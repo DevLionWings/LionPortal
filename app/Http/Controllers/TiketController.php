@@ -115,7 +115,7 @@ class TiketController extends Controller
             $data['tick'] = $ticketnoArray; 
             /* End */
         }   
-
+        //test
         return view('fitur.tiket', $data);
     }
 
