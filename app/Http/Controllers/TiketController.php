@@ -208,8 +208,8 @@ class TiketController extends Controller
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" >Assign To me</button>';
                     $managerBtn = $parentBtn;
                     $managerItBtn = $parentBtn;
-                } else  if($row["statusid"] == 'SD002' && $userid == $row["assigned_to"]){
-                    $itBtn = $parentBtn.' <button href="javascript:void(0)" class="update btn btn-danger" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
+                    $itBtn = $parentBtn.' <button href="javascript:void(0)" class="closed btn btn-danger" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'">Closed</button>';
                     $managerBtn = $parentBtn;
                     $managerItBtn = $parentBtn;
@@ -334,8 +334,8 @@ class TiketController extends Controller
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" >Assign To me</button>';
                     $managerBtn = $parentBtn;
                     $managerItBtn = $parentBtn;
-                } else  if($row["statusid"] == 'SD002' && $userid == $row["assigned_to"]){
-                    $itBtn = $parentBtn.' <button href="javascript:void(0)" class="update btn btn-danger" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
+                    $itBtn = $parentBtn.' <button href="javascript:void(0)" class="closed btn btn-danger" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'">Closed</button>';
                     $managerBtn = $parentBtn;
                     $managerItBtn = $parentBtn;
@@ -532,9 +532,11 @@ class TiketController extends Controller
         if(empty($mgrid) || $mgrid == null){
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->where('mgrid', $userid)->get();
             $email = $dataEmail[0]->usermail;
-        } else {
+        } else if (!empty($dataEmail)){
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('mgrid', $mgrid)->where('userid', $assignto)->get();
             $email = $dataEmail[0]->usermail;
+        } else {
+            $email = 'admin@lionwings.com';
         }
         
 

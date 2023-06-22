@@ -465,6 +465,49 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <div id="modal-closed-user"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Closed Ticket</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{route('update-tiket')}}" method="post" name='closed'>
+                    @csrf
+                    <input type="hidden" id="closed-ticketno" name="ticketno"/>
+                    <input type="hidden" id="closed-userid" name="userid"/>
+                    <input type="hidden" id="reject-assignto" name="assignto"/>
+                    <input type="hidden" id="reject-approvedby1" name="approvedby1"/>
+                    <input type="hidden" id="reject-approveby_it" name="approveby_it"/>
+                    <input type="hidden" id="reject-approveby_1_date" name="approveby_1_date"/>
+                    <input type="hidden" id="reject-approveby_it_date" name="approveby_it_date"/>
+                    <div class="modal-body">
+                        <p>Are You Sure ? <span class="text-bold"></span></p>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="assignto" name="assignto" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD003">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
 </div>
 <!-- ./wrapper -->
 @endsection
@@ -616,6 +659,21 @@
             $('#reject-approvedby1_date').val($(this).attr("data-approvedby1_date"));
             $('#reject-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
             $('#modal-reject-user').modal('show');
+        })
+
+        $(document).on('click', '.closed', function () {
+            // alert('bisa');
+            $('#closed-ticketno').val($(this).attr("data-ticketno"));
+            $('#closed-userid').val($(this).attr("data-userid"));
+            $('#closed-statusid').val($(this).attr("data-statusid"));
+            $('#reject-assignto').val($(this).attr("data-assignto"));
+            $('#reject-approvedby1').val($(this).attr("data-approvedby1"));
+            $('#reject-approvedbyit').val($(this).attr("data-approvedbyit"));
+            $('#reject-rejectedby').val($(this).attr("data-rejectedby"));
+            $('#reject-statusid').val($(this).attr("data-statusid"));
+            $('#reject-approvedby1_date').val($(this).attr("data-approvedby1_date"));
+            $('#reject-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
+            $('#modal-closed-user').modal('show');
         })
 
         $(document).on('click', '.ticket', function submit() {

@@ -576,6 +576,7 @@ class Repository
     {   
         DB::beginTransaction();
         if($roleid == "RD006"){
+            /* Manager IT */
             $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->Where('ticketno', $ticketno)
             ->update([
@@ -586,6 +587,7 @@ class Repository
                 'approvedbyit_date' => $approveby_it_date,
             ]);
         } else if($roleid == "RD002"){
+            /* Manager User */
             $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->Where('ticketno', $ticketno)
             ->update([
@@ -596,13 +598,13 @@ class Repository
                 'approvedby1_date' => $approveby_1_date,
             ]);
         } else {
+            /* IT Tim */
             $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->Where('ticketno', $ticketno)
             ->update([
                 'assignedto' => $assignto,
                 'statusid' => $statusid,
-                'approvedby_1' => $approvedby1,
-                'approvedby_it' => $approveby_it,
+                'rejectedby' => $rejectedby,
             ]);
         }
        
