@@ -75,6 +75,25 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                        <h6>Statistics</h6>
+                </div>
+                <div class="col-6">
+                    <!-- Default box -->
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title">Tickets for a Week</h3>
+                                <a href="javascript:void(0);"></a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <label name="loading-chart">Loading...</label>
+                            <canvas id="ticket" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;display: none;"></canvas>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
             </div>
         </div>
     </section>
@@ -91,12 +110,25 @@
     $('#m-dashboard').addClass('active');
 </script>
 <script type="text/javascript">
- // Ajax get chart now
- $.ajax({
+
+   // Ajax get data ticketing
+   $.ajax({
         url: '{{ route("get.stat") }}',
         type: 'GET',
         success: function(response) {
-            console.log(response);
+            $('label[name="loading-chart"]').css('display', 'none')
+            $('canvas[id="ticket"]').css('display', 'block')
+            ticketingChart(response["opn"], response["clsd"], response["prg"])
+        }, error: function(err) {
+            console.log(err)
+            alert('Opps, something wrong with dashboard chart');
+        }
+    })
+    // Ajax get chart now
+    $.ajax({
+        url: '{{ route("get.stat") }}',
+        type: 'GET',
+        success: function(response) {
             $('span[name="today-in"]').text(response['opn'])
             $('span[name="today-out"]').text(response['clsd'])
             $('span[name="today-progress"]').text(response['prg'])
@@ -105,5 +137,48 @@
             alert('Opps, something wrong with dashboard chart');
         }
     })
+
+    function ticketingChart(dataTicketOpen, dataTicketClosed, dataTicketProgress) {
+        // Chart
+        const DATA_COUNT = 4;
+        const datapoints = dataTicketOpen;
+        const datapoints1 = dataTicketClosed;
+        const datapoints2 = dataTicketProgress;
+    
+        var data = {
+            labels: ['Ticket Open', 'Ticket Closed', 'Ticket Progress'],
+            datasets: [
+                {
+                label: 'Count',
+                data: [datapoints, datapoints1, datapoints2],
+                backgroundColor: ["#28a745", "#dc3545", "#17a2b8",]
+                }
+            ]
+        }
+
+        //-------------
+        //- PIE CHART -
+        //-------------
+        // Get context with jQuery - using jQuery's .get() method.
+        var pieChartCanvas = $('#ticket').get(0).getContext('2d')
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                        legend: {
+                        position: 'top',
+                    },
+                    title: {
+                    display: true,
+                    text: 'Chart.js Pie Chart'
+                    }
+                }
+            },
+        })
+    }
 </script>
 @endsection

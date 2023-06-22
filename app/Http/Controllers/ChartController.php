@@ -26,9 +26,11 @@ class ChartController extends Controller
     public static function getStatToday()
     {
         $dateNow = date('Y-m-d');
+
         $opn = '';
         $clsd = '';
         $prg = '';
+
 
         $ticketOpen = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
             ->where('createdon', '>', now()->subDays(7)->endOfDay())
@@ -74,6 +76,13 @@ class ChartController extends Controller
                 ], 400);
             }
         return $data;
+    }
+
+    public static function getDataTicketingMonth()
+    {
+        $dateNow = date('Y-m-d');
+        $dateMin30 = date('Y-m-d', strtotime("-30 days"));
+        $dataRes = [];
     }
 
 }
