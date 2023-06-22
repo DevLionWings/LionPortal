@@ -29,15 +29,15 @@
                 <div class="col-12">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            <h6>Hari ini</h6>
+                            <h6>Tickets for a Week</h6>
                         </div>
                         <div class="col-12 col-sm-6 col-md-3">
                             <div class="info-box">
                                 <span class="info-box-icon bg-success elevation-1"><i class="fas fa-sign-in-alt"></i></span>
                 
                                 <div class="info-box-content">
-                                <span class="info-box-text">Ticket Masuk</span>
-                                <span class="info-box-number" name="today-container-in">
+                                <span class="info-box-text">Ticket Open</span>
+                                <span class="info-box-number" name="today-in">
                                     10
                                 </span>
                                 </div>
@@ -50,8 +50,8 @@
                                 <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-sign-out-alt"></i></span>
                 
                                 <div class="info-box-content">
-                                <span class="info-box-text">Ticket Selesai</span>
-                                <span class="info-box-number" name="today-container-out">
+                                <span class="info-box-text">Ticket Closed</span>
+                                <span class="info-box-number" name="today-out">
                                     10
                                 </span>
                                 </div>
@@ -65,7 +65,7 @@
                 
                                 <div class="info-box-content">
                                 <span class="info-box-text">Ticket Progress</span>
-                                <span class="info-box-number" name="today-inv">
+                                <span class="info-box-number" name="today-progress">
                                     10
                                 </span>
                                 </div>
@@ -89,5 +89,21 @@
 <script>
     $('.nav-link.active').removeClass('active');
     $('#m-dashboard').addClass('active');
+</script>
+<script type="text/javascript">
+ // Ajax get chart now
+ $.ajax({
+        url: '{{ route("get.stat") }}',
+        type: 'GET',
+        success: function(response) {
+            console.log(response);
+            $('span[name="today-in"]').text(response['opn'])
+            $('span[name="today-out"]').text(response['clsd'])
+            $('span[name="today-progress"]').text(response['prg'])
+        }, error: function(err) {
+            console.log(err)
+            alert('Opps, something wrong with dashboard chart');
+        }
+    })
 </script>
 @endsection

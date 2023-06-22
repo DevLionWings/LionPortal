@@ -8,6 +8,7 @@ use App\Http\Controllers\TiketController;
 use App\Http\Controllers\AbsensipayrollController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\ChartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,10 @@ Route::post('/updatetiket', [TiketController::class,'updateTiket'])->name('updat
 Route::get('/download', [TiketController::class,'downloadFile'])->name('download.file');
 
 /* Email */ 
-Route::get('send-mail', [MailController::class, 'index'])->name('email');;
+Route::get('send-mail', [MailController::class, 'index'])->name('email');
+
+/* Chart-Today */ 
+Route::get('get/stattoday', [ChartController::class, 'getStatToday'])->name('get.stat');
 
 /* Menu HRIS -> Attendance Payroll */
 Route::get('/absensipayroll', [AbsensipayrollController::class,'absenpayroll'])->name('absensipayroll');
