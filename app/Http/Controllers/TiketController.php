@@ -127,7 +127,6 @@ class TiketController extends Controller
         /* Get Data Ticket */
         $dataTicket = $this->repository->GETTIKET($userid, $roleid);
         $json = json_decode($dataTicket, true);
-        
         $dat = '';
 
         if($json["rc"] == "00") 
@@ -148,7 +147,7 @@ class TiketController extends Controller
                     "status" => trim($value['status']),
                     "priorid" => trim($value['priorid']),
                     "priority" => trim($value['priority']),
-                    "detail" => $value['detail'],
+                    "detail" => trim($value['detail']),
                     "assignedto" => trim($value['assignedto']),
                     "assigned_to" => trim($value['assigned_to']),
                     "createdon" => trim($value['createdon']),
@@ -163,6 +162,9 @@ class TiketController extends Controller
                     "approvedby3_date" => trim($value['approvedby3_date']),
                     "approvedbyit_date" => trim($value['approvedbyit_date']),
                     "createdby" => trim($value['createdby']),
+                    "approvedby1Name" => trim($value['approved1']),
+                    "approvedbyitName" => trim($value['approvedit']),
+                    
                 ]);
             }
             $data['dat'] = $dataTrimArray;
@@ -191,7 +193,8 @@ class TiketController extends Controller
                 $mgrid = Session::get('mgrid');
                 $parentBtn = '<button href="javascript:void(0)" class="view btn btn-success" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
-                data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$row["attachment"].'">View </button>';
+                data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$row["attachment"].'" 
+                data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'">View </button>';
             
                 $approveMgrBtn = ' <button href="javascript:void(0)" class="update btn btn-default" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
                 data-approvedby1="'.$row["approvedby_1"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'" data-approvedby1_date ="'.$row["approvedby1_date"].'">Approve</button>';
@@ -286,7 +289,7 @@ class TiketController extends Controller
                     "status" => trim($value['status']),
                     "priorid" => trim($value['priorid']),
                     "priority" => trim($value['priority']),
-                    "detail" => $value['detail'],
+                    "detail" => trim($value['detail']),
                     "assignedto" => trim($value['assignedto']),
                     "assigned_to" => trim($value['assigned_to']),
                     "createdon" => trim($value['createdon']),
@@ -389,6 +392,7 @@ class TiketController extends Controller
         $priority = $request->priority;
         $subject = $request->subject;
         $remark = $request->detail;
+        $assignto = $request->assignto;
        
         /* Get File Upload */
         if (!empty($request->file('files'))){
@@ -488,6 +492,25 @@ class TiketController extends Controller
             $statusid = 'SD006';
             $auth = true;
         }
+
+         /* Get User Email */ 
+        if($roleid == "RD003"){
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
+            $email = $dataEmail[0]->usermail;
+            $assignName = $dataEmail[0]->username;
+            $auth = true;
+        } else if ($roleid == "RD002"){
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->get();
+            $email = $dataEmail[0]->usermail;
+            $assignName = $dataEmail[0]->username;
+            $auth = true;
+        } else {
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
+            $email = $dataEmail[0]->usermail;
+            $assignName = $dataEmail[0]->username;
+            $auth = true;
+        }
+
         /* End */
         $upload = Session::get('uploads');
         if ($auth){
@@ -495,7 +518,8 @@ class TiketController extends Controller
 
             $updateCounter = $this->repository->UPDATECOUNTER($last);
 
-            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign); 
+            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $assignName, $email); 
+            return $SendMail;
         }
     
         return redirect()->route('tiket')->with("success", "successfully");
@@ -532,9 +556,11 @@ class TiketController extends Controller
         if(empty($mgrid) || $mgrid == null){
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->where('mgrid', $userid)->get();
             $email = $dataEmail[0]->usermail;
+            $assignName = $dataEmail[0]->username;
         } else if (!empty($dataEmail)){
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('mgrid', $mgrid)->where('userid', $assignto)->get();
             $email = $dataEmail[0]->usermail;
+            $assignName = $dataEmail[0]->username;
         } else {
             $email = 'admin@lionwings.com';
         }
@@ -542,15 +568,16 @@ class TiketController extends Controller
 
         $updateTicket = $this->repository->UPDATETICKET($userid, $ticketno, $assignto, $approvedby1, $approveby_it, $rejectedby, $statusid, $approveby_1_date, $approveby_it_date, $roleid);
 
-        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $email); 
+        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $assignName, $email); 
 
         return redirect()->route('tiket')->with("success", "successfully");;
     }
 
     public function downloadFile(Request $request)
     {    
+       
         $dataFile = Session::get('uploads');
-        if ($dataFile != ['']){
+        if (!empty($dataFile)){
             $dataFile = Session::get('uploads');
             $filepath = public_path()."/uploads/".$dataFile[0];
             

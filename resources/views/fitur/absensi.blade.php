@@ -35,7 +35,7 @@
                         <div class="card-header">
                             <div class="card-header">
                                 <div class="row align-items-end">
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Date Range:</label>
                                             <div class="input-group">
@@ -108,12 +108,19 @@
 <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
 <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> -->
+<!-- <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> -->
+<!-- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script> -->
+<!-- <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script> -->
 <script>
     $('.nav-link.active').removeClass('active');
     $('#m-Attendance').addClass('active');
@@ -154,9 +161,9 @@
                 serverSide: true,
                 responsive: true,
                 searching: false,
-                dom: 'Blfrtip',
+                dom: 'Bfrtip',
                 buttons: [
-                    'csv'
+                    'Excel'
                 ],
                 ajax: {
                     url: '{{ route("get-absensi") }}',
@@ -245,7 +252,7 @@
             searching: true,
             dom: 'Blfrtip',
             buttons: [
-                'csv'
+                'csv', 'excel'
             ],
             ajax: {
                 "url": '{{ route("get-absensi") }}',

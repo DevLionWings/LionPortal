@@ -36,7 +36,7 @@ Helpdesk Ticket
 
 @section('content')
 <p style="font-weight: bold;">Halo {{ $mailData['username'] }}</p>
-<p>Hi, your ticket has been created, here is the detail : </p>
+<p>Hi, here is the detail your ticket: </p>
 
 <table style="margin-bottom: 5px;">
     <tbody>
@@ -66,7 +66,7 @@ Helpdesk Ticket
         </tr>
         <tr>
             <td>Assigned To</td>
-            <td>: {{ $mailData['assignedto'] }}</td>
+            <td>: {{ $mailData['assigned_to'] }}</td>
         </tr>
     </tbody>
 </table>

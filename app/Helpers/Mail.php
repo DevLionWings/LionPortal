@@ -12,7 +12,7 @@ use Auth;
 class Mail
 {
 
-    public static function SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $email)
+    public static function SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $assignName, $email)
     {
         $username = Session::get('username');
         $useremail = Session::get('usermail');
@@ -26,9 +26,9 @@ class Mail
             'subject' => $subject,
             'detail' => $remark,
             'status' => $status,
-            'assignedto' => $assign
+            'assignedto' => $assign,
+            'assigned_to' => $assignName
         );
-       
         SendtoMail::to($emails)->send(new SendMail($mailData));
     }
 }

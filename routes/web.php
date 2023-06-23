@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\TiketController;
+use App\Http\Controllers\MyticketController;
 use App\Http\Controllers\AbsensipayrollController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MailController;
@@ -41,6 +42,9 @@ Route::get('/tiket/get', [TiketController::class,'tiketList'])->name('get-tiket'
 Route::get('/tiket/filter/get', [TiketController::class,'tiketFilter'])->name('filter-tiket');
 Route::post('/addtiket', [TiketController::class,'addTiket'])->name('add-tiket');
 Route::post('/updatetiket', [TiketController::class,'updateTiket'])->name('update-tiket');
+
+Route::get('/mytiket', [MyticketController::class,'myTiket'])->name('mytiket');
+Route::get('/mytiket/get', [MyticketController::class,'myTiketList'])->name('my-tiket');
 
 /* Upload */
 Route::get('/download', [TiketController::class,'downloadFile'])->name('download.file');

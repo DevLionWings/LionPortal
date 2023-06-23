@@ -14,7 +14,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>TICKET</h1>
+                    <h1>MY TICKET</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <!-- Default box -->
                     <div class="card">
-                        <div class="card-header">
+                        <!-- <div class="card-header">
                             <div class="float-sm-right">
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                     data-target="#modal-add-ticket">+ New Ticket</button>
@@ -110,7 +110,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                        
                         <div class="card-body">
                             @if(session('success'))
@@ -256,10 +256,10 @@
                 <form action="" method="post" name="view-user">
                     @csrf
                     <div class="modal-body">
-                        <!-- <div class="form-group">
+                        <div class="form-group">
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
                             <input type="text" name="id" class="form-control" readonly>
-                        </div> -->
+                        </div>
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
                             <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
@@ -300,10 +300,6 @@
                         <div class="form-group">
                             <label class="form-check-label" for="approve" disabled>Approve By :</label>
                             <input type="text" name="approve" class="form-control" id="approve" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
-                            <input type="text" name="approveit" class="form-control" id="approveit" readonly>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
@@ -536,8 +532,8 @@
 @endif
 <script>
     $('.nav-link.active').removeClass('active');
-    $('#m-tiket').addClass('active');
-    $('#m-tiket').parent().parent().parent().addClass('menu-is-opening menu-open');
+    $('#m-mytiket').addClass('active');
+    $('#m-mytiket').parent().parent().parent().addClass('menu-is-opening menu-open');
 </script>
 <script>
     $(function () {    
@@ -607,8 +603,7 @@
             var statusid  = $(this).attr('data-statusid');
             var roleid  = $(this).attr('data-roleid');
             var created  = $(this).attr('data-created');
-            var approve  = $(this).attr('data-approve1name');
-            var approveit  = $(this).attr('data-approveitname');
+            var approve  = $(this).attr('data-approve');
             var upload  = $(this).attr('data-upload');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view-user"]');
@@ -625,7 +620,6 @@
             $form.find('input[name="status"]').val(status);
             $form.find('input[name="created"]').val(created);
             $form.find('input[name="approve"]').val(approve);
-            $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="upload"]').val(upload);
             $form.find('input[name="comment"]').val();
             $modal.modal('show');
@@ -778,7 +772,7 @@
                             minutes = minutes;
                             seconds = seconds;
                             // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
+                            var date = day + "/" + month + "/" + year;
                             return date;   
                         }
                     },
@@ -805,7 +799,7 @@
             serverSide: true,
             responsive: true,
             searching: true,
-            ajax: "{{ route('get-tiket') }}",
+            ajax: "{{ route('my-tiket') }}",
             order: [[ 0, "desc" ]],
             columns: [
                 {
@@ -868,7 +862,7 @@
                         minutes = minutes;
                         seconds = seconds;
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
+                        var date = day + "/" + month + "/" + year;
                         return date;   
                     }
                 },

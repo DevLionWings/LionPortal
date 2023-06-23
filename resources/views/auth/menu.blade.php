@@ -28,7 +28,7 @@
             </p>
           </a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
@@ -44,7 +44,7 @@
                 </p>
               </a>
             </li>
-          </ul>
+          </ul> -->
           <!-- <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('absensi') }}" class="nav-link" type="submit" id="m-Attendance"><i class="far fa-circle nav-icon"></i>
@@ -54,7 +54,7 @@
               </a>
             </li>
           </ul> -->
-        </li>
+        <!-- </li> -->
         <li class="nav-item">
           <a href="{{ url('absensi') }}" class="nav-link" type="submit" id="m-Attendance"><i class="nav-icon fas fa-calendar-check"></i>
             <p>
@@ -63,13 +63,33 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ url('tiket') }}" class="nav-link" type="submit" id="m-tiket"><i class="nav-icon fas fa-file-invoice"></i>
-            <p> 
-              Tiketing
+          <a href="#" class="nav-link" >
+            <i class="nav-icon fas fa-ticket-alt"></i>
+            <p>
+              Ticketing
+              <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('tiket') }}" class="nav-link" type="submit" id="m-tiket"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Ticket All
+                </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('mytiket') }}" class="nav-link" type="submit" id="m-mytiket"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  My Ticket
+                </p>
+              </a>
+            </li>
+          </ul>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
@@ -95,7 +115,7 @@
               </a>
             </li>
           </ul>
-        </li>
+        </li> -->
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
