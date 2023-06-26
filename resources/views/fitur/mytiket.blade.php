@@ -14,7 +14,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>MY TICKET</h1>
+                    <h1>MYTICKET</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <!-- Default box -->
                     <div class="card">
-                        <!-- <div class="card-header">
+                        <div class="card-header">
                             <div class="float-sm-right">
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                     data-target="#modal-add-ticket">+ New Ticket</button>
@@ -110,7 +110,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                        
                         <div class="card-body">
                             @if(session('success'))
@@ -153,7 +153,7 @@
             </div>
         </div>
     </section>
-    <div id="modal-add-ticket" class="modal fade show" aria-modal="true">
+    <!-- <div id="modal-add-ticket" class="modal fade show" aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -187,7 +187,7 @@
                             <div class="input-group value">
                                 <select id="category" name="category" class="form-control input--style-6" required>
                                     <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($categ as $categcode)ID
+                                    @foreach($categ as $categcode)
                                     <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
@@ -229,10 +229,6 @@
                             <label class="form-check-label" for="files">File:</label>
                             <input type="file" name="files" id="files" class="form-control">
                         </div>
-                        <!-- <div class="input-field">
-                            <label class="active">Upload Photos<small>(max size: 1mb)</small></label>
-                            <div class="input-images" style="padding-top: .5rem;"></div>
-                        </div> -->
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -240,9 +236,8 @@
                     </div>
                 </form>
             </div>
-            <!-- /.modal-content -->
         </div>
-    </div>
+    </div> -->
     <!-- /.content -->
     <div id="modal-view-user" class="modal fade show" aria-modal="true">
         <div class="modal-dialog">
@@ -253,13 +248,13 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="" method="post" name="view-user">
+                <form action="{{ route('comment-add') }}" method="post" name="view-user">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
                             <input type="text" name="id" class="form-control" readonly>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
                             <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
@@ -302,13 +297,14 @@
                             <input type="text" name="approve" class="form-control" id="approve" readonly>
                         </div>
                         <div class="form-group">
+                            <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
+                            <input type="text" name="approveit" class="form-control" id="approveit" readonly>
+                        </div>
+                        <div class="form-group">
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
                             <input type="text" name="created" class="form-control" id="created" readonly>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="comment" disabled>Comment</label>
-                            <textarea type="text" name="comment" class="form-control" id="comment"></textarea>
-                        </div>
+                     
                     </div>
                     <!-- <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -355,12 +351,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
-                                <input id="status" name="status" class="form-control input--style-6" type="hidden">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedbyit_date" name="approvedbyit_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d'); ?>">
+                                <input id="approvedbyit_date" name="approvedbyit_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -377,7 +368,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
-                                <input id="approvedby1_date" name="approvedby1_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d'); ?>">
+                                <input id="approvedby1_date" name="approvedby1_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -478,11 +469,11 @@
                     @csrf
                     <input type="hidden" id="closed-ticketno" name="ticketno"/>
                     <input type="hidden" id="closed-userid" name="userid"/>
-                    <input type="hidden" id="reject-assignto" name="assignto"/>
-                    <input type="hidden" id="reject-approvedby1" name="approvedby1"/>
-                    <input type="hidden" id="reject-approveby_it" name="approveby_it"/>
-                    <input type="hidden" id="reject-approveby_1_date" name="approveby_1_date"/>
-                    <input type="hidden" id="reject-approveby_it_date" name="approveby_it_date"/>
+                    <input type="hidden" id="closed-assignto" name="assignto"/>
+                    <input type="hidden" id="closed-approvedby1" name="approvedby1"/>
+                    <input type="hidden" id="closed-approveby_it" name="approveby_it"/>
+                    <input type="hidden" id="closed-approveby_1_date" name="approveby_1_date"/>
+                    <input type="hidden" id="closed-approveby_it_date" name="approveby_it_date"/>
                     <div class="modal-body">
                         <p>Are You Sure ? <span class="text-bold"></span></p>
                         <div class="form-group">
@@ -603,7 +594,8 @@
             var statusid  = $(this).attr('data-statusid');
             var roleid  = $(this).attr('data-roleid');
             var created  = $(this).attr('data-created');
-            var approve  = $(this).attr('data-approve');
+            var approve  = $(this).attr('data-approve1name');
+            var approveit  = $(this).attr('data-approveitname');
             var upload  = $(this).attr('data-upload');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view-user"]');
@@ -620,6 +612,7 @@
             $form.find('input[name="status"]').val(status);
             $form.find('input[name="created"]').val(created);
             $form.find('input[name="approve"]').val(approve);
+            $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="upload"]').val(upload);
             $form.find('input[name="comment"]').val();
             $modal.modal('show');
@@ -666,13 +659,13 @@
             $('#closed-ticketno').val($(this).attr("data-ticketno"));
             $('#closed-userid').val($(this).attr("data-userid"));
             $('#closed-statusid').val($(this).attr("data-statusid"));
-            $('#reject-assignto').val($(this).attr("data-assignto"));
-            $('#reject-approvedby1').val($(this).attr("data-approvedby1"));
-            $('#reject-approvedbyit').val($(this).attr("data-approvedbyit"));
-            $('#reject-rejectedby').val($(this).attr("data-rejectedby"));
-            $('#reject-statusid').val($(this).attr("data-statusid"));
-            $('#reject-approvedby1_date').val($(this).attr("data-approvedby1_date"));
-            $('#reject-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
+            $('#closed-assignto').val($(this).attr("data-assignto"));
+            $('#closed-approvedby1').val($(this).attr("data-approvedby1"));
+            $('#closed-approvedbyit').val($(this).attr("data-approvedbyit"));
+            $('#closed-rejectedby').val($(this).attr("data-rejectedby"));
+            $('#closed-statusid').val($(this).attr("data-statusid"));
+            $('#closed-approvedby1_date').val($(this).attr("data-approvedby1_date"));
+            $('#closed-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
             $('#modal-closed-user').modal('show');
         })
 
@@ -772,7 +765,7 @@
                             minutes = minutes;
                             seconds = seconds;
                             // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year;
+                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
                             return date;   
                         }
                     },
@@ -799,7 +792,7 @@
             serverSide: true,
             responsive: true,
             searching: true,
-            ajax: "{{ route('my-tiket') }}",
+            ajax: "{{ route('get-tiket') }}",
             order: [[ 0, "desc" ]],
             columns: [
                 {
@@ -862,7 +855,7 @@
                         minutes = minutes;
                         seconds = seconds;
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year;
+                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
                         return date;   
                     }
                 },

@@ -35,7 +35,7 @@ Helpdesk Ticket
 @endsection
 
 @section('content')
-<p style="font-weight: bold;">Halo {{ $mailData['username'] }}</p>
+<p style="font-weight: bold;">Halo, {{ $mailData['username'] }}</p>
 <p>Hi, here is the detail your ticket: </p>
 
 <table style="margin-bottom: 5px;">

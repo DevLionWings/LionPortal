@@ -107,6 +107,11 @@ class LoginController extends Controller
             $spvid = $data[0]->spvid;
             $mgrid = $data[0]->mgrid;
 
+            $datTicket = $this->repository->GETMYTICKET($userid, $roleid);
+            $json = json_decode($datTicket);
+            $data = $json->data->data;
+            $request->session()->put($data);
+
             /* Session Data */
             $session = array(
                 'userid' => $userid,

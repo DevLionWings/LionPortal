@@ -187,7 +187,7 @@
                             <div class="input-group value">
                                 <select id="category" name="category" class="form-control input--style-6" required>
                                     <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($categ as $categcode)ID
+                                    @foreach($categ as $categcode)
                                     <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
@@ -253,7 +253,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="" method="post" name="view-user">
+                <form action="{{ route('comment-add') }}" method="post" name="view-user">
                     @csrf
                     <div class="modal-body">
                         <!-- <div class="form-group">
@@ -309,10 +309,25 @@
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
                             <input type="text" name="created" class="form-control" id="created" readonly>
                         </div>
+                        @if(session('userid') == session('userid') || session('userid') == session('assignto') || session('userid') == session('approvedby_1') || session('userid') == session('approvedby_it'))
+                        <hr />
+                        <!-- <label class="form-check-label">Display Comment :</label> -->
+                        <h4 class="modal-title">Display Comment :</h4>
+                            @foreach($disc as $discuscode)
+                                <div class="display-comment">
+                                    <strong>{{ $discuscode['SENDER'] }}</strong>
+                                    <p>{{ $discuscode['COMMENT'] }}</p>
+                                </div>
+                            @endforeach
+                        <hr />
                         <div class="form-group">
-                            <label class="form-check-label" for="comment" disabled>Comment</label>
-                            <textarea type="text" name="comment" class="form-control" id="comment"></textarea>
+                            <label class="form-check-label" for="comment_body" disabled>Comment</label>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
                         </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-warning" value="Add Comment" />
+                        </div>
+                        @endif
                     </div>
                     <!-- <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -359,12 +374,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
-                                <input id="status" name="status" class="form-control input--style-6" type="hidden">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedbyit_date" name="approvedbyit_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d'); ?>">
+                                <input id="approvedbyit_date" name="approvedbyit_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -381,7 +391,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
-                                <input id="approvedby1_date" name="approvedby1_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d'); ?>">
+                                <input id="approvedby1_date" name="approvedby1_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -482,11 +492,11 @@
                     @csrf
                     <input type="hidden" id="closed-ticketno" name="ticketno"/>
                     <input type="hidden" id="closed-userid" name="userid"/>
-                    <input type="hidden" id="reject-assignto" name="assignto"/>
-                    <input type="hidden" id="reject-approvedby1" name="approvedby1"/>
-                    <input type="hidden" id="reject-approveby_it" name="approveby_it"/>
-                    <input type="hidden" id="reject-approveby_1_date" name="approveby_1_date"/>
-                    <input type="hidden" id="reject-approveby_it_date" name="approveby_it_date"/>
+                    <input type="hidden" id="closed-assignto" name="assignto"/>
+                    <input type="hidden" id="closed-approvedby1" name="approvedby1"/>
+                    <input type="hidden" id="closed-approveby_it" name="approveby_it"/>
+                    <input type="hidden" id="closed-approveby_1_date" name="approveby_1_date"/>
+                    <input type="hidden" id="closed-approveby_it_date" name="approveby_it_date"/>
                     <div class="modal-body">
                         <p>Are You Sure ? <span class="text-bold"></span></p>
                         <div class="form-group">
@@ -497,6 +507,11 @@
                         <div class="form-group">
                             <div class="input-group value">
                                 <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD003">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="CLOSED">
                             </div>
                         </div>
                     </div>
@@ -672,13 +687,13 @@
             $('#closed-ticketno').val($(this).attr("data-ticketno"));
             $('#closed-userid').val($(this).attr("data-userid"));
             $('#closed-statusid').val($(this).attr("data-statusid"));
-            $('#reject-assignto').val($(this).attr("data-assignto"));
-            $('#reject-approvedby1').val($(this).attr("data-approvedby1"));
-            $('#reject-approvedbyit').val($(this).attr("data-approvedbyit"));
-            $('#reject-rejectedby').val($(this).attr("data-rejectedby"));
-            $('#reject-statusid').val($(this).attr("data-statusid"));
-            $('#reject-approvedby1_date').val($(this).attr("data-approvedby1_date"));
-            $('#reject-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
+            $('#closed-assignto').val($(this).attr("data-assignto"));
+            $('#closed-approvedby1').val($(this).attr("data-approvedby1"));
+            $('#closed-approvedbyit').val($(this).attr("data-approvedbyit"));
+            $('#closed-rejectedby').val($(this).attr("data-rejectedby"));
+            $('#closed-statusid').val($(this).attr("data-statusid"));
+            $('#closed-approvedby1_date').val($(this).attr("data-approvedby1_date"));
+            $('#closed-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
             $('#modal-closed-user').modal('show');
         })
 

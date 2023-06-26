@@ -10,6 +10,7 @@ use App\Http\Controllers\AbsensipayrollController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/absensi', [AbsensiController::class,'absensi'])->name('absensi');
 Route::get('/absensi/get', [AbsensiController::class,'getAbsensi'])->name('get-absensi');
 
-
 /* Menu Tiket */
 Route::get('/tiket', [TiketController::class,'tiket'])->name('tiket');
 Route::get('/tiket/get', [TiketController::class,'tiketList'])->name('get-tiket');
@@ -45,6 +45,9 @@ Route::post('/updatetiket', [TiketController::class,'updateTiket'])->name('updat
 
 Route::get('/mytiket', [MyticketController::class,'myTiket'])->name('mytiket');
 Route::get('/mytiket/get', [MyticketController::class,'myTiketList'])->name('my-tiket');
+
+// Route::get('/get/comment', [CommentController::class,'displayComment'])->name('comment-get');
+Route::post('/add/comment', [CommentController::class,'addComment'])->name('comment-add');
 
 /* Upload */
 Route::get('/download', [TiketController::class,'downloadFile'])->name('download.file');

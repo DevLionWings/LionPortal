@@ -538,10 +538,10 @@ class Repository
                 'priorid' => $priority,
                 'rejectedby' => '',
                 'remark' => $remark,
-                'approvedby1_date' => date('Y-m-d'),
-                'approvedby2_date' => date('Y-m-d'),
-                'approvedby3_date' => date('Y-m-d'),
-                'approvedbyit_date' => date('Y-m-d'),
+                'approvedby1_date' => date('Y-m-d H:i:s'),
+                'approvedby2_date' => date('Y-m-d H:i:s'),
+                'approvedby3_date' => date('Y-m-d H:i:s'),
+                'approvedbyit_date' => date('Y-m-d H:i:s'),
                 'createdby' => $createdby
             );
     } else {
@@ -562,10 +562,10 @@ class Repository
                 'priorid' => $priority,
                 'rejectedby' => '',
                 'remark' => $remark,
-                'approvedby1_date' => date('Y-m-d'),
-                'approvedby2_date' => date('Y-m-d'),
-                'approvedby3_date' => date('Y-m-d'),
-                'approvedbyit_date' => date('Y-m-d'),
+                'approvedby1_date' => date('Y-m-d H:i:s'),
+                'approvedby2_date' => date('Y-m-d H:i:s'),
+                'approvedby3_date' => date('Y-m-d H:i:s'),
+                'approvedbyit_date' => date('Y-m-d H:i:s'),
                 'createdby' => $createdby
             );
         }
@@ -642,7 +642,7 @@ class Repository
         if($roleid == "RD006"){
             /* Manager IT */
             $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
-            ->Where('ticketno', $ticketno)
+            ->where('ticketno', $ticketno)
             ->update([
                 'assignedto' => $assignto,
                 'statusid' => $statusid,
@@ -653,7 +653,7 @@ class Repository
         } else if($roleid == "RD002"){
             /* Manager User */
             $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
-            ->Where('ticketno', $ticketno)
+            ->where('ticketno', $ticketno)
             ->update([
                 'assignedto' => $assignto,
                 'statusid' => $statusid,
@@ -664,7 +664,7 @@ class Repository
         } else {
             /* IT Tim */
             $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
-            ->Where('ticketno', $ticketno)
+            ->where('ticketno', $ticketno)
             ->update([
                 'assignedto' => $assignto,
                 'statusid' => $statusid,

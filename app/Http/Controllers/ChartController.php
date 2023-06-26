@@ -25,18 +25,18 @@ class ChartController extends Controller
 
     public static function getStatToday()
     {
-        $dateNow = date('Y-m-d');
-
         $opn = '';
         $clsd = '';
         $prg = '';
 
-
-        $ticketOpen = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-            ->where('createdon', '>', now()->subDays(7)->endOfDay())
-            ->orWhere('statusid', 'SD006')
+        $date = \Carbon\Carbon::today()->subDays(7);
+        $dateweek = date('Y-m-d', strtotime($date));
+        $datenow = date('Y-m-d');
+        $ticketOpen = DB::connection('pgsql')->table('helpdesk.t_ticket')
+            ->where('statusid', 'SD006')
+            ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
-            if(!empty($ticketOpen)){
+            if($ticketOpen != ''){
                 $dataResp = $ticketOpen;
                 $dataRespArray = [];
                 array_push($dataRespArray, $dataResp);
@@ -47,11 +47,12 @@ class ChartController extends Controller
                     'message'=>'error1'
                 ], 400);
             }
-        $ticketProgress = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-            ->where('createdon', '>', now()->subDays(7)->endOfDay())
-            ->orWhere('statusid', 'SD002')
+        
+        $ticketProgress = DB::connection('pgsql')->table('helpdesk.t_ticket')
+            ->where('statusid', 'SD002')
+            ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
-            if(!empty($ticketProgress)) {
+            if($ticketProgress != "") {
                 $dataResp = $ticketProgress;
                 $dataRespArray = [];
                 array_push($dataRespArray, $dataResp);
@@ -61,11 +62,11 @@ class ChartController extends Controller
                     'message'=>'error2'
                 ], 400);
             }
-        $ticketClosed = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-            ->where('createdon', '>', now()->subDays(7)->endOfDay())
-            ->orWhere('statusid', 'SD003')
+        $ticketClosed = DB::connection('pgsql')->table('helpdesk.t_ticket')
+            ->where('statusid', 'SD003')
+            ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
-            if(!empty($ticketClosed)) {
+            if($ticketClosed != "") {
                 $dataResp = $ticketClosed;
                 $dataRespArray = [];
                 array_push($dataRespArray, $dataResp);
@@ -75,6 +76,7 @@ class ChartController extends Controller
                     'message'=>'error3'
                 ], 400);
             }
+        
         return $data;
     }
 

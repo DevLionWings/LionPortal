@@ -12,11 +12,11 @@ use Auth;
 class Mail
 {
 
-    public static function SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $assignName, $email)
+    public static function SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1)
     {
         $username = Session::get('username');
         $useremail = Session::get('usermail');
-        $emails = array($useremail, $email);
+        $emails = array($useremail, $emailSign, $emailReq, $emailApprove1);
         
         $mailData = array(
             'username' => $username,
@@ -27,7 +27,7 @@ class Mail
             'detail' => $remark,
             'status' => $status,
             'assignedto' => $assign,
-            'assigned_to' => $assignName
+            'assigned_to' => $assignNameSign
         );
         SendtoMail::to($emails)->send(new SendMail($mailData));
     }
