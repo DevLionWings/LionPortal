@@ -665,16 +665,33 @@
             $form.find('input[name="upload"]').val(upload);
             $form.find('input[name="comment"]').val();
             $modal.modal('show');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/comment",
+                data: {
+                    'ticketno' : ticketno,
+                },
+                success: function(resp) {
+                    json = JSON.parse(resp)
+                    // console.log(json['data']['file']);
+                    console.log(json);
+                    arr_values = [];
+                    $('#datacontainer').DataTable().ajax.reload();
+                    window.location = "{{ env('SERVICE') }}cetak-invoice?file_loc="+json['data']['file']; 
+                },
+            });
         });
 
-        $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
-            alert("test");
-            var $inputs = $('#modal-view-user form[name="view-user"] :input');
-            var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
-            if ($form_valid.length === 0) {
-                $('#modal-view-user form[name="view-user"]').submit();
-            }
-        });
+        // $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
+        //     var $inputs = $('#modal-view-user form[name="view-user"] :input');
+        //     var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
+        //     if ($form_valid.length === 0) {
+        //         $('#modal-view-user form[name="view-user"]').submit();
+        //     }
+        // });
 
         $(document).on('click', '.update', function () {
             $('#update-ticketno').val($(this).attr("data-ticketno"));

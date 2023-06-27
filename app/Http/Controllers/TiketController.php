@@ -34,7 +34,7 @@ class TiketController extends Controller
         $assn = '';
         $stat = '';
         $tick = '';
-        $disc = '';
+        $disc = ''; 
         
         $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $request->ticketno)->get();
         $jsonCmmnt = json_decode($dataCommnt, true);
@@ -518,8 +518,8 @@ class TiketController extends Controller
         }
 
          /* Get User Email */ 
-        if($roleid == "RD003"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
+        if($cateId == "CD001 "){
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->get();
             $emailSign = $dataEmail[0]->usermail;
             $assignNameSign = $dataEmail[0]->username;
             $emailReq = 'blank@lionwings.com';
@@ -532,7 +532,7 @@ class TiketController extends Controller
             $emailReq = 'blank@lionwings.com';
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
-        } else if ($cateId == "CD001"){
+        } else if ($roleid == "RD003"){
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
             $emailSign = $dataEmail[0]->usermail;
             $assignNameSign = $dataEmail[0]->username;

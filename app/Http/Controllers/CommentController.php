@@ -58,4 +58,26 @@ class CommentController extends Controller
 
         return redirect()->route('tiket')->with("success", "successfully");
     }
+
+    public function listComment(Request $request){
+        $disc = ''; 
+        
+        $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $request->ticketno)->get();
+        $jsonCmmnt = json_decode($dataCommnt, true);
+
+        /* Get Comment */
+        $comment = $jsonCmmnt;
+        $commentArray = [];
+        foreach ($comment as $key => $value) {
+            array_push($commentArray, [
+                "COMMENT" => trim($value['comment']),
+                "SENDER" => trim($value['senderid']),
+                "DATE" => trim($value['createdon'])
+            ]);
+        }
+
+        $data['disc'] = $commentArray; 
+
+        return $data;
+    }
 }

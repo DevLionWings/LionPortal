@@ -48,6 +48,7 @@ Route::get('/mytiket/get', [MyticketController::class,'myTiketList'])->name('my-
 
 // Route::get('/get/comment', [CommentController::class,'displayComment'])->name('comment-get');
 Route::post('/add/comment', [CommentController::class,'addComment'])->name('comment-add');
+Route::post('/get/comment', [CommentController::class,'listComment'])->name('get-comment');
 
 /* Upload */
 Route::get('/download', [TiketController::class,'downloadFile'])->name('download.file');
