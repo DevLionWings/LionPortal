@@ -570,6 +570,7 @@ class Repository
                 'createdby' => $createdby
             );
         }
+        
         $insert = DB::connection('pgsql')->table('helpdesk.t_ticket')->insert([
                     'ticketno' => $value['ticketno'],
                     'categoryid' => $value['categoryid'],

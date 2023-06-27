@@ -35,9 +35,6 @@ class TiketController extends Controller
         $stat = '';
         $tick = '';
         $disc = '';
-
-        $dataUsr = $this->repository->GETUSERBYROLE();
-        $json = json_decode($dataUsr, true);
         
         $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $request->ticketno)->get();
         $jsonCmmnt = json_decode($dataCommnt, true);
@@ -55,6 +52,9 @@ class TiketController extends Controller
 
         $data['disc'] = $commentArray; 
         /* End */
+
+        $dataUsr = $this->repository->GETUSERBYROLE();
+        $json = json_decode($dataUsr, true);
 
         if($json["rc"] == "00") {
             /* Get User for User Requestor */
@@ -397,7 +397,7 @@ class TiketController extends Controller
 
     public function addTiket(Request $request)
     {
-
+        
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $spvid = Session::get('spvid');
@@ -460,13 +460,13 @@ class TiketController extends Controller
         $userApprove = $dataApprove['data'][0]['userid'];
 
         $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->get();
-        $mgrIt = $dataMgrIt[0]->mgrid;
-        if($mgrid == '' && $roleid == 'RD002' && $userid == $userApprove){
+        $mgrIt = $dataMgrIt[0]->userid;
+        if($roleid == 'RD002'){
             $assign = $mgrIt;
             $approvedby_1 = $userid;
             $approvedby_it = '';
             $auth = true;
-        } else if ($mgrid == '' && $roleid == 'RD006' && $userid == $userApprove){
+        } else if ($roleid == 'RD006'){
             $assign = $request->assign;
             $approvedby_1 = $userid;
             $approvedby_it = $userid;
@@ -476,8 +476,13 @@ class TiketController extends Controller
             $approvedby_1 = '';
             $approvedby_it = $mgrid;
             $auth = true;
+        } else if($category == 'CD001'){
+            $assign = '';
+            $approvedby_1 = '';
+            $approvedby_it = '';
+            $auth = true;
         } else {
-            $assign = $mgrid;
+            $assign = $mgrIt;
             $approvedby_1 = '';
             $approvedby_it = '';
             $auth = true;
@@ -491,8 +496,8 @@ class TiketController extends Controller
         $cateId =  $dataCategory[0]->categoryid;
         if ($flaggingCat == 'X' ){
             if ($roleid == 'RD002'){
-                $status = 'OPEN';
-                $statusid = 'SD006';
+                $status = 'WAITING FOR APPROVAL';
+                $statusid = 'SD001';
             } else if ($roleid == 'RD003'){
                 $status = 'WAITING FOR APPROVAL';
                 $statusid = 'SD001';
@@ -507,9 +512,6 @@ class TiketController extends Controller
                 $auth = true;
             }
         } else {
-            $assign = '';
-            $approvedby_1 = '';
-            $approvedby_it = '';
             $status = 'OPEN';
             $statusid = 'SD006';
             $auth = true;
@@ -626,10 +628,10 @@ class TiketController extends Controller
             $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
             $emailReq = $dataEmailReq[0]->usermail;
             $assignNameReq = $dataEmailReq[0]->username;
-             /* Get Email Approve 1 */
-             $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
-             $emailApprove1 = $dataEmailApprove1[0]->usermail;
-             $assignNameApprove1 = $dataEmailApprove1[0]->username;
+            /* Get Email Approve 1 */
+            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
+            $emailApprove1 = $dataEmailApprove1[0]->usermail;
+            $assignNameApprove1 = $dataEmailApprove1[0]->username;
         }
         
         /* Update Ticket */

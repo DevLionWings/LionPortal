@@ -55,21 +55,6 @@ class CommentController extends Controller
             'createdon' =>  date('Y-m-d H:i:s'),
         ]);
         DB::commit();
-        if(!empty($insert)){
-            return response()->json([
-                'rc' => '00',
-                'desc' => 'success',
-                'msg' => 'success',
-                'data' => $insert
-            ]);
-        } else {
-            return response()->json([
-                'rc' => '01',
-                'desc' => 'failed',
-                'msg' => 'failed',
-                'data' => $insert
-            ]);
-        }
 
         return redirect()->route('tiket')->with("success", "successfully");
     }

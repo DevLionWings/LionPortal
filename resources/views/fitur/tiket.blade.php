@@ -202,7 +202,7 @@
                                     <option value="{{ $priorcode['ID'] }}">{{ $priorcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
-                                <input type="hidden" id="priorityname" name="priorityname" value="{ $priorcode['NAME'] }}">
+                                <input type="hidden" id="priorityname" name="priorityname" value="{{ $priorcode['NAME'] }}">
                             </div>
                         </div>
                         @if(session('roleid') == 'RD006')
@@ -446,7 +446,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger" onClick="this.disabled=true; this.value='Sending…';">Yes</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
                     </div>
                 </form>
             </div>
@@ -492,7 +492,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger" onClick="this.disabled=true; this.value='Sending…';">Yes</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
                     </div>
                 </form>
             </div>
@@ -538,7 +538,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger" onClick="this.disabled=true; this.value='Sending…';">Yes</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
                     </div>
                 </form>
             </div>
@@ -868,6 +868,8 @@
                             statusText = `<button class="btn btn-danger">Closed</button>`;
                         } else if(data == "IN PROGRESS"){
                             statusText = `<button class="btn btn-success">In Progress</button>`;
+                        } else if(data == "WAITING FOR APPROVAL"){
+                            statusText = `<button class="btn btn-secondary">Waiting Approval</button>`;
                         } else {
                             statusText = `<button class="btn btn-primary">Open</button>`;
                         }
