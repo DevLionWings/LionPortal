@@ -207,6 +207,7 @@ class Repository
         }  
         return json_encode($response);   
     }
+    
     public static function GETTIKET($userid, $roleid)
     {   
         try{

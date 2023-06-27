@@ -38,7 +38,7 @@
                                 <div class="info-box-content">
                                 <span class="info-box-text">Ticket Open</span>
                                 <span class="info-box-number" name="today-in">
-                                    10
+                                    0
                                 </span>
                                 </div>
                                 <!-- /.info-box-content -->
@@ -52,7 +52,7 @@
                                 <div class="info-box-content">
                                 <span class="info-box-text">Ticket Closed</span>
                                 <span class="info-box-number" name="today-out">
-                                    10
+                                    0
                                 </span>
                                 </div>
                                 <!-- /.info-box-content -->
@@ -66,7 +66,7 @@
                                 <div class="info-box-content">
                                 <span class="info-box-text">Ticket Progress</span>
                                 <span class="info-box-number" name="today-progress">
-                                    10
+                                    0
                                 </span>
                                 </div>
                                 <!-- /.info-box-content -->

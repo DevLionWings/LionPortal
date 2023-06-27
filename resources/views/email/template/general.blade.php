@@ -35,8 +35,31 @@ Helpdesk Ticket
 @endsection
 
 @section('content')
-<p style="font-weight: bold;">Halo, {{ $mailData['username'] }}</p>
-<p>Hi, here is the detail your ticket: </p>
+
+@if($mailData['statusid'] == 'SD006')
+    <p style="font-weight: bold;">Halo, {{ $mailData['username'] }}</p>
+    <p>Hi, your ticket has been created, here is the detail : </p>
+@endif
+
+@if($mailData['statusid'] == 'SD001')
+    <p style="font-weight: bold;">Halo, {{ $mailData['assigned_to'] }}</p>
+    <p>Hi, this ticket need your approval, please open helpdesk website : </p>
+@endif
+
+@if($mailData['statusid'] == 'SD002')
+    <p style="font-weight: bold;">Halo, {{ $mailData['assigned_to'] }}</p>
+    <p>Hi, this ticket has been assigned to you, here is the detail :</p>
+@endif
+
+@if($mailData['statusid'] == 'SD003')
+    <p style="font-weight: bold;">Halo, {{ $mailData['username'] }}</p>
+    <p>Hi, this ticket has been closed, here is the detail : </p>
+@endif
+
+@if($mailData['statusid'] == 'SD005')
+    <p style="font-weight: bold;">Halo, {{ $mailData['username'] }}</p>
+    <p>Hi, this ticket has been rejected, here is the detail : </p>
+@endif
 
 <table style="margin-bottom: 5px;">
     <tbody>
@@ -46,11 +69,11 @@ Helpdesk Ticket
         </tr>
         <tr>
             <td>Category</td>
-            <td>: {{ $mailData['category'] }}</td>
+            <td>: {{ $mailData['categoryname'] }}</td>
         </tr>
         <tr>
             <td>Priority</td>
-            <td>: {{ $mailData['priority'] }}</td>
+            <td>: {{ $mailData['priorityname'] }}</td>
         </tr>
         <tr>
             <td>Subject</td>

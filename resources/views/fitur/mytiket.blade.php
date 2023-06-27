@@ -32,7 +32,7 @@
                 <div class="col-12">
                     <!-- Default box -->
                     <div class="card">
-                        <div class="card-header">
+                        <!-- <div class="card-header">
                             <div class="float-sm-right">
                                 <button type="button" class="btn btn-success" data-toggle="modal"
                                     data-target="#modal-add-ticket">+ New Ticket</button>
@@ -110,7 +110,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                        
                         <div class="card-body">
                             @if(session('success'))

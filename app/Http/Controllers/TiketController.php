@@ -36,11 +36,14 @@ class TiketController extends Controller
         $tick = '';
         $disc = '';
 
+        $dataUsr = $this->repository->GETUSERBYROLE();
+        $json = json_decode($dataUsr, true);
+        
         $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $request->ticketno)->get();
-        $json = json_decode($dataCommnt, true);
+        $jsonCmmnt = json_decode($dataCommnt, true);
 
         /* Get Comment */
-        $comment = $json;
+        $comment = $jsonCmmnt;
         $commentArray = [];
         foreach ($comment as $key => $value) {
             array_push($commentArray, [
@@ -52,9 +55,6 @@ class TiketController extends Controller
 
         $data['disc'] = $commentArray; 
         /* End */
-
-        $dataUsr = $this->repository->GETUSERBYROLE();
-        $json = json_decode($dataUsr, true);
 
         if($json["rc"] == "00") {
             /* Get User for User Requestor */
@@ -409,6 +409,7 @@ class TiketController extends Controller
         $userreq = $request->user;
         $category = $request->category;
         $priority = $request->priority;
+        $priorityName = $request->priorityname;
         $subject = $request->subject;
         $remark = $request->detail;
         $assignto = $request->assignto;
@@ -486,6 +487,8 @@ class TiketController extends Controller
         /* Validasi Category Incident */
         $dataCategory = DB::connection('pgsql')->table('master_data.m_category')->where('categoryid', $category)->get();
         $flaggingCat =  $dataCategory[0]->approval;
+        $cateName =  $dataCategory[0]->description;
+        $cateId =  $dataCategory[0]->categoryid;
         if ($flaggingCat == 'X' ){
             if ($roleid == 'RD002'){
                 $status = 'OPEN';
@@ -527,6 +530,13 @@ class TiketController extends Controller
             $emailReq = 'blank@lionwings.com';
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
+        } else if ($cateId == "CD001"){
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
+            $emailSign = $dataEmail[0]->usermail;
+            $assignNameSign = $dataEmail[0]->username;
+            $emailReq = 'blank@lionwings.com';
+            $emailApprove1 = 'blank@lionwings.com';
+            $auth = true;
         } else {
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
             $emailSign = $dataEmail[0]->usermail;
@@ -544,7 +554,8 @@ class TiketController extends Controller
             /* Update Counter Prefix */
             $updateCounter = $this->repository->UPDATECOUNTER($last);
             /* Send Email */
-            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
+            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
+            
         }
     
         return redirect()->route('tiket')->with("success", "successfully");
@@ -573,10 +584,12 @@ class TiketController extends Controller
         $json = json_decode($dataTicketapprove, true);
         $requestor = $json['data'][0]['userid'];
         $approve1 = $json['data'][0]['approvedby_1'];
-        $category = $json['data'][0]['category'];
-        $priority = $json['data'][0]['priority'];
+        $category = $json['data'][0]['categoryid'];
+        $cateName= $json['data'][0]['category'];
+        $priority = $json['data'][0]['priorid'];
+        $priorityName = $json['data'][0]['priority'];
         $subject = $json['data'][0]['subject'];
-        $status = $json['data'][0]['status'];
+        // $status = $json['data'][0]['status'];
         $remark = $json['data'][0]['detail'];
         
         /* Get User Email */ 
@@ -591,9 +604,9 @@ class TiketController extends Controller
             $emailReq = $dataEmailReq[0]->usermail;
             $assignNameReq = $dataEmailReq[0]->username;
             $emailApprove1 = 'blank@lionwings.com';
-        } else {
+        } else if($category == 'CD001 '){
             /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
+            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
             $emailSign = $dataEmailSign[0]->usermail;
             $assignNameSign = $dataEmailSign[0]->username;
             /* Get Email Requestor */
@@ -601,15 +614,28 @@ class TiketController extends Controller
             $emailReq = $dataEmailReq[0]->usermail;
             $assignNameReq = $dataEmailReq[0]->username;
             /* Get Email Approve 1 */
-            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
+            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
             $emailApprove1 = $dataEmailApprove1[0]->usermail;
             $assignNameApprove1 = $dataEmailApprove1[0]->username;
+        } else {
+            /* Get Email Signto */
+            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
+            $emailSign = $dataEmailSign[0]->usermail;
+            $assignNameSign = $dataEmailSign[0]->username;
+            /* Get Email Requestor */
+            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
+            $emailReq = $dataEmailReq[0]->usermail;
+            $assignNameReq = $dataEmailReq[0]->username;
+             /* Get Email Approve 1 */
+             $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
+             $emailApprove1 = $dataEmailApprove1[0]->usermail;
+             $assignNameApprove1 = $dataEmailApprove1[0]->username;
         }
         
         /* Update Ticket */
         $updateTicket = $this->repository->UPDATETICKET($userid, $ticketno, $assignto, $approvedby1, $approveby_it, $rejectedby, $statusid, $approveby_1_date, $approveby_it_date, $roleid);
         /* Send Mail */
-        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $priority, $subject, $remark, $status, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
+        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
       
         return redirect()->route('tiket')->with("success", "successfully");;
     }

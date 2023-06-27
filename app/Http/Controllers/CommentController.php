@@ -16,6 +16,8 @@ class CommentController extends Controller
 
     public function addComment(Request $request)
     {   
+        $ticketno = $request->ticketno;
+
         /* Generate Ticket Number */ 
         $year = date("Y");
         $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT002')->where('period', $year)->get();
@@ -27,7 +29,7 @@ class CommentController extends Controller
         /* Session Data */
         $session = array(
             'last_number' => $last,
-            'ticketno' => $request->ticketno,
+            'ticketno' => $ticketno,
         );
         /* Set User Session */
         Session::put('last_number', $last);
@@ -53,9 +55,22 @@ class CommentController extends Controller
             'createdon' =>  date('Y-m-d H:i:s'),
         ]);
         DB::commit();
-        
-        $data = json_encode($insert);
+        if(!empty($insert)){
+            return response()->json([
+                'rc' => '00',
+                'desc' => 'success',
+                'msg' => 'success',
+                'data' => $insert
+            ]);
+        } else {
+            return response()->json([
+                'rc' => '01',
+                'desc' => 'failed',
+                'msg' => 'failed',
+                'data' => $insert
+            ]);
+        }
 
-        return view('fitur.tiket');
+        return redirect()->route('tiket')->with("success", "successfully");
     }
 }

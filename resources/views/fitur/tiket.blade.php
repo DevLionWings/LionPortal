@@ -202,6 +202,7 @@
                                     <option value="{{ $priorcode['ID'] }}">{{ $priorcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
+                                <input type="hidden" id="priorityname" name="priorityname" value="{ $priorcode['NAME'] }}">
                             </div>
                         </div>
                         @if(session('roleid') == 'RD006')
@@ -309,16 +310,16 @@
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
                             <input type="text" name="created" class="form-control" id="created" readonly>
                         </div>
-                        @if(session('userid') == session('userid') || session('userid') == session('assignto') || session('userid') == session('approvedby_1') || session('userid') == session('approvedby_it'))
+                      
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
                         <h4 class="modal-title">Display Comment :</h4>
-                            @foreach($disc as $discuscode)
-                                <div class="display-comment">
-                                    <strong>{{ $discuscode['SENDER'] }}</strong>
-                                    <p>{{ $discuscode['COMMENT'] }}</p>
-                                </div>
-                            @endforeach
+                        @foreach($disc as $discuscode)
+                            <div class="display-comment">
+                                <strong>{{ $discuscode['SENDER'] }}</strong>
+                                <p>{{ $discuscode['COMMENT'] }}</p>
+                            </div>
+                        @endforeach
                         <hr />
                         <div class="form-group">
                             <label class="form-check-label" for="comment_body" disabled>Comment</label>
@@ -327,7 +328,7 @@
                         <div class="form-group">
                             <input type="submit" class="btn btn-warning" value="Add Comment" />
                         </div>
-                        @endif
+                        
                     </div>
                     <!-- <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -374,6 +375,11 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="IN PROGRESS">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
                                 <input id="approvedbyit_date" name="approvedbyit_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
                             </div>
                         </div>
@@ -387,6 +393,11 @@
                         <div class="form-group">
                             <div class="input-group value">
                                 <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD001">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="WAITING APPROVAL IT">
                             </div>
                         </div>
                         <div class="form-group">
@@ -413,6 +424,11 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="IN PROGRESS">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
                                 <input id="approvedbyit" name="approvedbyit" class="form-control input--style-6" type="hidden" value="{{ session('mgrid') }}">
                             </div>
                         </div>
@@ -430,7 +446,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Yes</button>
+                        <button type="submit" class="btn btn-danger" onClick="this.disabled=true; this.value='Sending…';">Yes</button>
                     </div>
                 </form>
             </div>
@@ -468,10 +484,15 @@
                                 <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD005">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="REJECTED">
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Yes</button>
+                        <button type="submit" class="btn btn-danger" onClick="this.disabled=true; this.value='Sending…';">Yes</button>
                     </div>
                 </form>
             </div>
@@ -517,7 +538,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Yes</button>
+                        <button type="submit" class="btn btn-danger" onClick="this.disabled=true; this.value='Sending…';">Yes</button>
                     </div>
                 </form>
             </div>
