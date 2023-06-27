@@ -482,7 +482,7 @@ class TiketController extends Controller
             $approvedby_it = '';
             $auth = true;
         } else {
-            $assign = $mgrIt;
+            $assign = $mgrid;
             $approvedby_1 = '';
             $approvedby_it = '';
             $auth = true;
@@ -595,18 +595,7 @@ class TiketController extends Controller
         $remark = $json['data'][0]['detail'];
         
         /* Get User Email */ 
-        if($roleid == 'RD002'){
-            /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
-            $emailSign = $dataEmailSign[0]->usermail;
-            $assignNameSign = $dataEmailSign[0]->username;
-            $emailApprove1 = 'blank@lionwings.com';
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            $emailApprove1 = 'blank@lionwings.com';
-        } else if($category == 'CD001 '){
+        if($category == 'CD001 '){//ketika kategori incindent
             /* Get Email Signto */
             $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
             $emailSign = $dataEmailSign[0]->usermail;
@@ -619,9 +608,33 @@ class TiketController extends Controller
             $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
             $emailApprove1 = $dataEmailApprove1[0]->usermail;
             $assignNameApprove1 = $dataEmailApprove1[0]->username;
-        } else {
+        } else if($roleid == 'RD002'){ //ketika kategori incindent
             /* Get Email Signto */
             $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
+            $emailSign = $dataEmailSign[0]->usermail;
+            $assignNameSign = $dataEmailSign[0]->username;
+            $emailApprove1 = 'blank@lionwings.com';
+            /* Get Email Requestor */
+            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
+            $emailReq = $dataEmailReq[0]->usermail;
+            $assignNameReq = $dataEmailReq[0]->username;
+            $emailApprove1 = 'blank@lionwings.com';
+        } else if($roleid == 'RD006'){ 
+            /* Get Email Signto */
+            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
+            $emailSign = $dataEmailSign[0]->usermail;
+            $assignNameSign = $dataEmailSign[0]->username;
+            /* Get Email Requestor */
+            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
+            $emailReq = $dataEmailReq[0]->usermail;
+            $assignNameReq = $dataEmailReq[0]->username;
+            /* Get Email Approve 1 */
+            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
+            $emailApprove1 = $dataEmailApprove1[0]->usermail;
+            $assignNameApprove1 = $dataEmailApprove1[0]->username;
+        } else {
+            /* Get Email Signto */
+            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
             $emailSign = $dataEmailSign[0]->usermail;
             $assignNameSign = $dataEmailSign[0]->username;
             /* Get Email Requestor */
@@ -638,8 +651,7 @@ class TiketController extends Controller
         $updateTicket = $this->repository->UPDATETICKET($userid, $ticketno, $assignto, $approvedby1, $approveby_it, $rejectedby, $statusid, $approveby_1_date, $approveby_it_date, $roleid);
         /* Send Mail */
         $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
-      
-        return redirect()->route('tiket')->with("success", "successfully");;
+        return redirect()->route('tiket')->with("success", "successfully");
     }
 
     public function downloadFile(Request $request)
