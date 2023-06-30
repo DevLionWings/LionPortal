@@ -51,13 +51,15 @@ Route::post('/add/comment', [CommentController::class,'addComment'])->name('comm
 Route::post('/get/comment', [CommentController::class,'listComment'])->name('get-comment');
 
 /* Upload */
-Route::get('/download', [TiketController::class,'downloadFile'])->name('download.file');
+Route::post('/download', [TiketController::class,'downloadFile'])->name('download.file');
 
 /* Email */ 
 Route::get('send-mail', [MailController::class, 'index'])->name('email');
 
 /* Chart-Today */ 
 Route::get('get/stattoday', [ChartController::class, 'getStatToday'])->name('get.stat');
+Route::get('get/month', [ChartController::class, 'getDataTicketingMonth'])->name('get.month');
+Route::get('get/year', [ChartController::class, 'getDataTicketingYear'])->name('get.year');
 
 /* Menu HRIS -> Attendance Payroll */
 Route::get('/absensipayroll', [AbsensipayrollController::class,'absenpayroll'])->name('absensipayroll');

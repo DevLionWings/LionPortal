@@ -32,7 +32,7 @@ class SendMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Lion Wings',
+            subject: 'Lion Wings - Helpdesk Ticket : '.  $this->mailData['ticketno'],
         );
     }
 

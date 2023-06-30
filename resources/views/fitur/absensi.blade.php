@@ -108,13 +108,13 @@
 <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
 <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> -->
 <!-- <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
@@ -160,10 +160,10 @@
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                searching: false,
-                dom: 'Bfrtip',
+                searching: true,
+                dom: 'Blfrtip',
                 buttons: [
-                    'Excel'
+                    'excel'
                 ],
                 ajax: {
                     url: '{{ route("get-absensi") }}',
@@ -252,7 +252,7 @@
             searching: true,
             dom: 'Blfrtip',
             buttons: [
-                'csv', 'excel'
+                'excel'
             ],
             ajax: {
                 "url": '{{ route("get-absensi") }}',

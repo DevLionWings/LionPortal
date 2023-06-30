@@ -290,7 +290,7 @@
                         <div class="form-group">
                             <label class="form-check-label" for="upload" disabled>Attachment :</label>
                             <!-- <a href="/download" id="upload" name="upload" class="btn btn-large pull-right"><i class="icon-download-alt"> -->
-                            <input type="text" id="upload" name="upload" class="form-control" readonly><a href="{{ url('/download') }}" id="upload" name="upload" >donwload</a>
+                            <input type="text" id="upload" name="upload" class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="approve" disabled>Approve By :</label>

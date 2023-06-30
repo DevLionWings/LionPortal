@@ -11,8 +11,6 @@ use App\Models\User;
 use App\Helpers\Response;
 use App\Helpers\Repository;
 
-
-
 class LoginController extends Controller
 {
     protected $response;

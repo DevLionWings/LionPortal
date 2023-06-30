@@ -1,6 +1,7 @@
 @extends('parent.master')
 @section('extend-css')
 <link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('image-upload/image-uploader.min.css') }}">
@@ -35,7 +36,7 @@
                         <div class="card-header">
                             <div class="float-sm-right">
                                 <button type="button" class="btn btn-success" data-toggle="modal"
-                                    data-target="#modal-add-ticket">+ New Ticket</button>
+                                    data-target="#modal-add-ticket"><i class="fa fa-plus" aria-hidden="true"></i> New Ticket</button>
                             </div>
                             <div class="row align-items-end">
                                 <div class="col-md-2">
@@ -106,7 +107,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" >Search</button>
+                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-success" ><i class="fas fa-search"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -294,9 +295,9 @@
                             <input type="text" name="status" class="label-success" id="status" readonly>
                         </div>
                         <div class="form-group">
-                            <label class="form-check-label" for="upload" disabled>Attachment :</label>
+                            <label class="form-check-label" for="ticketno" disabled>Attachment :</label>
                             <!-- <a href="/download" id="upload" name="upload" class="btn btn-large pull-right"><i class="icon-download-alt"> -->
-                            <input type="text" id="upload" name="upload" class="form-control" readonly><a href="{{ url('/download') }}" id="upload" name="upload" >donwload</a>
+                            <input type="text" id="ticketno" name="ticketno" class="form-control" readonly>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="approve" disabled>Approve By :</label>
@@ -562,6 +563,7 @@
 <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 @if(session('file_url'))
     <script>
@@ -665,33 +667,15 @@
             $form.find('input[name="upload"]').val(upload);
             $form.find('input[name="comment"]').val();
             $modal.modal('show');
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: "POST",
-                url: "/get/comment",
-                data: {
-                    'ticketno' : ticketno,
-                },
-                success: function(resp) {
-                    json = JSON.parse(resp)
-                    // console.log(json['data']['file']);
-                    console.log(json);
-                    arr_values = [];
-                    $('#datacontainer').DataTable().ajax.reload();
-                    window.location = "{{ env('SERVICE') }}cetak-invoice?file_loc="+json['data']['file']; 
-                },
-            });
         });
 
-        // $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
-        //     var $inputs = $('#modal-view-user form[name="view-user"] :input');
-        //     var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
-        //     if ($form_valid.length === 0) {
-        //         $('#modal-view-user form[name="view-user"]').submit();
-        //     }
-        // });
+        $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
+            var $inputs = $('#modal-view-user form[name="view-user"] :input');
+            var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
+            if ($form_valid.length === 0) {
+                $('#modal-view-user form[name="view-user"]').submit();
+            }
+        });
 
         $(document).on('click', '.update', function () {
             $('#update-ticketno').val($(this).attr("data-ticketno"));
@@ -754,6 +738,10 @@
                 serverSide: true,
                 responsive: true,
                 searching: true,
+                dom: 'Blfrtip',
+                buttons: [
+                    'excel'
+                ],
                 ajax: {
                     url: "{{ route('filter-tiket') }}",
                     "data": function (d) {
@@ -858,6 +846,10 @@
             serverSide: true,
             responsive: true,
             searching: true,
+            dom: 'Blfrtip',
+            buttons: [
+                'excel'
+            ],
             ajax: "{{ route('get-tiket') }}",
             order: [[ 0, "desc" ]],
             columns: [
