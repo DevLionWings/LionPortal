@@ -135,7 +135,7 @@
                                 <thead>
                                     <tr>
                                         <th>Tiket No</th>
-                                        <!-- <th>Category</th> -->
+                                        <th>Category</th>
                                         <th>Status</th>
                                         <th>Subject</th>
                                         <th>Requestor</th>
@@ -709,19 +709,19 @@
                         data: 'ticketno',
                         name: 'ticketno'
                     },
-                    // {
-                    //     data: 'category',
-                    //     render: function(data) {
-                    //         if(data == 'INCIDENT'){
-                    //             statusText = `<button class="btn btn-dark">INCIDENT</span>`;
-                    //         } else if (data == 'CHANGE REQUEST'){
-                    //             statusText = `<button class="btn btn-warning">CHANGE REQUEST</span>`;
-                    //         } else {
-                    //             statusText = `<button class="btn btn-info">NEW USER</span>`;
-                    //         }
-                    //         return statusText;
-                    //     }
-                    // },
+                    {
+                        data: 'category',
+                        render: function(data) {
+                            if(data == 'INCIDENT'){
+                                statusText = `<button class="btn btn-dark">INCIDENT</span>`;
+                            } else if (data == 'CHANGE REQUEST'){
+                                statusText = `<button class="btn btn-warning">CHANGE REQUEST</span>`;
+                            } else {
+                                statusText = `<button class="btn btn-info">NEW USER</span>`;
+                            }
+                            return statusText;
+                        }
+                    },
                     {
                         data: 'status',
                         render: function (data){
@@ -776,8 +776,8 @@
                 ],
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
-                    "sProcessing": "Memproses...",
-                    "sSearch": "Cari data:",
+                    "sProcessing": "Loading...",
+                    "sSearch": "Search by Keyword:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
                 },
                 drawCallback: function() {
@@ -799,28 +799,30 @@
                     data: 'ticketno',
                     name: 'ticketno'
                 },
-                // {
-                //     data: 'category',
-                //     render: function(data) {
-                //         if(data == 'INCIDENT'){
-                //             statusText = `<button class="btn btn-dark">INCIDENT</span>`;
-                //         } else if (data == 'CHANGE REQUEST'){
-                //             statusText = `<button class="btn btn-warning">CHANGE REQUEST</span>`;
-                //         } else {
-                //             statusText = `<button class="btn btn-info">NEW USER</span>`;
-                //         }
-                //         return statusText;
-                //     }
-                // },
+                {
+                    data: 'category',
+                    render: function(data) {
+                        if(data == 'INCIDENT'){
+                            statusText = `<span class="badge badge-danger">INCIDENT</span>`;
+                        } else if (data == 'CHANGE REQUEST'){
+                            statusText = `<span class="badge badge-warning">CHANGE REQUEST</span>`;
+                        } else {
+                            statusText = `<span class="badge badge-info">NEW USER</span>`;
+                        }
+                        return statusText;
+                    }
+                },
                 {
                     data: 'status',
                     render: function (data){
                         if(data == "CLOSED"){
-                            statusText = `<button class="btn btn-danger">Closed</button>`;
+                            statusText = `<span class="badge badge-danger">Closed</span>`;
                         } else if(data == "IN PROGRESS"){
-                            statusText = `<button class="btn btn-success">In Progress</button>`;
+                            statusText = `<span class="badge badge-success">In Progress</span>`;
+                        } else if(data == "WAITING FOR APPROVAL"){
+                            statusText = `<span class="badge badge-warning">Waiting Approval</span>`;
                         } else {
-                            statusText = `<button class="btn btn-primary">Open</button>`;
+                            statusText = `<span class="badge badge-primary">Open</span>`;
                         }
                         return statusText;
                     }
@@ -866,8 +868,8 @@
             ],
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
-				"sProcessing": "Memproses...",
-				"sSearch": "Cari data:",
+				"sProcessing": "Loading...",
+				"sSearch": "Search by Keyword:",
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });

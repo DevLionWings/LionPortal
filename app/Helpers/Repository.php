@@ -692,4 +692,31 @@ class Repository
         }
 
     }
+
+    public static function CLOSEDTICKET($ticketno, $assignto, $statusid, $remark){
+        $closed = DB::connection('pgsql')->table('helpdesk.t_ticket')
+            ->where('ticketno', $ticketno)
+            ->update([
+                'assignedto' => $assignto,
+                'statusid' => $statusid,
+                'remark' => $remark,
+            ]);
+       
+        DB::commit();
+        if(!empty($closed)){
+            return response()->json([
+                'rc' => '00',
+                'desc' => 'success',
+                'msg' => 'success',
+                'data' => $closed
+            ]);
+        } else {
+            return response()->json([
+                'rc' => '01',
+                'desc' => 'failed',
+                'msg' => 'failed',
+                'data' => $closed
+            ]);
+        }
+    }
 }

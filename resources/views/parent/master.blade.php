@@ -116,7 +116,7 @@
 
         var isIdle = false;
 
-        function timerIncrement($username) {
+        function timerIncrement($userid) {
             idleTime = idleTime + 1;
             if (idleTime > 15 && !isIdle) { // 15 minutes
                 isIdle = true;
@@ -124,7 +124,7 @@
                 var url = "{{ route('login') }}";
                 $.ajax({
                     type: "POST",
-                    url:  "{{ route('login') }}",
+                    url:  "{{ route('logout') }}",
                     data: { 
                         '_token': "{{csrf_token()}}",
                     },

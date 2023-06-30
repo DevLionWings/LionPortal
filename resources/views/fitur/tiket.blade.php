@@ -136,7 +136,7 @@
                                 <thead>
                                     <tr>
                                         <th>Tiket No</th>
-                                        <!-- <th>Category</th> -->
+                                        <th>Category</th>
                                         <th>Status</th>
                                         <th>Subject</th>
                                         <th>Requestor</th>
@@ -255,9 +255,10 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('comment-add') }}" method="post" name="view-user">
+                <form action="{{ route('tiket') }}" name="view-user">
                     @csrf
                     <div class="modal-body">
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
                         <!-- <div class="form-group">
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
                             <input type="text" name="id" class="form-control" readonly>
@@ -315,6 +316,7 @@
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
                         <h4 class="modal-title">Display Comment :</h4>
+                        <h4 class="modal-title">-</h4>
                         @foreach($disc as $discuscode)
                             <div class="display-comment">
                                 <strong>{{ $discuscode['SENDER'] }}</strong>
@@ -327,7 +329,7 @@
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
                         </div>
                         <div class="form-group">
-                            <input type="submit" class="btn btn-warning" value="Add Comment" />
+                            <button type="button" id="btncomment" class="btn btn-warning">Save</button>
                         </div>
                         
                     </div>
@@ -510,7 +512,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{route('update-tiket')}}" method="post" name='closed'>
+                <form action="{{route('close-tiket')}}" method="post" name='closed'>
                     @csrf
                     <input type="hidden" id="closed-ticketno" name="ticketno"/>
                     <input type="hidden" id="closed-userid" name="userid"/>
@@ -521,6 +523,11 @@
                     <input type="hidden" id="closed-approveby_it_date" name="approveby_it_date"/>
                     <div class="modal-body">
                         <p>Are You Sure ? <span class="text-bold"></span></p>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="remark" name="remark" class="form-control input--style-6" type="text" value="Ticket Closed">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="input-group value">
                                 <input id="assignto" name="assignto" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
@@ -647,6 +654,7 @@
             var created  = $(this).attr('data-created');
             var approve  = $(this).attr('data-approve1name');
             var approveit  = $(this).attr('data-approveitname');
+            var comment_body = $('input[name="comment_body"]').val();
             var upload  = $(this).attr('data-upload');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view-user"]');
@@ -664,6 +672,7 @@
             $form.find('input[name="created"]').val(created);
             $form.find('input[name="approve"]').val(approve);
             $form.find('input[name="approveit"]').val(approveit);
+            $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="upload"]').val(upload);
             $form.find('input[name="comment"]').val();
             $modal.modal('show');
@@ -676,6 +685,27 @@
                 $('#modal-view-user form[name="view-user"]').submit();
             }
         });
+
+        $('#btncomment').on('click', function () {
+            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            var comment_body = $('#modal-view-user form[name="view-user"] textarea[name="comment_body"]').val();
+         
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/add/comment",
+                type: 'POST',
+                data: {
+                    'ticketno' : ticketno, 
+                    'comment_body' : comment_body,
+                },
+                success: function(response){ 
+                        window.location.reload(response);
+                        
+                }
+            });
+        })
 
         $(document).on('click', '.update', function () {
             $('#update-ticketno').val($(this).attr("data-ticketno"));
@@ -725,11 +755,6 @@
             var assignto = $('select[name="assignto"] option:selected').val();
             var status = $('select[name="status"] option:selected').val();
             var ticketno = $('select[name="ticketno"] option:selected').val();
-            console.log(daterange);
-            console.log(status);
-            console.log(ticketno);
-            console.log(requestor);
-            console.log(assignto);
            
             $('#tiket_list').DataTable().clear().destroy();
             var $dataticket = $('#tiket_list').DataTable({
@@ -763,28 +788,30 @@
                         data: 'ticketno',
                         name: 'ticketno'
                     },
-                    // {
-                    //     data: 'category',
-                    //     render: function(data) {
-                    //         if(data == 'INCIDENT'){
-                    //             statusText = `<button class="btn btn-dark">INCIDENT</span>`;
-                    //         } else if (data == 'CHANGE REQUEST'){
-                    //             statusText = `<button class="btn btn-warning">CHANGE REQUEST</span>`;
-                    //         } else {
-                    //             statusText = `<button class="btn btn-info">NEW USER</span>`;
-                    //         }
-                    //         return statusText;
-                    //     }
-                    // },
+                    {
+                        data: 'category',
+                        render: function(data) {
+                            if(data == 'INCIDENT'){
+                                statusText = `<span class="badge badge-danger">INCIDENT</span>`;
+                            } else if (data == 'CHANGE REQUEST'){
+                                statusText = `<span class="badge badge-warning">CHANGE REQUEST</span>`;
+                            } else {
+                                statusText = `<span class="badge badge-info">NEW USER</span>`;
+                            }
+                            return statusText;
+                        }
+                    },
                     {
                         data: 'status',
                         render: function (data){
                             if(data == "CLOSED"){
-                                statusText = `<button class="btn btn-danger">Closed</button>`;
+                                statusText = `<span class="badge badge-danger">Closed</span>`;
                             } else if(data == "IN PROGRESS"){
-                                statusText = `<button class="btn btn-success">In Progress</button>`;
+                                statusText = `<span class="badge badge-success">In Progress</span>`;
+                            } else if(data == "WAITING FOR APPROVAL"){
+                                statusText = `<span class="badge badge-warning">Waiting Approval</span>`;
                             } else {
-                                statusText = `<button class="btn btn-primary">Open</button>`;
+                                statusText = `<span class="badge badge-primary">Open</span>`;
                             }
                             return statusText;
                         }
@@ -830,8 +857,8 @@
                 ],
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
-                    "sProcessing": "Memproses...",
-                    "sSearch": "Cari data:",
+                    "sProcessing": "Loading...",
+                    "sSearch": "Search by Keyword:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
                 },
                 drawCallback: function() {
@@ -857,30 +884,30 @@
                     data: 'ticketno',
                     name: 'ticketno'
                 },
-                // {
-                //     data: 'category',
-                //     render: function(data) {
-                //         if(data == 'INCIDENT'){
-                //             statusText = `<button class="btn btn-dark">INCIDENT</span>`;
-                //         } else if (data == 'CHANGE REQUEST'){
-                //             statusText = `<button class="btn btn-warning">CHANGE REQUEST</span>`;
-                //         } else {
-                //             statusText = `<button class="btn btn-info">NEW USER</span>`;
-                //         }
-                //         return statusText;
-                //     }
-                // },
+                {
+                    data: 'category',
+                    render: function(data) {
+                        if(data == 'INCIDENT'){
+                            statusText = `<span class="badge badge-danger">INCIDENT</span>`;
+                        } else if (data == 'CHANGE REQUEST'){
+                            statusText = `<span class="badge badge-warning">CHANGE REQUEST</span>`;
+                        } else {
+                            statusText = `<span class="badge badge-info">NEW USER</span>`;
+                        }
+                        return statusText;
+                    }
+                },
                 {
                     data: 'status',
                     render: function (data){
                         if(data == "CLOSED"){
-                            statusText = `<button class="btn btn-danger">Closed</button>`;
+                            statusText = `<span class="badge badge-danger">Closed</span>`;
                         } else if(data == "IN PROGRESS"){
-                            statusText = `<button class="btn btn-success">In Progress</button>`;
+                            statusText = `<span class="badge badge-success">In Progress</span>`;
                         } else if(data == "WAITING FOR APPROVAL"){
-                            statusText = `<button class="btn btn-secondary">Waiting Approval</button>`;
+                            statusText = `<span class="badge badge-warning">Waiting Approval</span>`;
                         } else {
-                            statusText = `<button class="btn btn-primary">Open</button>`;
+                            statusText = `<span class="badge badge-primary">Open</span>`;
                         }
                         return statusText;
                     }
@@ -926,8 +953,8 @@
             ],
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
-				"sProcessing": "Memproses...",
-				"sSearch": "Cari data:",
+				"sProcessing": "Loading...",
+				"sSearch": "Search by Keyword:",
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });
