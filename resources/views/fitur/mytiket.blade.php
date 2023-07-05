@@ -203,6 +203,11 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="WAITING APPROVAL IT">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
                                 <input id="approvedby1_date" name="approvedby1_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
                             </div>
                         </div>
