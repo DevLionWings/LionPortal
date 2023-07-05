@@ -49,10 +49,7 @@ class AbsensiController extends Controller
         return DataTables::of($data)
             ->setTotalRecords($json["total"])
             ->setFilteredRecords($json["total"])
-            // ->skipPaging()
             ->make(true);
-
-        // return view('fitur.absensi', $data);
     }
 
 }

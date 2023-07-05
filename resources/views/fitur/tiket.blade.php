@@ -245,7 +245,6 @@
             <!-- /.modal-content -->
         </div>
     </div>
-    <!-- /.content -->
     <div id="modal-view-user" class="modal fade show" aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -339,10 +338,8 @@
                     </div> -->
                 </form>
             </div>
-            <!-- /.modal-content -->
         </div>
     </div>
-    <!-- /.content -->
     <div id="modal-update-user"  class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -546,7 +543,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Yes</button>
+                        <button type="submit" class="btn btn-danger" >Yes</button>
                     </div>
                 </form>
             </div>
@@ -846,7 +843,7 @@
                             minutes = minutes;
                             seconds = seconds;
                             // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
+                            var date = day + "/" + month + "/" + year;
                             return date;   
                         }
                     },
@@ -942,7 +939,7 @@
                         minutes = minutes;
                         seconds = seconds;
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
+                        var date = day + "/" + month + "/" + year;
                         return date;   
                     }
                 },

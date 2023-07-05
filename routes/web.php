@@ -64,3 +64,4 @@ Route::get('get/year', [ChartController::class, 'getDataTicketingYear'])->name('
 
 /* Menu HRIS -> Attendance Payroll */
 Route::get('/absensipayroll', [AbsensipayrollController::class,'absenpayroll'])->name('absensipayroll');
+Route::get('/get/absensipayroll', [AbsensipayrollController::class,'getAbsenPerkas'])->name('get-absensipayroll');

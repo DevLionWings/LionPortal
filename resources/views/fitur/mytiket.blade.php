@@ -32,86 +32,6 @@
                 <div class="col-12">
                     <!-- Default box -->
                     <div class="card">
-                        <!-- <div class="card-header">
-                            <div class="float-sm-right">
-                                <button type="button" class="btn btn-success" data-toggle="modal"
-                                    data-target="#modal-add-ticket">+ New Ticket</button>
-                            </div>
-                            <div class="row align-items-end">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label>Requestor :</label>
-                                        <div class="input-group value">
-                                            <select id="requestor" name="requestor" class="form-control input--style-6" required>
-                                            <option value="10"> all</option>
-                                                @foreach($usreq as $usreqcode)
-                                                <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <div class="form-group">
-                                        <label>Ticket No :</label>
-                                        <div class="input-group value">
-                                            <select id="ticketno" name="ticketno" class="form-control input--style-6" required>
-                                            <option value="HLP"> all</option>
-                                                @foreach($tick as $tickcode)
-                                                <option value="{{ $tickcode['ID'] }}">{{ $tickcode['NAME'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label>Assign To :</label>
-                                        <div class="input-group value">
-                                            <select id="assignto" name="assignto" class="form-control input--style-6" required>
-                                                <option value="10"> all</option>
-                                                @foreach($assn as $assncode)
-                                                <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <div class="form-group">
-                                        <label>Status :</label>
-                                        <div class="input-group value">
-                                            <select id="status" name="status" class="form-control input--style-6" required>
-                                                <option value="SD00"> all</option>
-                                                @foreach($stat as $statcode)
-                                                <option value="{{ $statcode['ID'] }}">{{ $statcode['NAME'] }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Date Range:</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="far fa-calendar-alt"></i>
-                                                </span>
-                                            </div>
-                                            <input type="text" class="form-control float-right datepicker"
-                                                name="data_date_range">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-1">
-                                    <div class="form-group">
-                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" >Search</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                       
                         <div class="card-body">
                             @if(session('success'))
                                 <div class="alert alert-success alert-dismissible alert-message" >
@@ -153,91 +73,6 @@
             </div>
         </div>
     </section>
-    <!-- <div id="modal-add-ticket" class="modal fade show" aria-modal="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="{{ route('add-tiket') }}" method="post" enctype="multipart/form-data" name="ticket">
-                    @csrf
-                    <input type="hidden" id="ticketno" name="ticketno">
-                    <input type="hidden" id="statusid" name="statusid">
-                    <input type="hidden" id="status" name="status">
-                    <input type="hidden" id="roleid" name="roleid">
-                    <div class="modal-body">
-                        @if(session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD006')
-                        <div class="form-group">
-                            <div class="name">User Request :</div>
-                            <div class="input-group value">
-                                <select id="user" name="user" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($usreq as $usreqcode)
-                                    <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        @endif
-                        <div class="form-group">
-                            <div class="name">Category :</div>
-                            <div class="input-group value">
-                                <select id="category" name="category" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($categ as $categcode)
-                                    <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="name">Priority :</div>
-                            <div class="input-group value">
-                                <select id="priority" name="priority" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($prior as $priorcode)
-                                    <option value="{{ $priorcode['ID'] }}">{{ $priorcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        @if(session('roleid') == 'RD006')
-                        <div class="form-group">
-                            <div class="name">Assigned To :</div>
-                            <div class="input-group value">
-                                <select id="assignto" name="assignto" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($assn as $assncode)
-                                    <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        @endif
-                        <div class="form-group">
-                            <label class="form-check-label" for="group">Subject</label>
-                            <input type="text" name="subject" class="form-control" id="subject" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="detail">Detail Issue</label>
-                            <textarea type="text" name="detail" class="form-control" id="detail" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-check-label" for="files">File:</label>
-                            <input type="file" name="files" id="files" class="form-control">
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" id="save-btn" class="btn btn-primary" onClick="this.disabled=true; this.value='Sending…';">Add Ticket</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> -->
     <!-- /.content -->
     <div id="modal-view-user" class="modal fade show" aria-modal="true">
         <div class="modal-dialog">
@@ -306,10 +141,10 @@
                         </div>
                      
                     </div>
-                    <!-- <div class="modal-footer justify-content-between">
+                    <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" id="update-btn" class="btn btn-primary">Save</button>
-                    </div> -->
+                        <!-- <button type="button" id="update-btn" class="btn btn-primary">Save</button> -->
+                    </div>
                 </form>
             </div>
             <!-- /.modal-content -->
@@ -390,6 +225,11 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="IN PROGRESS">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
                                 <input id="approvedbyit" name="approvedbyit" class="form-control input--style-6" type="hidden" value="{{ session('mgrid') }}">
                             </div>
                         </div>
@@ -445,6 +285,11 @@
                                 <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD005">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="REJECTED">
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -478,12 +323,22 @@
                         <p>Are You Sure ? <span class="text-bold"></span></p>
                         <div class="form-group">
                             <div class="input-group value">
+                                <input id="remark" name="remark" class="form-control input--style-6" type="text" value="Ticket Closed">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
                                 <input id="assignto" name="assignto" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group value">
                                 <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD003">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group value">
+                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="CLOSED">
                             </div>
                         </div>
                     </div>
@@ -514,6 +369,7 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
+<script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 @if(session('file_url'))
     <script>
         $(document).ready(function(){
@@ -688,6 +544,10 @@
                 serverSide: true,
                 responsive: true,
                 searching: true,
+                dom: 'Blfrtip',
+                buttons: [
+                    'excel'
+                ],
                 ajax: {
                     url: "{{ route('filter-tiket') }}",
                     "data": function (d) {
@@ -765,7 +625,7 @@
                             minutes = minutes;
                             seconds = seconds;
                             // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
+                            var date = day + "/" + month + "/" + year;
                             return date;   
                         }
                     },
@@ -794,6 +654,10 @@
             searching: true,
             ajax: "{{ route('get-tiket') }}",
             order: [[ 0, "desc" ]],
+            dom: 'Blfrtip',
+                buttons: [
+                    'excel'
+            ],
             columns: [
                 {
                     data: 'ticketno',

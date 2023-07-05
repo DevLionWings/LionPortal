@@ -3,14 +3,14 @@
   <!-- Brand Logo -->
   <a class="brand-link">
     <img src="{{ asset('images/logo.png') }}" class="brand-image">
-    <span class="brand-text font-weight-light">PORTAL-SYSTEM</span>
+    <span class="brand-text font-weight-light">LION-PORTAL</span>
   </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{asset('images/profile.png')}}" alt="User Image" alt="centered image" height="598" width="398">
+        <img src="{{asset('images/profile.png')}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
         <a href="#" class="d-block">{{ session('username') }}</a>
@@ -89,7 +89,8 @@
             </li>
           </ul>
         </li>
-        <!-- <li class="nav-item">
+        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006')
+        <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
@@ -106,7 +107,7 @@
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <!-- <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="" class="nav-link" type="submit" id="m-Attendance"><i class="far fas fa-receipt nav-icon"></i>
                 <p>
@@ -114,8 +115,9 @@
                 </p>
               </a>
             </li>
-          </ul>
-        </li> -->
+          </ul> -->
+          @endif
+        </li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

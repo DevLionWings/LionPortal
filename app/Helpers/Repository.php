@@ -11,6 +11,12 @@ use App\Models\Tiket;
 use App\Models\Tiketdiscussion;
 use App\Models\Tiketpriority;
 use App\Models\Tiketstatus;
+use App\Models\Masteremployee;
+use App\Models\Masterdivisi;
+use App\Models\Masteradmin;
+use App\Models\Masterbagian;
+use App\Models\Mastergroup;
+use App\Models\Masterperiode;
 use Auth;
 
 class Repository
@@ -51,7 +57,8 @@ class Repository
         $datenow = date('Y-m-d');
 
         $datauser = DB::connection('pgsql')->table('master_data.m_user')
-                    ->where ('mgrid', $userid)
+                    ->where('mgrid', $userid)
+                    ->orWhere('userid', $userid)
                     ->get();
 
         $response = array(
@@ -100,7 +107,6 @@ class Repository
                 $data = DB::table('dbstaff.kartuabsensi')
                     ->where('tgl', '>', now()->subDays(30)->endOfDay())
                     ->whereIn('id', $arr_user)
-                    ->groupBy('notr')
                     ->limit(10)
                     ->simplePaginate($count);
               
@@ -123,7 +129,6 @@ class Repository
                 $data = DB::table('dbstaff.kartuabsensi')
                 ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
                 ->whereIn('id', $arr_user)
-                ->groupBy('notr')
                 ->limit(10)
                 ->simplePaginate($countfilter);
 
@@ -171,9 +176,9 @@ class Repository
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 'a.createdon', 'b.departmentid', 'a.detail', 'b.mgrid')
                     ->where('a.userid', $userid)
-                    ->orWhere('b.mgrid', $userid)
-                    ->orWhere('a.assignedto', $userid)
-                    ->orWhere('a.assignedto', '')
+                    ->where('b.mgrid', $userid)
+                    ->where('a.assignedto', $userid)
+                    ->where('a.assignedto', '')
                     ->count();
         
             $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
@@ -189,9 +194,9 @@ class Repository
                 ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                 'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date')
                 ->where('a.userid', $userid)
-                ->orWhere('b.mgrid', $userid)
-                ->orWhere('a.assignedto', '')
-                ->orderBy('a.ticketno', 'DESC')
+                ->where('b.mgrid', $userid)
+                ->where('a.assignedto', '')
+                ->orderBy('a.userid', 'DESC')
                 ->limit(10)
                 ->simplePaginate($count);
             
@@ -315,8 +320,14 @@ class Repository
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date')
+                    ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1')
+                    ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1', 'h.username as approvedit')
                     ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                    ->Where('a.statusid', 'LIKE','%'.$status.'%') 
+                    ->where('a.statusid', 'LIKE','%'.$status.'%') 
                     ->where('a.userid', 'LIKE','%'.$requestor.'%') 
                     ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                     ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date]) 
@@ -334,8 +345,14 @@ class Repository
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date')
+                    ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1')
+                    ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1', 'h.username as approvedit')
                     ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                    ->Where('a.statusid', 'LIKE','%'.$status.'%') 
+                    ->where('a.statusid', 'LIKE','%'.$status.'%') 
                     ->where('a.userid', 'LIKE','%'.$requestor.'%') 
                     ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                     ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
@@ -354,14 +371,20 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','b.username as assigned_to', 'a.createdon', 'b.departmentid', 'a.detail', 'b.mgrid')
+                    ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1')
+                    ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1', 'h.username as approvedit')
                     ->where('a.userid', $userid)
-                    ->orWhere('b.mgrid', $userid)
-                    ->orWhere('a.assignedto', $userid)
-                    ->orWhere('a.assignedto', '')
-                    ->orWhere('a.statusid', 'LIKE','%'.$status.'%') 
-                    ->orWhere('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                    ->orWhere('a.userid', 'LIKE','%'.$requestor.'%') 
-                    ->orWhere('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                    ->where('b.mgrid', $userid)
+                    ->where('a.assignedto', $userid)
+                    ->where('a.assignedto', '')
+                    ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                    ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                    ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                    ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                     ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                     ->count();
     
@@ -377,13 +400,19 @@ class Repository
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','b.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date')
+                    ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1')
+                    ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1', 'h.username as approvedit')
                     ->where('a.userid', $userid)
-                    ->orWhere('b.mgrid', $userid)
-                    ->orWhere('a.assignedto', '')
-                    ->orWhere('a.statusid', 'LIKE','%'.$status.'%') 
-                    ->orWhere('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                    ->orWhere('a.userid', 'LIKE','%'.$requestor.'%') 
-                    ->orWhere('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                    ->where('b.mgrid', $userid)
+                    ->where('a.assignedto', '')
+                    ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                    ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                    ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                    ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                     ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                     ->orderBy('a.ticketno', 'DESC')
                     ->limit(10)
@@ -613,10 +642,10 @@ class Repository
         }
     }   
 
-    public static function UPDATECOUNTER($last)
+    public static function UPDATECOUNTER($last, $counterid)
     {   
         DB::beginTransaction();
-        $update = DB::connection('pgsql')->table('master_data.m_counter')->update([
+        $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', $counterid)->update([
             'last_number' => $last + 1
         ]);
         DB::commit();
@@ -719,4 +748,119 @@ class Repository
             ]);
         }
     }
+
+    public static function INDEXFILTERPERSNOLIA()
+    {
+        try {
+            $nip = DB::connection('mysql2')->table('personalia.masteremployee')->where('Endda', '9998-12-31')->get();
+            $divisi = DB::connection('mysql2')->table('personalia.masterdivisi')->get();
+            $bagian = DB::connection('mysql2')->table('personalia.masterbagian')->get();
+            $group = DB::connection('mysql2')->table('personalia.masterworkgroup')->get();
+            $admin = DB::connection('mysql2')->table('personalia.masteradmin')->get();
+            $periode = DB::connection('mysql2')->table('personalia.masterperiode')->get();
+
+            $response = array(
+                'rc' => '00',
+                'msg' => 'success',
+                'nip' => $nip,
+                'divisi' => $divisi,
+                'bagian' => $bagian,
+                'group' => $group,
+                'admin' => $admin,
+                'periode' => $periode
+            );
+
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }  
+        return json_encode($response);   
+    }
+        
+    public static function GETFILTERPERSONALIA($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $start_date, $end_date)
+    {   
+        // $start_date = "2023-06-01";
+        // $end_date = "2023-06-11";
+        // $kodedivisi = 'ENG';
+        // $kodebagian = '';
+        // $kodegroup = '';
+        // $kodeperiode = '';
+        try{          
+
+            if(!empty($nip) || $nip == []){
+                $count = DB::connection('mysql2')->table('personalia.masteremployee as a')
+                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
+                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
+                        'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')  
+                    ->where('a.Endda', '9998-12-31')
+                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
+                    ->count();
+
+                $data = DB::connection('mysql2')->table('personalia.masteremployee as a')
+                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
+                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'a.tipekaryawan', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
+                            'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')  
+                    ->where('a.Endda', '9998-12-31')
+                    // ->where(function ($q) {
+                    //     $q->whereIn('c.Nip', $nip)
+                    //         ->orWhereNull('c.Nip');
+                    // })
+                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
+                    ->orderBy('c.Nip', 'DESC')
+                    ->limit(10)
+                    ->simplePaginate($count);
+            } else {
+                $count = DB::connection('mysql2')->table('personalia.masteremployee as a')
+                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
+                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
+                        'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')  
+                    ->where('a.Endda', '9998-12-31')
+                    ->whereIn('c.Nip', $nip)
+                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
+                    ->count();
+
+                $data = DB::connection('mysql2')->table('personalia.masteremployee as a')
+                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
+                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'a.tipekaryawan', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
+                            'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')  
+                    ->where('a.Endda', '9998-12-31')
+                    // ->where(function ($q) {
+                    //     $q->whereIn('c.Nip', $nip)
+                    //         ->orWhereNull('c.Nip');
+                    // })
+                    ->whereIn('c.Nip', $nip)
+                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
+                    ->orderBy('c.Nip', 'DESC')
+                    ->limit(10)
+                    ->simplePaginate($count);
+            }
+            
+            $response = array(
+                'rc' => '00',
+                'msg' => 'success',
+                'data' => $data,
+                'total' => $count
+            );
+            
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }  
+        return json_encode($response);   
+    }
+    
 }

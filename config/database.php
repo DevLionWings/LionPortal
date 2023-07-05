@@ -63,6 +63,23 @@ return [
             ]) : [],
         ],
 
+        'mysql2' => [
+            'driver' => env('DB_CONNECTION_PAYROLL'),
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST_PAYROLL'),
+            'port' => env('DB_PORT_PAYROLL', '3306'),
+            'database' => env('DB_DATABASE_PAYROLL', 'forge'),
+            'username' => env('DB_USERNAME_PAYROLL', 'root'),
+            'password' => env('DB_PASSWORD_PAYROLL', ''),
+            'unix_socket' => '',
+            'charset' => null,
+            'collation' => null,
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => env('DB_CONNECTION_PGSQL'),
             'url' => env('DATABASE_URL'),

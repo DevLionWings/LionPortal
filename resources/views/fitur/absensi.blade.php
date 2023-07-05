@@ -238,7 +238,7 @@
                 ],
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
-                    "sProcessing": ":Loading...",
+                    "sProcessing": "Loading...",
                     "sSearch": "Searcing:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
                 },
@@ -327,8 +327,8 @@
             ],
             oLanguage: {
                 "sLengthMenu": "Tampilkan _MENU_ data",
-                "sProcessing": "Memproses...",
-                "sSearch": "Cari data:",
+                "sProcessing": "Loading...",
+                "sSearch": "Searcing:",
                 "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
             },
 
