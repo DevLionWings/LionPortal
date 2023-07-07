@@ -35,10 +35,13 @@ class TiketController extends Controller
         $stat = '';
         $tick = '';
         $disc = ''; 
+        $ticketno = $request->ticketno;
+        $ticketno = $request->get('ticketno');
         
-        $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as b')
-                ->join('master_data.m_user as a', 'b.senderid', '=', 'a.userid')
-                ->select('a.userid', 'a.username', 'a.createdon', 'a.mgrid', 'b.comment')
+        $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
+                ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
+                ->select('a.senderid', 'b.username', 'b.createdon', 'a.comment')
+                ->where('a.ticketno', $ticketno)
                 ->get();
         $jsonCmmnt = json_decode($dataCommnt, true);
 
@@ -201,7 +204,7 @@ class TiketController extends Controller
                 $userid = Session::get('userid');
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
-                $parentBtn = '<a href="javascript:void(0)" class="view btn btn-info" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                $parentBtn = '<a href="javascript:void(0)" class="view btn btn-info" href="{{ '.url('/tiket').' }}" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$row["attachment"].'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';

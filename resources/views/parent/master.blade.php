@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://10.80.80.25:443/ 'unsafe-inline' 'unsafe-eval';">
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://10.80.80.25:443/ 'unsafe-inline' 'unsafe-eval';"> -->
     <title>LION-PORTAL</title>
     <link href="{{asset('plugins/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/daterangepicker/daterangepicker.css')}}" rel="stylesheet">
@@ -83,10 +83,39 @@
             border-color: #0F68A8;
             box-shadow: none;
         }
+        .loading {
+            z-index: 20;
+            position: absolute;
+            top: 0;
+            left:-5px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .loading-content {
+            position: absolute;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            top: 40%;
+            left:50%;
+            animation: spin 2s linear infinite;
+            }
+              
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body  class="hold-transition sidebar-mini">
     <div class="wrapper">
+        <section id="loading">
+            <div id="loading-content"></div>
+        </section>
+  
         @include('auth.header')
         @include('auth.menu')
         @yield('body')
@@ -94,6 +123,34 @@
     </div>
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript"> 
+        /*------------------------------------------
+        --------------------------------------------
+        Add Loading When fire Ajax Request
+        --------------------------------------------
+        --------------------------------------------*/
+        $(document).ajaxStart(function() {
+            $('#loading').addClass('loading');
+            $('#loading-content').addClass('loading-content');
+            $('#modal-add-ticket').removeClass('modal-add-ticket');
+            $('#modal-update-ticket').removeClass('modal-update-ticket');
+            $('#save-btn').removeClass('save-btn');
+        });
+    
+        /*------------------------------------------
+        --------------------------------------------
+        Remove Loading When fire Ajax Request
+        --------------------------------------------
+        --------------------------------------------*/
+        $(document).ajaxStop(function() {
+            $('#loading').removeClass('loading');
+            $('#loading-content').removeClass('loading-content');
+            $('#modal-add-ticket').removeClass('modal-add-ticket');
+            $('#modal-update-ticket').removeClass('modal-update-ticket');
+            $('#save-btn').removeClass('save-btn');
+
+        });
+    </script>
     @yield('extend-js')
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <script src="{{ asset('dist/js/demo.js') }}"></script>

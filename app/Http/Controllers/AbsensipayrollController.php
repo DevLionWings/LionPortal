@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use App\Helpers\Response;
 use App\Helpers\Repository;
 use DataTables;
@@ -12,6 +13,7 @@ class AbsensipayrollController extends Controller
 {
     public function __construct(Repository $repository, Response $response)
     {
+        ini_set('max_execution_time', 300);
         $this->repository = $repository;
         $this->response = $response;
     }
@@ -28,7 +30,7 @@ class AbsensipayrollController extends Controller
 
         $dataIndex = $this->repository->INDEXFILTERPERSNOLIA();
         $json = json_decode($dataIndex, true);
-        
+
         if($json["rc"] == "00") {
             /* Get Divisi */
             $divisi = $json['divisi'];
@@ -102,7 +104,10 @@ class AbsensipayrollController extends Controller
                 if(!in_array($value, $divisiArray)){
                     array_push($divisiArray, [
                         "NAME" => trim($value['Nama']),
-                        "ID" => trim($value['Nip'])
+                        "ID" => trim($value['Nip']),
+                        "DIV" => trim($value['Kode Divisi']),
+                        "BAG" => trim($value['Kode Bagian']),
+                        "GRP" => trim($value['Kode Group'])
                     ]);
                 }
             }
@@ -145,6 +150,29 @@ class AbsensipayrollController extends Controller
             ->setFilteredRecords($json["total"])
             ->make(true);
 
+    }
+
+    public function updateShift(Request $request)
+    {
+        $shift = $request->shift;
+        $nokasus = $request->nokasus;
+        $dat = '';
+
+        $lastShift = DB::connection('mysql2')->table('personalia.kasus')
+            ->select('No Kasus as nokasus')
+            ->orderBy('No Kasus', 'DESC')
+            ->limit(1)
+            ->get();
+            
+        $prefix = $lastShift[0]->nokasus; 
+        // $prefixArray = [];
+        // foreach ($lastShift as $key => $value) {
+        //     array_push($prefixArray, [
+        //         "nokasus" => explode('   ', $value['No Kasus']),
+        //     ]);
+        // }
+        // $data['dat'] = $prefixArray;
+        // return $data;
     }
 
 }

@@ -100,7 +100,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{ url('absensipayroll') }}" class="nav-link" type="submit" id="m-absensipayroll"><i class="far fa-calendar-check nav-icon"></i>
+              <a href="{{ url('absensipayroll') }}" class="nav-link" type="submit" id="m-absensipayroll"><i class="far fa-circle nav-icon"></i>
                 <p>
                   Attendance Payroll
                 </p>

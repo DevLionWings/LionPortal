@@ -52,7 +52,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label>Ticket No :</label>
                                         <div class="input-group value">
@@ -78,7 +78,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label>Status :</label>
                                         <div class="input-group value">
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-success" ><i class="fas fa-search"></i></button>
+                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" ><i class="fas fa-search"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -135,6 +135,7 @@
                             <table id="tiket_list" class="table table-bordered table-hover display nowrap" width="100%">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Tiket No</th>
                                         <th>Category</th>
                                         <th>Status</th>
@@ -254,7 +255,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('tiket') }}" name="view-user">
+                <form action="" name="view-user">
                     @csrf
                     <div class="modal-body">
                     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -314,12 +315,55 @@
                       
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
-                        <h4 class="modal-title">Display Comment :</h4>
-                        <h4 class="modal-title">-</h4>
+                        <!-- <h4 class="modal-title">Display Comment :</h4>
                         @foreach($disc as $discuscode)
-                            <div class="display-comment">
-                                <strong>{{ $discuscode['SENDER'] }}</strong>
-                                <p>{{ $discuscode['COMMENT'] }}</p>
+                            <div class="form-group">
+                                <label class="form-check-label" style="color:red">{{ $discuscode['SENDER'] }}</label>
+                                <label class="form-check-label" style="font-size:10px">{{ $discuscode['DATE'] }}</label>
+                                <input type="text" style="font-family:'Courier New';font-size:20px" value="{{ $discuscode['COMMENT'] }}" class="form-control" readonly>
+                            </div>
+                        @endforeach
+                        <hr /> -->
+                        <div class="form-group">
+                            <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="btncomment" class="btn btn-warning">Save</button>
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="update-btn" class="btn btn-primary">Save</button>
+                    </div> -->
+                </form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <button id="comment" name="comment" class="comment btn-submit btn btn-secondary" ><i class="fas fa-comments"></i>View Comment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-comment" class="modal fade show" aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Display Comment :</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="" name="comment">
+                    @csrf
+                    <div class="modal-body">
+                        <!-- <label class="form-check-label">Display Comment :</label> -->
+                        @foreach($disc as $discuscode)
+                            <div class="form-group">
+                                <label class="form-check-label" style="color:red">{{ $discuscode['SENDER'] }}</label>
+                                <label class="form-check-label" style="font-size:10px">{{ $discuscode['DATE'] }}</label>
+                                <input type="text" style="font-family:'Courier New';font-size:20px" value="{{ $discuscode['COMMENT'] }}" class="form-control" readonly>
                             </div>
                         @endforeach
                         <hr />
@@ -632,6 +676,15 @@
             }
         });
 
+        $(document).on('click', '.comment', function() {
+            $("#modal-view-user").removeClass('fade').modal('hide')
+            var comment = $('#comment').val().trim();
+            var $modal = $('#modal-comment');
+            var $form = $modal.find('form[name="comment"]');
+            $modal.modal('show');
+
+        })
+
         $(document).on('click', '.view', function() {
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
@@ -650,39 +703,54 @@
             var approveit  = $(this).attr('data-approveitname');
             var comment_body = $('input[name="comment_body"]').val();
             var upload  = $(this).attr('data-upload');
-            var $modal = $('#modal-view-user');
-            var $form = $modal.find('form[name="view-user"]');
-            $form.find('input[name="id"]').val(user_id);
-            $form.find('input[name="ticketno"]').val(ticketno);
-            $form.find('input[name="requestor"]').val(requestor);
-            $form.find('input[name="category"]').val(category);
-            $form.find('input[name="priority"]').val(priority);
-            $form.find('input[name="subject"]').val(subject);
-            $form.find('input[name="detail"]').val(detail);
-            $form.find('input[name="assignto"]').val(assign);
-            $form.find('input[name="statusid"]').val(statusid);
-            $form.find('input[name="roleid"]').val(roleid);
-            $form.find('input[name="status"]').val(status);
-            $form.find('input[name="created"]').val(created);
-            $form.find('input[name="approve"]').val(approve);
-            $form.find('input[name="approveit"]').val(approveit);
-            $form.find('input[name="comment_body"]').val(comment_body);
-            $form.find('input[name="upload"]').val(upload);
-            $form.find('input[name="comment"]').val();
-            $modal.modal('show');
+           
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/tiket",
+                type: 'GET',
+                data: {
+                    'ticketno' : ticketno, 
+                    
+                },
+                success: function(response){ 
+                    var $modal = $('#modal-view-user');
+                    var $form = $modal.find('form[name="view-user"]');
+                    $form.find('input[name="id"]').val(user_id);
+                    $form.find('input[name="ticketno"]').val(ticketno);
+                    $form.find('input[name="requestor"]').val(requestor);
+                    $form.find('input[name="category"]').val(category);
+                    $form.find('input[name="priority"]').val(priority);
+                    $form.find('input[name="subject"]').val(subject);
+                    $form.find('input[name="detail"]').val(detail);
+                    $form.find('input[name="assignto"]').val(assign);
+                    $form.find('input[name="statusid"]').val(statusid);
+                    $form.find('input[name="roleid"]').val(roleid);
+                    $form.find('input[name="status"]').val(status);
+                    $form.find('input[name="created"]').val(created);
+                    $form.find('input[name="approve"]').val(approve);
+                    $form.find('input[name="approveit"]').val(approveit);
+                    $form.find('input[name="comment_body"]').val(comment_body);
+                    $form.find('input[name="upload"]').val(upload);
+                    $form.find('input[name="comment"]').val();
+                    $modal.modal('show');
+                }
+            });
+            
         });
 
-        $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
-            var $inputs = $('#modal-view-user form[name="view-user"] :input');
-            var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
-            if ($form_valid.length === 0) {
-                $('#modal-view-user form[name="view-user"]').submit();
-            }
-        });
+        // $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
+        //     var $inputs = $('#modal-view-user form[name="view-user"] :input');
+        //     var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
+        //     if ($form_valid.length === 0) {
+        //         $('#modal-view-user form[name="view-user"]').submit();
+        //     }
+        // });
 
         $('#btncomment').on('click', function () {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-            var comment_body = $('#modal-view-user form[name="view-user"] textarea[name="comment_body"]').val();
+            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
          
             $.ajax({
                 headers: {
@@ -780,6 +848,16 @@
                 columns: [
                     {
                         data: 'ticketno',
+                        render: function(data){
+                            if(data != null){
+                                return '';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        data: 'ticketno',
                         name: 'ticketno'
                     },
                     {
@@ -852,7 +930,7 @@
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
                     "sProcessing": "Loading...",
-                    "sSearch": "Search by Keyword:",
+                    "sSearch": "Search:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
                 },
                 drawCallback: function() {
@@ -874,6 +952,16 @@
             ajax: "{{ route('get-tiket') }}",
             order: [[ 0, "desc" ]],
             columns: [
+                {
+                    data: 'ticketno',
+                    render: function(data){
+                        if(data != null){
+                            return '';
+                        } else {
+                            return '';
+                        }
+                    }
+                },
                 {
                     data: 'ticketno',
                     name: 'ticketno'
@@ -948,19 +1036,10 @@
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
 				"sProcessing": "Loading...",
-				"sSearch": "Search by Keyword:",
+				"sSearch": "Search:",
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });
-    });
-
-    var selectOption = parseInt(document.getElementById("status").value);
-
-    $(document).on('keypress', '.select2-search__field', function () {
-    $(this).val($(this).val().replace(/[^\d].+/, ""));
-        if ((event.which < 48 || event.which > 57)) {
-          event.preventDefault();
-        }
     });
 </script>
 

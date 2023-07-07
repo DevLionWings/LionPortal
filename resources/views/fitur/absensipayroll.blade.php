@@ -111,7 +111,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-5">
                                         <div class="form-group">
                                             <label>NIP :</label>
                                             <div class="input-group value">
@@ -138,9 +138,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-0">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <button id="absen" name="absen" class="absen btn-submit btn btn-success" ><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-1">
                                         <div class="form-group">
-                                            <button id="absen" name="absen" class="absen btn-submit btn btn-success" >Search</button>
+                                            <div class="input-group">
+                                                <button id="checked" name="checked" class="checked btn btn-submit btn-primary">Update</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- <div class="col-md-2">
@@ -182,9 +191,9 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="form-row">
+                            <!-- <div class="form-row">
                                 <button id="checked" class="btn btn-block btn-primary btn-default" style="background-color: #007bff; !important;color: #fff;">Save</button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <!-- /.card-body -->
@@ -288,9 +297,10 @@
             $('#dataabsenpayroll').DataTable().clear().destroy();
             var $dataabsen = $('#dataabsenpayroll').DataTable({
                 destroy: true,
+                scrollX: true,
                 processing: true,
                 serverSide: true,
-                responsive: true,
+                responsive: false,
                 searching: true,
                 dom: 'Blfrtip',
                 buttons: [
@@ -435,6 +445,332 @@
                 }
             });
         });
+
+        /* After Checked */
+        $(document).on('click', '.checked', function submit() {
+            $('#dataabsenpayroll').DataTable().clear().destroy();
+            var $dataabsen = $('#dataabsenpayroll').DataTable({
+                destroy: true,
+                scrollX: true,
+                processing: true,
+                serverSide: true,
+                responsive: false,
+                searching: true,
+                dom: 'Blfrtip',
+                buttons: [
+                    'excel'
+                ],
+                ajax: {
+                    url: '{{ route("update-shift") }}',
+                    "data": function (d) {
+                        d.nip = arr_values,
+                        d.shift = $('select[name="data_nip"]').val();
+                    },
+                    "dataSrc": function (settings) {
+                        $btn_submit.text("Submit");
+                        $btn_submit.prop('disabled', false);
+                        return settings.data;
+                    },
+                },
+                columns: [
+                    {
+                        data: 'Nip',
+                        targets: 0,
+                        className: 'select-checkbox',
+                        render: function (data) {
+                            if (data) {
+                                return '<input type="checkbox" value="' + data +
+                                    '" id="chckBox" name="checked" onclick="getValue(this);">';
+                            }
+                        }
+                    },
+                    {
+                        data: 'Nip',
+                        name: 'Nip'
+                    },
+                    {
+                        data: 'Nama',
+                        name: 'Nama'
+                    },
+                    {
+                        data: 'Kode Divisi',
+                        name: 'Kode Divisi'
+                    },
+                    {
+                        data: 'Kode Bagian',
+                        name: 'Kode Bagian'
+                    },
+                    {
+                        data: 'Kode Group',
+                        name: 'Kode Group'
+                    },
+                    {
+                        data: 'Tgl In',
+                        render: function(data) {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                            return date;   
+                        }
+                    },
+                    {
+                        data: 'Jam In',
+                        name: 'Jam In'
+                    },
+                    {
+                        data: 'Tgl Out',
+                        render: function(data) {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                            return date;   
+                        }
+                    },
+                    {
+                        data: 'Lama Kerja',
+                        name: 'Lama Kerja'
+                    },
+                    {
+                        data: 'Jam Lembur',
+                        name: 'Jam Lembur'
+                    },
+                    {
+                        data: 'Shift',
+                        name: 'Shift'
+                    },
+                    {
+                        data: 'Lama Off',
+                        name: 'Lama Off'
+                    },
+                    {
+                        data: 'No Kasus',
+                        name: 'No Kasus'
+                    },
+                    {
+                        data: 'CardX',
+                        name: 'CardX'
+                    },
+                    {
+                        data: 'tipekaryawan',
+                        name: 'Tipe'
+                    },
+                ],
+                oLanguage: {
+                    "sLengthMenu": "Tampilkan _MENU_ data",
+                    "sProcessing": "Loading...",
+                    "sSearch": "Search:",
+                    "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
+                },
+                drawCallback: function() {
+                    $btn_submit.text("Sumbit");
+                    $btn_submit.prop('disabled', false);
+                }
+            });
+        });
+
+        $('#checked').on('click', function () {
+            var nip = arr_values;
+         
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/add/comment",
+                type: 'POST',
+                data: {
+                    'nip' : nip,
+                },
+                success: function(response){ 
+                        window.location.reload(response);
+                        
+                }
+            });
+        })
+
+        var $dataabsen = $('#dataabsenpayroll').DataTable({
+            scrollX: true,
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            searching: true,
+            dom: 'Blfrtip',
+            buttons: [
+                'excel'
+            ],
+            ajax: {
+                url: '{{ route("get-absensipayroll") }}',
+                "data": function (d) {
+                    d.daterange = $('input[name="data_date_range"]').val();
+                    d.data_nip = $('select[name="data_nip"]').val();
+                    d.data_divisi = $('select[name="divisi"]').val();
+                    d.data_bagian = $('select[name="bagian"]').val();
+                    d.data_group = $('select[name="group"]').val();
+                    d.data_admin = $('select[name="admin"]').val();
+                    d.data_periode = $('select[name="periode"]').val();
+                    d.data_kontrak = $('select[name="kontrak"]').val();
+                },
+                "dataSrc": function (settings) {
+                    $btn_submit.text("Submit");
+                    $btn_submit.prop('disabled', false);
+                    return settings.data;
+                },
+            },
+            columns: [
+                {
+                    data: 'Nip',
+                    targets: 0,
+                    className: 'select-checkbox',
+                    render: function (data) {
+                        if (data) {
+                            return '<input type="checkbox" value="' + data +
+                                '" id="chckBox" name="checked" onclick="getValue(this);">';
+                        }
+                    }
+                },
+                {
+                    data: 'Nip',
+                    name: 'Nip'
+                },
+                {
+                    data: 'Nama',
+                    name: 'Nama'
+                },
+                {
+                    data: 'Kode Divisi',
+                    name: 'Kode Divisi'
+                },
+                {
+                    data: 'Kode Bagian',
+                    name: 'Kode Bagian'
+                },
+                {
+                    data: 'Kode Group',
+                    name: 'Kode Group'
+                },
+                {
+                    data: 'Tgl In',
+                    render: function(data) {
+                        var today = new Date(data);
+                        var day = today.getDate() + "";
+                        var month = (today.getMonth() + 1) + "";
+                        var year = today.getFullYear() + "";
+                        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                        var seconds = today.getSeconds() + "";
+
+                        day = day;
+                        month = month;
+                        year = year;
+                        hour = hour;
+                        minutes = minutes;
+                        seconds = seconds;
+                        // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                        return date;   
+                    }
+                },
+                {
+                    data: 'Jam In',
+                    name: 'Jam In'
+                },
+                {
+                    data: 'Tgl Out',
+                    render: function(data) {
+                        var today = new Date(data);
+                        var day = today.getDate() + "";
+                        var month = (today.getMonth() + 1) + "";
+                        var year = today.getFullYear() + "";
+                        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                        var seconds = today.getSeconds() + "";
+
+                        day = day;
+                        month = month;
+                        year = year;
+                        hour = hour;
+                        minutes = minutes;
+                        seconds = seconds;
+                        // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                        return date;   
+                    }
+                },
+                {
+                    data: 'Lama Kerja',
+                    name: 'Lama Kerja'
+                },
+                {
+                    data: 'Jam Lembur',
+                    name: 'Jam Lembur'
+                },
+                {
+                    data: 'Shift',
+                    name: 'Shift'
+                },
+                {
+                    data: 'Lama Off',
+                    name: 'Lama Off'
+                },
+                {
+                    data: 'No Kasus',
+                    name: 'No Kasus'
+                },
+                {
+                    data: 'CardX',
+                    name: 'CardX'
+                },
+                {
+                    data: 'tipekaryawan',
+                    name: 'Tipe'
+                },
+            ],
+            oLanguage: {
+                "sLengthMenu": "Tampilkan _MENU_ data",
+                "sProcessing": "Loading...",
+                "sSearch": "Search:",
+                "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
+            },
+            drawCallback: function() {
+                $btn_submit.text("Sumbit");
+                $btn_submit.prop('disabled', false);
+            }
+        });
     });
+</script>
+<script>
+    window.setTimeout(function() {
+    $(".alert-message").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove(); 
+    });
+}, 5000);
+</script>
+<script>
+    $('.toast').toast('show');
 </script>
 @endsection

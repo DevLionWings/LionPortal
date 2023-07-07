@@ -68,6 +68,7 @@
                                             <table id="dataabsen" class="table table-bordered table-hover display nowrap" width="100%">
                                                 <thead>
                                                     <tr>
+                                                        <th></th>
                                                         <th>ID</th>
                                                         <th>Name</th>
                                                         <th>Date</th>
@@ -179,6 +180,16 @@
                 columns: [
                     {
                         data: 'id',
+                        render: function(data){
+                            if(data != null){
+                                return '';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        data: 'id',
                         name: 'id'
                     },
                     {
@@ -239,7 +250,7 @@
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
                     "sProcessing": "Loading...",
-                    "sSearch": "Searcing:",
+                    "sSearch": "Search:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
                 },
             });
@@ -266,6 +277,16 @@
                 },
             },
             columns: [
+                {
+                    data: 'id',
+                    render: function(data){
+                        if(data != null){
+                            return '';
+                        } else {
+                            return '';
+                        }
+                    }
+                },
                 {
                     data: 'id',
                     name: 'id'
@@ -328,7 +349,7 @@
             oLanguage: {
                 "sLengthMenu": "Tampilkan _MENU_ data",
                 "sProcessing": "Loading...",
-                "sSearch": "Searcing:",
+                "sSearch": "Search:",
                 "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
             },
 

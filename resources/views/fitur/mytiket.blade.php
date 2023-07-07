@@ -530,134 +530,12 @@
             $('#modal-closed-user').modal('show');
         })
 
-        $(document).on('click', '.ticket', function submit() {
-            var daterange = $('input[name="data_date_range"]').val();
-            var requestor = $('select[name="requestor"]  option:selected').val();
-            var assignto = $('select[name="assignto"] option:selected').val();
-            var status = $('select[name="status"] option:selected').val();
-            var ticketno = $('select[name="ticketno"] option:selected').val();
-            console.log(daterange);
-            console.log(status);
-            console.log(ticketno);
-            console.log(requestor);
-            console.log(assignto);
-           
-            $('#tiket_list').DataTable().clear().destroy();
-            var $dataticket = $('#tiket_list').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                responsive: true,
-                searching: true,
-                dom: 'Blfrtip',
-                buttons: [
-                    'excel'
-                ],
-                ajax: {
-                    url: "{{ route('filter-tiket') }}",
-                    "data": function (d) {
-                        d.daterange = $('input[name="data_date_range"]').val();
-                        d.requestor = $('select[name="requestor"] option:selected').val();
-                        d.assignto = $('select[name="assignto"] option:selected').val();
-                        d.status = $('select[name="status"] option:selected').val();
-                        d.ticketno = $('select[name="ticketno"] option:selected').val();
-                    },
-                    "dataSrc": function (settings) {
-                        $btn_submit.text("Submit");
-                        $btn_submit.prop('disabled', false);
-                        return settings.data;
-                    },
-                },
-                order: [[ 0, "desc" ]],
-                columns: [
-                    {
-                        data: 'ticketno',
-                        name: 'ticketno'
-                    },
-                    {
-                        data: 'category',
-                        render: function(data) {
-                            if(data == 'INCIDENT'){
-                                statusText = `<button class="btn btn-dark">INCIDENT</span>`;
-                            } else if (data == 'CHANGE REQUEST'){
-                                statusText = `<button class="btn btn-warning">CHANGE REQUEST</span>`;
-                            } else {
-                                statusText = `<button class="btn btn-info">NEW USER</span>`;
-                            }
-                            return statusText;
-                        }
-                    },
-                    {
-                        data: 'status',
-                        render: function (data){
-                            if(data == "CLOSED"){
-                                statusText = `<button class="btn btn-danger">Closed</button>`;
-                            } else if(data == "IN PROGRESS"){
-                                statusText = `<button class="btn btn-success">In Progress</button>`;
-                            } else {
-                                statusText = `<button class="btn btn-primary">Open</button>`;
-                            }
-                            return statusText;
-                        }
-                    },
-                    {
-                        data: 'subject',
-                        name: 'subject'
-                    },
-                    {
-                        data: 'requestor',
-                        name: 'requestor'
-                    },
-                    {
-                        data: 'assigned_to',
-                        name: 'assigned_to'
-                    },
-                    {
-                        data: 'createdon',
-                        render: function(data) {
-                            var today = new Date(data);
-                            var day = today.getDate() + "";
-                            var month = (today.getMonth() + 1) + "";
-                            var year = today.getFullYear() + "";
-                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                            var seconds = today.getSeconds() + "";
-
-                            day = day;
-                            month = month;
-                            year = year;
-                            hour = hour;
-                            minutes = minutes;
-                            seconds = seconds;
-                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year;
-                            return date;   
-                        }
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                    },
-                ],
-                oLanguage: {
-                    "sLengthMenu": "Tampilkan _MENU_ data",
-                    "sProcessing": "Loading...",
-                    "sSearch": "Search by Keyword:",
-                    "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
-                },
-                drawCallback: function() {
-                    $btn_submit.text("Sumbit");
-                    $btn_submit.prop('disabled', false);
-                }
-            });
-        });
-
         var table = $('#tiket_list').DataTable({
             processing: true,
             serverSide: true,
             responsive: true,
             searching: true,
-            ajax: "{{ route('get-tiket') }}",
+            ajax: "{{ route('my-tiket') }}",
             order: [[ 0, "desc" ]],
             dom: 'Blfrtip',
                 buttons: [
@@ -742,15 +620,6 @@
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });
-    });
-
-    var selectOption = parseInt(document.getElementById("status").value);
-
-    $(document).on('keypress', '.select2-search__field', function () {
-    $(this).val($(this).val().replace(/[^\d].+/, ""));
-        if ((event.which < 48 || event.which > 57)) {
-          event.preventDefault();
-        }
     });
 </script>
 
