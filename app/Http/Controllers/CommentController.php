@@ -61,7 +61,7 @@ class CommentController extends Controller
 
     public function listComment(Request $request){
         $disc = ''; 
-        
+        $ticketno = $request->ticketno;
         // $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $request->ticketno)->get();
         // $jsonCmmnt = json_decode($dataCommnt, true);
         $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
@@ -77,7 +77,7 @@ class CommentController extends Controller
         foreach ($comment as $key => $value) {
             array_push($commentArray, [
                 "COMMENT" => trim($value['comment']),
-                "SENDER" => trim($value['senderid']),
+                "SENDER" => trim($value['username']),
                 "DATE" => trim($value['createdon'])
             ]);
         }

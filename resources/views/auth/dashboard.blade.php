@@ -170,12 +170,10 @@
         url: '{{ route("get.year") }}',
         type: 'GET',
         success: function(response) {
-            console.log(response)
             $('label[name="loading-year"]').css('display', 'none')
             $('canvas[id="ticketyear"]').css('display', 'block')
             ticketingYearChart(response["date"], response["opn"], response["clsd"], response["prg"])
         }, error: function(err) {
-            console.log(err)
             alert('Opps, something wrong with dashboard chart');
         }
     })

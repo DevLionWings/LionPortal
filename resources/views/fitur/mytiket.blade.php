@@ -83,9 +83,10 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('comment-add') }}" method="post" name="view-user">
+                <form action="" name="view-user" id="view-user">
                     @csrf
                     <div class="modal-body">
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
                         <!-- <div class="form-group">
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
                             <input type="text" name="id" class="form-control" readonly>
@@ -139,18 +140,28 @@
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
                             <input type="text" name="created" class="form-control" id="created" readonly>
                         </div>
-                     
+                        <hr />
+                        <h4 class="modal-title">Display Comment :</h4>
+                            <div class="form-group">
+                                <input type="text" name="comment" class="modal-input">
+                            </div>
+                        <hr />
+                        <div class="form-group">
+                            <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="btncomment" class="btn btn-warning">Save</button>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id=close-btn class="btn btn-default" data-dismiss="modal">Close</button>
                         <!-- <button type="button" id="update-btn" class="btn btn-primary">Save</button> -->
                     </div>
                 </form>
             </div>
-            <!-- /.modal-content -->
         </div>
     </div>
-    <!-- /.content -->
     <div id="modal-update-user"  class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -357,10 +368,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-
-
 </div>
-<!-- ./wrapper -->
 @endsection
 @section('extend-js')
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
@@ -442,6 +450,8 @@
         });
 
         $(document).on('click', '.view', function() {
+            $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
+            getComment($(this).attr('data-ticket'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -475,20 +485,41 @@
             $form.find('input[name="approve"]').val(approve);
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="upload"]').val(upload);
-            $form.find('input[name="comment"]').val();
             $modal.modal('show');
         });
 
-        $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
-            alert("test");
-            var $inputs = $('#modal-view-user form[name="view-user"] :input');
-            var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
-            if ($form_valid.length === 0) {
-                $('#modal-view-user form[name="view-user"]').submit();
-            }
-        });
+        // $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
+        //     alert("test");
+        //     var $inputs = $('#modal-view-user form[name="view-user"] :input');
+        //     var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
+        //     if ($form_valid.length === 0) {
+        //         $('#modal-view-user form[name="view-user"]').submit();
+        //     }
+        // });
+
+        $('#btncomment').on('click', function () {
+            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+         
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/add/comment",
+                type: 'POST',
+                data: {
+                    'ticketno' : ticketno, 
+                    'comment_body' : comment_body,
+                },
+                success: function(response){ 
+                        window.location.reload(response);
+                        
+                }
+            });
+        })
 
         $(document).on('click', '.update', function () {
+            $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
             $('#update-ticketno').val($(this).attr("data-ticketno"));
             $('#update-userid').val($(this).attr("data-userid"));
             $('#update-assignto').val($(this).attr("data-assignto"));
@@ -503,6 +534,7 @@
 
         $(document).on('click', '.reject', function () {
             // alert('bisa');
+            $('#modal-reject-user').modal({backdrop: 'static', keyboard: false})  
             $('#reject-ticketno').val($(this).attr("data-ticketno"));
             $('#reject-userid').val($(this).attr("data-userid"));
             $('#reject-assignto').val($(this).attr("data-assignto"));
@@ -517,6 +549,7 @@
 
         $(document).on('click', '.closed', function () {
             // alert('bisa');
+            $('#modal-closed-user').modal({backdrop: 'static', keyboard: false})  
             $('#closed-ticketno').val($(this).attr("data-ticketno"));
             $('#closed-userid').val($(this).attr("data-userid"));
             $('#closed-statusid').val($(this).attr("data-statusid"));
@@ -621,14 +654,44 @@
 			},
         });
     });
-</script>
 
+    function getComment(ticketno) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "/get/comment",
+            data: {
+                'ticketno' : ticketno, 
+            },
+            success: function(response) {
+                console.log(response["disc"])
+                var $viewComment = $(' <div class="form-group"></div>');
+                $.each(response["disc"], function(key, data) {
+                    var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
+                    var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
+                    var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
+                    $viewComment.append($nama,$date,$comment);
+                });
+                $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+            }
+        })
+    }
+</script>
 <script>
     window.setTimeout(function() {
     $(".alert-message").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove(); 
     });
 }, 5000);
+</script>
+<script>
+    $('#document').ready(function(){
+            $('#close-btn').on('click', function(){
+                location.reload();
+        });
+    });
 </script>
 <script>
     $('.toast').toast('show');

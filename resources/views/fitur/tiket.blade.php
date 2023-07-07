@@ -1,10 +1,10 @@
 @extends('parent.master')
 @section('extend-css')
-<link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('image-upload/image-uploader.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
 @endsection
 @section('body')
 <!-- Site wrapper -->
@@ -255,7 +255,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="" name="view-user">
+                <form action="" name="view-user" id="view-user">
                     @csrf
                     <div class="modal-body">
                     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -312,18 +312,16 @@
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
                             <input type="text" name="created" class="form-control" id="created" readonly>
                         </div>
-                      
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
-                        <!-- <h4 class="modal-title">Display Comment :</h4>
-                        @foreach($disc as $discuscode)
+                        <h4 class="modal-title">Display Comment :</h4>
                             <div class="form-group">
-                                <label class="form-check-label" style="color:red">{{ $discuscode['SENDER'] }}</label>
-                                <label class="form-check-label" style="font-size:10px">{{ $discuscode['DATE'] }}</label>
-                                <input type="text" style="font-family:'Courier New';font-size:20px" value="{{ $discuscode['COMMENT'] }}" class="form-control" readonly>
+                                <input type="text" name="comment" class="modal-input">
+                                    <!-- <h4 class="form-check-label" style="color:red"></h4>
+                                    <span class="form-check-label" style="font-size:10px"></span>
+                                    <p type="text" style="font-family:'Courier New';font-size:20px" class="form-control" ></p> -->
                             </div>
-                        @endforeach
-                        <hr /> -->
+                        <hr />
                         <div class="form-group">
                             <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
@@ -332,16 +330,15 @@
                             <button type="button" id="btncomment" class="btn btn-warning">Save</button>
                         </div>
                     </div>
-                    <!-- <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" id="update-btn" class="btn btn-primary">Save</button>
-                    </div> -->
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" id=close-btn class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 </form>
-                <div class="modal-body">
+                <!-- <div class="modal-body">
                     <div class="form-group">
                         <button id="comment" name="comment" class="comment btn-submit btn btn-secondary" ><i class="fas fa-comments"></i>View Comment</button>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -359,13 +356,14 @@
                     @csrf
                     <div class="modal-body">
                         <!-- <label class="form-check-label">Display Comment :</label> -->
-                        @foreach($disc as $discuscode)
+                        <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                        
                             <div class="form-group">
-                                <label class="form-check-label" style="color:red">{{ $discuscode['SENDER'] }}</label>
-                                <label class="form-check-label" style="font-size:10px">{{ $discuscode['DATE'] }}</label>
-                                <input type="text" style="font-family:'Courier New';font-size:20px" value="{{ $discuscode['COMMENT'] }}" class="form-control" readonly>
+                                <label class="form-check-label" style="color:red"></label>
+                                <label class="form-check-label" style="font-size:10px"></label>
+                                <input type="text" style="font-family:'Courier New';font-size:20px" value="" class="form-control" readonly>
                             </div>
-                        @endforeach
+                        
                         <hr />
                         <div class="form-group">
                             <label class="form-check-label" for="comment_body" disabled>Comment</label>
@@ -648,6 +646,7 @@
 
         $('#save-btn').on('click', function () {
             // console.log("clicked");
+            $('#modal-add-user').modal({backdrop: 'static', keyboard: false}) 
             var $inputs = $('modal-add-ticket form[name="ticket"] :input');
             $inputs.each(function () {
                 if ($(this).attr('type') !== "button" && $(this).attr('type') !== undefined) {
@@ -676,16 +675,18 @@
             }
         });
 
-        $(document).on('click', '.comment', function() {
-            $("#modal-view-user").removeClass('fade').modal('hide')
-            var comment = $('#comment').val().trim();
-            var $modal = $('#modal-comment');
-            var $form = $modal.find('form[name="comment"]');
-            $modal.modal('show');
+        // $(document).on('click', '.comment', function() {
+        //     $("#modal-view-user").removeClass('fade').modal('hide')
+        //     var comment = $('#comment').val().trim();
+        //     var $modal = $('#modal-comment');
+        //     var $form = $modal.find('form[name="comment"]');
+        //     $modal.modal('show');
 
-        })
+        // })
 
         $(document).on('click', '.view', function() {
+            $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
+            getComment($(this).attr('data-ticket'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -701,43 +702,26 @@
             var created  = $(this).attr('data-created');
             var approve  = $(this).attr('data-approve1name');
             var approveit  = $(this).attr('data-approveitname');
-            var comment_body = $('input[name="comment_body"]').val();
             var upload  = $(this).attr('data-upload');
-           
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "/tiket",
-                type: 'GET',
-                data: {
-                    'ticketno' : ticketno, 
-                    
-                },
-                success: function(response){ 
-                    var $modal = $('#modal-view-user');
-                    var $form = $modal.find('form[name="view-user"]');
-                    $form.find('input[name="id"]').val(user_id);
-                    $form.find('input[name="ticketno"]').val(ticketno);
-                    $form.find('input[name="requestor"]').val(requestor);
-                    $form.find('input[name="category"]').val(category);
-                    $form.find('input[name="priority"]').val(priority);
-                    $form.find('input[name="subject"]').val(subject);
-                    $form.find('input[name="detail"]').val(detail);
-                    $form.find('input[name="assignto"]').val(assign);
-                    $form.find('input[name="statusid"]').val(statusid);
-                    $form.find('input[name="roleid"]').val(roleid);
-                    $form.find('input[name="status"]').val(status);
-                    $form.find('input[name="created"]').val(created);
-                    $form.find('input[name="approve"]').val(approve);
-                    $form.find('input[name="approveit"]').val(approveit);
-                    $form.find('input[name="comment_body"]').val(comment_body);
-                    $form.find('input[name="upload"]').val(upload);
-                    $form.find('input[name="comment"]').val();
-                    $modal.modal('show');
-                }
-            });
-            
+            var $modal = $('#modal-view-user');
+            var $form = $modal.find('form[name="view-user"]');
+            $form.find('input[name="id"]').val(user_id);
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $form.find('input[name="requestor"]').val(requestor);
+            $form.find('input[name="category"]').val(category);
+            $form.find('input[name="priority"]').val(priority);
+            $form.find('input[name="subject"]').val(subject);
+            $form.find('input[name="detail"]').val(detail);
+            $form.find('input[name="assignto"]').val(assign);
+            $form.find('input[name="statusid"]').val(statusid);
+            $form.find('input[name="roleid"]').val(roleid);
+            $form.find('input[name="status"]').val(status);
+            $form.find('input[name="created"]').val(created);
+            $form.find('input[name="approve"]').val(approve);
+            $form.find('input[name="approveit"]').val(approveit);
+            $form.find('input[name="comment_body"]').val(comment_body);
+            $form.find('input[name="upload"]').val(upload);
+            $modal.modal('show');
         });
 
         // $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
@@ -770,6 +754,7 @@
         })
 
         $(document).on('click', '.update', function () {
+            $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
             $('#update-ticketno').val($(this).attr("data-ticketno"));
             $('#update-userid').val($(this).attr("data-userid"));
             $('#update-assignto').val($(this).attr("data-assignto"));
@@ -784,6 +769,7 @@
 
         $(document).on('click', '.reject', function () {
             // alert('bisa');
+            $('#modal-reject-user').modal({backdrop: 'static', keyboard: false})  
             $('#reject-ticketno').val($(this).attr("data-ticketno"));
             $('#reject-userid').val($(this).attr("data-userid"));
             $('#reject-assignto').val($(this).attr("data-assignto"));
@@ -798,6 +784,7 @@
 
         $(document).on('click', '.closed', function () {
             // alert('bisa');
+            $('#modal-closed-user').modal({backdrop: 'static', keyboard: false})  
             $('#closed-ticketno').val($(this).attr("data-ticketno"));
             $('#closed-userid').val($(this).attr("data-userid"));
             $('#closed-statusid').val($(this).attr("data-statusid"));
@@ -1041,6 +1028,30 @@
 			},
         });
     });
+
+    function getComment(ticketno) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "/get/comment",
+            data: {
+                'ticketno' : ticketno, 
+            },
+            success: function(response) {
+                console.log(response["disc"])
+                var $viewComment = $(' <div class="form-group"></div>');
+                $.each(response["disc"], function(key, data) {
+                    var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
+                    var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
+                    var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
+                    $viewComment.append($nama,$date,$comment);
+                });
+                $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+            }
+        })
+    }
 </script>
 
 <script>
@@ -1049,6 +1060,13 @@
         $(this).remove(); 
     });
 }, 5000);
+</script>
+<script>
+    $('#document').ready(function(){
+            $('#close-btn').on('click', function(){
+                location.reload();
+        });
+    });
 </script>
 <script>
     $('.toast').toast('show');
