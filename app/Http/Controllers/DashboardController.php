@@ -28,18 +28,31 @@ class DashboardController extends Controller
         // if(!$isLogin) {
         //     return redirect()->route('login-page');
         // }
-
-        $allSessions = session()->all();
+        // $isLogin = Session::get('status');
+        // if($isLogin != 1) {
+        //     return redirect()->route('login-page');
+        // }
+        // $allSessions = session()->all();
         $datLogin = $this->repository->GETUSER(Session::get('userid'), Session::get('password'));
         $json = json_decode($datLogin);
-        $data = $json->data;
        
-        if ($data == [] || $data[0]->status_login = 0) {
+        if ($json->rc == 00){
+            $data = $json->data;
+            $status_login = $data[0]->status_login;
+            if ($data == [] || $status_login == 0) {
+                return redirect()->route('login')
+                ->withSuccess('please login first');
+            }
+        } else {
             // $flushSessions = session()->flush();
             return redirect()->route('login')
                 ->withSuccess('please login first');
         }
-        // $request->session()->put($datLogin->json());
+        $session = array(
+            'status_login' => $status_login
+        );
+        Session::put('status_login', $status_login);
+        
         return view('auth.dashboard');
     }
     

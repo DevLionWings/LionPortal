@@ -251,7 +251,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">View Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id=close-btn data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -331,7 +331,7 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" id=close-btn class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </form>
                 <!-- <div class="modal-body">
@@ -747,9 +747,9 @@
                     'comment_body' : comment_body,
                 },
                 success: function(response){ 
-                        window.location.reload(response);
+                    window.location.reload(response);
                         
-                }
+                } 
             });
         })
 
@@ -951,7 +951,9 @@
                 },
                 {
                     data: 'ticketno',
-                    name: 'ticketno'
+                    render: function(data, type, row){
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'">'+data+'</a>'
+                    }
                 },
                 {
                     data: 'category',
@@ -1064,6 +1066,11 @@
 <script>
     $('#document').ready(function(){
             $('#close-btn').on('click', function(){
+                location.reload();
+        });
+    });
+    $('#document').ready(function(){
+            $('#close-btn2').on('click', function(){
                 location.reload();
         });
     });

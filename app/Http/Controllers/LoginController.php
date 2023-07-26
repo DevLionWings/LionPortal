@@ -31,12 +31,26 @@ class LoginController extends Controller
         $date = date('Y-m-d H:i:s');
        
         try {
-            DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->update([
+            $update = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->update([
                 'status_login' => 1,
                 'createdon' => $date
             ]);
             DB::commit();
-            return $this->response->SUCCESS('');
+            if(!empty($update)){
+                return response()->json([
+                    'rc' => '00',
+                    'desc' => 'success',
+                    'msg' => 'success',
+                    'data' => $update
+                ]);
+            } else {
+                return response()->json([
+                    'rc' => '01',
+                    'desc' => 'failed',
+                    'msg' => 'failed',
+                    'data' => $update
+                ]);
+            }
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -70,77 +84,82 @@ class LoginController extends Controller
         $datLogin = $this->repository->GETUSER($userid, $password);
         $json = json_decode($datLogin);
         $data = $json->data;
-
         /* Update status */
-        if(empty($data)){
-            $update = $this->updateLogin($userid, $password);
-        } else {
-            if ($data[0]->status_login == 0)
-            {
+        // if(empty($data)){
+        //     $update = $this->updateLogin($userid, $password);
+        // } else {
+        //     if ($data[0]->status_login == 0)
+        //     {
                 
-            } else {
-                return back()->withErrors([
-                    'userid' => 'If you are already logged in, please log out first or call admin',
-                ]);
-            }
-        }
+        //     } else {
+        //         return back()->withErrors([
+        //             'userid' => 'If you are already logged in, please log out first or call admin',
+        //         ]);
+        //     }
+        // }
       
-        if($json->rc == '00')
-        {
-            /* checked status login */
-            if ($data[0]->status_login == 1){
-                return back()->withErrors([
-                    'userid' => 'If you are already logged in, please log out first ',
-                ]);
-            }
-
-            $userid = $data[0]->userid;
-            $username = $data[0]->username;
-            $password = $data[0]->pass;
-            $departmentid = $data[0]->departmentid;
-            $usermail = $data[0]->usermail;
-            $status = $data[0]->status_login;
-            $roleid = $data[0]->roleid;
-            $plantid = $data[0]->plantid;
-            $spvid = $data[0]->spvid;
-            $mgrid = $data[0]->mgrid;
-
-            $datTicket = $this->repository->GETMYTICKET($userid, $roleid);
-            $json = json_decode($datTicket);
-            $data = $json->data->data;
-            $request->session()->put($data);
-
-            /* Session Data */
-            $session = array(
-                'userid' => $userid,
-                'username' => $username,
-                'password' => $password,
-                'departmentid' => $departmentid,
-                'usermail' => $usermail,
-                'roleid' => $roleid,
-                'plantud' => $plantid,
-                'spvid' => $spvid,
-                'mgrid' => $mgrid,
-                'status' => $status
-            );
-            /* Set User Session */
-            Session::put('login', true);
-            Session::put('userid', $userid);
-            Session::put('username', $username);
-            Session::put('password', $password);
-            Session::put('departmentid', $departmentid);
-            Session::put('usermail', $usermail);
-            Session::put('roleid', $roleid);
-            Session::put('plantid', $plantid);
-            Session::put('spvid', $spvid);
-            Session::put('mgrid', $mgrid);
-            Session::put('status', $status);
+        if($json->rc == '00'){   
+            /* Update status */
+            $update = $this->updateLogin($userid, $password);
+            $json = json_decode($update);
        
-            return redirect()->route('home')
-                ->withSuccess('You have successfully logged in!');
-        } else {
+            if(!empty($update)){
+                /* checked status login */
+                if ($data[0]->status_login == 1){
+                    return back()->withErrors([
+                        'userid' => 'If you are already logged in, please log out first ',
+                    ]);
+                }
+            
+                $userid = $data[0]->userid;
+                $username = $data[0]->username;
+                $password = $data[0]->pass;
+                $departmentid = $data[0]->departmentid;
+                $usermail = $data[0]->usermail;
+                $status = $data[0]->status_login;
+                $roleid = $data[0]->roleid;
+                $plantid = $data[0]->plantid;
+                $spvid = $data[0]->spvid;
+                $mgrid = $data[0]->mgrid;
 
-            return back()->withErrors(['error' => 'your password or id is wrong ',]);
+                $datTicket = $this->repository->GETMYTICKET($userid, $roleid);
+                $json = json_decode($datTicket);
+                $data = $json->data->data;
+                // $request->session()->put($data);
+
+                /* Session Data */
+                $session = array(
+                    'userid' => $userid,
+                    'username' => $username,
+                    'password' => $password,
+                    'departmentid' => $departmentid,
+                    'usermail' => $usermail,
+                    'roleid' => $roleid,
+                    'plantud' => $plantid,
+                    'spvid' => $spvid,
+                    'mgrid' => $mgrid,
+                    'status' => $status
+                );
+                /* Set User Session */
+                Session::put('login', true);
+                Session::put('userid', $userid);
+                Session::put('username', $username);
+                Session::put('password', $password);
+                Session::put('departmentid', $departmentid);
+                Session::put('usermail', $usermail);
+                Session::put('roleid', $roleid);
+                Session::put('plantid', $plantid);
+                Session::put('spvid', $spvid);
+                Session::put('mgrid', $mgrid);
+                Session::put('status', $status);
+        
+                return redirect()->route('home')
+                    ->withSuccess('You have successfully logged in!');
+            } else {
+                return back()->withErrors(['error' => 'If you are already logged in, please log out first or call admin',]);
+            }           
+        } else {
+            return back()->withErrors(['error' => 'Error Update Login',]);
         }
     } 
 

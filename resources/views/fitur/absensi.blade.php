@@ -145,7 +145,6 @@
         seconds = seconds;
 
         var date_range = day + "/" + month + "/" + year;
-        console.log(date_range);    
         var $btn_submit = $("button#btn-sumbit-absen");
 
         //Initialize Select2 Elements
@@ -158,10 +157,12 @@
             $('#dataabsen').DataTable().clear().destroy();
             var $dataabsen = $('#dataabsen').DataTable({
                 destroy: true,
+                scrollX: true,
                 processing: true,
                 serverSide: true,
-                responsive: true,
+                responsive: false,
                 searching: true,
+                pageLength: 30,
                 dom: 'Blfrtip',
                 buttons: [
                     'excel'
@@ -189,7 +190,7 @@
                         }
                     },
                     {
-                        data: 'id',
+                        data: 'userid',
                         name: 'id'
                     },
                     {
@@ -214,7 +215,7 @@
                             minutes = minutes;
                             seconds = seconds;
                             // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                            var date = day + "/" + month + "/" + year;
                             return date;   
                         }
                     },
@@ -247,6 +248,15 @@
                         name: 'j6'
                     },
                 ],
+                rowCallback: function(row, data, index){
+                    console.log(index);
+                    if(data['j1'] == "     " && data['j2'] == "     " && data['j3'] == "     " && data['j4'] == "     " && data['j5'] == "     " && data['j6'] == "     "){
+                        $(row).find('td').css('background-color', 'red');
+                    }
+                    var no = $("td:first", row).html(index +1);
+                    return no;
+                   
+                },
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
                     "sProcessing": "Loading...",
@@ -259,8 +269,10 @@
         var $table = $('#dataabsen').DataTable({
             processing: true,
             serverSide: true,
-            responsive: true,
+            responsive: false,
+            scrollX: true,
             searching: true,
+            pageLength: 30,
             dom: 'Blfrtip',
             buttons: [
                 'excel'
@@ -313,7 +325,7 @@
                         minutes = minutes;
                         seconds = seconds;
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                        var date = day + "/" + month + "/" + year;
                         return date;   
                     }
                 },
@@ -323,7 +335,7 @@
                 },
                 {
                     data: 'j1',
-                    name: 'j1'
+                    nama: 'j1'
                 },
                 {
                     data: 'j2',
@@ -352,7 +364,14 @@
                 "sSearch": "Search:",
                 "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
             },
-
+            rowCallback: function(row, data, index){
+                console.log(index);
+                if(data['j1'] == "     " && data['j2'] == "     " && data['j3'] == "     " && data['j4'] == "     " && data['j5'] == "     " && data['j6'] == "     "){
+                    $(row).find('td').css('background-color', 'red').css('color', 'white');
+                }
+                var no = $("td:first", row).html(index +1);
+                return no;
+            },
             drawCallback: function() {
               $btn_submit.text("Sumbit");
               $btn_submit.prop('disabled', false);

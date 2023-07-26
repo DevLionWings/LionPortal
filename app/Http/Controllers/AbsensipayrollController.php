@@ -20,13 +20,17 @@ class AbsensipayrollController extends Controller
 
     public function absenpayroll()
     {   
+        $isLogin = Session::get('status_login');
+        if($isLogin != 1) {
+            return redirect()->route('login-page');
+        }
+
         $div = '';
         $bag = '';
         $grp = '';
         $adm = '';
         $period = '';
         $nip = '';
-
 
         $dataIndex = $this->repository->INDEXFILTERPERSNOLIA();
         $json = json_decode($dataIndex, true);
@@ -112,7 +116,6 @@ class AbsensipayrollController extends Controller
                 }
             }
             $data['nip'] = $divisiArray; 
-
         }
         
         return view('fitur.absensipayroll', $data);
@@ -121,58 +124,209 @@ class AbsensipayrollController extends Controller
     public function getAbsenPerkas(Request $request)
     {   
 
+        $nip = $request->data_nip;
         $date_arr = $request->get('daterange');
-        $nip = $request->get('data_nip');
-        $kodedivisi = $request->get('divisi');
-        $kodebagian = $request->get('bagian');
-        $kodegroup = $request->get('group');
-        $kodeadmin = $request->get('admin');
-        $kodeperiode = $request->get('periode');
         $start = explode(' - ',$date_arr)[0];
         $start_date = date("Y-m-d", strtotime($start));
         $end = explode(' - ',$date_arr)[1];
         $end_date = date("Y-m-d", strtotime($end));
+        $limit = $request->start;
+        $page = $request->length;
             
         /* Get Absen Perkas */
-        $dataAbsenPerkas = $this->repository->GETFILTERPERSONALIA($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $start_date, $end_date);
+        $dataAbsenPerkas = $this->repository->GETPERSONALIA($nip, $limit, $page, $start_date, $end_date);
         $json = json_decode($dataAbsenPerkas, true);
         
         if($json["rc"] == "00") 
         {   
-            $data = $json['data']['data'];
+            $data = $json['data'];
+            if(!empty($json["total"]) || $data == []){
+                $total = $json["total"];
+            }
+            $total = $json["total"];
         } else {
             $data = [];
-            $json["total"] = [];
+            $total = $json["total"];
         }
         
         return DataTables::of($data)
-            ->setTotalRecords($json["total"])
-            ->setFilteredRecords($json["total"])
+            ->addColumn('action', function($row){
+                $updateBtn = ' <a href="javascript:void(0)" class="newshift btn btn-success" data-nip="'.$row["Nip"].'" data-newshift="'.$row["NewShift"].'" data-category="'.$row["TimeCategory"].'"><i class="fas fa-edit"></i></a>';
+                return $updateBtn;
+                
+            })
+            ->rawColumns(['checkbox', 'action'])
+            ->setTotalRecords($total)
+            ->setFilteredRecords($total)
+            ->skipPaging()
+            ->make(true);
+
+    }
+
+    public function filterAbsenPerkas(Request $request)
+    {   
+
+        $date_arr = $request->get('daterange');
+        $nip = $request->data_nip;
+        $kodedivisi = $request->data_divisi;
+        $kodebagian = $request->data_bagian;
+        $kodegroup = $request->data_group;
+        $kodeadmin = $request->data_admin;
+        $kodeperiode = $request->data_periode;
+        $kontrak = $request->data_kontrak;
+        $start = explode(' - ',$date_arr)[0];
+        $start_date = date("Y-m-d", strtotime($start));
+        $end = explode(' - ',$date_arr)[1];
+        $end_date = date("Y-m-d", strtotime($end));
+        $limit = $request->start;
+        $page = $request->length;
+            
+        /* Get Absen Perkas */
+        $dataAbsenPerkas = $this->repository->GETFILTERPERSONALIA($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $kontrak, $start_date, $end_date, $limit, $page);
+        $json = json_decode($dataAbsenPerkas, true);
+        
+        if($json["rc"] == "00") 
+        {   
+            $data = $json['data'];
+            if(!empty($json["total"]) || $data == []){
+                $total = $json["total"];
+            }
+            $total = $json["total"];
+            // $total = $json["total"][0]["count"];
+        } else {
+            $data = [];
+            $total = $json["total"];
+        }
+        
+        return DataTables::of($data)
+            ->addColumn('action', function($row){
+                $updateBtn = ' <a href="javascript:void(0)" class="newshift btn btn-success" data-nip="'.$row["Nip"].'" data-newshift="'.$row["NewShift"].'" data-category="'.$row["TimeCategory"].'"
+                data-jamin="'.$row["JamIn"].'" data-tglin="'.$row["TglIn"].'" data-tglout="'.$row["TglOut"].'" data-jamout="'.$row["JamOut"].'" data-timevalid="'.$row["TimeValidation"].'"
+                data-jamlembur="'.$row["JamLembur"].'" data-off="'.$row["LamaOff"].'"><i class="fas fa-edit"></i></a>';
+                return $updateBtn;
+            })
+            ->rawColumns(['action'])
+            ->setTotalRecords($total)
+            ->setFilteredRecords($total)
+            ->skipPaging()
             ->make(true);
 
     }
 
     public function updateShift(Request $request)
     {
-        $shift = $request->shift;
-        $nokasus = $request->nokasus;
-        $dat = '';
-
+        $shift = $request->selectshift;
+        $nip = $request->nip;
+        $jamin = $request->jamin;
+        $tglin = $request->tglin;
+        $jamout = $request->jamout;
+        $tglout = $request->tglout;
+        $timevalid = $request->timevalid;
+        $jamlembur = $request->jamlembur;
+        $lamaoff = $request->off;
+        
         $lastShift = DB::connection('mysql2')->table('personalia.kasus')
+            ->where('No Kasus', 'LIKE','Z'.'%')
             ->select('No Kasus as nokasus')
-            ->orderBy('No Kasus', 'DESC')
-            ->limit(1)
-            ->get();
-            
-        $prefix = $lastShift[0]->nokasus; 
-        // $prefixArray = [];
-        // foreach ($lastShift as $key => $value) {
-        //     array_push($prefixArray, [
-        //         "nokasus" => explode('   ', $value['No Kasus']),
-        //     ]);
-        // }
-        // $data['dat'] = $prefixArray;
-        // return $data;
+            ->max('No Kasus');
+   
+        if(empty($lastShift) ){
+            $nokasus = 'Z'.'000000000';
+            // $var = $i + 1;
+            $subs = substr($nokasus, 1, 10) ;
+            $int = intval($subs);
+            $newint = $int+1;
+            $str_pad = str_pad($newint, 9, "0", STR_PAD_LEFT);
+            $last = 'Z'.$str_pad;
+            $no_kasus = $last;
+        } else {
+            // $var = $i + 1;
+            $subs = substr($lastShift, 1, 10) ;
+            $int = intval($subs);
+            $newint = $int+1;
+            $str_pad = str_pad($newint, 9, "0", STR_PAD_LEFT);
+            $last = 'Z'.$str_pad;
+            $no_kasus = $last;
+        }
+        
+        /* Update Shift & Insert Tukar Shift */
+        $queryShift = $this->repository->UPDATETUKARSHIFT($nip, $shift, $no_kasus, $jamin, $tglin, $jamout, $tglout, $timevalid, $jamlembur, $lamaoff);
+      
+        return redirect()->route('absensipayroll')->with("success", "successfully");
+    }
+
+    public function updateShiftBulk(Request $request)
+    {
+        $nip = $request->nip;
+        $kodedivisi = $request->data_divisi;
+        $kodebagian = $request->data_bagian;
+        $kodegroup = $request->data_group;
+        $kodeadmin = $request->data_admin;
+        $kodeperiode = $request->data_periode;
+        $kontrak = $request->data_kontrak;
+        $date_arr = $request->get('daterange');
+        $start = explode(' - ',$date_arr)[0];
+        $start_date = date("Y-m-d", strtotime($start));
+        $end = explode(' - ',$date_arr)[1];
+        $end_date = date("Y-m-d", strtotime($end));
+    
+        $lastShift = DB::connection('mysql2')->table('personalia.kasus')
+            ->where('No Kasus', 'LIKE','Z'.'%')
+            ->select('No Kasus as nokasus')
+            ->max('No Kasus');
+        $count = count($nip);
+   
+        $no_kasus = [];
+        for ($i=1; $i <= $count; $i++){
+            if(empty($lastShift) ){
+                $nokasus = 'Z'.'000000000';
+                // $var = $i + 1;
+                $subs = substr($nokasus, 1, 10) ;
+                $int = intval($subs);
+                $newint = $int+$i;
+                $str_pad = str_pad($newint, 9, "0", STR_PAD_LEFT);
+                $last = 'Z'.$str_pad;
+            } else {
+                // $var = $i + 1;
+                $subs = substr($lastShift, 1, 10) ;
+                $int = intval($subs);
+                $newint = $int+$i;
+                $str_pad = str_pad($newint, 9, "0", STR_PAD_LEFT);
+                $last = 'Z'.$str_pad;
+            }
+            array_push($no_kasus, $last);
+        } 
+     
+        /* Update Shift & Insert Tukar Shift */
+        $queryShift = $this->repository->UPDATETUKARSHIFTBULK($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $kontrak, $start_date, $end_date, $no_kasus);
+        return $queryShift;
+        return redirect()->route('absensipayroll')->with("success", "successfully");
+    }
+
+    public function getShift(Request $request)
+    {   
+        $shft = '';
+        $shift = $request->shift;
+
+        $dataShift = DB::connection('mysql2')->table('personalia.mastershift') 
+                ->where('Kode Shift', 'LIKE','%'.$shift.'%') 
+                ->get();
+        $jsonShift = json_decode($dataShift, true);
+
+        /* Get Shift */
+        $shift = $jsonShift;
+        $shiftArray = [];
+        foreach ($shift as $key => $value) {
+            if(!in_array($value, $shiftArray)){
+                array_push($shiftArray, [
+                    "NAME" => trim($value['Nama Shift']),
+                    "CODE" => trim($value['Kode Shift']),
+                ]);
+            }
+        }
+        $data['shft'] = $shiftArray; 
+        
+        return $data;
     }
 
 }

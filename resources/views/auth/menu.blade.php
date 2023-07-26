@@ -2,18 +2,18 @@
 <aside class="main-sidebar sidebar-dark-primary">
   <!-- Brand Logo -->
   <a class="brand-link">
-    <img src="{{ asset('images/logo.png') }}" class="brand-image">
-    <span class="brand-text font-weight-light">LION-PORTAL</span>
+    <img src="{{ asset('images/logobar1.png') }}" class="brand-image">
+    <span class="brand-text font-weight-light">PORTAL</span>
   </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{asset('images/profile.png')}}" class="img-circle elevation-2" alt="User Image">
+        <img src="{{asset('images/lion.png')}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
-        <a href="#" class="d-block">{{ session('username') }}</a>
+        <a class="d-block">{{ session('username') }}</a>
       </div>
     </div>
 

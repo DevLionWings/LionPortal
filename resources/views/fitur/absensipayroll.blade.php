@@ -111,7 +111,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label>NIP :</label>
                                             <div class="input-group value">
@@ -148,7 +148,7 @@
                                     <div class="col-md-1">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <button id="checked" name="checked" class="checked btn btn-submit btn-primary">Update</button>
+                                                <button id="checked" name="checked" class="checked btn-submit btn-primary" style="display: none">Update</button>
                                             </div>
                                         </div>
                                     </div>
@@ -159,14 +159,31 @@
                                     </div> -->
                                 </div>
                             </div>
-                            <form name="formData" action="">
+                            <form id="formData" name="formData" action="">
                                 <div class="card-body">
+                                    @if(session('success'))
+                                    <div class="alert alert-success alert-dismissible alert-message" >
+                                        <i class="icon fas fa-check"></i>
+                                        {{ session('success') }}
+                                    </div>
+                                    @endif
+                                    @if(session('error'))
+                                        <div class="alert alert-danger alert-dismissible alert-message">
+                                            <i class="icon fas fa-ban"></i>
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
+
+                                    @if($errors->any())
+                                        <div class="alert alert-danger alert-message">
+                                            {{ $errors->first() }}
+                                        </div>
+                                    @endif
                                     <div class="row">
                                         <div class="col-12">
                                             <table id="dataabsenpayroll" class="table table-bordered table-hover display nowrap" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th></th>
                                                         <th>NIP</th>
                                                         <th>Name</th>
                                                         <th>Code Division</th>
@@ -175,13 +192,19 @@
                                                         <th>Date In</th>
                                                         <th>Clock In</th>
                                                         <th>Date Out</th>
+                                                        <th>Clock Out</th>
                                                         <th>Length of Working</th>
                                                         <th>Overtime</th>
                                                         <th>Shift</th>
                                                         <th>Long Time Off</th>
                                                         <th>No Case</th>
                                                         <th>CardX</th>
-                                                        <th>Type</th>
+                                                        <th>Shift In</th>
+                                                        <th>Shift Out</th>
+                                                        <th>Time Validation</th>
+                                                        <th></th>
+                                                        <th>New Shift</th>
+                                                        <th>Edit</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -196,17 +219,50 @@
                             </div> -->
                         </div>
                     </div>
-                    <!-- /.card-body -->
-                    <!-- <div class="card-footer">
-                            Indo Sukses Logistic
-                        </div> -->
-                    <!-- /.card-footer-->
                 </div>
                 <!-- /.card -->
             </div>
         </div>
     </section>
-</div>
+    <div id="modal-update-shift"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Shift</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{route('update-shift')}}" method="post" name='shift'>
+                    @csrf
+                    <div class="modal-body">
+                    <meta name="csrf-token" content="{{ csrf_token() }}">
+                        <input type="hidden" id="nip" name="nip"/>
+                        <input type="hidden" id="jamin" name="jamin"/>
+                        <input type="hidden" id="tglin" name="tglin"/>
+                        <input type="hidden" id="tglout" name="tglout"/>
+                        <input type="hidden" id="jamout" name="jamout"/>
+                        <input type="hidden" id="timevalid" name="timevalid"/>
+                        <input type="hidden" id="jamlembur" name="jamlembur"/>
+                        <input type="hidden" id="off" name="off"/>
+                        <div class="form-group">
+                            <div class="name">Update Shift :</div>
+                            <div class="input-group value">
+                                <select id="selectshift" name="selectshift" class="form-control input--style-6" required>
+                                    <option value=""> Masukkan Pilihan :</option>
+                                        <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" id="update-btn" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- ./wrapper -->
 @endsection
@@ -233,10 +289,12 @@
 
     function getValue(check) {
         var values = [];
-        if ($(check).is(':checked')) {
+        if ($(check).is(':checked') == true) {
+            $("#checked").show();
             $(checked).prop("checked", true);
             arr_values.push($(check).val());
         } else {
+            $("#checked").hide();
             $(checked).prop("checked", false);
             arr_values.forEach(function (value, i) {
                 if (value === $(check).val()) {
@@ -283,6 +341,32 @@
         //     });
         // });
 
+        $(document).on('click', '.newshift', function () {
+            $('#modal-update-shift').modal({backdrop: 'static', keyboard: false})  
+            getShiftJson($(this).attr('data-newshift'));
+            var nip = $(this).attr('data-nip');
+            var newshift = $(this).attr('data-newshift');
+            var jamin = $(this).attr('data-jamin');
+            var tglin = $(this).attr('data-tglin');
+            var tglout = $(this).attr('data-tglout');
+            var jamout = $(this).attr('data-jamout');
+            var timevalid = $(this).attr('data-timevalid');
+            var jamlembur = $(this).attr('data-jamlembur');
+            var off = $(this).attr('data-off');
+            var $modal = $('#modal-update-shift');
+            var $form = $modal.find('form[name="shift"]');
+            $form.find('input[name="nip"]').val(nip);
+            $form.find('input[name="selectshift"]').val(selectshift);
+            $form.find('input[name="newshift"]').val(newshift);
+            $form.find('input[name="jamin"]').val(jamin);
+            $form.find('input[name="tglin"]').val(tglin);
+            $form.find('input[name="tglout"]').val(tglout);
+            $form.find('input[name="jamout"]').val(jamout);
+            $form.find('input[name="timevalid"]').val(timevalid);
+            $form.find('input[name="jamlembur"]').val(jamlembur);
+            $form.find('input[name="off"]').val(off);
+            $modal.modal('show');
+        }) 
 
         $(document).on('click', '.absen', function submit() {
             data_divisi = $('select[name="divisi"]').val();
@@ -302,12 +386,13 @@
                 serverSide: true,
                 responsive: false,
                 searching: true,
+                pageLength: 50,
                 dom: 'Blfrtip',
                 buttons: [
                     'excel'
                 ],
                 ajax: {
-                    url: '{{ route("get-absensipayroll") }}',
+                    url: '{{ route("filter-absensipayroll") }}',
                     "data": function (d) {
                         d.daterange = $('input[name="data_date_range"]').val();
                         d.data_nip = $('select[name="data_nip"]').val();
@@ -324,7 +409,116 @@
                         return settings.data;
                     },
                 },
+                
                 columns: [
+                    {
+                        data: 'Nip',
+                        name: 'Nip'
+                    },
+                    {
+                        data: 'Nama',
+                        name: 'Nama'
+                    },
+                    {
+                        data: 'KodeDivisi',
+                        name: 'KodeDivisi'
+                    },
+                    {
+                        data: 'KodeBagian',
+                        name: 'KodeBagian'
+                    },
+                    {
+                        data: 'KodeGroup',
+                        name: 'KodeGroup'
+                    },
+                    {
+                        data: 'TglIn',
+                        render: function(data) {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                            return date;   
+                        }
+                    },
+                    {
+                        data: 'JamIn',
+                        name: 'JamIn'
+                    },
+                    {
+                        data: 'TglOut',
+                        render: function(data) {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                            return date;   
+                        }
+                    },
+                    {
+                        data: 'JamOut',
+                        name: 'JamOut'
+                    },
+                    {
+                        data: 'LamaKerja',
+                        name: 'LamaKerja'
+                    },
+                    {
+                        data: 'JamLembur',
+                        name: 'JamLembur'
+                    },
+                    {
+                        data: 'Shift',
+                        name: 'Shift'
+                    },
+                    {
+                        data: 'LamaOff',
+                        name: 'LamaOff'
+                    },
+                    {
+                        data: 'NoKasus',
+                        name: 'NoKasus'
+                    },
+                    {
+                        data: 'CardX',
+                        name: 'CardX'
+                    },
+                    {
+                        data: 'ShiftIn',
+                        name: 'ShiftIn'
+                    },
+                    {
+                        data: 'ShiftOut',
+                        name: 'ShiftOut'
+                    },
+                    {
+                        data: 'TimeValidation',
+                        name: 'TimeValidation'
+                    },
                     {
                         data: 'Nip',
                         targets: 0,
@@ -337,101 +531,14 @@
                         }
                     },
                     {
-                        data: 'Nip',
-                        name: 'Nip'
+                        data: 'NewShift',
+                        name: 'NewShift'
                     },
                     {
-                        data: 'Nama',
-                        name: 'Nama'
+                        data: 'action',
+                        name: 'action',
                     },
-                    {
-                        data: 'Kode Divisi',
-                        name: 'Kode Divisi'
-                    },
-                    {
-                        data: 'Kode Bagian',
-                        name: 'Kode Bagian'
-                    },
-                    {
-                        data: 'Kode Group',
-                        name: 'Kode Group'
-                    },
-                    {
-                        data: 'Tgl In',
-                        render: function(data) {
-                            var today = new Date(data);
-                            var day = today.getDate() + "";
-                            var month = (today.getMonth() + 1) + "";
-                            var year = today.getFullYear() + "";
-                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                            var seconds = today.getSeconds() + "";
 
-                            day = day;
-                            month = month;
-                            year = year;
-                            hour = hour;
-                            minutes = minutes;
-                            seconds = seconds;
-                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
-                            return date;   
-                        }
-                    },
-                    {
-                        data: 'Jam In',
-                        name: 'Jam In'
-                    },
-                    {
-                        data: 'Tgl Out',
-                        render: function(data) {
-                            var today = new Date(data);
-                            var day = today.getDate() + "";
-                            var month = (today.getMonth() + 1) + "";
-                            var year = today.getFullYear() + "";
-                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                            var seconds = today.getSeconds() + "";
-
-                            day = day;
-                            month = month;
-                            year = year;
-                            hour = hour;
-                            minutes = minutes;
-                            seconds = seconds;
-                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
-                            return date;   
-                        }
-                    },
-                    {
-                        data: 'Lama Kerja',
-                        name: 'Lama Kerja'
-                    },
-                    {
-                        data: 'Jam Lembur',
-                        name: 'Jam Lembur'
-                    },
-                    {
-                        data: 'Shift',
-                        name: 'Shift'
-                    },
-                    {
-                        data: 'Lama Off',
-                        name: 'Lama Off'
-                    },
-                    {
-                        data: 'No Kasus',
-                        name: 'No Kasus'
-                    },
-                    {
-                        data: 'CardX',
-                        name: 'CardX'
-                    },
-                    {
-                        data: 'tipekaryawan',
-                        name: 'Tipe'
-                    },
                 ],
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
@@ -444,181 +551,51 @@
                     $btn_submit.prop('disabled', false);
                 }
             });
-        });
-
+        }); 
+        
         /* After Checked */
-        $(document).on('click', '.checked', function submit() {
-            $('#dataabsenpayroll').DataTable().clear().destroy();
-            var $dataabsen = $('#dataabsenpayroll').DataTable({
-                destroy: true,
-                scrollX: true,
-                processing: true,
-                serverSide: true,
-                responsive: false,
-                searching: true,
-                dom: 'Blfrtip',
-                buttons: [
-                    'excel'
-                ],
-                ajax: {
-                    url: '{{ route("update-shift") }}',
-                    "data": function (d) {
-                        d.nip = arr_values,
-                        d.shift = $('select[name="data_nip"]').val();
-                    },
-                    "dataSrc": function (settings) {
-                        $btn_submit.text("Submit");
-                        $btn_submit.prop('disabled', false);
-                        return settings.data;
-                    },
-                },
-                columns: [
-                    {
-                        data: 'Nip',
-                        targets: 0,
-                        className: 'select-checkbox',
-                        render: function (data) {
-                            if (data) {
-                                return '<input type="checkbox" value="' + data +
-                                    '" id="chckBox" name="checked" onclick="getValue(this);">';
-                            }
-                        }
-                    },
-                    {
-                        data: 'Nip',
-                        name: 'Nip'
-                    },
-                    {
-                        data: 'Nama',
-                        name: 'Nama'
-                    },
-                    {
-                        data: 'Kode Divisi',
-                        name: 'Kode Divisi'
-                    },
-                    {
-                        data: 'Kode Bagian',
-                        name: 'Kode Bagian'
-                    },
-                    {
-                        data: 'Kode Group',
-                        name: 'Kode Group'
-                    },
-                    {
-                        data: 'Tgl In',
-                        render: function(data) {
-                            var today = new Date(data);
-                            var day = today.getDate() + "";
-                            var month = (today.getMonth() + 1) + "";
-                            var year = today.getFullYear() + "";
-                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                            var seconds = today.getSeconds() + "";
-
-                            day = day;
-                            month = month;
-                            year = year;
-                            hour = hour;
-                            minutes = minutes;
-                            seconds = seconds;
-                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
-                            return date;   
-                        }
-                    },
-                    {
-                        data: 'Jam In',
-                        name: 'Jam In'
-                    },
-                    {
-                        data: 'Tgl Out',
-                        render: function(data) {
-                            var today = new Date(data);
-                            var day = today.getDate() + "";
-                            var month = (today.getMonth() + 1) + "";
-                            var year = today.getFullYear() + "";
-                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                            var seconds = today.getSeconds() + "";
-
-                            day = day;
-                            month = month;
-                            year = year;
-                            hour = hour;
-                            minutes = minutes;
-                            seconds = seconds;
-                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
-                            return date;   
-                        }
-                    },
-                    {
-                        data: 'Lama Kerja',
-                        name: 'Lama Kerja'
-                    },
-                    {
-                        data: 'Jam Lembur',
-                        name: 'Jam Lembur'
-                    },
-                    {
-                        data: 'Shift',
-                        name: 'Shift'
-                    },
-                    {
-                        data: 'Lama Off',
-                        name: 'Lama Off'
-                    },
-                    {
-                        data: 'No Kasus',
-                        name: 'No Kasus'
-                    },
-                    {
-                        data: 'CardX',
-                        name: 'CardX'
-                    },
-                    {
-                        data: 'tipekaryawan',
-                        name: 'Tipe'
-                    },
-                ],
-                oLanguage: {
-                    "sLengthMenu": "Tampilkan _MENU_ data",
-                    "sProcessing": "Loading...",
-                    "sSearch": "Search:",
-                    "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
-                },
-                drawCallback: function() {
-                    $btn_submit.text("Sumbit");
-                    $btn_submit.prop('disabled', false);
-                }
-            });
-        });
-
         $('#checked').on('click', function () {
             var nip = arr_values;
+            var daterange = $('input[name="data_date_range"]').val();
+            var data_divisi = $('select[name="divisi"]').val();
+            var data_bagian = $('select[name="bagian"]').val();
+            var data_group = $('select[name="group"]').val();
+            var data_admin = $('select[name="admin"]').val();
+            var data_periode = $('select[name="periode"]').val();
+            var data_kontrak = $('select[name="kontrak"]').val();
          
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: "/add/comment",
+                url: "/update/shiftbulk",
                 type: 'POST',
                 data: {
                     'nip' : nip,
+                    'daterange' : daterange,
+                    'data_divisi' : data_divisi,
+                    'data_bagian' : data_bagian,
+                    'data_group' : data_group,
+                    'data_admin' : data_admin,
+                    'data_periode' : data_periode,
+                    'data_kontrak' : data_kontrak
                 },
                 success: function(response){ 
-                        window.location.reload(response);
+                    // console.log(response);
+                    $('#dataabsenpayroll').DataTable().ajax.reload();
                         
                 }
             });
         })
 
+
         var $dataabsen = $('#dataabsenpayroll').DataTable({
             scrollX: true,
             processing: true,
             serverSide: true,
-            responsive: true,
+            responsive: false,
             searching: true,
+            lengthChange: false,
             dom: 'Blfrtip',
             buttons: [
                 'excel'
@@ -628,12 +605,6 @@
                 "data": function (d) {
                     d.daterange = $('input[name="data_date_range"]').val();
                     d.data_nip = $('select[name="data_nip"]').val();
-                    d.data_divisi = $('select[name="divisi"]').val();
-                    d.data_bagian = $('select[name="bagian"]').val();
-                    d.data_group = $('select[name="group"]').val();
-                    d.data_admin = $('select[name="admin"]').val();
-                    d.data_periode = $('select[name="periode"]').val();
-                    d.data_kontrak = $('select[name="kontrak"]').val();
                 },
                 "dataSrc": function (settings) {
                     $btn_submit.text("Submit");
@@ -642,6 +613,114 @@
                 },
             },
             columns: [
+                {
+                    data: 'Nip',
+                    name: 'Nip'
+                },
+                {
+                    data: 'Nama',
+                    name: 'Nama'
+                },
+                {
+                    data: 'KodeDivisi',
+                    name: 'KodeDivisi'
+                },
+                {
+                    data: 'KodeBagian',
+                    name: 'KodeBagian'
+                },
+                {
+                    data: 'KodeGroup',
+                    name: 'KodeGroup'
+                },
+                {
+                    data: 'TglIn',
+                    render: function(data) {
+                        var today = new Date(data);
+                        var day = today.getDate() + "";
+                        var month = (today.getMonth() + 1) + "";
+                        var year = today.getFullYear() + "";
+                        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                        var seconds = today.getSeconds() + "";
+
+                        day = day;
+                        month = month;
+                        year = year;
+                        hour = hour;
+                        minutes = minutes;
+                        seconds = seconds;
+                        // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                        return date;   
+                    }
+                },
+                {
+                    data: 'JamIn',
+                    name: 'JamIn'
+                },
+                {
+                    data: 'TglOut',
+                    render: function(data) {
+                        var today = new Date(data);
+                        var day = today.getDate() + "";
+                        var month = (today.getMonth() + 1) + "";
+                        var year = today.getFullYear() + "";
+                        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                        var seconds = today.getSeconds() + "";
+
+                        day = day;
+                        month = month;
+                        year = year;
+                        hour = hour;
+                        minutes = minutes;
+                        seconds = seconds;
+                        // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
+                        return date;   
+                    }
+                },
+                {
+                    data: 'JamOut',
+                    name: 'JamOut'
+                },
+                {
+                    data: 'LamaKerja',
+                    name: 'LamaKerja'
+                },
+                {
+                    data: 'JamLembur',
+                    name: 'JamLembur'
+                },
+                {
+                    data: 'Shift',
+                    name: 'Shift'
+                },
+                {
+                    data: 'LamaOff',
+                    name: 'LamaOff'
+                },
+                {
+                    data: 'NoKasus',
+                    name: 'NoKasus'
+                },
+                {
+                    data: 'CardX',
+                    name: 'CardX'
+                },
+                {
+                    data: 'ShiftIn',
+                    name: 'ShiftIn'
+                },
+                {
+                    data: 'ShiftOut',
+                    name: 'ShiftOut'
+                },
+                {
+                    data: 'TimeValidation',
+                    name: 'TimeValidation'
+                },
                 {
                     data: 'Nip',
                     targets: 0,
@@ -654,101 +733,14 @@
                     }
                 },
                 {
-                    data: 'Nip',
-                    name: 'Nip'
+                    data: 'NewShift',
+                    name: 'NewShift'
                 },
                 {
-                    data: 'Nama',
-                    name: 'Nama'
+                    data: 'action',
+                    name: 'action'
                 },
-                {
-                    data: 'Kode Divisi',
-                    name: 'Kode Divisi'
-                },
-                {
-                    data: 'Kode Bagian',
-                    name: 'Kode Bagian'
-                },
-                {
-                    data: 'Kode Group',
-                    name: 'Kode Group'
-                },
-                {
-                    data: 'Tgl In',
-                    render: function(data) {
-                        var today = new Date(data);
-                        var day = today.getDate() + "";
-                        var month = (today.getMonth() + 1) + "";
-                        var year = today.getFullYear() + "";
-                        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                        var seconds = today.getSeconds() + "";
 
-                        day = day;
-                        month = month;
-                        year = year;
-                        hour = hour;
-                        minutes = minutes;
-                        seconds = seconds;
-                        // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
-                        return date;   
-                    }
-                },
-                {
-                    data: 'Jam In',
-                    name: 'Jam In'
-                },
-                {
-                    data: 'Tgl Out',
-                    render: function(data) {
-                        var today = new Date(data);
-                        var day = today.getDate() + "";
-                        var month = (today.getMonth() + 1) + "";
-                        var year = today.getFullYear() + "";
-                        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                        var seconds = today.getSeconds() + "";
-
-                        day = day;
-                        month = month;
-                        year = year;
-                        hour = hour;
-                        minutes = minutes;
-                        seconds = seconds;
-                        // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes;
-                        return date;   
-                    }
-                },
-                {
-                    data: 'Lama Kerja',
-                    name: 'Lama Kerja'
-                },
-                {
-                    data: 'Jam Lembur',
-                    name: 'Jam Lembur'
-                },
-                {
-                    data: 'Shift',
-                    name: 'Shift'
-                },
-                {
-                    data: 'Lama Off',
-                    name: 'Lama Off'
-                },
-                {
-                    data: 'No Kasus',
-                    name: 'No Kasus'
-                },
-                {
-                    data: 'CardX',
-                    name: 'CardX'
-                },
-                {
-                    data: 'tipekaryawan',
-                    name: 'Tipe'
-                },
             ],
             oLanguage: {
                 "sLengthMenu": "Tampilkan _MENU_ data",
@@ -762,6 +754,30 @@
             }
         });
     });
+
+    function getShiftJson(shiftSelected) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "GET",
+            url: "/shift",
+            data: {
+                'shift' : shiftSelected, 
+            },
+            success: function(response) {
+                console.log(response['shft'])
+                var $select_shift = $('<select type="text" id="selectshift" name="selectshift" class="form-control input--style-6" required></select>');
+                $.each(response["shft"], function(key, data) {
+                    var isSelected = (data["CODE"]===shiftSelected)?"selected":"";
+                    var $options = "<option value='"+data["CODE"]+"' "+isSelected+">"+data["CODE"]+"</option>";
+                    $select_shift.append($options);
+                });
+                $('#modal-update-shift form[name="shift"] select[name="selectshift"]').parent().html($select_shift);
+            }
+        })
+    }
+    
 </script>
 <script>
     window.setTimeout(function() {

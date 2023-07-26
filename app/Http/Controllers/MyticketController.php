@@ -27,6 +27,12 @@ class MyticketController extends Controller
 
     public function myTiket(Request $request)
     {
+        $isLogin = Session::get('status_login');
+        if($isLogin != 1) {
+            return redirect()->route('login-page');
+        }
+
+
         $usreq = '';
         $categ = '';
         $prior = '';

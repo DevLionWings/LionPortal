@@ -1,0 +1,42 @@
+$data = DB::connection('mysql2')->select("SELECT Nip, Nama, KodeDivisi, KodeBagian, KodeGroup, TglIn, JamIn, TglOut, JamOut, LamaKerja, JamLembur, Shift, LamaOff, NoKasus, CardX, ShiftIn, ShiftOut, TimeValidation,
+                ( 
+                    SELECT `Kode Shift` FROM personalia.mastershift 
+                    WHERE `Jam In` >= JamIn AND `Jam Out` <= JamOut 
+                    AND `Kode Shift` REGEXP '^S.$'
+                    AND (TIME_TO_SEC(TIMEDIFF(`Jam In`, JamIn))/60) <= 60 
+                    AND (TIME_TO_SEC(TIMEDIFF(JamOut, `Jam Out`))/60) <= 360
+                ) AS NewShift,
+                    CASE 
+                        WHEN (TimeValidation = 'VALID') THEN 'VL'
+                        WHEN (TimeValidation = 'INVALID') THEN 'IV'
+                        WHEN (TimeValidation = 'LATE < 10') THEN 'LT'
+                        WHEN (TimeValidation = 'LESS WORKING HOURS') THEN 'LS'
+                    END TimeCategory
+                FROM (
+                    SELECT a.Nip, b.Nama, b.`Kode Divisi` AS KodeDivisi, b.`Kode Bagian` AS KodeBagian, b.`Kode Group` AS KodeGroup,
+                    a.`Tgl In` AS TglIn, a.`Jam In` AS JamIn, a.`Tgl Out` AS TglOut, a.`Jam Out` AS JamOut, a.`Lama Kerja` AS LamaKerja, a.`Jam Lembur` AS JamLembur,
+                    a.Shift, a.`Lama Off` AS LamaOff, a.`No Kasus` AS NoKasus, a.CardX, c.`Jam In` AS ShiftIn, c.`Jam Out` AS ShiftOut,
+                    CASE
+                        WHEN (b.`Kode Group` != '') 
+                        THEN
+                            CASE
+                            WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN 'VALID'
+                            WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN 'VALID'
+                            WHEN (a.`Lama Kerja` < 7) THEN 'LESS WORKING HOURS'
+                            WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN 'LATE < 10'
+                            ELSE 'INVALID'
+                            END
+                        ELSE 'VALID'
+                    END TimeValidation
+                    FROM personalia.absensi AS a 
+                    INNER JOIN personalia.masteremployee AS b ON a.Nip = b.Nip AND b.Begda <= a.`Tgl In` AND b.Endda >= a.`Tgl In`
+                    LEFT OUTER JOIN personalia.mastershift AS c ON a.Shift = c.`Kode Shift`
+                    WHERE a.Nip  IN :nip
+                    AND a.`Tgl In` >= :start AND a.`Tgl In` <= :end
+                    AND b.`Kode Divisi` LIKE :divisi
+                    AND b.`Kode Bagian` LIKE :bagian
+                    AND b.`Kode Group` LIKE :group
+                    AND b.`Kode Admin` LIKE :admins
+                    AND b.`Kode Periode` LIKE :periode
+                    AND b.`Kode Kontrak` LIKE :kontrak
+                ) a  WHERE TimeValidation IN ('INVALID', 'LATE', 'LESS WORKING HOURS') LIMIT :limit, :page", $bindings);

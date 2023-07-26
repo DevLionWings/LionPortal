@@ -14,7 +14,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>MYTICKET</h1>
+                    <h1>MY TICKET</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -54,6 +54,7 @@
                             <table id="tiket_list" class="table table-bordered table-hover display nowrap" width="100%">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Tiket No</th>
                                         <th>Category</th>
                                         <th>Status</th>
@@ -79,7 +80,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">View Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id=close-btn data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -148,14 +149,14 @@
                         <hr />
                         <div class="form-group">
                             <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
-                            <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" required></textarea>
                         </div>
                         <div class="form-group">
                             <button type="button" id="btncomment" class="btn btn-warning">Save</button>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" id=close-btn class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
                         <!-- <button type="button" id="update-btn" class="btn btn-primary">Save</button> -->
                     </div>
                 </form>
@@ -577,7 +578,19 @@
             columns: [
                 {
                     data: 'ticketno',
-                    name: 'ticketno'
+                    render: function(data){
+                        if(data != null){
+                            return '';
+                        } else {
+                            return '';
+                        }
+                    }
+                },
+                {
+                    data: 'ticketno',
+                    render: function(data, type, row){
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'">'+data+'</a>'
+                    }
                 },
                 {
                     data: 'category',
@@ -689,6 +702,11 @@
 <script>
     $('#document').ready(function(){
             $('#close-btn').on('click', function(){
+                location.reload();
+        });
+    });
+    $('#document').ready(function(){
+            $('#close-btn2').on('click', function(){
                 location.reload();
         });
     });

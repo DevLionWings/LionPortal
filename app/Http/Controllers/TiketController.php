@@ -28,36 +28,18 @@ class TiketController extends Controller
 
     public function tiket(Request $request)
     {
+
+        $isLogin = Session::get('status_login');
+        if($isLogin != 1) {
+            return redirect()->route('login-page');
+        }
+
         $usreq = '';
         $categ = '';
         $prior = '';
         $assn = '';
         $stat = '';
         $tick = '';
-        $disc = ''; 
-        $ticketno = $request->ticketno;
-        $ticketno = $request->get('ticketno');
-        
-        $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
-                ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
-                ->select('a.senderid', 'b.username', 'b.createdon', 'a.comment')
-                ->where('a.ticketno', $ticketno)
-                ->get();
-        $jsonCmmnt = json_decode($dataCommnt, true);
-
-        /* Get Comment */
-        $comment = $jsonCmmnt;
-        $commentArray = [];
-        foreach ($comment as $key => $value) {
-            array_push($commentArray, [
-                "COMMENT" => trim($value['comment']),
-                "SENDER" => trim($value['username']),
-                "DATE" => trim($value['createdon'])
-            ]);
-        }
-
-        $data['disc'] = $commentArray; 
-        /* End */
 
         $dataUsr = $this->repository->GETUSERBYROLE();
         $json = json_decode($dataUsr, true);
@@ -204,7 +186,7 @@ class TiketController extends Controller
                 $userid = Session::get('userid');
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
-                $parentBtn = '<a href="javascript:void(0)" class="view btn btn-info" href="{{ '.url('/tiket').' }}" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                $parentBtn = '<a href="javascript:void(0)" class="view btn btn-info" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$row["attachment"].'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
@@ -789,23 +771,4 @@ class TiketController extends Controller
     
         return redirect()->route('tiket')->with("success", "successfully");
     }
-
-    // public function downloadFile(Request $request)
-    // {    
-    //     $dataFile = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $request->ticketno)->get();
-
-    //     if (!empty($dataFile) || $dataFile == ""){
-    //         $filepath = public_path()."/uploads/".$dataFile[0];
-            
-    //         $headers = array(
-    //             'Content-Type: application/pdf',
-    //         );
-
-    //         return response()->download($filepath, $dataFile[0], $headers);
-    //     } else {
-    //         return back()->withErrors([
-    //             'File' => 'File Not Found',
-    //         ]);
-    //     } 
-    // }
 }

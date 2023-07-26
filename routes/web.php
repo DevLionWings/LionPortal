@@ -65,4 +65,7 @@ Route::get('get/year', [ChartController::class, 'getDataTicketingYear'])->name('
 /* Menu HRIS -> Attendance Payroll */
 Route::get('/absensipayroll', [AbsensipayrollController::class,'absenpayroll'])->name('absensipayroll');
 Route::get('/get/absensipayroll', [AbsensipayrollController::class,'getAbsenPerkas'])->name('get-absensipayroll');
-Route::get('/update/shift', [AbsensipayrollController::class,'updateShift'])->name('update-shift');
+Route::get('/filter/absensipayroll', [AbsensipayrollController::class,'filterAbsenPerkas'])->name('filter-absensipayroll');
+Route::post('/update/shift', [AbsensipayrollController::class,'updateShift'])->name('update-shift');
+Route::post('/update/shiftbulk', [AbsensipayrollController::class,'updateShiftBulk'])->name('update-shiftbulk');
+Route::get('/shift', [AbsensipayrollController::class,'getShift'])->name('get-shift');

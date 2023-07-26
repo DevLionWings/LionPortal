@@ -28,12 +28,11 @@ class Repository
 
     public static function GETUSER($userid, $password)
     {
-        if(DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->where('pass', $password)->exists())
+        if(DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->exists())
         {
             $data = DB::connection('pgsql')->table('master_data.m_user as a')
                     ->join('master_data.m_department as b', 'a.departmentid', '=', 'b.departmentid')
                     ->where ('userid', $userid)
-                    ->where ('pass', $password)
                     ->get();
             $count = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->count();
 
@@ -85,34 +84,20 @@ class Repository
         }
         
         if(DB::connection('mysql')->table('dbstaff.kartuabsensi')->where('id', $id)->exists()){
-
-            // $count1 = DB::table('dbstaff.kartuabsensi')->where('id', $id)->where('tgl', '>', now()->subDays(30)->endOfDay())->count();
-            // $count = Attendance::select("SELECT count(*) FROM dbstaff.kartuabsensi WHERE id = '$id'");
-            // $countfilter = DB::table('dbstaff.kartuabsensi')->where('id', $id)->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])->count();
-
-            $count = DB::table('dbstaff.kartuabsensi')
-                ->where('id', $id)
-                ->where('tgl', '>', now()->subDays(30)->endOfDay())
-                ->groupBy('id')
-                ->count();
-            
-            $countfilter = DB::table('dbstaff.kartuabsensi')
-                ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
-                ->groupBy('id')
-                ->count();
-          
-            
             if ($start_date == $datenow && $end_date == $datenow){
-                // $data = Attendance::where('tgl', '>', now()->subDays(30)->endOfDay())
-                //     ->whereIn('ID', $arr_user)
-                //     ->groupBy('id')
-                //     ->limit(10)
-                //     ->simplePaginate($count);
+                $count = DB::table('dbstaff.kartuabsensi')
+                    ->whereIn('id', $arr_user)
+                    ->where('tgl', '>', now()->subDays(30)->endOfDay())
+                    ->orderBy('tgl', 'desc')
+                    ->limit(31)
+                    ->count();
+            
 
                 $data = DB::table('dbstaff.kartuabsensi')
-                    ->where('tgl', '>', now()->subDays(30)->endOfDay())
                     ->whereIn('id', $arr_user)
-                    ->limit(10)
+                    ->where('tgl', '>', now()->subDays(30)->endOfDay())
+                    ->orderBy('tgl', 'desc')
+                    ->limit(31)
                     ->simplePaginate($count);
               
                 if($data->isNotEmpty()){
@@ -131,11 +116,19 @@ class Repository
                     );
                 }
             } else {
+                $countfilter = DB::table('dbstaff.kartuabsensi')
+                    ->whereIn('id', $arr_user)
+                    ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
+                    ->orderBy('tgl', 'desc')
+                    ->limit(31)
+                    ->count();
+
                 $data = DB::table('dbstaff.kartuabsensi')
-                ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
-                ->whereIn('id', $arr_user)
-                ->limit(10)
-                ->simplePaginate($countfilter);
+                    ->whereIn('id', $arr_user)
+                    ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
+                    ->orderBy('tgl', 'desc')
+                    ->limit(31)
+                    ->simplePaginate($countfilter);
 
                 if($data->isNotEmpty()){
                     $response = array(
@@ -764,6 +757,7 @@ class Repository
             $group = DB::connection('mysql2')->table('personalia.masterworkgroup')->get();
             $admin = DB::connection('mysql2')->table('personalia.masteradmin')->get();
             $periode = DB::connection('mysql2')->table('personalia.masterperiode')->get();
+            $shift = DB::connection('mysql2')->table('personalia.mastershift')->get();
 
             $response = array(
                 'rc' => '00',
@@ -773,7 +767,8 @@ class Repository
                 'bagian' => $bagian,
                 'group' => $group,
                 'admin' => $admin,
-                'periode' => $periode
+                'periode' => $periode,
+                'shift' => $shift
             );
 
         } catch(\Exception $e) {
@@ -781,74 +776,356 @@ class Repository
         }  
         return json_encode($response);   
     }
-        
-    public static function GETFILTERPERSONALIA($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $start_date, $end_date)
-    {   
-        // $start_date = "2023-06-01";
-        // $end_date = "2023-06-11";
-        // $kodedivisi = 'ENG';
-        // $kodebagian = '';
-        // $kodegroup = '';
-        // $kodeperiode = '';
+    
+    public static function GETPERSONALIA($nip, $limit, $page, $start_date, $end_date)
+    {    
+        // $start_date = '2023-06-02';
+        // $end_date = '2023-06-02';
+        $bindings = [
+            'start' => $start_date,
+            'end' => $end_date,
+            'limit' => $limit,
+            'page' => $page
+        ];
         try{          
+            $count = DB::connection('mysql2')->table('personalia.absensi as a')
+            ->join('personalia.masteremployee as b', function($q){
+                    $q->on('a.Nip', '=', 'b.Nip')
+                    ->on( 'b.Begda', '<=', 'a.Tgl In' )
+                    ->on('b.Endda', '>=', 'a.Tgl In');
+            })
+            ->leftjoin('personalia.mastershift as c', 'a.Shift', '=', 'c.Kode Shift')
+            ->select('a.Nip', 'b.Nama', 'b.Kode Divisi AS KodeDivisi', 'b.Kode Bagian AS KodeBagian', 'b.Kode Group AS KodeGroup', 'a.Tgl In AS TglIn', 'a.Jam In AS JamIn',
+                    'a.Tgl Out AS TglOut', 'a.Jam Out AS JamOut', 'a.Lama Kerja AS LamaKerja', 'a.Jam Lembur AS JamLembur', 'a.Shift', 'a.Lama Off AS LamaOff', 'a.No Kasus AS NoKasus',
+                    'a.CardX', 'c.Jam In AS ShiftIn', 'c.Jam Out AS ShiftOut', \DB::raw('(
+                        CASE WHEN b.`Kode Group` != "" THEN 
+                            CASE 
+                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN "VALID" 
+                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN "VALID"
+                                WHEN (a.`Lama Kerja` <= 7) THEN "LESS WORKING HOURS"
+                                WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN "LATE < 10"
+                            ELSE "INVALID" END 
+                        ELSE "VALID" END) AS TimeValidation'))
+            ->whereBetween('a.Tgl In', [$start_date, $end_date])
+            ->selectRaw('WHERE TimeValidation IN ("INVALID", "LATE", "LESS WORKING HOURS")')
+            ->count();
+        $data = DB::connection('mysql2')->select("SELECT Nip, Nama, KodeDivisi, KodeBagian, KodeGroup, TglIn, JamIn, TglOut, JamOut, LamaKerja, JamLembur, Shift, LamaOff, NoKasus, CardX, ShiftIn, ShiftOut, TimeValidation,
+            ( 
+                SELECT `Kode Shift` FROM personalia.mastershift 
+                WHERE `Jam In` >= JamIn AND `Jam Out` <= JamOut 
+                AND `Kode Shift` REGEXP '^S.$'
+                AND (TIME_TO_SEC(TIMEDIFF(`Jam In`, JamIn))/60) <= 60 
+                AND (TIME_TO_SEC(TIMEDIFF(JamOut, `Jam Out`))/60) <= 360
+            ) AS NewShift,
+                CASE 
+                    WHEN (TimeValidation = 'VALID') THEN 'VL'
+                    WHEN (TimeValidation = 'INVALID') THEN 'IV'
+                    WHEN (TimeValidation = 'LATE < 10') THEN 'LT'
+                    WHEN (TimeValidation = 'LESS WORKING HOURS') THEN 'LS'
+                END TimeCategory
+            FROM (
+                SELECT a.Nip, b.Nama, b.`Kode Divisi` AS KodeDivisi, b.`Kode Bagian` AS KodeBagian, b.`Kode Group` AS KodeGroup,
+                a.`Tgl In` AS TglIn, a.`Jam In` AS JamIn, a.`Tgl Out` AS TglOut, a.`Jam Out` AS JamOut, a.`Lama Kerja` AS LamaKerja, a.`Jam Lembur` AS JamLembur,
+                a.Shift, a.`Lama Off` AS LamaOff, a.`No Kasus` AS NoKasus, a.CardX, c.`Jam In` AS ShiftIn, c.`Jam Out` AS ShiftOut,
+                CASE
+                    WHEN (b.`Kode Group` != '') 
+                    THEN
+                        CASE
+                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN 'VALID'
+                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN 'VALID'
+                        WHEN (a.`Lama Kerja` < 7) THEN 'LESS WORKING HOURS'
+                        WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN 'LATE < 10'
+                        ELSE 'INVALID'
+                        END
+                    ELSE 'VALID'
+                END TimeValidation
+                FROM personalia.absensi AS a 
+                INNER JOIN personalia.masteremployee AS b ON a.Nip = b.Nip AND b.Begda <= a.`Tgl In` AND b.Endda >= a.`Tgl In`
+                LEFT OUTER JOIN personalia.mastershift AS c ON a.Shift = c.`Kode Shift`
+                WHERE a.`Tgl In` >= :start AND a.`Tgl In` <= :end
+            ) a WHERE TimeValidation IN ('INVALID', 'LATE', 'LESS WORKING HOURS') LIMIT :limit, :page", $bindings);
+        
+            $response = array(
+                'rc' => '00',
+                'msg' => 'success',
+                'data' => $data,
+                'total' => $count
+            );
+            
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }  
+        return json_encode($response);   
+    }
 
-            if(!empty($nip) || $nip == []){
-                $count = DB::connection('mysql2')->table('personalia.masteremployee as a')
-                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
-                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
-                        'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')
-                        
-                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
-                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
-                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
-                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
-                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+    public static function GETFILTERPERSONALIA($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $kontrak, $start_date, $end_date, $limit, $page)
+    {   
+        // $start_date = '2023-06-02';
+        // $end_date = '2023-06-02';
+        // $kodedivisi = 'HRD';
+        // $kodebagian = 'a';
+        // $kodegroup = 'a';
+        // $kodeperiode = 'a';
+        // $kontrak = 'a';
+        if($nip == null || $nip == []){
+            $bindings = [
+                'start' => $start_date,
+                'end' => $end_date,
+                'limit' => $limit,
+                'page' => $page,
+                'divisi' => '%'.$kodedivisi.'%',
+                'bagian' => '%'.$kodebagian.'%',
+                'group' => '%'.$kodegroup.'%',
+                'admins' => '%'.$kodeadmin.'%',
+                'periode' => '%'.$kodeperiode.'%',
+                'kontrak' => '%'.$kontrak.'%'
+            ];
+        } else {
+            $bindings = [
+                'start' => $start_date,
+                'end' => $end_date,
+                'limit' => $limit,
+                'page' => $page,
+                'divisi' => '%'.$kodedivisi.'%',
+                'bagian' => '%'.$kodebagian.'%',
+                'group' => '%'.$kodegroup.'%',
+                'admins' => '%'.$kodeadmin.'%',
+                'periode' => '%'.$kodeperiode.'%',
+                'kontrak' => '%'.$kontrak.'%',
+                'nip' => $nip
+            ];
+        }
+        
+        try{          
+            if($start_date == $end_date){
+                $count = DB::connection('mysql2')->table('personalia.absensi as a')
+                    ->join('personalia.masteremployee as b', function($q){
+                            $q->on('a.Nip', '=', 'b.Nip')
+                            ->on( 'b.Begda', '<=', 'a.Tgl In' )
+                            ->on('b.Endda', '>=', 'a.Tgl In');
+                    })
+                    ->leftjoin('personalia.mastershift as c', 'a.Shift', '=', 'c.Kode Shift')
+                    ->select('a.Nip', 'b.Nama', 'b.Kode Divisi AS KodeDivisi', 'b.Kode Bagian AS KodeBagian', 'b.Kode Group AS KodeGroup', 'a.Tgl In AS TglIn', 'a.Jam In AS JamIn',
+                            'a.Tgl Out AS TglOut', 'a.Jam Out AS JamOut', 'a.Lama Kerja AS LamaKerja', 'a.Jam Lembur AS JamLembur', 'a.Shift', 'a.Lama Off AS LamaOff', 'a.No Kasus AS NoKasus',
+                            'a.CardX', 'c.Jam In AS ShiftIn', 'c.Jam Out AS ShiftOut', \DB::raw('(
+                                CASE WHEN b.`Kode Group` != "" && a.`No Kasus` = "" THEN 
+                                    CASE 
+                                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN "VALID" 
+                                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN "VALID"
+                                        WHEN (a.`Lama Kerja` <= 7) THEN "LESS WORKING HOURS"
+                                        WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN "LATE < 10"
+                                    ELSE "INVALID" END 
+                                ELSE "VALID" END) AS TimeValidation'))
+                    ->whereBetween('a.Tgl In', [$start_date, $end_date])
+                    ->where('b.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                    ->where('b.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                    ->where('b.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                    ->where('b.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                    ->selectRaw('WHERE TimeValidation IN ("INVALID", "LATE", "LESS WORKING HOURS")')
                     ->count();
-
-                $data = DB::connection('mysql2')->table('personalia.masteremployee as a')
-                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
-                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'a.tipekaryawan', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
-                            'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')  
-                    // ->where(function ($q) {
-                    //     $q->whereIn('c.Nip', $nip)
-                    //         ->orWhereNull('c.Nip');
-                    // })
-                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
-                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
-                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
-                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
-                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
-                    ->limit(10)
-                    ->simplePaginate($count);
+                $data = DB::connection('mysql2')->select("SELECT Nip, Nama, KodeDivisi, KodeBagian, KodeGroup, TglIn, JamIn, TglOut, JamOut, LamaKerja, JamLembur, Shift, LamaOff, NoKasus, CardX, ShiftIn, ShiftOut, TimeValidation,
+                    ( 
+                        SELECT `Kode Shift` FROM personalia.mastershift 
+                        WHERE `Jam In` >= JamIn AND `Jam Out` <= JamOut 
+                        AND `Kode Shift` REGEXP '^S.$'
+                        AND (TIME_TO_SEC(TIMEDIFF(`Jam In`, JamIn))/60) <= 60 
+                        AND (TIME_TO_SEC(TIMEDIFF(JamOut, `Jam Out`))/60) <= 360
+                    ) AS NewShift,
+                        CASE 
+                            WHEN (TimeValidation = 'VALID') THEN 'VL'
+                            WHEN (TimeValidation = 'INVALID') THEN 'IV'
+                            WHEN (TimeValidation = 'LATE < 10') THEN 'LT'
+                            WHEN (TimeValidation = 'LESS WORKING HOURS') THEN 'LS'
+                        END TimeCategory
+                    FROM (
+                        SELECT a.Nip, b.Nama, b.`Kode Divisi` AS KodeDivisi, b.`Kode Bagian` AS KodeBagian, b.`Kode Group` AS KodeGroup,
+                        a.`Tgl In` AS TglIn, a.`Jam In` AS JamIn, a.`Tgl Out` AS TglOut, a.`Jam Out` AS JamOut, a.`Lama Kerja` AS LamaKerja, a.`Jam Lembur` AS JamLembur,
+                        a.Shift, a.`Lama Off` AS LamaOff, a.`No Kasus` AS NoKasus, a.CardX, c.`Jam In` AS ShiftIn, c.`Jam Out` AS ShiftOut,
+                        CASE
+                            WHEN (b.`Kode Group` != '' && a.`No Kasus` = '') 
+                            THEN
+                                CASE
+                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN 'VALID'
+                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN 'VALID'
+                                WHEN (a.`Lama Kerja` < 7) THEN 'LESS WORKING HOURS'
+                                WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN 'LATE < 10'
+                                ELSE 'INVALID'
+                                END
+                            ELSE 'VALID'
+                        END TimeValidation
+                        FROM personalia.absensi AS a 
+                        INNER JOIN personalia.masteremployee AS b ON a.Nip = b.Nip AND b.Begda <= a.`Tgl In` AND b.Endda >= a.`Tgl In`
+                        LEFT OUTER JOIN personalia.mastershift AS c ON a.Shift = c.`Kode Shift`
+                        WHERE a.`Tgl In` >= :start AND a.`Tgl In` <= :end
+                        AND b.`Kode Divisi` LIKE :divisi
+                        AND b.`Kode Bagian` LIKE :bagian
+                        AND b.`Kode Group` LIKE :group
+                        AND b.`Kode Admin` LIKE :admins
+                        AND b.`Kode Periode` LIKE :periode
+                        AND b.`Kode Kontrak` LIKE :kontrak
+                    ) a  WHERE TimeValidation IN ('INVALID', 'LATE', 'LESS WORKING HOURS') LIMIT :limit, :page", $bindings);
+            } else if($nip == []){
+                $count = DB::connection('mysql2')->table('personalia.absensi as a')
+                    ->join('personalia.masteremployee as b', function($q){
+                            $q->on('a.Nip', '=', 'b.Nip')
+                            ->on( 'b.Begda', '<=', 'a.Tgl In' )
+                            ->on('b.Endda', '>=', 'a.Tgl In');
+                    })
+                    ->leftjoin('personalia.mastershift as c', 'a.Shift', '=', 'c.Kode Shift')
+                    ->select('a.Nip', 'b.Nama', 'b.Kode Divisi AS KodeDivisi', 'b.Kode Bagian AS KodeBagian', 'b.Kode Group AS KodeGroup', 'a.Tgl In AS TglIn', 'a.Jam In AS JamIn',
+                            'a.Tgl Out AS TglOut', 'a.Jam Out AS JamOut', 'a.Lama Kerja AS LamaKerja', 'a.Jam Lembur AS JamLembur', 'a.Shift', 'a.Lama Off AS LamaOff', 'a.No Kasus AS NoKasus',
+                            'a.CardX', 'c.Jam In AS ShiftIn', 'c.Jam Out AS ShiftOut', \DB::raw('(
+                                CASE WHEN b.`Kode Group` != "" && a.`No Kasus` = "" THEN 
+                                    CASE 
+                                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN "VALID" 
+                                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN "VALID"
+                                        WHEN (a.`Lama Kerja` <= 7) THEN "LESS WORKING HOURS"
+                                        WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN "LATE < 10"
+                                    ELSE "INVALID" END 
+                                ELSE "VALID" END) AS TimeValidation'))
+                    ->whereBetween('a.Tgl In', [$start_date, $end_date])
+                    ->where('b.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                    ->where('b.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                    ->where('b.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                    ->where('b.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                    ->selectRaw('WHERE TimeValidation IN ("INVALID", "LATE", "LESS WORKING HOURS")')
+                    ->count();
+                $data = DB::connection('mysql2')->select("SELECT Nip, Nama, KodeDivisi, KodeBagian, KodeGroup, TglIn, JamIn, TglOut, JamOut, LamaKerja, JamLembur, Shift, LamaOff, NoKasus, CardX, ShiftIn, ShiftOut, TimeValidation,
+                ( 
+                    SELECT `Kode Shift` FROM personalia.mastershift 
+                    WHERE `Jam In` >= JamIn AND `Jam Out` <= JamOut 
+                    AND `Kode Shift` REGEXP '^S.$'
+                    AND (TIME_TO_SEC(TIMEDIFF(`Jam In`, JamIn))/60) <= 60 
+                    AND (TIME_TO_SEC(TIMEDIFF(JamOut, `Jam Out`))/60) <= 360
+                ) AS NewShift,
+                    CASE 
+                        WHEN (TimeValidation = 'VALID') THEN 'VL'
+                        WHEN (TimeValidation = 'INVALID') THEN 'IV'
+                        WHEN (TimeValidation = 'LATE < 10') THEN 'LT'
+                        WHEN (TimeValidation = 'LESS WORKING HOURS') THEN 'LS'
+                    END TimeCategory
+                FROM (
+                    SELECT a.Nip, b.Nama, b.`Kode Divisi` AS KodeDivisi, b.`Kode Bagian` AS KodeBagian, b.`Kode Group` AS KodeGroup,
+                    a.`Tgl In` AS TglIn, a.`Jam In` AS JamIn, a.`Tgl Out` AS TglOut, a.`Jam Out` AS JamOut, a.`Lama Kerja` AS LamaKerja, a.`Jam Lembur` AS JamLembur,
+                    a.Shift, a.`Lama Off` AS LamaOff, a.`No Kasus` AS NoKasus, a.CardX, c.`Jam In` AS ShiftIn, c.`Jam Out` AS ShiftOut,
+                    CASE
+                        WHEN (b.`Kode Group` != '' && a.`No Kasus` = '') 
+                        THEN
+                            CASE
+                            WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN 'VALID'
+                            WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN 'VALID'
+                            WHEN (a.`Lama Kerja` < 7) THEN 'LESS WORKING HOURS'
+                            WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN 'LATE < 10'
+                            ELSE 'INVALID'
+                            END
+                        ELSE 'VALID'
+                    END TimeValidation
+                    FROM personalia.absensi AS a 
+                    INNER JOIN personalia.masteremployee AS b ON a.Nip = b.Nip AND b.Begda <= a.`Tgl In` AND b.Endda >= a.`Tgl In`
+                    LEFT OUTER JOIN personalia.mastershift AS c ON a.Shift = c.`Kode Shift`
+                    WHERE a.`Tgl In` >= :start AND a.`Tgl In` <= :end
+                    AND b.`Kode Divisi` LIKE :divisi
+                    AND b.`Kode Bagian` LIKE :bagian
+                    AND b.`Kode Group` LIKE :group
+                    AND b.`Kode Admin` LIKE :admins
+                    AND b.`Kode Periode` LIKE :periode
+                    AND b.`Kode Kontrak` LIKE :kontrak
+                ) a  WHERE TimeValidation IN ('INVALID', 'LATE', 'LESS WORKING HOURS')  LIMIT :limit, :page", $bindings);
             } else {
-                $count = DB::connection('mysql2')->table('personalia.masteremployee as a')
-                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
-                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
-                        'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')
-                    ->whereIn('c.Nip', $nip)
-                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
-                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
-                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
-                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
-                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                $count = DB::connection('mysql2')->table('personalia.absensi as a')
+                    ->join('personalia.masteremployee as b', function($q){
+                            $q->on('a.Nip', '=', 'b.Nip')
+                            ->on( 'b.Begda', '<=', 'a.Tgl In' )
+                            ->on('b.Endda', '>=', 'a.Tgl In');
+                    })
+                    ->leftjoin('personalia.mastershift as c', 'a.Shift', '=', 'c.Kode Shift')
+                    ->select('a.Nip', 'b.Nama', 'b.Kode Divisi AS KodeDivisi', 'b.Kode Bagian AS KodeBagian', 'b.Kode Group AS KodeGroup', 'a.Tgl In AS TglIn', 'a.Jam In AS JamIn',
+                            'a.Tgl Out AS TglOut', 'a.Jam Out AS JamOut', 'a.Lama Kerja AS LamaKerja', 'a.Jam Lembur AS JamLembur', 'a.Shift', 'a.Lama Off AS LamaOff', 'a.No Kasus AS NoKasus',
+                            'a.CardX', 'c.Jam In AS ShiftIn', 'c.Jam Out AS ShiftOut', \DB::raw('(
+                                CASE WHEN b.`Kode Group` != "" && a.`No Kasus` = "" THEN 
+                                    CASE 
+                                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN "VALID" 
+                                        WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN "VALID"
+                                        WHEN (a.`Lama Kerja` <= 7) THEN "LESS WORKING HOURS"
+                                        WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN "LATE < 10"
+                                    ELSE "INVALID" END 
+                                ELSE "VALID" END) AS TimeValidation'))
+                    ->whereIn('a.Nip', $nip)
+                    ->whereBetween('a.Tgl In', [$start_date, $end_date])
+                    ->where('b.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                    ->where('b.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                    ->where('b.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                    ->where('b.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                    ->selectRaw('WHERE TimeValidation IN ("INVALID", "LATE", "LESS WORKING HOURS")')
                     ->count();
+                $data = DB::connection('mysql2')->select("SELECT Nip, Nama, KodeDivisi, KodeBagian, KodeGroup, TglIn, JamIn, TglOut, JamOut, LamaKerja, JamLembur, Shift, LamaOff, NoKasus, CardX, ShiftIn, ShiftOut, TimeValidation,
+                ( 
+                    SELECT `Kode Shift` FROM personalia.mastershift 
+                    WHERE `Jam In` >= JamIn AND `Jam Out` <= JamOut 
+                    AND `Kode Shift` REGEXP '^S.$'
+                    AND (TIME_TO_SEC(TIMEDIFF(`Jam In`, JamIn))/60) <= 60 
+                    AND (TIME_TO_SEC(TIMEDIFF(JamOut, `Jam Out`))/60) <= 360
+                ) AS NewShift,
+                    CASE 
+                        WHEN (TimeValidation = 'VALID') THEN 'VL'
+                        WHEN (TimeValidation = 'INVALID') THEN 'IV'
+                        WHEN (TimeValidation = 'LATE < 10') THEN 'LT'
+                        WHEN (TimeValidation = 'LESS WORKING HOURS') THEN 'LS'
+                    END TimeCategory
+                FROM (
+                    SELECT a.Nip, b.Nama, b.`Kode Divisi` AS KodeDivisi, b.`Kode Bagian` AS KodeBagian, b.`Kode Group` AS KodeGroup,
+                    a.`Tgl In` AS TglIn, a.`Jam In` AS JamIn, a.`Tgl Out` AS TglOut, a.`Jam Out` AS JamOut, a.`Lama Kerja` AS LamaKerja, a.`Jam Lembur` AS JamLembur,
+                    a.Shift, a.`Lama Off` AS LamaOff, a.`No Kasus` AS NoKasus, a.CardX, c.`Jam In` AS ShiftIn, c.`Jam Out` AS ShiftOut,
+                    CASE
+                        WHEN (b.`Kode Group` != '' && a.`No Kasus` = '') 
+                        THEN
+                            CASE
+                            WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN 'VALID'
+                            WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN 'VALID'
+                            WHEN (a.`Lama Kerja` < 7) THEN 'LESS WORKING HOURS'
+                            WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN 'LATE < 10'
+                            ELSE 'INVALID'
+                            END
+                        ELSE 'VALID'
+                    END TimeValidation
+                    FROM personalia.absensi AS a 
+                    INNER JOIN personalia.masteremployee AS b ON a.Nip = b.Nip AND b.Begda <= a.`Tgl In` AND b.Endda >= a.`Tgl In`
+                    LEFT OUTER JOIN personalia.mastershift AS c ON a.Shift = c.`Kode Shift`
+                    WHERE a.Nip  IN :nip
+                    AND a.`Tgl In` >= :start AND a.`Tgl In` <= :end
+                    AND b.`Kode Divisi` LIKE :divisi
+                    AND b.`Kode Bagian` LIKE :bagian
+                    AND b.`Kode Group` LIKE :group
+                    AND b.`Kode Admin` LIKE :admins
+                    AND b.`Kode Periode` LIKE :periode
+                    AND b.`Kode Kontrak` LIKE :kontrak
+                ) a  WHERE TimeValidation IN ('INVALID', 'LATE', 'LESS WORKING HOURS') LIMIT :limit, :page", $bindings);
 
-                $data = DB::connection('mysql2')->table('personalia.masteremployee as a')
-                    ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
-                    ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'a.tipekaryawan', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
-                            'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')
-                    // ->where(function ($q) {
-                    //     $q->whereIn('c.Nip', $nip)
-                    //         ->orWhereNull('c.Nip');
-                    // })
-                    ->whereIn('c.Nip', $nip)
-                    ->whereBetween('c.Tgl In', [$start_date, $end_date])
-                    ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
-                    ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
-                    ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
-                    ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
-                    ->limit(10)
-                    ->simplePaginate($count);
+
+                // $count = DB::connection('mysql2')->table('personalia.masteremployee as a')
+                //     ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
+                //     ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
+                //         'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')
+                //     ->whereIn('c.Nip', $nip)
+                //     ->whereBetween('c.Tgl In', [$start_date, $end_date])
+                //     ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                //     ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                //     ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                //     ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                //     ->count();
+
+                // $data = DB::connection('mysql2')->table('personalia.masteremployee as a')
+                //     ->join('personalia.absensi as c', 'a.Nip', '=', 'c.Nip')
+                //     ->select('c.Nip', 'a.Nama', 'a.Kode Divisi', 'a.Kode Bagian', 'a.Kode Group', 'a.Kode Admin', 'a.Kode Periode', 'a.tipekaryawan', 'c.Tgl In', 'c.Jam In', 'c.Tgl Out', 'c.Jam Out', 'c.Lama Kerja',
+                //             'c.Jam Lembur', 'c.Shift', 'c.Lama Off', 'c.No Kasus', 'c.CardX')
+                //     ->whereIn('c.Nip', $nip)
+                //     ->whereBetween('c.Tgl In', [$start_date, $end_date])
+                //     ->where('a.Kode Divisi', 'LIKE', '%'.$kodedivisi.'%')
+                //     ->where('a.Kode Bagian', 'LIKE', '%'.$kodebagian.'%')
+                //     ->where('a.Kode Group', 'LIKE', '%'.$kodegroup.'%')
+                //     ->where('a.Kode Periode', 'LIKE', '%'.$kodeperiode.'%')
+                //     ->limit(10)
+                //     ->simplePaginate($count);
             }
             
             $response = array(
@@ -863,5 +1140,244 @@ class Repository
         }  
         return json_encode($response);   
     }
+
+    public static function UPDATETUKARSHIFT($nip, $shift, $no_kasus, $jamin, $tglin, $jamout, $tglout, $timevalid, $jamlembur, $lamaoff)
+    {
+        $date = date('Y-m-d');
+        if($timevalid == "INVALID"){
+            DB::beginTransaction();
+            $update1 = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip)->update([
+                'Shift' => $shift
+            ]);
+            DB::commit();
+            DB::beginTransaction();
+            $insert = DB::connection('mysql2')->table('personalia.tukarshift')->insert([
+                'Tanggal' => $date,
+                'Nip' => $nip,
+                'Shift' => $shift
+            ]);
+            DB::commit();
+
+            if(!empty($update) || !empty($insert)){
+                return response()->json([
+                    'rc' => '00',
+                    'desc' => 'success',
+                    'msg' => 'success',
+                    'update1' => $update1,
+                    'insert' => $insert
+                ]);
+            } else {
+                return response()->json([
+                    'rc' => '01',
+                    'desc' => 'failed',
+                    'msg' => 'failed',
+                    'update1' => $update1,
+                    'insert' => $insert
+                ]);
+            }
+        } else {
+            DB::beginTransaction();
+            $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip)->update([
+                'No Kasus' => $no_kasus
+            ]);
+            DB::commit();
+            DB::beginTransaction();
+            $insert = DB::connection('mysql2')->table('personalia.kasus')->insert([
+                'No Kasus' => $no_kasus,
+                'Tgl Kasus' => date('Y-m-d'),
+                'Nip' => $nip,
+                'Tgl In' => $tglin,
+                'Jam In' => $jamin,
+                'Tgl Out' => $tglout,
+                'Jam Out' => $jamout,
+                'Shift' => $timevalid,
+                'Tipe' => 'ADD',
+                'Jam Kurang' => 'b1',
+                'Bayar Jam' => 'b1',
+                'Bayar Penuh' =>'b1',
+                'Keterangan' => 'Shift yang Bermasalah',
+                'Jam Lembur' => $jamlembur,
+                'Lama Off' => $lamaoff,
+                'Jam Dibayar' => '0'
+            ]);
+            DB::commit();
+
+            if(!empty($update) || !empty($insert)){
+                return response()->json([
+                    'rc' => '00',
+                    'desc' => 'success',
+                    'msg' => 'success',
+                    'update' => $update,
+                    'insert' => $insert
+                ]);
+            } else {
+                return response()->json([
+                    'rc' => '01',
+                    'desc' => 'failed',
+                    'msg' => 'failed',
+                    'update' => $update,
+                    'insert' => $insert
+                ]);
+            }
+        }
+
+        
+    }
+
+    public static function UPDATETUKARSHIFTBULK($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $kontrak, $start_date, $end_date, $no_kasus)
+    {
+        
+        $start_date = '2023-06-02';
+        $end_date = '2023-06-02';
+        
+        /* get Data TimeValidation */
+        $validation = DB::connection('mysql2')->table('personalia.absensi as a')
+            ->join('personalia.masteremployee as b', function($q){
+                    $q->on('a.Nip', '=', 'b.Nip')
+                    ->on( 'b.Begda', '<=', 'a.Tgl In' )
+                    ->on('b.Endda', '>=', 'a.Tgl In');
+            })
+            ->leftjoin('personalia.mastershift as c', 'a.Shift', '=', 'c.Kode Shift')
+            ->select('a.Nip', 'b.Nama', 'b.Kode Divisi AS KodeDivisi', 'b.Kode Bagian AS KodeBagian', 'b.Kode Group AS KodeGroup', 'a.Tgl In AS TglIn', 'a.Jam In AS JamIn',
+                    'a.Tgl Out AS TglOut', 'a.Jam Out AS JamOut', 'a.Lama Kerja AS LamaKerja', 'a.Jam Lembur AS JamLembur', 'a.Shift', 'a.Lama Off AS LamaOff', 'a.No Kasus AS NoKasus',
+                    'a.CardX', 'c.Jam In AS ShiftIn', 'c.Jam Out AS ShiftOut', \DB::raw('(
+                        CASE WHEN b.`Kode Group` != "" && a.`No Kasus` = "" THEN 
+                            CASE 
+                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN "VALID" 
+                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN "VALID"
+                                WHEN (a.`Lama Kerja` <= 7) THEN "LESS WORKING HOURS"
+                                WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN "LATE < 10"
+                            ELSE "INVALID" END 
+                        ELSE "VALID" END) AS TimeValidation'))
+            ->whereIn('a.Nip', $nip)
+            ->whereBetween('a.Tgl In', [$start_date, $end_date])
+            ->get();
     
+        foreach($validation as $valid){
+            if($valid->TimeValidation == "INVALID"){
+                /* Get data New Shift */
+                $result = DB::connection('mysql2')->table('personalia.mastershift')
+                    ->where('Jam In', '>=', $valid->JamIn)
+                    ->where('Jam Out', '<=', $valid->JamOut)
+                    ->where('Kode Shift', 'REGEXP', '^S.$')
+                    ->whereRaw('((TIME_TO_SEC(TIMEDIFF(`Jam In`, ? ))/60) <= 60) AND ((TIME_TO_SEC(TIMEDIFF(`Jam Out`, ? ))/60) <= 360)', [$valid->JamIn, $valid->JamOut])
+                    ->select('Kode Shift AS NewShift')
+                    ->get();
+               
+                $arr_newshift = [];
+                foreach ($result as $key => $value) {
+                    array_push($arr_newshift, $value->NewShift);
+                }
+                
+                /* Update Into Table Absensi */
+                DB::beginTransaction();
+                for ($a=0; $a < count($nip) ; $a++){
+                    $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip[$a])->update([
+                        'Shift' => $arr_newshift[$a]
+                    ]);
+                }
+                DB::commit();
+
+                /* Insert Into Table Tukar Shift */
+                // DB::beginTransaction();
+                // $arrayInsert = [];
+                // for ($i=0; $i < count($nip) ; $i++){
+                //     $draw = [
+                //         'Tanggal' => date('Y-m-d'),
+                //         'Shift' => $arr_newshift[$i],
+                //         'Nip' => $nip[$i],
+                //     ];
+                //     $arrayInsert[] = $draw; 
+                // }
+                // $insert = DB::connection('mysql2')->table('personalia.tukarshift')->insert($arrayInsert);
+                // DB::commit();
+
+                if(!empty($insert) || !empty($update)){
+                    return response()->json([
+                        'rc' => '00',
+                        'desc' => 'success',
+                        'msg' => 'success',
+                        // 'insert' => $insert,
+                        'update1' => $update
+                    ]);
+                } else {
+                    DB::rollback();
+                    return response()->json([
+                        'rc' => '01',
+                        'desc' => 'failed',
+                        'msg' => 'failed',
+                        // 'insert' => $insert,
+                        'update1' => $update
+                    ]);
+                }   
+            } else {
+                /* Get data New Shift */
+                $result = DB::connection('mysql2')->table('personalia.mastershift')
+                    ->where('Jam In', '>=', $valid->JamIn)
+                    ->where('Jam Out', '<=', $valid->JamOut)
+                    ->where('Kode Shift', 'REGEXP', '^S.$')
+                    ->whereRaw('((TIME_TO_SEC(TIMEDIFF(`Jam In`, ? ))/60) <= 60) AND ((TIME_TO_SEC(TIMEDIFF(`Jam Out`, ? ))/60) <= 360)', [$valid->JamIn, $valid->JamOut])
+                    ->select('Kode Shift AS NewShift')
+                    ->get();
+
+                $arr_newshift = [];
+                foreach ($result as $key => $value) {
+                    array_push($arr_newshift, $value->NewShift);
+                }
+                /* Insert Into Table Kasus */
+                DB::beginTransaction();
+                $arrayInsert = [];
+                for ($i=0; $i < count($nip); $i++){
+                    $draw = [
+                        'No Kasus' => $no_kasus[$i],
+                        'Tgl Kasus' => date('Y-m-d'),
+                        'Nip' => $nip[$i],
+                        'Tgl In' => $valid->TglIn,
+                        'Jam In' => $valid->JamIn,
+                        'Tgl Out' => $valid->TglOut,
+                        'Jam Out' => $valid->JamOut,
+                        'Shift' => $valid->TimeValidation,
+                        'Tipe' => 'ADD',
+                        'Jam Kurang' => 'b1',
+                        'Bayar Jam' => 'b1',
+                        'Bayar Penuh' =>'b1',
+                        'Keterangan' => 'Shift yang Bermasalah',
+                        'Jam Lembur' => $valid->JamLembur,
+                        'Lama Off' => $valid->LamaOff,
+                        'Jam Dibayar' => '0'
+                    ];
+                    
+                    $arrayInsert[] = $draw;      
+                }
+                $insert = DB::connection('mysql2')->table('personalia.kasus')->insert($arrayInsert);
+                DB::commit();
+
+                /* Update No Kasus Into Table Absensi */
+                DB::beginTransaction();
+                for ($i=0; $i < count($no_kasus); $i++){
+                    $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip[$i])->update(['No Kasus' => $no_kasus[$i]]);
+                }
+                DB::commit();
+
+                if(!empty($insert)){
+                    return response()->json([
+                        'rc' => '00',
+                        'desc' => 'success',
+                        'msg' => 'success',
+                        'insert' => $insert,
+                        'update' => $update
+                    ]);
+                } else {
+                    DB::rollback();
+                    return response()->json([
+                        'rc' => '01',
+                        'desc' => 'failed',
+                        'msg' => 'failed',
+                        'insert' => $insert,
+                        'update' => $update
+                    ]);
+                }   
+            }       
+        }
+    }  
 }

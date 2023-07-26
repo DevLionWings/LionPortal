@@ -18,6 +18,11 @@ class AbsensiController extends Controller
 
     public function absensi(Request $request)
     {
+        $isLogin = Session::get('status_login');
+        if($isLogin != 1) {
+            return redirect()->route('login-page');
+        }
+
         return view('fitur.absensi');
     }
     

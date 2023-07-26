@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://10.80.80.25:443/ 'unsafe-inline' 'unsafe-eval';"> -->
-    <title>LION-PORTAL</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://10.80.80.25:443/ 'unsafe-inline' 'unsafe-eval';">
+    <title>Lion-Portal</title>
     <link href="{{asset('plugins/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/daterangepicker/daterangepicker.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/dropzone/min/dropzone.min.css')}}" rel="stylesheet">
+    <!-- add icon link -->
+    <link rel="icon" href = "{{asset('images/lion.png')}}" type="image/x-icon">
     @yield('extend-css')
     <link href="{{asset('css/adminlte.css')}}" rel="stylesheet">
     <link href="{{asset('dist/css/adminlte.min.css')}}" rel="stylesheet">
@@ -56,7 +58,7 @@
         }
         .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link:focus, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link:focus, .nav-treeview>.nav-item>.nav-link:focus {
             background-color: rgba(15, 104, 168, 0.192);
-            color: #0F68A8;
+            color: #3ea555;
         }
         
         [class*=sidebar-dark] .user-panel {
