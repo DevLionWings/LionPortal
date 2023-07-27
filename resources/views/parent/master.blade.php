@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://10.80.80.25:443/ 'unsafe-inline' 'unsafe-eval';">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://10.80.80.23:443/ 'unsafe-inline' 'unsafe-eval';">
     <title>Lion-Portal</title>
     <link href="{{asset('plugins/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/daterangepicker/daterangepicker.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/dropzone/min/dropzone.min.css')}}" rel="stylesheet">
     <!-- add icon link -->
-    <link rel="icon" href = "{{asset('images/lion.png')}}" type="image/x-icon">
+    <link rel="stylesheet" href = "{{asset('images/lion.png')}}" type="image/x-icon">
     @yield('extend-css')
     <link href="{{asset('css/adminlte.css')}}" rel="stylesheet">
     <link href="{{asset('dist/css/adminlte.min.css')}}" rel="stylesheet">
@@ -125,7 +125,7 @@
     </div>
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script type="text/javascript"> 
+    <!-- <script type="text/javascript"> 
         /*------------------------------------------
         --------------------------------------------
         Add Loading When fire Ajax Request
@@ -152,7 +152,7 @@
             $('#save-btn').removeClass('save-btn');
 
         });
-    </script>
+    </script> -->
     @yield('extend-js')
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <script src="{{ asset('dist/js/demo.js') }}"></script>

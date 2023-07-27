@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Useraccount;
 use App\Models\User;
 use App\Models\Attendance;
+use App\Models\Attendancenew;
 use App\Models\Tiket;
 use App\Models\Tiketdiscussion;
 use App\Models\Tiketpriority;
@@ -83,21 +84,22 @@ class Repository
             );
         }
         
-        if(DB::connection('mysql')->table('dbstaff.kartuabsensi')->where('id', $id)->exists()){
+        
+        if(DB::connection('pgsql')->table('absensi.kartuabsensi')->where('id', $id)->exists()){
             if ($start_date == $datenow && $end_date == $datenow){
-                $count = DB::table('dbstaff.kartuabsensi')
+                $count = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->where('tgl', '>', now()->subDays(30)->endOfDay())
                     ->orderBy('tgl', 'desc')
-                    ->limit(31)
+                    ->limit(10)
                     ->count();
             
 
-                $data = DB::table('dbstaff.kartuabsensi')
+                $data = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->where('tgl', '>', now()->subDays(30)->endOfDay())
                     ->orderBy('tgl', 'desc')
-                    ->limit(31)
+                    ->limit(10)
                     ->simplePaginate($count);
               
                 if($data->isNotEmpty()){
@@ -116,18 +118,18 @@ class Repository
                     );
                 }
             } else {
-                $countfilter = DB::table('dbstaff.kartuabsensi')
+                $countfilter = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
                     ->orderBy('tgl', 'desc')
-                    ->limit(31)
+                    ->limit(10)
                     ->count();
 
-                $data = DB::table('dbstaff.kartuabsensi')
+                $data = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
                     ->orderBy('tgl', 'desc')
-                    ->limit(31)
+                    ->limit(10)
                     ->simplePaginate($countfilter);
 
                 if($data->isNotEmpty()){
