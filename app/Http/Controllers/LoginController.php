@@ -84,20 +84,6 @@ class LoginController extends Controller
         $datLogin = $this->repository->GETUSER($userid, $password);
         $json = json_decode($datLogin);
         $data = $json->data;
-        /* Update status */
-        // if(empty($data)){
-        //     $update = $this->updateLogin($userid, $password);
-        // } else {
-        //     if ($data[0]->status_login == 0)
-        //     {
-                
-        //     } else {
-        //         return back()->withErrors([
-        //             'userid' => 'If you are already logged in, please log out first or call admin',
-        //         ]);
-        //     }
-        // }
-      
         if($json->rc == '00'){   
             /* Update status */
             $update = $this->updateLogin($userid, $password);
@@ -105,22 +91,22 @@ class LoginController extends Controller
        
             if(!empty($update)){
                 /* checked status login */
-                if ($data[0]->status_login == 1){
+                if ($data->status_login == 1){
                     return back()->withErrors([
                         'userid' => 'If you are already logged in, please log out first ',
                     ]);
                 }
             
-                $userid = $data[0]->userid;
-                $username = $data[0]->username;
-                $password = $data[0]->pass;
-                $departmentid = $data[0]->departmentid;
-                $usermail = $data[0]->usermail;
-                $status = $data[0]->status_login;
-                $roleid = $data[0]->roleid;
-                $plantid = $data[0]->plantid;
-                $spvid = $data[0]->spvid;
-                $mgrid = $data[0]->mgrid;
+                $userid = $data->userid;
+                $username = $data->username;
+                $password = $data->pass;
+                $departmentid = $data->departmentid;
+                $usermail = $data->usermail;
+                $status = $data->status_login;
+                $roleid = $data->roleid;
+                $plantid = $data->plantid;
+                $spvid = $data->spvid;
+                $mgrid = $data->mgrid;
 
                 $datTicket = $this->repository->GETMYTICKET($userid, $roleid);
                 $json = json_decode($datTicket);
@@ -159,7 +145,7 @@ class LoginController extends Controller
                 return back()->withErrors(['error' => 'If you are already logged in, please log out first or call admin',]);
             }           
         } else {
-            return back()->withErrors(['error' => 'Error Update Login',]);
+            return back()->withErrors(['error' => 'Wrong Password',]);
         }
     } 
 

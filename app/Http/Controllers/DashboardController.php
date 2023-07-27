@@ -38,15 +38,15 @@ class DashboardController extends Controller
        
         if ($json->rc == 00){
             $data = $json->data;
-            $status_login = $data[0]->status_login;
+            $status_login = $data->status_login;
             if ($data == [] || $status_login == 0) {
                 return redirect()->route('login')
-                ->withSuccess('please login first');
+                ->withErrors('please login first');
             }
         } else {
             // $flushSessions = session()->flush();
             return redirect()->route('login')
-                ->withSuccess('please login first');
+                ->withErrors('Wrong Password');
         }
         $session = array(
             'status_login' => $status_login

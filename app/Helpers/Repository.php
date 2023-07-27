@@ -29,25 +29,36 @@ class Repository
 
     public static function GETUSER($userid, $password)
     {
+        
         if(DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->exists())
         {
             $data = DB::connection('pgsql')->table('master_data.m_user as a')
                     ->join('master_data.m_department as b', 'a.departmentid', '=', 'b.departmentid')
-                    ->where ('userid', $userid)
-                    ->get();
+                    ->where('userid', $userid)
+                    ->first();
             $count = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->count();
-
             DB::commit();
-            $response = array(
-                'rc' => '00',
-                'msg' => 'success',
-                'data' => $data,
-                'count' => $count
-            );
+            $userPass =  $data->pass;
+            if($password == $userPass){
+                $response = array(
+                    'rc' => '00',
+                    'msg' => 'success',
+                    'data' => $data,
+                    'count' => $count
+                );
+            } else {
+                $response = array(
+                    'rc' => '01',
+                    'msg' => 'Wrong User Or Password',
+                    'data' => [],
+                    'count' => []
+                );
+            }
+          
         } else {
             $response = array(
                 'rc' => '01',
-                'msg' => 'Wrong User Or Password ',
+                'msg' => 'User Not Found',
                 'data' => [],
                 'count' => []
             );
@@ -137,7 +148,7 @@ class Repository
                         'rc' => '00',
                         'msg' => 'success',
                         'data' => $data,
-                        'total' => $count
+                        'total' => $countfilter
                     );
                 } else {
                     $response = array(

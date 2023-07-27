@@ -183,7 +183,7 @@
                         }
                     },
                     {
-                        data: 'userid',
+                        data: 'id',
                         name: 'id'
                     },
                     {
@@ -242,9 +242,9 @@
                     },
                 ],
                 rowCallback: function(row, data, index){
-                    console.log(index);
+                    // console.log(index);
                     if(data['j1'] == "     " && data['j2'] == "     " && data['j3'] == "     " && data['j4'] == "     " && data['j5'] == "     " && data['j6'] == "     "){
-                        $(row).find('td').css('background-color', 'red');
+                    $(row).find('td').css('background-color', '#28a745').css('color', 'white');
                     }
                     var no = $("td:first", row).html(index +1);
                     return no;
@@ -357,7 +357,7 @@
                 "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
             },
             rowCallback: function(row, data, index){
-                console.log(index);
+                // console.log(index);
                 if(data['j1'] == "     " && data['j2'] == "     " && data['j3'] == "     " && data['j4'] == "     " && data['j5'] == "     " && data['j6'] == "     "){
                     $(row).find('td').css('background-color', '#28a745').css('color', 'white');
                 }
