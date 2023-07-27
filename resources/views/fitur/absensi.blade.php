@@ -367,7 +367,7 @@
             rowCallback: function(row, data, index){
                 console.log(index);
                 if(data['j1'] == "     " && data['j2'] == "     " && data['j3'] == "     " && data['j4'] == "     " && data['j5'] == "     " && data['j6'] == "     "){
-                    $(row).find('td').css('background-color', 'red').css('color', 'white');
+                    $(row).find('td').css('background-color', '#28a745').css('color', 'white');
                 }
                 var no = $("td:first", row).html(index +1);
                 return no;
