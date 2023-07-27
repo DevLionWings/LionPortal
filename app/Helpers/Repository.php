@@ -38,8 +38,8 @@ class Repository
                     ->first();
             $count = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->count();
             DB::commit();
-            $userPass =  $data->pass;
-            if($password == $userPass){
+            $userPass =  trim($data->pass);
+            if($userPass == $password){
                 $response = array(
                     'rc' => '00',
                     'msg' => 'success',

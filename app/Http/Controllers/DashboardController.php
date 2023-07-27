@@ -33,7 +33,8 @@ class DashboardController extends Controller
         //     return redirect()->route('login-page');
         // }
         // $allSessions = session()->all();
-        $datLogin = $this->repository->GETUSER(Session::get('userid'), Session::get('password'));
+        $password = trim(Session::get('password'));
+        $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
         $json = json_decode($datLogin);
        
         if ($json->rc == 00){
@@ -42,6 +43,9 @@ class DashboardController extends Controller
             if ($data == [] || $status_login == 0) {
                 return redirect()->route('login')
                 ->withErrors('please login first');
+            } else {
+
+                return view('auth.dashboard');
             }
         } else {
             // $flushSessions = session()->flush();

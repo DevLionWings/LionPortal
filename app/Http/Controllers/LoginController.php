@@ -74,7 +74,7 @@ class LoginController extends Controller
 
     public function login(Request $request){
         $userid = $request->userid;
-        $password = $request->password;
+        $password = trim($request->password);
 
         $credentials = $request->validate([
             "userid"=>"required",
@@ -84,7 +84,7 @@ class LoginController extends Controller
         $datLogin = $this->repository->GETUSER($userid, $password);
         $json = json_decode($datLogin);
         $data = $json->data;
-        if($json->rc == '00'){   
+        if($json->rc == '00'){ 
             /* Update status */
             $update = $this->updateLogin($userid, $password);
             $json = json_decode($update);
