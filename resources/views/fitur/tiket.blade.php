@@ -246,7 +246,7 @@
             <!-- /.modal-content -->
         </div>
     </div>
-    <div id="modal-view-user" class="modal fade show" aria-modal="true">
+    <div id="modal-view-user" class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -327,7 +327,7 @@
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
                         </div>
                         <div class="form-group">
-                            <button type="button" id="btncomment" class="btn btn-warning">Save</button>
+                            <button type="button" id="btncomment" class="btncomment btn btn-warning">Save</button>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -647,32 +647,7 @@
         $('#save-btn').on('click', function () {
             // console.log("clicked");
             $('#modal-add-user').modal({backdrop: 'static', keyboard: false}) 
-            var $inputs = $('modal-add-ticket form[name="ticket"] :input');
-            $inputs.each(function () {
-                if ($(this).attr('type') !== "button" && $(this).attr('type') !== undefined) {
-                    if ($(this).val() === "") {
-                        if ($(this).attr('name') === "category") {
-                            $(this).parent().parent().parent().append(
-                                '<span class="text-danger">Invalid input</span>');
-                        } else {
-                            $(this).parent().append(
-                                '<span class="text-danger">Invalid input</span>');
-                        }
-                        $(this).addClass('is-invalid');
-                    } else {
-                        $(this).removeClass('is-invalid');
-                        if ($(this).attr('name') === "subject") {
-                            $(this).parent().parent().parent().children("span").remove();
-                        } else {
-                            $(this).parent().children("span").remove();
-                        }
-                    }
-                }
-            });
-            var $form_valid = $('form[name="ticket"] :input.is-invalid');
-            if ($form_valid.length === 0) {
-                $('form[name="ticket"]').submit();
-            }
+            $('form[name="ticket"]').submit();
         });
 
         // $(document).on('click', '.comment', function() {
@@ -732,7 +707,7 @@
         //     }
         // });
 
-        $('#btncomment').on('click', function () {
+        $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
             var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
          
@@ -747,8 +722,7 @@
                     'comment_body' : comment_body,
                 },
                 success: function(response){ 
-                    window.location.reload(response);
-                        
+                    console.log(response);
                 } 
             });
         })
@@ -853,7 +827,7 @@
                             if(data == 'INCIDENT'){
                                 statusText = `<span class="badge badge-danger">INCIDENT</span>`;
                             } else if (data == 'CHANGE REQUEST'){
-                                statusText = `<span class="badge badge-warning">CHANGE REQUEST</span>`;
+                                statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
                             } else {
                                 statusText = `<span class="badge badge-info">NEW USER</span>`;
                             }
@@ -961,7 +935,7 @@
                         if(data == 'INCIDENT'){
                             statusText = `<span class="badge badge-danger">INCIDENT</span>`;
                         } else if (data == 'CHANGE REQUEST'){
-                            statusText = `<span class="badge badge-warning">CHANGE REQUEST</span>`;
+                            statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
                         } else {
                             statusText = `<span class="badge badge-info">NEW USER</span>`;
                         }
@@ -1042,7 +1016,7 @@
                 'ticketno' : ticketno, 
             },
             success: function(response) {
-                console.log(response["disc"])
+                // console.log(response["disc"])
                 var $viewComment = $(' <div class="form-group"></div>');
                 $.each(response["disc"], function(key, data) {
                     var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";

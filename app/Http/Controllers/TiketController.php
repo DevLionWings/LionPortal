@@ -384,7 +384,6 @@ class TiketController extends Controller
 
     public function addTiket(Request $request)
     {
-        
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $spvid = Session::get('spvid');
@@ -400,20 +399,15 @@ class TiketController extends Controller
         $subject = $request->subject;
         $remark = $request->detail;
         $assignto = $request->assignto;
-    
-        // foreach ($files as $key => $file) {
-        //     File::create($file);
-        // }
-        /* End */
 
         /* Generate Ticket Number */ 
         $year = date("Y");
-        $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT001')->where('period', $year)->get();
-        $prefix = $dataPrefix[0]->prefix;
-        $period = $dataPrefix[0]->period;
-        $start_numb = $dataPrefix[0]->start_number;
-        $end_numb = $dataPrefix[0]->end_number;
-        $last = $dataPrefix[0]->last_number;
+        $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT001')->where('period', $year)->first();
+        $prefix = $dataPrefix->prefix;
+        $period = $dataPrefix->period;
+        $start_numb = $dataPrefix->start_number;
+        $end_numb = $dataPrefix->end_number;
+        $last = $dataPrefix->last_number;
         $counterid = 'CT001';
         /* Session Data */
         $session = array(
@@ -423,11 +417,11 @@ class TiketController extends Controller
         Session::put('last_number', $last);
         $lastSession = Session::get('last_number');
         if ($start_numb <= $end_numb && $last == $lastSession){
-            $last_numb =  str_pad($dataPrefix[0]->last_number + 1, 4, "00", STR_PAD_LEFT);
+            $last_numb =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
 
-        } else 
+        } else {
             $last_numb = '0000';
-        
+        }
         $ticketno = $prefix. $period. $last_numb;
         /* End */
 
@@ -439,11 +433,6 @@ class TiketController extends Controller
             $path = explode("/", $path);
             $path[0] = "storage";
             array_push($upload, join("/",$path));
-
-            // $file = $request->file('files');
-            // $file_name = $ticketno.'_'.date('Y-m-d').'.'.$file->extension();  
-            // $file->move(public_path('uploads'), $file_name);
-            // $upload[]= $file_name;
         } else {
             $upload = [''];
         }
@@ -452,12 +441,12 @@ class TiketController extends Controller
         $mgridApprove = $dataApprove['data'][0]['mgrid'];
         $userApprove = $dataApprove['data'][0]['userid'];
 
-        $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->get();
-        $mgrIt = $dataMgrIt[0]->userid;
+        $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->first();
+        $mgrIt = $dataMgrIt->userid;
         if($roleid == 'RD002'){
-            $assign = '';
+            $assign = $mgrIt;
             $approvedby_1 = $userid;
-            $approvedby_it = $mgrIt;
+            $approvedby_it = '';
             $auth = true;
         } else if ($roleid == 'RD006'){
             $assign = $request->assignto;
@@ -483,10 +472,10 @@ class TiketController extends Controller
         /* End */
 
         /* Validasi Category Incident */
-        $dataCategory = DB::connection('pgsql')->table('master_data.m_category')->where('categoryid', $category)->get();
-        $flaggingCat =  $dataCategory[0]->approval;
-        $cateName =  $dataCategory[0]->description;
-        $cateId =  $dataCategory[0]->categoryid;
+        $dataCategory = DB::connection('pgsql')->table('master_data.m_category')->where('categoryid', $category)->first();
+        $flaggingCat =  $dataCategory->approval;
+        $cateName =  $dataCategory->description;
+        $cateId =  $dataCategory->categoryid;
         if ($flaggingCat == 'X' ){
             if ($roleid == 'RD002'){
                 $status = 'WAITING FOR APPROVAL';
@@ -516,35 +505,57 @@ class TiketController extends Controller
        
          /* Get User Email */ 
         if($cateId == "CD001"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->get();
-            $emailSign = $dataEmail[0]->usermail;
-            $assignNameSign = $dataEmail[0]->username;
-            $emailReq = 'blank@lionwings.com';
-            $emailApprove1 = 'it@lionwings.com';
-            $auth = true;
+            if ($roleid == "RD002"){
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->first();
+                $emailSign = $dataEmail->usermail;
+                $assignNameSign = $dataEmail->username;
+                $emailReq = 'blank@lionwings.com';
+                $emailApprove1 = 'blank@lionwings.com';
+                $auth = true;
+            } else if ($roleid == "RD006"){
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
+                $emailSign = $dataEmail->usermail;
+                $assignNameSign = $dataEmail->username;
+                $emailReq = 'blank@lionwings.com';
+                $emailApprove1 = 'blank@lionwings.com';
+                $auth = true;
+            } else {
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
+                $emailSign = $dataEmail->usermail;
+                $assignNameSign = $dataEmail->username;
+                $emailReq = 'blank@lionwings.com';
+                $emailApprove1 = 'it@lionwings.com';
+                $auth = true;
+            }
         } else if ($roleid == "RD002"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->get();
-            $emailSign = $dataEmail[0]->usermail;
-            $assignNameSign = $dataEmail[0]->username;
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->first();
+            $emailSign = $dataEmail->usermail;
+            $assignNameSign = $dataEmail->username;
             $emailReq = 'blank@lionwings.com';
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
         } else if ($roleid == "RD003"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
-            $emailSign = $dataEmail[0]->usermail;
-            $assignNameSign = $dataEmail[0]->username;
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->first();
+            $emailSign = $dataEmail->usermail;
+            $assignNameSign = $dataEmail->username;
+            $emailReq = 'blank@lionwings.com';
+            $emailApprove1 = 'blank@lionwings.com';
+            $auth = true;
+        } else if ($roleid == "RD006"){
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
+            $emailSign = $dataEmail->usermail;
+            $assignNameSign = $dataEmail->username;
             $emailReq = 'blank@lionwings.com';
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
         } else {
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
-            $emailSign = $dataEmail[0]->usermail;
-            $assignNameSign = $dataEmail[0]->username;
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
+            $emailSign = $dataEmail->usermail;
+            $assignNameSign = $dataEmail->username;
             $emailReq = 'blank@lionwings.com';
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
         }
-
         /* End */
 
         if ($auth){

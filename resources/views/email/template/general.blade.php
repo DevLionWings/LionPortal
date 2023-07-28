@@ -43,12 +43,12 @@ Helpdesk Ticket
 
 @if($mailData['statusid'] == 'SD001')
     <p style="font-weight: bold;">Halo, {{ $mailData['assigned_to'] }}</p>
-    <p>Hi, this ticket need your approval, please open helpdesk website : </p>
+    <p>Hi, {{ $mailData['username'] }} this ticket need your approval, please open helpdesk website : </p>
 @endif
 
 @if($mailData['statusid'] == 'SD002')
     <p style="font-weight: bold;">Halo, {{ $mailData['assigned_to'] }}</p>
-    <p>Hi, this ticket has been assigned to you, here is the detail :</p>
+    <p>Hi, {{ $mailData['username'] }} has been assigned this ticket  to you, here is the detail :</p>
 @endif
 
 @if($mailData['statusid'] == 'SD003')

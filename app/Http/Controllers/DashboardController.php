@@ -44,6 +44,10 @@ class DashboardController extends Controller
                 return redirect()->route('login')
                 ->withErrors('please login first');
             } else {
+                $session = array(
+                    'status_login' => $status_login
+                );
+                Session::put('status_login', $status_login);
 
                 return view('auth.dashboard');
             }

@@ -598,7 +598,7 @@
                         if(data == 'INCIDENT'){
                             statusText = `<span class="badge badge-danger">INCIDENT</span>`;
                         } else if (data == 'CHANGE REQUEST'){
-                            statusText = `<span class="badge badge-warning">CHANGE REQUEST</span>`;
+                            statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
                         } else {
                             statusText = `<span class="badge badge-info">NEW USER</span>`;
                         }
