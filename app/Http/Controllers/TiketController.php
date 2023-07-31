@@ -186,32 +186,34 @@ class TiketController extends Controller
                 $userid = Session::get('userid');
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
-                $parentBtn = '<a href="javascript:void(0)" class="view btn btn-info" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                $document_name = str_replace("storage/", "", $row["attachment"]);
+
+                $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
-                data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$row["attachment"].'" 
+                data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
-                $document_name = str_replace("storage/", "", $row["attachment"]);
-                $download_btn = '<a download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-default" 
+                
+                $download_btn = '<a download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url($document_name).'" target="_blank" class="btn btn-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
             
-                $approveMgrBtn = ' <button href="javascript:void(0)" class="update btn btn-success" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
+                $approveMgrBtn = '<button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
                 data-approvedby1="'.$row["approvedby_1"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'" data-approvedby1_date ="'.$row["approvedby1_date"].'"><i class="fa fa-check" aria-hidden="true"></i></button>';
 
-                $approveBtn = ' <button href="javascript:void(0)" class="update btn btn-success" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
+                $approveBtn = '<button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
                 data-approvedbyit="'.$row["approvedby_it"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'" data-approvedbyit_date ="'.$row["approvedbyit_date"].'"><i class="fa fa-check" aria-hidden="true"></i></button>';
 
-                $rejectBtn = ' <button href="javascript:void(0)" class="reject btn btn-danger" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                $rejectBtn = '<button href="javascript:void(0)" class="reject btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                 data-approvedby1="'.$row["approvedby_it"].'" data-approvedbyit="'.$row["approvedby_it"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'"><i class="fa fa-ban" aria-hidden="true"></i></button>';
                 
                 // $superAdminBtn = $parentBtn. $approveBtn. $rejectBtn;
                 if($row["categoryid"] == 'CD001' && $row["statusid"] == 'SD006' && $row["assignedto"] == '' ){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="update btn btn-warning" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
+                    $itBtn = $parentBtn. $download_btn. '<button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" ><i class="fas fa-user-plus"></i></button>';
                     $managerBtn = $parentBtn. $download_btn;
                     $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
                 } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="closed btn btn-danger" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    $itBtn = $parentBtn. $download_btn. '<button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                     $managerBtn = $parentBtn. $download_btn;
                     $managerItBtn = $parentBtn. $download_btn;
@@ -283,7 +285,7 @@ class TiketController extends Controller
                     "categoryid" => trim($value['categoryid']),
                     "category" => trim($value['category']),
                     "subject" => trim($value['subject']),
-                    "attachment" => trim($value['attachment']),
+                    "attachment" => str_replace("storage/", "", $value['attachment']),
                     "statusid" => trim($value['statusid']),
                     "status" => trim($value['status']),
                     "priorid" => trim($value['priorid']),
@@ -313,38 +315,38 @@ class TiketController extends Controller
             $data = [];
         }   
         $resp = json_encode($data);
-    
+
         return DataTables::of($data['dat'])
             ->addColumn('action', function($row){
                 $userid = Session::get('userid');
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
-                 $parentBtn = '<a href="javascript:void(0)" class="view btn btn-info" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                 $parentBtn = '<a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$row["attachment"].'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $document_name = str_replace("storage/", "", $row["attachment"]);
-                $download_btn = '<a download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-default" 
+                $download_btn = '<a download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-outline-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
             
-                $approveMgrBtn = ' <button href="javascript:void(0)" class="update btn btn-success" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
+                $approveMgrBtn = ' <button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
                 data-approvedby1="'.$row["approvedby_1"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'" data-approvedby1_date ="'.$row["approvedby1_date"].'"><i class="fa fa-check" aria-hidden="true"></i></button>';
 
-                $approveBtn = ' <button href="javascript:void(0)" class="update btn btn-success" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
+                $approveBtn = ' <button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
                 data-approvedbyit="'.$row["approvedby_it"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'" data-approvedbyit_date ="'.$row["approvedbyit_date"].'"><i class="fa fa-check" aria-hidden="true"></i></button>';
 
-                $rejectBtn = ' <button href="javascript:void(0)" class="reject btn btn-danger" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                $rejectBtn = ' <button href="javascript:void(0)" class="reject btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                 data-approvedby1="'.$row["approvedby_it"].'" data-approvedbyit="'.$row["approvedby_it"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'"><i class="fa fa-ban" aria-hidden="true"></i></button>';
                 
                 // $superAdminBtn = $parentBtn. $approveBtn. $rejectBtn;
                 if($row["categoryid"] == 'CD001' && $row["statusid"] == 'SD006' && $row["assignedto"] == '' ){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="update btn btn-warning" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
+                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" ><i class="fas fa-user-plus"></i></button>';
                     $managerBtn = $parentBtn. $download_btn;
                     $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
                 } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="closed btn btn-danger" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                     $managerBtn = $parentBtn. $download_btn;
                     $managerItBtn = $parentBtn. $download_btn;
@@ -407,7 +409,7 @@ class TiketController extends Controller
         $period = $dataPrefix->period;
         $start_numb = $dataPrefix->start_number;
         $end_numb = $dataPrefix->end_number;
-        $last = $dataPrefix->last_number;
+        $last = $dataPrefix->last_number + 1;
         $counterid = 'CT001';
         /* Session Data */
         $session = array(
@@ -560,14 +562,18 @@ class TiketController extends Controller
 
         if ($auth){
             /* Insert Ticket */ 
-            $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid);
+            $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix);
             /* Update Counter Prefix */
-            $updateCounter = $this->repository->UPDATECOUNTER($last, $counterid);
+            // $updateCounter = $this->repository->UPDATECOUNTER($last, $counterid);
             /* Send Email */
             $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1);
+            
+            return redirect()->route('tiket')->with("success", "Data insert successfully");
+        } else { 
+            return redirect()->back()->with("error", "error");
         }
     
-        return redirect()->route('tiket')->with("success", "successfully");
+        
 
     }
 
@@ -770,10 +776,18 @@ class TiketController extends Controller
             $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
             $emailReq = $dataEmailReq[0]->usermail;
             $assignNameReq = $dataEmailReq[0]->username;
-            /* Get Email Approve 1 */
-            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
-            $emailApprove1 = $dataEmailApprove1[0]->usermail;
-            $assignNameApprove1 = $dataEmailApprove1[0]->username;
+            if(!empty($approve1)){
+                /* Get Email Approve IT */
+                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approveit)->first();
+                $emailApprove1 = $dataEmailApprove1->usermail;
+                $assignNameApprove1 = $dataEmailApprove1->username;
+            } else {
+                /* Get Email Approve 1 */
+                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->first();
+                $emailApprove1 = $dataEmailApprove1->usermail;
+                $assignNameApprove1 = $dataEmailApprove1->username;
+            }
+        
         }
         /* Update Ticket */
         $updateTicket = $this->repository->CLOSEDTICKET($ticketno, $assignto, $statusid, $remark);
@@ -781,5 +795,76 @@ class TiketController extends Controller
         $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
     
         return redirect()->route('tiket')->with("success", "successfully");
+    }
+
+    public function addForm(Request $request)
+    {
+
+        $isLogin = Session::get('status_login');
+        if($isLogin != 1) {
+            return redirect()->route('login-page');
+        }
+
+        $usreq = '';
+        $categ = '';
+        $prior = '';
+
+        $dataUsr = $this->repository->GETUSERBYROLE();
+        $json = json_decode($dataUsr, true);
+
+        if($json["rc"] == "00") {
+            /* Get User for User Requestor */
+            $requestor = $json['requestor'];
+            $requestorArray = [];
+            foreach ($requestor as $key => $value) {
+                array_push($requestorArray, [
+                    "NAME" => trim($value['username']),
+                    "ID" => trim($value['userid'])
+                ]);
+            }
+            $data['usreq'] = $requestorArray; 
+            /* End */
+
+            /* Get Category */
+            $category = $json['category'];
+            $categoryArray = [];
+
+            foreach ($category as $key => $value) {
+                array_push($categoryArray, [
+                    "NAME" => trim($value['description']),
+                    "ID" => trim($value['categoryid'])
+                ]);
+            }
+            $data['categ'] = $categoryArray; 
+            /* End */
+
+            /* Get Priority */
+            $priority = $json['priority'];
+            $priorityArray = [];
+
+            foreach ($priority as $key => $value) {
+                array_push($priorityArray, [
+                    "NAME" => trim($value['description']),
+                    "ID" => trim($value['priorid'])
+                ]);
+            }
+            $data['prior'] = $priorityArray; 
+            /* End */
+
+            /* Get Assigned To */
+            $assign = $json['assign'];
+            $assignArray = [];
+
+            foreach ($assign as $key => $value) {
+                array_push($assignArray, [
+                    "NAME" => trim($value['username']),
+                    "ID" => trim($value['userid'])
+                ]);
+            }
+            $data['assn'] = $assignArray; 
+            /* End */
+        }   
+        
+        return view('fitur.addform', $data);
     }
 }

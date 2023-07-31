@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('image-upload/image-uploader.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
 @endsection
 @section('body')
 <!-- Site wrapper -->
@@ -14,7 +15,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>MY TICKET</h1>
+                    <h1>My Ticket</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -54,7 +55,7 @@
                             <table id="tiket_list" class="table table-bordered table-hover display nowrap" width="100%">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>Action</th>
                                         <th>Tiket No</th>
                                         <th>Category</th>
                                         <th>Status</th>
@@ -62,7 +63,6 @@
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
                                         <th>Created On</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -576,15 +576,19 @@
                     'excel'
             ],
             columns: [
+                // {
+                //     data: 'ticketno',
+                //     render: function(data){
+                //         if(data != null){
+                //             return '';
+                //         } else {
+                //             return '';
+                //         }
+                //     }
+                // },
                 {
-                    data: 'ticketno',
-                    render: function(data){
-                        if(data != null){
-                            return '';
-                        } else {
-                            return '';
-                        }
-                    }
+                    data: 'action',
+                    name: 'action',
                 },
                 {
                     data: 'ticketno',
@@ -654,15 +658,11 @@
                         return date;   
                     }
                 },
-                {
-                    data: 'action',
-                    name: 'action',
-                },
             ],
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
 				"sProcessing": "Loading...",
-				"sSearch": "Search by Keyword:",
+				"sSearch": "Search :",
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });

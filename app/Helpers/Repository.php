@@ -245,19 +245,11 @@ class Repository
 
                 $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                    ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'a.assignedto', 'a.createdon', 'b.mgrid' )
                     ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                    ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date')
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1', 'h.username as approvedit')
@@ -265,19 +257,11 @@ class Repository
     
                 $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                    ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'a.assignedto', 'a.createdon', 'b.mgrid' )
                     ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                    ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date')
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'g.username as approved1', 'h.username as approvedit')
@@ -587,108 +571,123 @@ class Repository
         }  
         return $response;
     }
-    public static function ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid)
-    {      
-        /* passing Data to Array */
-        if ($roleid == 'RD002' || $roleid == 'RD003') {
-            $value = array(
-                'ticketno' => $ticketno,
-                'categoryid' => $category,
-                'userid' => $userid,
-                'subject' => $subject,
-                'detail' => $remark,
-                'attachment' => $upload,
-                'assignedto' => $assign,
-                'statusid' => $statusid,
-                'createdon' => $createdon,
-                'approvedby_1' => $approvedby_1,
-                'approvedby_2' => '',
-                'approvedby_3' => '',
-                'approvedby_it' => $approvedby_it,
-                'priorid' => $priority,
-                'rejectedby' => '',
-                'remark' => $remark,
-                'approvedby1_date' => date('Y-m-d H:i:s'),
-                'approvedby2_date' => date('Y-m-d H:i:s'),
-                'approvedby3_date' => date('Y-m-d H:i:s'),
-                'approvedbyit_date' => date('Y-m-d H:i:s'),
-                'createdby' => $createdby
-            );
-    } else {
-            $value = array(
-                'ticketno' => $ticketno,
-                'categoryid' => $category,
-                'userid' => $userreq,
-                'subject' => $subject,
-                'detail' => $remark,
-                'attachment' => $upload,
-                'assignedto' => $assign,
-                'statusid' => $statusid,
-                'createdon' => $createdon,
-                'approvedby_1' => $approvedby_1,
-                'approvedby_2' => '',
-                'approvedby_3' => '',
-                'approvedby_it' => $approvedby_it,
-                'priorid' => $priority,
-                'rejectedby' => '',
-                'remark' => $remark,
-                'approvedby1_date' => date('Y-m-d H:i:s'),
-                'approvedby2_date' => date('Y-m-d H:i:s'),
-                'approvedby3_date' => date('Y-m-d H:i:s'),
-                'approvedbyit_date' => date('Y-m-d H:i:s'),
-                'createdby' => $createdby
-            );
-        }
-        DB::beginTransaction();
-        $insert = DB::connection('pgsql')->table('helpdesk.t_ticket')->insert([
-                    'ticketno' => $value['ticketno'],
-                    'categoryid' => $value['categoryid'],
-                    'userid' => $value['userid'],
-                    'subject' => $value['subject'],
-                    'detail' => $value['detail'],
-                    'attachment' => $value['attachment'][0],
-                    'assignedto' => $value['assignedto'],
-                    'statusid' => $value['statusid'],
-                    'createdon' => $value['createdon'],
-                    'approvedby_1' => $value['approvedby_1'],
+    public static function ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix)
+    {       
+        try{
+            $year = date('Y');
+            /* passing Data to Array */
+            if ($roleid == 'RD002' || $roleid == 'RD003') {
+                $value = array(
+                    'ticketno' => $ticketno,
+                    'categoryid' => $category,
+                    'userid' => $userid,
+                    'subject' => $subject,
+                    'detail' => $remark,
+                    'attachment' => $upload,
+                    'assignedto' => $assign,
+                    'statusid' => $statusid,
+                    'createdon' => $createdon,
+                    'approvedby_1' => $approvedby_1,
                     'approvedby_2' => '',
                     'approvedby_3' => '',
-                    'approvedby_it' => $value['approvedby_it'],
-                    'priorid' => $value['priorid'],
+                    'approvedby_it' => $approvedby_it,
+                    'priorid' => $priority,
                     'rejectedby' => '',
-                    'remark' => $value['rejectedby'],
-                    'approvedby1_date' => $value['approvedby1_date'],
-                    'approvedby2_date' => $value['approvedby2_date'],
-                    'approvedby3_date' => $value['approvedby3_date'],
-                    'approvedbyit_date' => $value['approvedbyit_date'],
-                    'createdby' => $value['createdby']
+                    'remark' => $remark,
+                    'approvedby1_date' => date('Y-m-d H:i:s'),
+                    'approvedby2_date' => date('Y-m-d H:i:s'),
+                    'approvedby3_date' => date('Y-m-d H:i:s'),
+                    'approvedbyit_date' => date('Y-m-d H:i:s'),
+                    'createdby' => $createdby
+                );
+            } else {
+                $value = array(
+                    'ticketno' => $ticketno,
+                    'categoryid' => $category,
+                    'userid' => $userreq,
+                    'subject' => $subject,
+                    'detail' => $remark,
+                    'attachment' => $upload,
+                    'assignedto' => $assign,
+                    'statusid' => $statusid,
+                    'createdon' => $createdon,
+                    'approvedby_1' => $approvedby_1,
+                    'approvedby_2' => '',
+                    'approvedby_3' => '',
+                    'approvedby_it' => $approvedby_it,
+                    'priorid' => $priority,
+                    'rejectedby' => '',
+                    'remark' => $remark,
+                    'approvedby1_date' => date('Y-m-d H:i:s'),
+                    'approvedby2_date' => date('Y-m-d H:i:s'),
+                    'approvedby3_date' => date('Y-m-d H:i:s'),
+                    'approvedbyit_date' => date('Y-m-d H:i:s'),
+                    'createdby' => $createdby
+                );
+            }
+            $insert = DB::connection('pgsql')->table('helpdesk.t_ticket')->insert([
+                'ticketno' => $value['ticketno'],
+                'categoryid' => $value['categoryid'],
+                'userid' => $value['userid'],
+                'subject' => $value['subject'],
+                'detail' => $value['detail'],
+                'attachment' => $value['attachment'][0],
+                'assignedto' => $value['assignedto'],
+                'statusid' => $value['statusid'],
+                'createdon' => $value['createdon'],
+                'approvedby_1' => $value['approvedby_1'],
+                'approvedby_2' => '',
+                'approvedby_3' => '',
+                'approvedby_it' => $value['approvedby_it'],
+                'priorid' => $value['priorid'],
+                'rejectedby' => '',
+                'remark' => $value['rejectedby'],
+                'approvedby1_date' => $value['approvedby1_date'],
+                'approvedby2_date' => $value['approvedby2_date'],
+                'approvedby3_date' => $value['approvedby3_date'],
+                'approvedbyit_date' => $value['approvedbyit_date'],
+                'createdby' => $value['createdby']
+            ]);
+
+            $update = DB::connection('pgsql')->table('master_data.m_counter')
+                ->where('counterid', $counterid)
+                ->where('period', $year)
+                ->where('prefix', $prefix)
+                ->update([
+                    'last_number' => $last
                 ]);
 
-        DB::commit();
-        if(!empty($insert)){
+            // $update = DB::connection('pgsql')->table('master_data.m_counter')->selectRaw("update master_data.m_counter set last_number = '$last' WHERE counterid = 'CT001' AND period = '$year' ");
+            // $insert = DB::connection('pgsql')->table('helpdesk.t_ticket')->selectRaw('INSERT INTO helpdesk.t_ticket(
+            //     ticketno, categoryid, userid, subject, detail, attachment, assignedto, statusid, approvedby_1, approvedby_2, approvedby_3, approvedby_it, priorid, rejectedby, reasonrejection, remark, closedon, approvedby1_date, approvedby2_date, approvedby3_date, approvedbyit_date, createdby, createdon)
+            //     VALUES ("test", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");');
             return response()->json([
                 'rc' => '00',
                 'desc' => 'success',
                 'msg' => 'success',
-                'data' => $insert
+                'data' => ''
             ]);
-        } else {
+
+        }catch(\Exception $e){
+            DB::rollback();
             return response()->json([
                 'rc' => '01',
                 'desc' => 'failed',
                 'msg' => 'failed',
-                'data' => $insert
+                'data' => $e->getMessage()
             ]);
+
         }
     }   
 
     public static function UPDATECOUNTER($last, $counterid)
     {   
-        DB::beginTransaction();
-        $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', $counterid)->update([
-            'last_number' => $last + 1
+        $year = date('Y');
+        $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', $counterid)->where('period', $year)->update([
+            'last_number' => $last
         ]);
-        DB::commit();
+        // $update =  DB::connection('pgsql')->table('master_data.m_counter')->selectRaw('')
+        return $update;
         if(!empty($update)){
             return response()->json([
                 'rc' => '00',
@@ -710,81 +709,83 @@ class Repository
     public static function UPDATETICKET($userid, $ticketno, $assignto, $approvedby1, $approveby_it, $rejectedby, $statusid, $approveby_1_date, $approveby_it_date, $roleid)
     {   
         DB::beginTransaction();
-        if($roleid == "RD006"){
-            /* Manager IT */
-            $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
-            ->where('ticketno', $ticketno)
-            ->update([
-                'assignedto' => $assignto,
-                'statusid' => $statusid,
-                'approvedby_it' => $approveby_it,
-                'rejectedby' => $rejectedby,
-                'approvedbyit_date' => $approveby_it_date,
-            ]);
-        } else if($roleid == "RD002"){
-            /* Manager User */
-            $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
-            ->where('ticketno', $ticketno)
-            ->update([
-                'assignedto' => $assignto,
-                'statusid' => $statusid,
-                'approvedby_1' => $approvedby1,
-                'rejectedby' => $rejectedby,
-                'approvedby1_date' => $approveby_1_date,
-            ]);
-        } else {
-            /* IT Tim */
-            $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
-            ->where('ticketno', $ticketno)
-            ->update([
-                'assignedto' => $assignto,
-                'statusid' => $statusid,
-                'rejectedby' => $rejectedby,
-            ]);
-        }
-       
-        DB::commit();
-        if(!empty($update)){
+        try{
+            if($roleid == "RD006"){
+                /* Manager IT */
+                $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'assignedto' => $assignto,
+                    'statusid' => $statusid,
+                    'approvedby_it' => $approveby_it,
+                    'rejectedby' => $rejectedby,
+                    'approvedbyit_date' => $approveby_it_date,
+                ]);
+            } else if($roleid == "RD002"){
+                /* Manager User */
+                $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'assignedto' => $assignto,
+                    'statusid' => $statusid,
+                    'approvedby_1' => $approvedby1,
+                    'rejectedby' => $rejectedby,
+                    'approvedby1_date' => $approveby_1_date,
+                ]);
+            } else {
+                /* IT Tim */
+                $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'assignedto' => $assignto,
+                    'statusid' => $statusid,
+                    'rejectedby' => $rejectedby,
+                ]);
+            }
+            DB::commit();
             return response()->json([
                 'rc' => '00',
                 'desc' => 'success',
                 'msg' => 'success',
-                'data' => $update
+                'data' => ''
             ]);
-        } else {
+        }catch(\Exception $e){
+            DB::rollback();
             return response()->json([
                 'rc' => '01',
                 'desc' => 'failed',
                 'msg' => 'failed',
-                'data' => $update
+                'data' => $e->getMessage()
             ]);
-        }
 
+        }
     }
 
-    public static function CLOSEDTICKET($ticketno, $assignto, $statusid, $remark){
-        $closed = DB::connection('pgsql')->table('helpdesk.t_ticket')
-            ->where('ticketno', $ticketno)
-            ->update([
-                'assignedto' => $assignto,
-                'statusid' => $statusid,
-                'remark' => $remark,
-            ]);
-       
-        DB::commit();
-        if(!empty($closed)){
+    public static function CLOSEDTICKET($ticketno, $assignto, $statusid, $remark)
+    {
+        try{
+            $closed = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'assignedto' => $assignto,
+                    'statusid' => $statusid,
+                    'remark' => $remark,
+                ]);
+        
+            DB::commit();
             return response()->json([
                 'rc' => '00',
                 'desc' => 'success',
                 'msg' => 'success',
-                'data' => $closed
+                'data' => ''
             ]);
-        } else {
+        }catch(\Exception $e){
+            DB::rollback();
             return response()->json([
                 'rc' => '01',
                 'desc' => 'failed',
                 'msg' => 'failed',
-                'data' => $closed
+                'data' => $e->getMessage()
             ]);
         }
     }
@@ -1184,241 +1185,209 @@ class Repository
 
     public static function UPDATETUKARSHIFT($nip, $shift, $no_kasus, $jamin, $tglin, $jamout, $tglout, $timevalid, $jamlembur, $lamaoff)
     {
-        $date = date('Y-m-d');
-        if($timevalid == "INVALID"){
-            DB::beginTransaction();
-            $update1 = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip)->update([
-                'Shift' => $shift
-            ]);
-            DB::commit();
-            DB::beginTransaction();
-            $insert = DB::connection('mysql2')->table('personalia.tukarshift')->insert([
-                'Tanggal' => $date,
-                'Nip' => $nip,
-                'Shift' => $shift
-            ]);
-            DB::commit();
+        try{
+            $date = date('Y-m-d');
+            if($timevalid == "INVALID"){
+                $update1 = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip)->where('Tgl In', $tglin)
+                ->update([
+                    'Shift' => $shift
+                ]);
+            
+                $insert = DB::connection('mysql2')->table('personalia.tukarshift')->insert([
+                    'Tanggal' => $date,
+                    'Nip' => $nip,
+                    'Shift' => $shift
+                ]);
 
-            if(!empty($update) || !empty($insert)){
+                DB::commit();
                 return response()->json([
                     'rc' => '00',
                     'desc' => 'success',
                     'msg' => 'success',
-                    'update1' => $update1,
-                    'insert' => $insert
+                    'data' => ''
                 ]);
             } else {
-                return response()->json([
-                    'rc' => '01',
-                    'desc' => 'failed',
-                    'msg' => 'failed',
-                    'update1' => $update1,
-                    'insert' => $insert
+                $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip)->where('Tgl In', $tglin)
+                ->update([
+                    'No Kasus' => $no_kasus
                 ]);
-            }
-        } else {
-            DB::beginTransaction();
-            $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip)->update([
-                'No Kasus' => $no_kasus
-            ]);
-            DB::commit();
-            DB::beginTransaction();
-            $insert = DB::connection('mysql2')->table('personalia.kasus')->insert([
-                'No Kasus' => $no_kasus,
-                'Tgl Kasus' => date('Y-m-d'),
-                'Nip' => $nip,
-                'Tgl In' => $tglin,
-                'Jam In' => $jamin,
-                'Tgl Out' => $tglout,
-                'Jam Out' => $jamout,
-                'Shift' => $timevalid,
-                'Tipe' => 'ADD',
-                'Jam Kurang' => 'b1',
-                'Bayar Jam' => 'b1',
-                'Bayar Penuh' =>'b1',
-                'Keterangan' => 'Shift yang Bermasalah',
-                'Jam Lembur' => $jamlembur,
-                'Lama Off' => $lamaoff,
-                'Jam Dibayar' => '0'
-            ]);
-            DB::commit();
 
-            if(!empty($update) || !empty($insert)){
+                $insert = DB::connection('mysql2')->table('personalia.kasus')->insert([
+                    'No Kasus' => $no_kasus,
+                    'Tgl Kasus' => date('Y-m-d'),
+                    'Nip' => $nip,
+                    'Tgl In' => $tglin,
+                    'Jam In' => $jamin,
+                    'Tgl Out' => $tglout,
+                    'Jam Out' => $jamout,
+                    'Shift' => $timevalid,
+                    'Tipe' => 'ADD',
+                    'Jam Kurang' => 'b1',
+                    'Bayar Jam' => 'b1',
+                    'Bayar Penuh' =>'b1',
+                    'Keterangan' => 'Shift yang Bermasalah',
+                    'Jam Lembur' => $jamlembur,
+                    'Lama Off' => $lamaoff,
+                    'Jam Dibayar' => '0'
+                ]);
+
+                DB::commit();
                 return response()->json([
                     'rc' => '00',
                     'desc' => 'success',
                     'msg' => 'success',
-                    'update' => $update,
-                    'insert' => $insert
+                    'data' => ''
                 ]);
-            } else {
-                return response()->json([
-                    'rc' => '01',
-                    'desc' => 'failed',
-                    'msg' => 'failed',
-                    'update' => $update,
-                    'insert' => $insert
-                ]);
-            }
+            }   
+        }catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'rc' => '01',
+                'desc' => 'failed',
+                'msg' => 'failed',
+                'data' => $e->getMessage()
+            ]);
         }
-
-        
     }
 
     public static function UPDATETUKARSHIFTBULK($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $kontrak, $start_date, $end_date, $no_kasus)
     {
-        
-        $start_date = '2023-06-02';
-        $end_date = '2023-06-02';
-        
-        /* get Data TimeValidation */
-        $validation = DB::connection('mysql2')->table('personalia.absensi as a')
-            ->join('personalia.masteremployee as b', function($q){
-                    $q->on('a.Nip', '=', 'b.Nip')
-                    ->on( 'b.Begda', '<=', 'a.Tgl In' )
-                    ->on('b.Endda', '>=', 'a.Tgl In');
-            })
-            ->leftjoin('personalia.mastershift as c', 'a.Shift', '=', 'c.Kode Shift')
-            ->select('a.Nip', 'b.Nama', 'b.Kode Divisi AS KodeDivisi', 'b.Kode Bagian AS KodeBagian', 'b.Kode Group AS KodeGroup', 'a.Tgl In AS TglIn', 'a.Jam In AS JamIn',
-                    'a.Tgl Out AS TglOut', 'a.Jam Out AS JamOut', 'a.Lama Kerja AS LamaKerja', 'a.Jam Lembur AS JamLembur', 'a.Shift', 'a.Lama Off AS LamaOff', 'a.No Kasus AS NoKasus',
-                    'a.CardX', 'c.Jam In AS ShiftIn', 'c.Jam Out AS ShiftOut', \DB::raw('(
-                        CASE WHEN b.`Kode Group` != "" && a.`No Kasus` = "" THEN 
-                            CASE 
-                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN "VALID" 
-                                WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN "VALID"
-                                WHEN (a.`Lama Kerja` <= 7) THEN "LESS WORKING HOURS"
-                                WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN "LATE < 10"
-                            ELSE "INVALID" END 
-                        ELSE "VALID" END) AS TimeValidation'))
-            ->whereIn('a.Nip', $nip)
-            ->whereBetween('a.Tgl In', [$start_date, $end_date])
-            ->get();
-    
-        foreach($validation as $valid){
-            if($valid->TimeValidation == "INVALID"){
-                /* Get data New Shift */
-                $result = DB::connection('mysql2')->table('personalia.mastershift')
-                    ->where('Jam In', '>=', $valid->JamIn)
-                    ->where('Jam Out', '<=', $valid->JamOut)
-                    ->where('Kode Shift', 'REGEXP', '^S.$')
-                    ->whereRaw('((TIME_TO_SEC(TIMEDIFF(`Jam In`, ? ))/60) <= 60) AND ((TIME_TO_SEC(TIMEDIFF(`Jam Out`, ? ))/60) <= 360)', [$valid->JamIn, $valid->JamOut])
-                    ->select('Kode Shift AS NewShift')
-                    ->get();
-               
-                $arr_newshift = [];
-                foreach ($result as $key => $value) {
-                    array_push($arr_newshift, $value->NewShift);
-                }
-                
-                /* Update Into Table Absensi */
-                DB::beginTransaction();
-                for ($a=0; $a < count($nip) ; $a++){
-                    $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip[$a])->update([
-                        'Shift' => $arr_newshift[$a]
-                    ]);
-                }
-                DB::commit();
+        try{
+            $start_date = '2023-06-02';
+            $end_date = '2023-06-02';
+            
+            /* get Data TimeValidation */
+            $validation = DB::connection('mysql2')->table('personalia.absensi as a')
+                ->join('personalia.masteremployee as b', function($q){
+                        $q->on('a.Nip', '=', 'b.Nip')
+                        ->on( 'b.Begda', '<=', 'a.Tgl In' )
+                        ->on('b.Endda', '>=', 'a.Tgl In');
+                })
+                ->leftjoin('personalia.mastershift as c', 'a.Shift', '=', 'c.Kode Shift')
+                ->select('a.Nip', 'b.Nama', 'b.Kode Divisi AS KodeDivisi', 'b.Kode Bagian AS KodeBagian', 'b.Kode Group AS KodeGroup', 'a.Tgl In AS TglIn', 'a.Jam In AS JamIn',
+                        'a.Tgl Out AS TglOut', 'a.Jam Out AS JamOut', 'a.Lama Kerja AS LamaKerja', 'a.Jam Lembur AS JamLembur', 'a.Shift', 'a.Lama Off AS LamaOff', 'a.No Kasus AS NoKasus',
+                        'a.CardX', 'c.Jam In AS ShiftIn', 'c.Jam Out AS ShiftOut', \DB::raw('(
+                            CASE WHEN b.`Kode Group` != "" && a.`No Kasus` = "" THEN 
+                                CASE 
+                                    WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` = 0) THEN "VALID" 
+                                    WHEN (a.`Jam In` <= c.`Jam In` AND a.`Jam Out` >= c.`Jam Out`) AND (a.`Jam Lembur` > 0) THEN "VALID"
+                                    WHEN (a.`Lama Kerja` <= 7) THEN "LESS WORKING HOURS"
+                                    WHEN ((TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) > 0 AND (TIME_TO_SEC(TIMEDIFF(a.`Jam In`, c.`Jam In`))/60) <= 10 ) THEN "LATE < 10"
+                                ELSE "INVALID" END 
+                            ELSE "VALID" END) AS TimeValidation'))
+                ->whereIn('a.Nip', $nip)
+                ->whereBetween('a.Tgl In', [$start_date, $end_date])
+                ->get();
 
-                /* Insert Into Table Tukar Shift */
-                // DB::beginTransaction();
-                // $arrayInsert = [];
-                // for ($i=0; $i < count($nip) ; $i++){
-                //     $draw = [
-                //         'Tanggal' => date('Y-m-d'),
-                //         'Shift' => $arr_newshift[$i],
-                //         'Nip' => $nip[$i],
-                //     ];
-                //     $arrayInsert[] = $draw; 
-                // }
-                // $insert = DB::connection('mysql2')->table('personalia.tukarshift')->insert($arrayInsert);
-                // DB::commit();
-
-                if(!empty($insert) || !empty($update)){
-                    return response()->json([
-                        'rc' => '00',
-                        'desc' => 'success',
-                        'msg' => 'success',
-                        // 'insert' => $insert,
-                        'update1' => $update
-                    ]);
-                } else {
-                    DB::rollback();
-                    return response()->json([
-                        'rc' => '01',
-                        'desc' => 'failed',
-                        'msg' => 'failed',
-                        // 'insert' => $insert,
-                        'update1' => $update
-                    ]);
-                }   
-            } else {
-                /* Get data New Shift */
-                $result = DB::connection('mysql2')->table('personalia.mastershift')
-                    ->where('Jam In', '>=', $valid->JamIn)
-                    ->where('Jam Out', '<=', $valid->JamOut)
-                    ->where('Kode Shift', 'REGEXP', '^S.$')
-                    ->whereRaw('((TIME_TO_SEC(TIMEDIFF(`Jam In`, ? ))/60) <= 60) AND ((TIME_TO_SEC(TIMEDIFF(`Jam Out`, ? ))/60) <= 360)', [$valid->JamIn, $valid->JamOut])
-                    ->select('Kode Shift AS NewShift')
-                    ->get();
-
-                $arr_newshift = [];
-                foreach ($result as $key => $value) {
-                    array_push($arr_newshift, $value->NewShift);
-                }
-                /* Insert Into Table Kasus */
-                DB::beginTransaction();
-                $arrayInsert = [];
-                for ($i=0; $i < count($nip); $i++){
-                    $draw = [
-                        'No Kasus' => $no_kasus[$i],
-                        'Tgl Kasus' => date('Y-m-d'),
-                        'Nip' => $nip[$i],
-                        'Tgl In' => $valid->TglIn,
-                        'Jam In' => $valid->JamIn,
-                        'Tgl Out' => $valid->TglOut,
-                        'Jam Out' => $valid->JamOut,
-                        'Shift' => $valid->TimeValidation,
-                        'Tipe' => 'ADD',
-                        'Jam Kurang' => 'b1',
-                        'Bayar Jam' => 'b1',
-                        'Bayar Penuh' =>'b1',
-                        'Keterangan' => 'Shift yang Bermasalah',
-                        'Jam Lembur' => $valid->JamLembur,
-                        'Lama Off' => $valid->LamaOff,
-                        'Jam Dibayar' => '0'
-                    ];
+            foreach($validation as $valid){
+                if($valid->TimeValidation == "INVALID"){
+                    /* Get data New Shift */
+                    $result = DB::connection('mysql2')->table('personalia.mastershift')
+                        ->where('Jam In', '>=', $valid->JamIn)
+                        ->where('Jam Out', '<=', $valid->JamOut)
+                        ->where('Kode Shift', 'REGEXP', '^S.$')
+                        ->whereRaw('((TIME_TO_SEC(TIMEDIFF(`Jam In`, ? ))/60) <= 60) AND ((TIME_TO_SEC(TIMEDIFF(`Jam Out`, ? ))/60) <= 360)', [$valid->JamIn, $valid->JamOut])
+                        ->select('Kode Shift AS NewShift')
+                        ->get();
                     
-                    $arrayInsert[] = $draw;      
-                }
-                $insert = DB::connection('mysql2')->table('personalia.kasus')->insert($arrayInsert);
-                DB::commit();
+                    $arr_newshift = [];
+                    foreach ($result as $key => $value) {
+                        array_push($arr_newshift, $value->NewShift);
+                    }
+                    
+                    /* Update Into Table Absensi */
+                    for ($a=0; $a < count($nip) ; $a++){
+                        $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip[$a])->update([
+                            'Shift' => $arr_newshift[$a]
+                        ]);
+                    }
 
-                /* Update No Kasus Into Table Absensi */
-                DB::beginTransaction();
-                for ($i=0; $i < count($no_kasus); $i++){
-                    $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip[$i])->update(['No Kasus' => $no_kasus[$i]]);
-                }
-                DB::commit();
-
-                if(!empty($insert)){
+                    DB::commit();
                     return response()->json([
                         'rc' => '00',
                         'desc' => 'success',
                         'msg' => 'success',
-                        'insert' => $insert,
-                        'update' => $update
+                        'data' => ''
                     ]);
+
+                    /* Insert Into Table Tukar Shift */
+                    // DB::beginTransaction();
+                    // $arrayInsert = [];
+                    // for ($i=0; $i < count($nip) ; $i++){
+                    //     $draw = [
+                    //         'Tanggal' => date('Y-m-d'),
+                    //         'Shift' => $arr_newshift[$i],
+                    //         'Nip' => $nip[$i],
+                    //     ];
+                    //     $arrayInsert[] = $draw; 
+                    // }
+                    // $insert = DB::connection('mysql2')->table('personalia.tukarshift')->insert($arrayInsert);
+                    // DB::commit();
+
                 } else {
-                    DB::rollback();
+                    /* Get data New Shift */
+                    $result = DB::connection('mysql2')->table('personalia.mastershift')
+                        ->where('Jam In', '>=', $valid->JamIn)
+                        ->where('Jam Out', '<=', $valid->JamOut)
+                        ->where('Kode Shift', 'REGEXP', '^S.$')
+                        ->whereRaw('((TIME_TO_SEC(TIMEDIFF(`Jam In`, ? ))/60) <= 60) AND ((TIME_TO_SEC(TIMEDIFF(`Jam Out`, ? ))/60) <= 360)', [$valid->JamIn, $valid->JamOut])
+                        ->select('Kode Shift AS NewShift')
+                        ->get();
+
+                    $arr_newshift = [];
+                    foreach ($result as $key => $value) {
+                        array_push($arr_newshift, $value->NewShift);
+                    }
+
+                    /* Insert Into Table Kasus */
+                    $arrayInsert = [];
+                    for ($i=0; $i < count($nip); $i++){
+                        $draw = [
+                            'No Kasus' => $no_kasus[$i],
+                            'Tgl Kasus' => date('Y-m-d'),
+                            'Nip' => $nip[$i],
+                            'Tgl In' => $valid->TglIn,
+                            'Jam In' => $valid->JamIn,
+                            'Tgl Out' => $valid->TglOut,
+                            'Jam Out' => $valid->JamOut,
+                            'Shift' => $valid->TimeValidation,
+                            'Tipe' => 'ADD',
+                            'Jam Kurang' => 'b1',
+                            'Bayar Jam' => 'b1',
+                            'Bayar Penuh' =>'b1',
+                            'Keterangan' => 'Shift yang Bermasalah',
+                            'Jam Lembur' => $valid->JamLembur,
+                            'Lama Off' => $valid->LamaOff,
+                            'Jam Dibayar' => '0'
+                        ];
+                        
+                        $arrayInsert[] = $draw;      
+                    }
+                    $insert = DB::connection('mysql2')->table('personalia.kasus')->insert($arrayInsert);
+
+                    /* Update No Kasus Into Table Absensi */
+                    for ($i=0; $i < count($no_kasus); $i++){
+                        $update = DB::connection('mysql2')->table('personalia.absensi')->where('Nip', $nip[$i])->update(['No Kasus' => $no_kasus[$i]]);
+                    }
+
+                    DB::commit();
                     return response()->json([
-                        'rc' => '01',
-                        'desc' => 'failed',
-                        'msg' => 'failed',
-                        'insert' => $insert,
-                        'update' => $update
+                        'rc' => '00',
+                        'desc' => 'success',
+                        'msg' => 'success',
+                        'data' => ''
                     ]);
-                }   
-            }       
+                }       
+            }
+        }catch(\Exception $e){
+            DB::rollback();
+            return response()->json([
+                'rc' => '01',
+                'desc' => 'failed',
+                'msg' => 'failed',
+                'data' => $e->getMessage()
+            ]);
+
         }
     }  
 }

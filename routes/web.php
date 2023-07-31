@@ -41,6 +41,7 @@ Route::get('/tiket', [TiketController::class,'tiket'])->name('tiket');
 Route::get('/tiket/get', [TiketController::class,'tiketList'])->name('get-tiket');
 Route::get('/tiket/filter/get', [TiketController::class,'tiketFilter'])->name('filter-tiket');
 Route::post('/addtiket', [TiketController::class,'addTiket'])->name('add-tiket');
+Route::get('/addform', [TiketController::class,'addForm'])->name('add.form');
 Route::post('/updatetiket', [TiketController::class,'updateTiket'])->name('update-tiket');
 Route::post('/closetiket', [TiketController::class,'closedTiket'])->name('close-tiket');
 

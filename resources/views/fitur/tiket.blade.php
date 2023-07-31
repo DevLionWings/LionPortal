@@ -35,8 +35,11 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="float-sm-right">
-                                <button type="button" class="btn btn-success" data-toggle="modal"
-                                    data-target="#modal-add-ticket"><i class="fa fa-plus" aria-hidden="true"></i> New Ticket</button>
+                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#modal-add-ticket"><i class="fa fa-plus" aria-hidden="true"></i> New Ticket</button>
+                                <!-- <form id="formData" name="formData" method="get" action="{{ route('add.form') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-success btn-sm">+ Tambah Ticket</button> -->
+                            </form>
                             </div>
                             <div class="row align-items-end">
                                 <div class="col-md-2">
@@ -135,7 +138,7 @@
                             <table id="tiket_list" class="table table-bordered table-hover display nowrap" width="100%">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>Action</th>
                                         <th>Tiket No</th>
                                         <th>Category</th>
                                         <th>Status</th>
@@ -143,7 +146,6 @@
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
                                         <th>Created On</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -164,7 +166,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('add-tiket') }}" method="post" enctype="multipart/form-data" name="ticket">
+                <form id="form" name="form" action="{{ route('add-tiket') }}" method="post" enctype="multipart/form-data" name="ticket">
                     @csrf
                     <input type="hidden" id="ticketno" name="ticketno">
                     <input type="hidden" id="statusid" name="statusid">
@@ -239,7 +241,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" id="save-btn" class="btn btn-primary" onClick="this.disabled=true; this.value='Sending…';">Add Ticket</button>
+                        <button type="button" id="save-btn" class="btn btn-primary">Add Ticket</button>
                     </div>
                 </form>
             </div>
@@ -298,7 +300,8 @@
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Attachment :</label>
                             <!-- <a href="/download" id="upload" name="upload" class="btn btn-large pull-right"><i class="icon-download-alt"> -->
-                            <input type="text" id="ticketno" name="ticketno" class="form-control" readonly>
+                            <a download="upload" href="Storage::urlupload" target="_blank" class="btn btn-outline-link  btn-xs" 
+                                style="margin-left: 5px"><input type="button" id="upload" name="upload" class="btn btn-link btn-sm"readonly></a>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="approve" disabled>Approve By :</label>
@@ -622,42 +625,33 @@
 </script>
 <script>
     $(function () {    
-        var today = new Date();
-        var day = today.getDate() + "";
-        var month = (today.getMonth() + 1) + "";
-        var year = today.getFullYear() + "";
-        var hour = today.getHours() + "";
-        var minutes = today.getMinutes() + "";
-        var seconds = today.getSeconds() + "";
+        // var today = new Date();
+        // var day = today.getDate() + "";
+        // var month = (today.getMonth() + 1) + "";
+        // var year = today.getFullYear() + "";
+        // var hour = today.getHours() + "";
+        // var minutes = today.getMinutes() + "";
+        // var seconds = today.getSeconds() + "";
 
-        day = day;
-        month = month;
-        year = year;
-        hour = hour;
-        minutes = minutes;
-        seconds = seconds;
+        // day = day;
+        // month = month;
+        // year = year;
+        // hour = hour;
+        // minutes = minutes;
+        // seconds = seconds;
 
-        var date_range = year + "-" + month + "-" + day;
+        // var date_range = year + "-" + month + "-" + day;
         var $btn_submit = $("button#btn-sumbit-ticket");
 
         //Initialize Select2 Elements
         $('.select2').select2()
         $('.datepicker').daterangepicker();
 
-        $('#save-btn').on('click', function () {
-            // console.log("clicked");
-            $('#modal-add-user').modal({backdrop: 'static', keyboard: false}) 
-            $('form[name="ticket"]').submit();
+        $('#save-btn').on('click', function() {
+            $('#form').submit();
+            $(this).attr('disabled', true);
+            $(this).text("Loading ...");
         });
-
-        // $(document).on('click', '.comment', function() {
-        //     $("#modal-view-user").removeClass('fade').modal('hide')
-        //     var comment = $('#comment').val().trim();
-        //     var $modal = $('#modal-comment');
-        //     var $form = $modal.find('form[name="comment"]');
-        //     $modal.modal('show');
-
-        // })
 
         $(document).on('click', '.view', function() {
             $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
@@ -698,14 +692,6 @@
             $form.find('input[name="upload"]').val(upload);
             $modal.modal('show');
         });
-
-        // $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
-        //     var $inputs = $('#modal-view-user form[name="view-user"] :input');
-        //     var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
-        //     if ($form_valid.length === 0) {
-        //         $('#modal-view-user form[name="view-user"]').submit();
-        //     }
-        // });
 
         $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
@@ -807,15 +793,19 @@
                 },
                 order: [[ 0, "desc" ]],
                 columns: [
+                    // {
+                    //     data: 'ticketno',
+                    //     render: function(data){
+                    //         if(data != null){
+                    //             return '';
+                    //         } else {
+                    //             return '';
+                    //         }
+                    //     }
+                    // },
                     {
-                        data: 'ticketno',
-                        render: function(data){
-                            if(data != null){
-                                return '';
-                            } else {
-                                return '';
-                            }
-                        }
+                        data: 'action',
+                        name: 'action',
                     },
                     {
                         data: 'ticketno',
@@ -883,10 +873,6 @@
                             return date;   
                         }
                     },
-                    {
-                        data: 'action',
-                        name: 'action',
-                    },
                 ],
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
@@ -912,16 +898,22 @@
             ],
             ajax: "{{ route('get-tiket') }}",
             order: [[ 0, "desc" ]],
+            autoWidth: false,
+            fixedColumns: false,
             columns: [
+                // {
+                //     data: 'ticketno',
+                //     render: function(data){
+                //         if(data != null){
+                //             return '';
+                //         } else {
+                //             return '';
+                //         }
+                //     }
+                // },
                 {
-                    data: 'ticketno',
-                    render: function(data){
-                        if(data != null){
-                            return '';
-                        } else {
-                            return '';
-                        }
-                    }
+                    data: 'action',
+                    name: 'action',
                 },
                 {
                     data: 'ticketno',
@@ -990,10 +982,6 @@
                         var date = day + "/" + month + "/" + year;
                         return date;   
                     }
-                },
-                {
-                    data: 'action',
-                    name: 'action',
                 },
             ],
             oLanguage: {
