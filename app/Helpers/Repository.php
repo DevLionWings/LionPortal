@@ -24,7 +24,7 @@ class Repository
 {
     public function __construct()
     {
-        ini_set('max_execution_time', 300);
+        ini_set('max_execution_time', 3);
     }
 
     public static function GETUSER($userid, $password)
@@ -538,7 +538,6 @@ class Repository
         try{
             $datauser = DB::connection('pgsql')->table('master_data.m_user')
                 ->where('departmentid', $departmentid)
-                ->orWhere('userid', $userid)
                 ->get();
 
             $response = array(
@@ -561,6 +560,7 @@ class Repository
                     "createdon" => trim($value->createdon),
                 ]);
             }
+            return $arr_user;
             $response = array(
                 'rc' => '00',
                 'msg' => 'success',
@@ -653,10 +653,11 @@ class Repository
                 ->where('counterid', $counterid)
                 ->where('period', $year)
                 ->where('prefix', $prefix)
+                ->where('description', 'HELPDESK')
                 ->update([
                     'last_number' => $last
-                ]);
-
+            ]);
+            DB::commit();
             // $update = DB::connection('pgsql')->table('master_data.m_counter')->selectRaw("update master_data.m_counter set last_number = '$last' WHERE counterid = 'CT001' AND period = '$year' ");
             // $insert = DB::connection('pgsql')->table('helpdesk.t_ticket')->selectRaw('INSERT INTO helpdesk.t_ticket(
             //     ticketno, categoryid, userid, subject, detail, attachment, assignedto, statusid, approvedby_1, approvedby_2, approvedby_3, approvedby_it, priorid, rejectedby, reasonrejection, remark, closedon, approvedby1_date, approvedby2_date, approvedby3_date, approvedbyit_date, createdby, createdon)
@@ -707,8 +708,7 @@ class Repository
     }
 
     public static function UPDATETICKET($userid, $ticketno, $assignto, $approvedby1, $approveby_it, $rejectedby, $statusid, $approveby_1_date, $approveby_it_date, $roleid)
-    {   
-        DB::beginTransaction();
+    { 
         try{
             if($roleid == "RD006"){
                 /* Manager IT */

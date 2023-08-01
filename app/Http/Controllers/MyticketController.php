@@ -206,27 +206,27 @@ class MyticketController extends Controller
                 
                 // $superAdminBtn = $parentBtn. $approveBtn. $rejectBtn;
                 if($row["categoryid"] == 'CD001' && $row["statusid"] == 'SD006' && $row["assignedto"] == '' ){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
+                    $itBtn = '<button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" ><i class="fas fa-user-plus"></i></button>';
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
+                    $managerBtn = '';
+                    $managerItBtn =$approveBtn. $rejectBtn;
                 } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    $itBtn = '<button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerBtn = '';
+                    $managerItBtn = '';
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
-                    $managerBtn = $parentBtn. $download_btn. $approveMgrBtn. $rejectBtn;
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerBtn = $approveMgrBtn. $rejectBtn;
+                    $itBtn = '';
+                    $managerItBtn = '';
                 } else if($row["approvedby_1"] != null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"] ){
-                    $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $approveBtn. $rejectBtn;
+                    $itBtn = '';
+                    $managerBtn = '';
                 } else {
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $itBtn = '';
+                    $managerBtn = '';
+                    $managerItBtn = '';
                 }
                 
                 if($roleid == 'RD004' || $roleid == 'RD005'){
@@ -238,9 +238,9 @@ class MyticketController extends Controller
                 if($roleid == 'RD006'){
                     return $managerItBtn;
                 }
-                if($roleid == 'RD003'){
-                    return $parentBtn. $download_btn;
-                }
+                // if($roleid == 'RD003'){
+                //     return $parentBtn. $download_btn;
+                // }
 
             })
             ->rawColumns(['action'])

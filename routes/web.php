@@ -53,7 +53,8 @@ Route::post('/add/comment', [CommentController::class,'addComment'])->name('comm
 Route::post('/get/comment', [CommentController::class,'listComment'])->name('get-comment');
 
 /* Upload */
-Route::post('/download', [TiketController::class,'downloadFile'])->name('download.file');
+// Route::post('/download', [TiketController::class,'downloadFile'])->name('download.file');
+Route::post('/download/file', [UploadController::class,'download'])->name('download-file');
 
 /* Email */ 
 Route::get('send-mail', [MailController::class, 'index'])->name('email');

@@ -193,42 +193,40 @@ class TiketController extends Controller
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
-                
-                $download_btn = '<a download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url($document_name).'" target="_blank" class="btn btn-link btn-xs" 
+                $download_btn = ' <a  href="'.Storage::url($document_name).'" target="_blank" class="btn btn-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
             
-                $approveMgrBtn = '<button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
+                $approveMgrBtn = ' <button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
                 data-approvedby1="'.$row["approvedby_1"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'" data-approvedby1_date ="'.$row["approvedby1_date"].'"><i class="fa fa-check" aria-hidden="true"></i></button>';
 
-                $approveBtn = '<button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
+                $approveBtn = ' <button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
                 data-approvedbyit="'.$row["approvedby_it"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'" data-approvedbyit_date ="'.$row["approvedbyit_date"].'"><i class="fa fa-check" aria-hidden="true"></i></button>';
 
-                $rejectBtn = '<button href="javascript:void(0)" class="reject btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                $rejectBtn = ' <button href="javascript:void(0)" class="reject btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                 data-approvedby1="'.$row["approvedby_it"].'" data-approvedbyit="'.$row["approvedby_it"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'"><i class="fa fa-ban" aria-hidden="true"></i></button>';
                 
-                // $superAdminBtn = $parentBtn. $approveBtn. $rejectBtn;
                 if($row["categoryid"] == 'CD001' && $row["statusid"] == 'SD006' && $row["assignedto"] == '' ){
-                    $itBtn = $parentBtn. $download_btn. '<button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
+                    $itBtn = '<button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" ><i class="fas fa-user-plus"></i></button>';
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
+                    $managerBtn = '';
+                    $managerItBtn =$approveBtn. $rejectBtn;
                 } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $parentBtn. $download_btn. '<button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    $itBtn = '<button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerBtn = '';
+                    $managerItBtn = '';
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
-                    $managerBtn = $parentBtn. $download_btn. $approveMgrBtn. $rejectBtn;
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerBtn = $approveMgrBtn. $rejectBtn;
+                    $itBtn = '';
+                    $managerItBtn = '';
                 } else if($row["approvedby_1"] != null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"] ){
-                    $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $approveBtn. $rejectBtn;
+                    $itBtn = '';
+                    $managerBtn = '';
                 } else {
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $itBtn = '';
+                    $managerBtn = '';
+                    $managerItBtn = '';
                 }
                 
                 if($roleid == 'RD004' || $roleid == 'RD005'){
@@ -240,9 +238,9 @@ class TiketController extends Controller
                 if($roleid == 'RD006'){
                     return $managerItBtn;
                 }
-                if($roleid == 'RD003'){
-                    return $parentBtn. $download_btn;
-                }
+                // if($roleid == 'RD003'){
+                //     return $parentBtn. $download_btn;
+                // }
 
             })
             ->rawColumns(['action'])
@@ -341,27 +339,27 @@ class TiketController extends Controller
                 
                 // $superAdminBtn = $parentBtn. $approveBtn. $rejectBtn;
                 if($row["categoryid"] == 'CD001' && $row["statusid"] == 'SD006' && $row["assignedto"] == '' ){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
+                    $itBtn = '<button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" ><i class="fas fa-user-plus"></i></button>';
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
+                    $managerBtn = '';
+                    $managerItBtn =$approveBtn. $rejectBtn;
                 } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $parentBtn. $download_btn. ' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    $itBtn = '<button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerBtn = '';
+                    $managerItBtn = '';
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
-                    $managerBtn = $parentBtn. $download_btn. $approveMgrBtn. $rejectBtn;
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerBtn = $approveMgrBtn. $rejectBtn;
+                    $itBtn = '';
+                    $managerItBtn = '';
                 } else if($row["approvedby_1"] != null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"] ){
-                    $managerItBtn = $parentBtn. $download_btn. $approveBtn. $rejectBtn;
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $approveBtn. $rejectBtn;
+                    $itBtn = '';
+                    $managerBtn = '';
                 } else {
-                    $itBtn = $parentBtn. $download_btn;
-                    $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $itBtn = '';
+                    $managerBtn = '';
+                    $managerItBtn = '';
                 }
                 
                 if($roleid == 'RD004' || $roleid == 'RD005'){
@@ -373,9 +371,9 @@ class TiketController extends Controller
                 if($roleid == 'RD006'){
                     return $managerItBtn;
                 }
-                if($roleid == 'RD003'){
-                    return $parentBtn. $download_btn;
-                }
+                // if($roleid == 'RD003'){
+                //     return $parentBtn. $download_btn;
+                // }
             })
             ->rawColumns(['action'])
             ->addIndexColumn()
@@ -439,9 +437,9 @@ class TiketController extends Controller
             $upload = [''];
         }
         /* Validasi Approve manager by user login */
-        $dataApprove = $this->repository->GETAPPROVEBYDEPARTMENT($departmentid, $userid);
-        $mgridApprove = $dataApprove['data'][0]['mgrid'];
-        $userApprove = $dataApprove['data'][0]['userid'];
+        // $dataApprove = $this->repository->GETAPPROVEBYDEPARTMENT($departmentid, $userid);
+        // $mgridApprove = $dataApprove['data'][0]['mgrid'];
+        // $userApprove = $dataApprove['data'][0]['userid'];
 
         $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->first();
         $mgrIt = $dataMgrIt->userid;
@@ -572,9 +570,6 @@ class TiketController extends Controller
         } else { 
             return redirect()->back()->with("error", "error");
         }
-    
-        
-
     }
 
     public function updateTiket(Request $request)

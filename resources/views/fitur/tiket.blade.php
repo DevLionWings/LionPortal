@@ -300,8 +300,9 @@
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Attachment :</label>
                             <!-- <a href="/download" id="upload" name="upload" class="btn btn-large pull-right"><i class="icon-download-alt"> -->
-                            <a download="upload" href="Storage::urlupload" target="_blank" class="btn btn-outline-link  btn-xs" 
-                                style="margin-left: 5px"><input type="button" id="upload" name="upload" class="btn btn-link btn-sm"readonly></a>
+                            <!-- <input type="hidden" id="upload" name="upload" class="form-control">
+                            <button style="margin-left: 5px" class="upload btn btn-link btn-sm">Download File</button> -->
+                            <a style="margin-left: 5px"><input type="button" id="upload" name="upload" class=" upload btn btn-link btn-sm" readonly></a>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="approve" disabled>Approve By :</label>
@@ -611,13 +612,7 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
-@if(session('file_url'))
-    <script>
-        $(document).ready(function(){
-            window.open("{{session('file_url')}}"); // will open new tab on document ready
-        });
-    </script>
-@endif
+
 <script>
     $('.nav-link.active').removeClass('active');
     $('#m-tiket').addClass('active');
@@ -692,26 +687,6 @@
             $form.find('input[name="upload"]').val(upload);
             $modal.modal('show');
         });
-
-        $(document).on('click', '.btncomment', function() {
-            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
-         
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "/add/comment",
-                type: 'POST',
-                data: {
-                    'ticketno' : ticketno, 
-                    'comment_body' : comment_body,
-                },
-                success: function(response){ 
-                    console.log(response);
-                } 
-            });
-        })
 
         $(document).on('click', '.update', function () {
             $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
@@ -991,6 +966,52 @@
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });
+
+
+        $(document).on('click', '.btncomment', function() {
+            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+         
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/add/comment",
+                type: 'POST',
+                data: {
+                    'ticketno' : ticketno, 
+                    'comment_body' : comment_body,
+                },
+                success: function(response){ 
+                    console.log(response);
+                } 
+            });
+        })
+
+        $(document).on('click', '.upload', function() {
+            var upload = $('#modal-view-user input[name="upload"]').val();
+         
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "/download/file",
+                data: {
+                    'upload' : upload, 
+                },
+                success: function(response){ 
+                    console.log(response);
+                    window.open(response);
+                    // var blob = new Blob([response]);
+                    // var link = document.createElement('a');
+                    // link.href = window.URL.createObjectURL(blob);
+                    // link.download = response;
+                    // link.click();
+                }
+            });
+        })
+
     });
 
     function getComment(ticketno) {

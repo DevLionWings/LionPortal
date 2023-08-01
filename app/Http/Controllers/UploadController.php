@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
@@ -35,5 +36,16 @@ class UploadController extends Controller
             ->with('success','You have successfully upload file.')
             ->with('file', $fileName);
    
+    }
+
+    public function download(Request $request)
+    {
+        $fileupload = $request->upload;
+        // $document_name = str_replace("storage/", "", $fileupload);
+        // $files = Storage::allFiles($document_name);
+        return $fileupload;
+        // return Storage::download($files[0], 'file_url');
+
+        // return $document_name;
     }
 }
