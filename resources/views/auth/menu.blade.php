@@ -107,6 +107,24 @@
               </a>
             </li>
           </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('kwitansi') }}" class="nav-link" type="submit" id="m-kwitansi"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Print Kwitansi
+                </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('kwitansi/cuti') }}" class="nav-link" type="submit" id="m-kwitansicuti"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Print Kwitansi Cuti
+                </p>
+              </a>
+            </li>
+          </ul>
           <!-- <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="" class="nav-link" type="submit" id="m-Attendance"><i class="far fas fa-receipt nav-icon"></i>

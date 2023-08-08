@@ -27,12 +27,13 @@ class CommentController extends Controller
         if($validate){
             /* Generate Ticket Number */ 
             $year = date("Y");
-            $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT002')->where('period', $year)->get();
-            $prefix = $dataPrefix[0]->prefix;
-            $period = $dataPrefix[0]->period;
-            $start_numb = $dataPrefix[0]->start_number;
-            $end_numb = $dataPrefix[0]->end_number;
-            $last = $dataPrefix[0]->last_number;
+            $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT002')->where('period', $year)->first();
+            $prefix = $dataPrefix->prefix;
+            $period = $dataPrefix->period;
+            $start_numb = $dataPrefix->start_number;
+            $end_numb = $dataPrefix->end_number;
+            //test real
+            $last = $dataPrefix->last_number;
             /* Session Data */
             $session = array(
                 'last_number' => $last,
@@ -43,7 +44,7 @@ class CommentController extends Controller
             Session::put('ticketno', $ticketno);
             $lastSession = Session::get('last_number');
             if ($start_numb <= $end_numb && $last == $lastSession){
-                $last_numb =  str_pad($dataPrefix[0]->last_number + 1, 4, "00", STR_PAD_LEFT);
+                $last_numb =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
 
             } else 
                 $last_numb = '0000';
@@ -61,9 +62,38 @@ class CommentController extends Controller
                 'attachment' => '',
                 'createdon' =>  date('Y-m-d H:i:s'),
             ]);
+
+            $update = DB::connection('pgsql')->table('master_data.m_counter')
+                ->where('counterid', $counterno)
+                ->where('period', $year)
+                ->where('prefix', $prefix)
+                ->where('description', 'DISCUSSION')
+                ->update([
+                    'last_number' => $last
+            ]);
             DB::commit();
 
-            return redirect()->route('tiket')->with("success", "successfully");
+            $disc = ''; 
+            $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
+                ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
+                ->select('a.senderid', 'b.username', 'b.createdon', 'a.comment')
+                ->where('a.ticketno', $ticketno)
+                ->latest('a.ticketno')
+                ->first();
+    
+            /* Get Comment */
+            $commentArray = [];
+
+            array_push($commentArray, [
+                "COMMENT" => trim($dataCommnt->comment),
+                "SENDER" => trim($dataCommnt->username),
+                "DATE" => trim($dataCommnt->createdon)
+            ]);
+
+            $data['disc'] = $commentArray; 
+
+            return $data;
+
         } else {
             return redirect()->route('tiket')->with("error", "required");
         }

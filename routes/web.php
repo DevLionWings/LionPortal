@@ -11,6 +11,8 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\KwitansiController;
+use App\Http\Controllers\CutiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,10 +66,20 @@ Route::get('get/stattoday', [ChartController::class, 'getStatToday'])->name('get
 Route::get('get/month', [ChartController::class, 'getDataTicketingMonth'])->name('get.month');
 Route::get('get/year', [ChartController::class, 'getDataTicketingYear'])->name('get.year');
 
-/* Menu HRIS -> Attendance Payroll */
+/* Menu HRIS */
+/* Attendance Payroll */
 Route::get('/absensipayroll', [AbsensipayrollController::class,'absenpayroll'])->name('absensipayroll');
 Route::get('/get/absensipayroll', [AbsensipayrollController::class,'getAbsenPerkas'])->name('get-absensipayroll');
 Route::get('/filter/absensipayroll', [AbsensipayrollController::class,'filterAbsenPerkas'])->name('filter-absensipayroll');
 Route::post('/update/shift', [AbsensipayrollController::class,'updateShift'])->name('update-shift');
 Route::post('/update/shiftbulk', [AbsensipayrollController::class,'updateShiftBulk'])->name('update-shiftbulk');
 Route::get('/shift', [AbsensipayrollController::class,'getShift'])->name('get-shift');
+
+/* Print Kwitansi */
+Route::get('/kwitansi', [KwitansiController::class,'kwitansi'])->name('kwitansi');
+Route::post('/simulasi', [KwitansiController::class,'getSimulasi'])->name('simulasi-kwitansi');
+Route::get('/print', [KwitansiController::class,'print'])->name('print-kwitansi');
+
+Route::get('/kwitansi/cuti', [CutiController::class,'index'])->name('kwitansi-cuti');
+Route::post('/simulasi/cuti', [CutiController::class,'getSimulasi'])->name('simulasi-cuti');
+Route::get('/print/cuti', [CutiController::class,'print'])->name('print-cuti');

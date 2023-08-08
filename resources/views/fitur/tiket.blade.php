@@ -15,7 +15,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>TICKET</h1>
+                    <h5>Ticket All</h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -166,7 +166,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form id="form" name="form" action="{{ route('add-tiket') }}" method="post" enctype="multipart/form-data" name="ticket">
+                <form id="form" name="form" action="{{ route('add-tiket') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="ticketno" name="ticketno">
                     <input type="hidden" id="statusid" name="statusid">
@@ -253,7 +253,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">View Ticket</h4>
-                    <button type="button" class="close" id=close-btn data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" id=close-btn aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -320,7 +320,7 @@
                         <!-- <label class="form-check-label">Display Comment :</label> -->
                         <h4 class="modal-title">Display Comment :</h4>
                             <div class="form-group">
-                                <input type="text" name="comment" class="modal-input">
+                                <input type="text" name="comment" id="comment" class="modal-input">
                                     <!-- <h4 class="form-check-label" style="color:red"></h4>
                                     <span class="form-check-label" style="font-size:10px"></span>
                                     <p type="text" style="font-family:'Courier New';font-size:20px" class="form-control" ></p> -->
@@ -328,7 +328,7 @@
                         <hr />
                         <div class="form-group">
                             <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
-                            <textarea type="text" name="comment_body" class="form-control" id="comment_body"></textarea>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
                         </div>
                         <div class="form-group">
                             <button type="button" id="btncomment" class="btncomment btn btn-warning">Save</button>
@@ -983,8 +983,25 @@
                     'comment_body' : comment_body,
                 },
                 success: function(response){ 
-                    console.log(response);
-                } 
+                    console.log(response["disc"]);
+                    var $viewComment = $('.modal-content .modal-body');
+                    var target = $viewComment.find('form-group .modal-input');
+                    $.each(response["disc"], function(key, data) {
+                        var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
+                        var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
+                        var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
+                        $viewComment.append($nama,$date,$comment);
+                    });
+                    // $('#modal-view-user').modal('show');
+                    // $('#modal-view-user form[id="view-user"] input[id="comment"]').reset();
+                    $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
+                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().modal('show');
+                    // $view = $('#modal-view-user').find('form[id="view-user"]').find('input[id="comment"]').html($viewComment);
+                  
+                },
+                error: function (error) {
+                    console.error(error);
+                },
             });
         })
 
