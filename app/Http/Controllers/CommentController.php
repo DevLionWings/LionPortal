@@ -76,11 +76,11 @@ class CommentController extends Controller
             $disc = ''; 
             $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
-                ->select('a.senderid', 'b.username', 'b.createdon', 'a.comment')
+                ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment')
                 ->where('a.ticketno', $ticketno)
                 ->latest('a.ticketno')
                 ->first();
-    
+            
             /* Get Comment */
             $commentArray = [];
 
@@ -107,7 +107,7 @@ class CommentController extends Controller
         // $jsonCmmnt = json_decode($dataCommnt, true);
         $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
-                ->select('a.senderid', 'b.username', 'b.createdon', 'a.comment')
+                ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment')
                 ->where('a.ticketno', $ticketno)
                 ->get();
         $jsonCmmnt = json_decode($dataCommnt, true);

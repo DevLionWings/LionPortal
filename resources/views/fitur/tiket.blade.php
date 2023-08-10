@@ -319,24 +319,24 @@
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
                         <h4 class="modal-title">Display Comment :</h4>
+                        <hr />
+                            <div class="form-group">
+                                <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
+                                <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
+                            </div>
                             <div class="form-group">
                                 <input type="text" name="comment" id="comment" class="modal-input">
                                     <!-- <h4 class="form-check-label" style="color:red"></h4>
                                     <span class="form-check-label" style="font-size:10px"></span>
                                     <p type="text" style="font-family:'Courier New';font-size:20px" class="form-control" ></p> -->
                             </div>
-                        <hr />
-                        <div class="form-group">
-                            <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
-                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="form-group">
-                            <button type="button" id="btncomment" class="btncomment btn btn-warning">Save</button>
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+                    </div>    
                 </form>
                 <!-- <div class="modal-body">
                     <div class="form-group">
@@ -790,11 +790,23 @@
                         data: 'category',
                         render: function(data) {
                             if(data == 'INCIDENT'){
-                                statusText = `<span class="badge badge-danger">INCIDENT</span>`;
-                            } else if (data == 'CHANGE REQUEST'){
+                            statusText = `<span class="badge badge-danger">INCIDENT</span>`;
+                            } else if (data == 'SAP CHANGE REQUEST'){
                                 statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
-                            } else {
-                                statusText = `<span class="badge badge-info">NEW USER</span>`;
+                            } else if (data == 'NON SAP CHANGE REQUEST'){
+                                statusText = `<span class="badge badge-info">NON SAP CHANGE REQUEST</span>`;
+                            } else if (data == 'USER SAP REQUEST'){
+                                statusText = `<span class="badge badge-warning">USER SAP REQUEST</span>`;
+                            } else if (data == 'SAP AUTHORIZATION'){
+                                statusText = `<span class="badge badge-dark">SAP AUTHORIZATION</span>`;
+                            } else if (data == 'INTERNET ACCESS'){
+                                statusText = `<span class="badge badge-primary">INTERNET ACCESS</span>`;
+                            } else if (data == 'EMAIL ACCESS'){
+                                statusText = `<span class="badge badge-dark">EMAIL ACCESS</span>`;
+                            } else if (data == 'NEW HARDWARE'){
+                                statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
+                            } else if (data == 'NON SAP ACCESS'){
+                                statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
                             }
                             return statusText;
                         }
@@ -901,10 +913,22 @@
                     render: function(data) {
                         if(data == 'INCIDENT'){
                             statusText = `<span class="badge badge-danger">INCIDENT</span>`;
-                        } else if (data == 'CHANGE REQUEST'){
+                        } else if (data == 'SAP CHANGE REQUEST'){
                             statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
-                        } else {
-                            statusText = `<span class="badge badge-info">NEW USER</span>`;
+                        } else if (data == 'NON SAP CHANGE REQUEST'){
+                            statusText = `<span class="badge badge-info">NON SAP CHANGE REQUEST</span>`;
+                        } else if (data == 'USER SAP REQUEST'){
+                            statusText = `<span class="badge badge-warning">USER SAP REQUEST</span>`;
+                        } else if (data == 'SAP AUTHORIZATION'){
+                            statusText = `<span class="badge badge-dark">SAP AUTHORIZATION</span>`;
+                        } else if (data == 'INTERNET ACCESS'){
+                            statusText = `<span class="badge badge-primary">INTERNET ACCESS</span>`;
+                        } else if (data == 'EMAIL ACCESS'){
+                            statusText = `<span class="badge badge-dark">EMAIL ACCESS</span>`;
+                        } else if (data == 'NEW HARDWARE'){
+                            statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
+                        } else if (data == 'NON SAP ACCESS'){
+                            statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
                         }
                         return statusText;
                     }
@@ -983,7 +1007,7 @@
                     'comment_body' : comment_body,
                 },
                 success: function(response){ 
-                    console.log(response["disc"]);
+                    // console.log(response["disc"]);
                     var $viewComment = $('.modal-content .modal-body');
                     var target = $viewComment.find('form-group .modal-input');
                     $.each(response["disc"], function(key, data) {
@@ -1045,9 +1069,9 @@
                 // console.log(response["disc"])
                 var $viewComment = $(' <div class="form-group"></div>');
                 $.each(response["disc"], function(key, data) {
-                    var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
-                    var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
-                    var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
+                    var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
+                    var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
+                    var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px>" +data["COMMENT"]+"</textarea>";
                     $viewComment.append($nama,$date,$comment);
                 });
                 $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);

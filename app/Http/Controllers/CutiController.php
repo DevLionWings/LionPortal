@@ -42,9 +42,9 @@ class CutiController extends Controller
         $lamacuti = $request->lamacuti;
         $jmlhchh = $request->jmlhchh;
         $id = $request->idkaryawan;
-        $uangmakan = $request->uangmakan;
-        $spsi = $request->spsi;
-        $koperasi = $request->koperasi;
+        $uangmakanReq = $request->uangmakan;
+        $spsiReq = $request->spsi;
+        $koperasiReq = $request->koperasi;
         $bpjs = $request->bpjs;
         $exp = explode(".",$request->amountrapel);
         $rapelAmount = implode("", $exp);
@@ -66,7 +66,8 @@ class CutiController extends Controller
         
             // $namaTj = $mastertunjangan->categorydescr;
             // $amountTj = $mastertunjangan->value;
-            if (empty($uangmakan) && empty($spsi) && empty($koperasi)){
+      
+            if (empty($uangmakanReq) && empty($spsiReq) && empty($koperasiReq)){
                 $uangmakan = '20000';  
                 $spsi = '27000'; 
                 $koperasi = '50000';
@@ -83,10 +84,14 @@ class CutiController extends Controller
                 $spsi = '27000'; 
                 $koperasi;
             } else {
-                $uangmakan;
-                $spsi;
-                $koperasi;
+                $subs = substr($uangmakanReq, 3, 6);
+                $uangmakan = implode('.', $subs);
+                $subs = substr($spsiReq, 3, 6);
+                $spsi = implode('.', $subs);
+                $subs = substr($koperasiReq, 3, 6);
+                $koperasi = implode('.', $subs);
             }
+            
             $formatUm = 'Rp.'.number_format($uangmakan,0,',','.');
             $formatSpsi = 'Rp.'.number_format($spsi,0,',','.');
             $formatKoperasi = 'Rp.'.number_format($koperasi,0,',','.');
@@ -97,7 +102,7 @@ class CutiController extends Controller
             $formatGaji = 'Rp.'.number_format($gaji,0,',','.');
             $tunjangan = $datakaryawan->Tunjangan;
             $formatTj = 'Rp.'.number_format($tunjangan,0,',','.');
-            $jamsostek = $gaji * 2/100;
+            $jamsostek = $gaji * 1/100;
             $formatJamsostek = 'Rp.'.number_format($jamsostek,0,',','.');
             $bagian = $datakaryawan->bagian;
             $item = $gaji + $uangmakan;
@@ -121,7 +126,7 @@ class CutiController extends Controller
                 $untuk = "Uang Pengganti Cuti Keguguran a/n ".$nama.' bagian: '.$bagian.' id: '.$id.',';
                 $keterangan = "1.5x(GP + UM) - 2x(JHT) - (Cuti Haid) - 2x(SPSI) - 2x(Koperasi) - 2x(Bpjs + Pensiun) :". $hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
             }
-            $total = $hitung1 - $hitung2 - $hitung3 - $hitung4 - $hitung5 - $hitung6;
+            $total = round($hitung1 - $hitung2 - $hitung3 - $hitung4 - $hitung5 - $hitung6);
             $formatTotal = 'Rp.'.number_format($total,0,',','.');
             $terbilang =  $this->convertion->TERBILANG($total).' '.'RUPIAH';
             if(!empty($rapelAmount)){
@@ -144,7 +149,8 @@ class CutiController extends Controller
                         "KETERANGAN" => $keterangan,
                         "TOTAL" => $formatTotal,
                         "TERBILANG" => $terbilang,
-                        "SELISIH" => $formatSelisih
+                        "SELISIH" => $formatSelisih,
+                        "COUNT" => $countSelisih
                     ]);
 
             return $dataArray;
@@ -175,6 +181,7 @@ class CutiController extends Controller
         $numb = 0000 + 1;
         $nokwitansi = 'No.'.'000'.$numb.'/LW'.'/'.$month.'/'.$year;
         $selisih = $request->selisih;
+        $terbilangSelisih = $this->convertion->TERBILANG($total).' '.'RUPIAH';
         $rapel = $request->rapel;
 
         $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee')
@@ -183,7 +190,7 @@ class CutiController extends Controller
             ->select('Nip','Nama')
             ->first();
         
-        if(empty($selisih)){
+        if(empty($rapel)){
             $data = array(
                 "type" => $type,
                 "nokwitansi" => $nokwitansi,
@@ -194,16 +201,18 @@ class CutiController extends Controller
                 "tanggal" => $format,
                 "keterangan" => $to.' '.$keterangan,
                 "lamakerja" => $masakerja,
-                "tglmasuk" => $tglmasuk
+                "tglmasuk" => $tglmasuk,
+                "rapel" => $rapel
             );
         } else {
+            /* kwitansi rapel */
             $data = array(
                 "type" => 'on',
                 "nokwitansi" => $nokwitansi,
                 "nama" => trim($datakaryawan->Nama),
                 "terimadari" => 'PT LION WINGS, JAKARTA',
                 "nominal" => $nominal,
-                "terbilang" => $terbilang,
+                "terbilang" => $terbilangSelisih,
                 "tanggal" => $format,
                 "keterangan" => $to.' '.$keterangan,
                 "lamakerja" => $masakerja,

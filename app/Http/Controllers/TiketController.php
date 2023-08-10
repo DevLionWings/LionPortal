@@ -193,7 +193,7 @@ class TiketController extends Controller
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
-                $download_btn = ' <a  href="'.Storage::url($document_name).'" target="_blank" class="btn btn-link btn-xs" 
+                $download_btn = ' <a  download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
             
                 $approveMgrBtn = ' <button href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-status="'.$row["status"].'" data-assignto="'.$row["assignedto"].'"
@@ -206,27 +206,27 @@ class TiketController extends Controller
                 data-approvedby1="'.$row["approvedby_it"].'" data-approvedbyit="'.$row["approvedby_it"].'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$row["userid"].'"><i class="fa fa-ban" aria-hidden="true"></i></button>';
                 
                 if($row["categoryid"] == 'CD001' && $row["statusid"] == 'SD006' && $row["assignedto"] == '' ){
-                    $itBtn = '<button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
+                    $itBtn = $parentBtn. $download_btn.' <button href="javascript:void(0)" class="update btn btn-outline-warning btn-xs" data-status="'.$row["status"].'" data-statusid="'.$row["statusid"].'" data-assignto="'.$row["assignedto"].'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" ><i class="fas fa-user-plus"></i></button>';
-                    $managerBtn = '';
-                    $managerItBtn =$approveBtn. $rejectBtn;
+                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn.$approveBtn. $rejectBtn;
                 } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = '<button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    $itBtn = ' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
-                    $managerBtn = '';
-                    $managerItBtn = '';
+                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn;
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
                     $managerBtn = $approveMgrBtn. $rejectBtn;
-                    $itBtn = '';
-                    $managerItBtn = '';
+                    $itBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn;
                 } else if($row["approvedby_1"] != null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"] ){
-                    $managerItBtn = $approveBtn. $rejectBtn;
-                    $itBtn = '';
-                    $managerBtn = '';
+                    $managerItBtn = $parentBtn. $download_btn.$approveBtn. $rejectBtn;
+                    $itBtn = $parentBtn. $download_btn;
+                    $managerBtn = $parentBtn. $download_btn;
                 } else {
-                    $itBtn = '';
-                    $managerBtn = '';
-                    $managerItBtn = '';
+                    $itBtn = $parentBtn. $download_btn;
+                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn;
                 }
                 
                 if($roleid == 'RD004' || $roleid == 'RD005'){
@@ -238,9 +238,9 @@ class TiketController extends Controller
                 if($roleid == 'RD006'){
                     return $managerItBtn;
                 }
-                // if($roleid == 'RD003'){
-                //     return $parentBtn. $download_btn;
-                // }
+                if($roleid == 'RD003'){
+                    return $parentBtn. $download_btn;
+                }
 
             })
             ->rawColumns(['action'])
@@ -513,18 +513,18 @@ class TiketController extends Controller
                 $emailApprove1 = 'blank@lionwings.com';
                 $auth = true;
             } else if ($roleid == "RD006"){
-                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
-                $emailSign = $dataEmail->usermail;
-                $assignNameSign = $dataEmail->username;
-                $emailReq = 'blank@lionwings.com';
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
+                $emailSign = $dataEmail[1]->usermail;
+                $assignNameSign = $dataEmail[1]->username;
+                $emailReq = $dataEmail[0]->usermail;
                 $emailApprove1 = 'blank@lionwings.com';
                 $auth = true;
             } else {
-                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
-                $emailSign = $dataEmail->usermail;
-                $assignNameSign = $dataEmail->username;
-                $emailReq = 'blank@lionwings.com';
-                $emailApprove1 = 'it@lionwings.com';
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();
+                $emailSign = $dataEmail[2]->usermail;
+                $assignNameSign = $dataEmail[2]->username;
+                $emailReq = $dataEmail[0]->usermail;
+                $emailApprove1 = $dataEmail[1]->usermail;
                 $auth = true;
             }
         } else if ($roleid == "RD002"){
@@ -542,18 +542,18 @@ class TiketController extends Controller
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
         } else if ($roleid == "RD006"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
-            $emailSign = $dataEmail->usermail;
-            $assignNameSign = $dataEmail->username;
-            $emailReq = 'blank@lionwings.com';
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
+            $emailSign = $dataEmail[1]->usermail;
+            $assignNameSign = $dataEmail[1]->username;
+            $emailReq = $dataEmail[0]->usermail;
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
         } else {
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
-            $emailSign = $dataEmail->usermail;
-            $assignNameSign = $dataEmail->username;
-            $emailReq = 'blank@lionwings.com';
-            $emailApprove1 = 'blank@lionwings.com';
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();
+            $emailSign = $dataEmail[2]->usermail;
+            $assignNameSign = $dataEmail[2]->username;
+            $emailReq = $dataEmail[0]->usermail;
+            $emailApprove1 = $dataEmail[1]->usermail;
             $auth = true;
         }
         /* End */
@@ -561,11 +561,9 @@ class TiketController extends Controller
         if ($auth){
             /* Insert Ticket */ 
             $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix);
-            /* Update Counter Prefix */
-            // $updateCounter = $this->repository->UPDATECOUNTER($last, $counterid);
             /* Send Email */
             $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1);
-            
+       
             return redirect()->route('tiket')->with("success", "Data insert successfully");
         } else { 
             return redirect()->back()->with("error", "error");

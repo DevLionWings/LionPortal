@@ -205,7 +205,7 @@
         var totalamount = $('input[name="totalamount"]').val();
         var selisih = $('input[name="selisih"]').val();
         var rapel = $("input[type='checkbox']").val();
-        console.log(rapel);
+        // console.log(rapel);
 
         if(id.length < 1) {
             alert('id harus di isi');
@@ -275,17 +275,17 @@
     });
 
     // Use datepicker on the date inputs
-    $("input[type=date]").datepicker({
-    dateFormat: 'yy-mm-dd',
-    onSelect: function(dateText, inst) {
-        $(inst).val(dateText); // Write the value in the input
-    }
-    });
+    // $("input[type=date]").datepicker({
+    // dateFormat: 'yy-mm-dd',
+    // onSelect: function(dateText, inst) {
+    //     $(inst).val(dateText); // Write the value in the input
+    // }
+    // });
 
     // Code below to avoid the classic date-picker
-    $("input[type=date]").on('click', function() {
-    return false;
-    });
+    // $("input[type=date]").on('click', function() {
+    // return false;
+    // });
 
     /* Dengan Rupiah */
     var dengan_rupiah = document.getElementById('amountrapel');
