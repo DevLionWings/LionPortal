@@ -287,7 +287,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="detail" disabled>Detail Issue :</label>
-                            <input type="text" name="detail" class="form-control" id="detail" readonly>
+                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" readonly></textarea>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="assignto" disabled>Assigned To :</label>
@@ -675,7 +675,7 @@
             $form.find('input[name="category"]').val(category);
             $form.find('input[name="priority"]').val(priority);
             $form.find('input[name="subject"]').val(subject);
-            $form.find('input[name="detail"]').val(detail);
+            $form.find('textarea[name="detail"]').val(detail);
             $form.find('input[name="assignto"]').val(assign);
             $form.find('input[name="statusid"]').val(statusid);
             $form.find('input[name="roleid"]').val(roleid);
