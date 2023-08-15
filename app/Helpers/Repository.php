@@ -22,10 +22,10 @@ use Auth;
 
 class Repository
 {
-    public function __construct()
-    {
-        ini_set('max_execution_time', 3);
-    }
+    // public function __construct()
+    // {
+    //     ini_set('max_execution_time', 3);
+    // }
 
     public static function GETUSER($userid, $password)
     {

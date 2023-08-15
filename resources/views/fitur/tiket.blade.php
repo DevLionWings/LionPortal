@@ -325,6 +325,9 @@
                                 <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
                             </div>
                             <div class="form-group">
+                                <input type="file" name="filecomment" id="filecomment" class="form-control">
+                            </div>
+                            <div class="form-group">
                                 <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
                             </div>
                             <div class="form-group">
@@ -784,7 +787,9 @@
                     },
                     {
                         data: 'ticketno',
-                        name: 'ticketno'
+                        render: function(data, type, row){
+                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'">'+data+'</a>'
+                        }
                     },
                     {
                         data: 'category',
@@ -807,7 +812,10 @@
                                 statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
                             } else if (data == 'NON SAP ACCESS'){
                                 statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
+                            } else if (data == 'OTHER'){
+                                statusText = `<span class="badge badge-dark">OTHER</span>`;
                             }
+                            
                             return statusText;
                         }
                     },
@@ -929,7 +937,10 @@
                             statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
                         } else if (data == 'NON SAP ACCESS'){
                             statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
+                        } else if (data == 'OTHER'){
+                            statusText = `<span class="badge badge-dark">OTHER</span>`;
                         }
+                            
                         return statusText;
                     }
                 },
@@ -995,6 +1006,7 @@
         $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
             var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+            var filecomment = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
          
             $.ajax({
                 headers: {
@@ -1005,6 +1017,7 @@
                 data: {
                     'ticketno' : ticketno, 
                     'comment_body' : comment_body,
+                    'fileomment' : filecomment
                 },
                 success: function(response){ 
                     // console.log(response["disc"]);
@@ -1014,6 +1027,7 @@
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
                         var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
+                        var $filecomment = "<input type=button id=file name=file class=upload btn btn-link btn-sm style=font-size:15px readonly>"
                         $viewComment.append($nama,$date,$comment);
                     });
                     // $('#modal-view-user').modal('show');

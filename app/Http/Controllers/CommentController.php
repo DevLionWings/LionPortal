@@ -19,6 +19,7 @@ class CommentController extends Controller
 
         $comment_body = $request->comment_body;
         $ticketno = $request->ticketno;
+        $file = $request->filecomment;
 
         $validate = $request->validate([
             'comment_body' => 'required'

@@ -596,7 +596,10 @@
                             statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
                         } else if (data == 'NON SAP ACCESS'){
                             statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
+                        } else if (data == 'OTHER'){
+                            statusText = `<span class="badge badge-dark">OTHER</span>`;
                         }
+                            
                         return statusText;
                     }
                 },

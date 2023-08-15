@@ -62,9 +62,9 @@
                                                     <div class="input-group value">
                                                         <select id="user" name="user" class="form-control input--style-6" required>
                                                             <option value=""> Masukkan Pilihan :</option>
-                                                            @foreach($usreq as $usreqcode)
-                                                            <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
-                                                            @endforeach
+                                                           
+                                                            <option value=""></option>
+                                                           
                                                         </select>
                                                     </div>
                                                 </div>
@@ -74,9 +74,9 @@
                                                     <div class="input-group value">
                                                         <select id="category" name="category" class="form-control input--style-6" required>
                                                             <option value=""> Masukkan Pilihan :</option>
-                                                            @foreach($categ as $categcode)
-                                                            <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
-                                                            @endforeach
+                                                            
+                                                            <option value=""></option>
+                                                            
                                                         </select>
                                                     </div>
                                                 </div>
@@ -85,11 +85,11 @@
                                                     <div class="input-group value">
                                                         <select id="priority" name="priority" class="form-control input--style-6" required>
                                                             <option value=""> Masukkan Pilihan :</option>
-                                                            @foreach($prior as $priorcode)
-                                                            <option value="{{ $priorcode['ID'] }}">{{ $priorcode['NAME'] }}</option>
-                                                            @endforeach
+                                                            
+                                                            <option value=""></option>
+                                                          
                                                         </select>
-                                                        <input type="hidden" id="priorityname" name="priorityname" value="{{ $priorcode['NAME'] }}">
+                                                        <input type="hidden" id="priorityname" name="priorityname" value="">
                                                     </div>
                                                 </div>
                                                 @if(session('roleid') == 'RD006')
@@ -98,9 +98,9 @@
                                                     <div class="input-group value">
                                                         <select id="assignto" name="assignto" class="form-control input--style-6" required>
                                                             <option value=""> Masukkan Pilihan :</option>
-                                                            @foreach($assn as $assncode)
-                                                            <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
-                                                            @endforeach
+                                                            
+                                                            <option value=""></option>
+                                                        
                                                         </select>
                                                     </div>
                                                 </div>

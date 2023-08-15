@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables/dataTables.checkboxes.css') }}">
-<link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css') }}"> -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endsection
 @section('body')
 <!-- Site wrapper -->
@@ -59,47 +60,69 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="name">Type Kwitansi :</div>
-                                                    <div class="input-group value">
-                                                        <select id="opsi" name="opsi" class="form-control input--style-6" onchange="myFunction(event)">
-                                                            <option value=""> Masukkan Pilihan :</option>
-                                                            <option value="3">Cuti Hamil</option>
-                                                            <option value="1.5">Cuti Keguguran</option> 
-                                                        </select>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="mb-3">
+                                                            <div class="form-group">
+                                                                <div class="name">Type Kwitansi :</div>
+                                                                <div class="input-group value">
+                                                                    <select id="opsi" name="opsi" class="form-control input--style-6" onchange="myFunction(event)">
+                                                                        <option value=""> Masukkan Pilihan :</option>
+                                                                        <option value="3">Cuti Hamil</option>
+                                                                        <option value="1.5">Cuti Keguguran</option> 
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" id="label">Lama Cuti:</label>
-                                                    <input type="text" name="lamacuti" id="lamacuti" class="form-control" readonly> 
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" id="label">Lama Cuti:</label>
+                                                            <input type="text" name="lamacuti" id="lamacuti" class="form-control" readonly> 
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-check-label" for="idkaryawan">ID Karyawan:</label>
                                                     <input type="text" name="idkaryawan" class="form-control" id="idkaryawan" placeholder="wajib di isi" required>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" for="tglcuti">Tanggal Cuti:</label>
-                                                    <input type="date" name="tglcuti" id="tglcuti" class="form-control" required> 
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" for="tglmasuk">Tanggal Masuk:</label>
-                                                    <input type="date" name="tglmasuk" id="tglmasuk" class="form-control" required> 
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" for="tglcuti">Tanggal Cuti:</label>
+                                                            <input type="datepicker" name="tglcuti" id="tglcuti" class="form-control" placeholder="wajib di isi" required> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" for="tglmasuk">Tanggal Masuk:</label>
+                                                            <input type="text" name="tglmasuk" id="tglmasuk" class="form-control" readonly> 
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-check-label" for="chh">Jumlah CHH(Cuti Haid Hadir):</label>
                                                     <input type="text" name="chh" class="form-control" id="chh" placeholder="wajib di isi"  required>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" >Uang Makan:</label>
-                                                    <input type="text" name="um" id="um" class="form-control" placeholder="di isi/ubah jika perlu">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" >SPSI:</label>
-                                                    <input type="text" name="spsi" id="spsi" class="form-control" placeholder="di isi/ubah jika perlu">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" >Koperasi:</label>
-                                                    <input type="text" name="koperasi" id="koperasi" class="form-control" placeholder="di isi/ubah jika perlu">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" >Uang Makan:</label>
+                                                            <input type="text" name="um" id="um" class="form-control" placeholder="di isi/ubah jika perlu">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" >SPSI:</label>
+                                                            <input type="text" name="spsi" id="spsi" class="form-control" placeholder="di isi/ubah jika perlu">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" >Koperasi:</label>
+                                                            <input type="text" name="koperasi" id="koperasi" class="form-control" placeholder="di isi/ubah jika perlu">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <input type="checkbox" id="rapel" name="rapel" value="on">
@@ -109,13 +132,45 @@
                                                     <label class="form-check-label" for="amountrapel">Total Nominal Kwitansi Lama:</label>
                                                     <input type="text" name="amountrapel" id="amountrapel" class="form-control">
                                                 </div>
-                                                <div class="mb-3" id="hide2">
-                                                    <label class="form-check-label" for="totalamount">Jumlah Bulan:</label>
-                                                    <input type="text" name="totalamount" id="totalamount" class="form-control">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide2">
+                                                            <label class="form-check-label" for="startdate">Tanggal Masuk:</label>
+                                                            <input type="text" name="startdate" id="startdate" class="form-control" readonly> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide3">
+                                                            <label class="form-check-label" for="enddate">Tanggal Cuti:</label>
+                                                            <input type="text" name="enddate" id="enddate" class="form-control" readonly> 
+                                                        </div>
+                                                    </div>
+                                                </div>      
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide4">
+                                                            <label class="form-check-label" for="amountDay">Selisih Hari Baru:</label>
+                                                            <input type="text" name="amountDay1" id="amountDay" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide5">
+                                                            <label class="form-check-label" for="amountDay2">Selisih Hari Lama</label>
+                                                            <input type="text" name="amountDay2" id="amountDay2" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="mb-3" id="hide3">
+                                                <div class="mb-3" id="hide6">
+                                                    <input type="checkbox" id="bpjs" name="bpjs" value="on">
+                                                    <label for="rapel">Sudah di potong, saat terakhir bekerja</label><br>
+                                                </div>
+                                                <div class="mb-3" id="hide7">
                                                     <label class="form-check-label" for="selisih">Selisih:</label>
                                                     <input type="text" name="selisih" id="selisih" class="form-control" readonly>
+                                                </div>
+                                                <div class="mb-3" id="hide8">
+                                                    <label class="form-check-label" for="keterangan2">Keterangan:</label>
+                                                    <textarea type="text" name="keterangan2" class="form-control" id="keterangan2" readonly></textarea>
                                                 </div>
                                                 <div class="mb-6">
                                                     <button type="button" class="btn btn-danger btn-md float-left" onclick="window.location='{{ url()->previous() }}'">Back</button>
@@ -125,26 +180,41 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" for="detail">Nama Karyawan:</label>
-                                                    <input type="text" name="nama" id="nama" class="form-control" readonly>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" for="detail">Nama Karyawan:</label>
+                                                            <input type="text" name="nama" id="nama" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="form-check-label" for="detail">Bagian Karyawan:</label>
+                                                            <input type="text" name="bagian" id="bagian" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" for="detail">Bagian Karyawan:</label>
-                                                    <input type="text" name="bagian" id="bagian" class="form-control" readonly>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="mb-2">
+                                                            <label class="form-check-label" >Gaji:</label>
+                                                            <input type="text" name="gaji" id="gaji" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="mb-2">
+                                                            <label class="form-check-label" >Jabatan:</label>
+                                                            <input type="text" name="jabatan" id="jabatan" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="mb-2">
+                                                            <label class="form-check-label" >Jamsostek:</label>
+                                                            <input type="text" name="jstk" id="jstk" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" >Gaji:</label>
-                                                    <input type="text" name="gaji" id="gaji" class="form-control" readonly>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" >Jabatan:</label>
-                                                    <input type="text" name="jabatan" id="jabatan" class="form-control" readonly>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-check-label" >Jamsostek:</label>
-                                                    <input type="text" name="jstk" id="jstk" class="form-control" readonly>
-                                                </div>
+                                               
                                                 <div class="mb-3">
                                                     <label class="form-check-label" for="to">Untuk:</label>
                                                     <input type="text" name="to" id="to" class="form-control" readonly>
@@ -190,11 +260,18 @@
     $('#m-kwitansicuti').parent().parent().parent().addClass('menu-is-opening menu-open');
 </script>
 <script>
+    $("#tglcuti").datepicker({
+        // autoClose: true,
+        // viewStart: 0,
+        // weekStart: 1,
+        // maxDate: 0,
+        dateFormat: "yy-mm-dd"
+    });
+
     $(document).on('click', '.check', function() {
         var type = $('select[name="opsi"] option:selected').val();
         var id = $('input[name="idkaryawan"]').val();
         var tglcuti = $('input[name="tglcuti"]').val();
-        var tglmasuk = $('input[name="tglmasuk"]').val();
         var lamacuti = $('input[name="lamacuti"]').val();
         var jmlhchh = $('input[name="chh"]').val();
         var bpjs = $('input[name="bpjs"]').val();
@@ -205,6 +282,7 @@
         var totalamount = $('input[name="totalamount"]').val();
         var selisih = $('input[name="selisih"]').val();
         var rapel = $("input[type='checkbox']").val();
+        var bpjs = $("input[name='bpjs']").val();
         // console.log(rapel);
 
         if(id.length < 1) {
@@ -233,7 +311,6 @@
                     'type' : type,
                     'idkaryawan' : id, 
                     'tglcuti' : tglcuti,
-                    'tglmasuk' : tglmasuk,
                     'lamacuti' : lamacuti,
                     'jmlhchh' : jmlhchh,
                     'bpjs' : bpjs,
@@ -243,12 +320,19 @@
                     'amountrapel' : amountrapel,
                     'totalamount' : totalamount,
                     'selisih' : selisih,
-                    'rapel' : rapel
+                    'rapel' : rapel,
+                    'bpjs' : bpjs
                 },
                 success: function(response) {
+                    console.log(response[0]);
                     $('#nama').val(response[0]['NAME']);
                     $('#bagian').val(response[0]['BAGIAN']);
                     $('#gaji').val(response[0]['GAJI']);
+                    $('#tglmasuk').val(response[0]['TGLMASUK']);
+                    $('input[name="enddate"]').val(response[0]['TGLCUTI']);
+                    $('input[name="startdate"]').val(response[0]['TGLMASUK']);
+                    $('input[name="amountDay1"]').val(response[0]['HARI BARU']);
+                    $('input[name="amountDay2"]').val(response[0]['HARI LAMA']);
                     $('#jabatan').val(response[0]['JABATAN']);
                     $('#um').val(response[0]['UANGMAKAN']);
                     $('#jstk').val(response[0]['JAMSOSTEK']);
@@ -270,22 +354,18 @@
     //     $(this).text("Loading ...");
     // });
 
-    document.getElementById("formData").addEventListener("click", function(event){
-        event.preventDefault()
+    // Use datepicker on the date inputs
+    $("input[type=date]").datepicker({
+    dateFormat: 'yy-mm-dd',
+    onSelect: function(dateText, inst) {
+        $(inst).val(dateText); // Write the value in the input
+    }
     });
 
-    // Use datepicker on the date inputs
-    // $("input[type=date]").datepicker({
-    // dateFormat: 'yy-mm-dd',
-    // onSelect: function(dateText, inst) {
-    //     $(inst).val(dateText); // Write the value in the input
-    // }
-    // });
-
     // Code below to avoid the classic date-picker
-    // $("input[type=date]").on('click', function() {
-    // return false;
-    // });
+    $("input[type=date]").on('click', function() {
+    return false;
+    });
 
     /* Dengan Rupiah */
     var dengan_rupiah = document.getElementById('amountrapel');
@@ -324,20 +404,40 @@
         var hide1 = $("#hide1");
         var hide2 = $("#hide2");
         var hide3 = $("#hide3");
+        var hide4 = $("#hide4");
+        var hide5 = $("#hide5");
+        var hide6 = $("#hide6");
+        var hide7 = $("#hide7");
+        var hide8 = $("#hide8");
 
         hide1.hide();
         hide2.hide();
         hide3.hide();
+        hide4.hide();
+        hide5.hide();
+        hide6.hide();
+        hide7.hide();
+        hide8.hide();
 
         checkbox.change(function() {
             if (checkbox.is(':checked')) {
                 hide1.show();
                 hide2.show();
                 hide3.show();
+                hide4.show();
+                hide5.show();
+                hide6.show();
+                hide7.show();
+                hide8.show();
             } else {
                 hide1.hide();
                 hide2.hide();
                 hide3.hide();
+                hide4.hide();
+                hide5.hide();
+                hide6.hide();
+                hide7.hide();
+                hide8.hide();
             }
         });
     });

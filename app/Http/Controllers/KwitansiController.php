@@ -11,7 +11,6 @@ use App\Helpers\Convertion;
 use App\Models\Masteremployee;
 use App\Models\Mastertunjangan;
 use DateTime;
-use Carbon\Carbon;
 use PDF;
 
 class KwitansiController extends Controller
@@ -199,17 +198,28 @@ class KwitansiController extends Controller
         $exp = explode('.', $total);
         $imp = implode('', $exp);
         $terbilang = $this->convertion->TERBILANG($imp).' '.'RUPIAH';
-        $format = date('l, d F Y');
-        $year = date('Y');
-        $month = date('M');
-        $numb = 0000 + 1;
-        $nokwitansi = 'No.'.'000'.$numb.'/LW'.'/'.$month.'/'.$year;
 
         $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee')
             ->where('Nip', $id)
             ->where('Endda', '9998-12-31')
             ->select('Nip','Nama')
             ->first();
+        
+        $datakwintansi = DB::connection('pgsql')->table('master_data.m_counter')
+            ->where('counterid', 'CT003')
+            ->where('prefix', 'KWS')
+            ->select('period','start_number', 'end_number', 'last_number')
+            ->first();
+
+        $format = \Carbon\Carbon::today()->translatedFormat('l, d F Y');
+        $year = date('Y');
+        $month = date('m');
+        $convMonth = $this->convertion->ROMAWI($month);
+        $last = $datakwintansi->last_number + 1;
+        $nokwitansi = 'No.'.'000'.$last.'/LW'.'/'.$convMonth.'/'.$year;
+        $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT003')->where('period', $year)->update([
+            'last_number' => $last
+        ]);
 
         $data = array(
             "rapel" => "",

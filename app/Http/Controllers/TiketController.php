@@ -542,11 +542,27 @@ class TiketController extends Controller
             $emailApprove1 = 'blank@lionwings.com';
             $auth = true;
         } else if ($roleid == "RD006"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
+            if($userreq == $userid) {
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
+                $emailSign = $dataEmail[0]->usermail;
+                $assignNameSign = $dataEmail[0]->username;
+                $emailReq = $dataEmail[1]->usermail;
+                $emailApprove1 = 'blank@lionwings.com';
+                $auth = true;
+            } else {
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
+                $emailSign = $dataEmail[1]->usermail;
+                $assignNameSign = $dataEmail[1]->username;
+                $emailReq = $dataEmail[0]->usermail;
+                $emailApprove1 = 'blank@lionwings.com';
+                $auth = true;
+            }
+        } else if ($userreq == $mgrIt) {
+            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();
             $emailSign = $dataEmail[1]->usermail;
             $assignNameSign = $dataEmail[1]->username;
             $emailReq = $dataEmail[0]->usermail;
-            $emailApprove1 = 'blank@lionwings.com';
+            $emailApprove1 = $dataEmail[0]->usermail;
             $auth = true;
         } else {
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();

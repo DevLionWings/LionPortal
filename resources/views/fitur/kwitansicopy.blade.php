@@ -1,11 +1,10 @@
 @extends('parent.master')
 @section('extend-css')
-<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('plugins/datatables/dataTables.checkboxes.css') }}">
-<!-- <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css') }}"> -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="{{ asset('image-upload/image-uploader.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
 @endsection
 @section('body')
 <!-- Site wrapper -->
@@ -16,7 +15,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h5>Print Kwitansi</h5>
+                    <h5>My Ticket</h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -36,7 +35,7 @@
                     <div class="card">
                         <div class="card-body">
                             @if(session('success'))
-                                <div class="alert alert-success alert-dismissible alert-message">
+                                <div class="alert alert-success alert-dismissible alert-message" >
                                     <i class="icon fas fa-check"></i>
                                     {{ session('success') }}
                                 </div>
@@ -47,99 +46,35 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
+
                             @if($errors->any())
                                 <div class="alert alert-danger alert-message">
-                                    @foreach ($errors->all() as $error)
-                                        {{$error}}<br/>
-                                    @endforeach
+                                    {{ $errors->first() }}
                                 </div>
                             @endif
-                            <form action="{{ route('print-kwitansi') }}" id="form" name="form" method="get" >
-                                <meta name="csrf-token" content="{{ csrf_token() }}">
-                                <div class="row">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="name">Type Kwitansi :</div>
-                                                    <div class="input-group value">
-                                                        <select id="opsi" name="opsi" class="form-control input--style-6">
-                                                            <option value=""> Masukkan Pilihan :</option>
-                                                            <option value="UP">Uang Pisah</option>
-                                                            <option value="TJ001">Uang Duka</option> 
-                                                            <option value="TJ002">Uang Pernikahan</option> 
-                                                            <option value="TJ003">Uang Kelahiran</option> 
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3" id="hide1">
-                                                    <label class="form-check-label" for="idkaryawan">ID Karyawan:</label>
-                                                    <input type="text" name="idkaryawan" class="form-control" id="idkaryawan" required>
-                                                </div>
-                                                <div class="mb-3" id="hide2">
-                                                    <label class="form-check-label" for="tglpisah">Tanggal Pisah:</label>
-                                                    <input type="date" name="tglpisah" id="tglpisah" class="form-control" > 
-                                                </div>
-                                                <div class="form-group" id="hide3">
-                                                    <div class="name">Category Duka :</div>
-                                                    <div class="input-group value">
-                                                        <select id="category" name="category" class="form-control input--style-6">
-                                                            <option value=""> Masukkan Pilihan :</option>
-                                                        @foreach($cate as $catecode)
-                                                            <option value="{{ $catecode['ID'] }}">{{ $catecode['NAME'] }}</option>
-                                                        @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3" id="hide4">
-                                                    <label class="form-check-label" for="detail">Keterangan:</label>
-                                                    <textarea type="text" name="keterangan" class="form-control" id="keterangan" readonly></textarea>
-                                                </div>
-                                                <div class="mb-6" id="hide11">
-                                                    <button type="button" class="btn btn-danger btn-md float-left" onclick="window.location='{{ url()->previous() }}'">Back</button>
-                                                </div>
-                                                <div class="mb-6" id="hide12">
-                                                    <button type="button" id="check" class="check btn btn-primary btn-md float-right">Check</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3" id="hide5">
-                                                    <label class="form-check-label" for="nama">Nama Karyawan:</label>
-                                                    <input type="text" name="nama" id="nama" class="form-control"  $value="" readonly>
-                                                </div>
-                                                <div class="mb-3" id="hide6">
-                                                    <label class="form-check-label" >Tanggal Masuk:</label>
-                                                    <input type="text" name="tglmasuk" id="tglmasuk" class="form-control" readonly> 
-                                                </div>
-                                                <div class="mb-3" id="hide7">
-                                                    <label class="form-check-label" >Gaji+Jabatan:</label>
-                                                    <input type="text" name="gaji" id="gaji" class="form-control" readonly>
-                                                </div>
-                                                <div class="mb-3" id="hide8">
-                                                    <label class="form-check-label" for="total">Total:</label>
-                                                    <input type="text" name="total" id="total" class="form-control" readonly>
-                                                </div>
-                                                <div class="mb-3" id="hide9">
-                                                    <label class="form-check-label" >Lama Masa Kerja:</label>
-                                                    <input type="text" name="masakerja" id="masakerja" class="form-control" readonly>
-                                                </div>
-                                                <div class="mb-6" id="hide10">
-                                                    <button type="submit" class="btn btn-success btn-md float-right">Print</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                            <table id="tiket_list" class="table table-bordered table-hover display nowrap" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Tiket No</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Subject</th>
+                                        <th>Requestor</th>
+                                        <th>Assigned To</th>
+                                        <th>Created On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- /.content -->
 </div>
-<!-- ./wrapper -->   
 @endsection
 @section('extend-js')
 <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
@@ -274,6 +209,10 @@
     //     $('#form').submit();
     //     $(this).attr('disabled', true);
     //     $(this).text("Loading ...");
+    // });
+
+    // document.getElementById("formData").addEventListener("click", function(event){
+    //     event.preventDefault()
     // });
 
     // Use datepicker on the date inputs

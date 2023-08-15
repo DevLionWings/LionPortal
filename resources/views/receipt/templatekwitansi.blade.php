@@ -1,6 +1,5 @@
 <!DOCTYPE html>  
- <html>   
- 	<body>   
+ 
 	    @if($type == 'UP')
 		<table width=720px style="border: 3px solid #000;" cellspacing="15">  
 			<tr>
@@ -46,7 +45,6 @@
 						<tr>  
 							<td rowspan="7" width=100px height=10px style="border:2px solid #000;"><h4 style="text-align: center; vertical-align:top">Mengetahui</h4><h4 style="text-align: center; vertical-align:bottom">HRD</h4></td>  
 							<td><h4>{{ $nokwitansi }}</h4></td> 
-							<td> <h4>{{ $nokwitansi }}</h4></td>  
 						</tr>  
 						<tr>  
 							<td width="100"> Telah terima dari </td>  
@@ -149,5 +147,4 @@
 			</tr>
         </table>
 		@endif
- 	</body>   
- </html>   
+ 

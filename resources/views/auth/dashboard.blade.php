@@ -131,7 +131,7 @@
         url: '{{ route("get.stat") }}',
         type: 'GET',
         success: function(response) {
-            console.log(response);
+            // console.log(response);
             $('label[name="loading-chart"]').css('display', 'none')
             $('canvas[id="ticket"]').css('display', 'block')
         }, error: function(err) {
@@ -162,7 +162,7 @@
             $('canvas[id="ticket"]').css('display', 'block')
             ticketingChart(response["opn"], response["clsd"], response["prg"])
         }, error: function(err) {
-            console.log(err)
+            // console.log(err)
             alert('Opps, something wrong with dashboard chart');
         }
     })
