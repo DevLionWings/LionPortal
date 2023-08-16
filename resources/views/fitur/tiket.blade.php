@@ -265,21 +265,33 @@
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
                             <input type="text" name="id" class="form-control" readonly>
                         </div> -->
-                        <div class="form-group">
-                            <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
-                            <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                                    <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="requestor" disabled>User Request :</label>
+                                    <input type="text" name="requestor" class="form-control" id="requestor" readonly>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="requestor" disabled>User Request :</label>
-                            <input type="text" name="requestor" class="form-control" id="requestor" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="category" disabled>Category :</label>
-                            <input type="text" name="category" class="form-control" id="category" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="priority" disabled>Priority :</label>
-                            <input type="text" name="priority" class="form-control" id="priority" readonly>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="category" disabled>Category :</label>
+                                    <input type="text" name="category" class="form-control" id="category" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="priority" disabled>Priority :</label>
+                                    <input type="text" name="priority" class="form-control" id="priority" readonly>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
@@ -289,28 +301,40 @@
                             <label class="form-check-label" for="detail" disabled>Detail Issue :</label>
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" readonly></textarea>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="assignto" disabled>Assigned To :</label>
-                            <input type="text" name="assignto" class="form-control" id="assignto" readonly>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="form-group">
+                                    <label class="form-check-label" for="assignto" disabled>Assigned To :</label>
+                                    <input type="text" name="assignto" class="form-control" id="assignto" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="form-group">
+                                    <label class="form-check-label" for="status" disabled>Status :</label>
+                                    <input type="text" name="status" class="label-success" id="status" readonly>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-check-label" for="status" disabled>Status :</label>
-                            <input type="text" name="status" class="label-success" id="status" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="ticketno" disabled>Attachment :</label>
+                            <label class="form-check-label" for="upload" disabled>Attachment :</label>
                             <!-- <a href="/download" id="upload" name="upload" class="btn btn-large pull-right"><i class="icon-download-alt"> -->
                             <!-- <input type="hidden" id="upload" name="upload" class="form-control">
                             <button style="margin-left: 5px" class="upload btn btn-link btn-sm">Download File</button> -->
                             <a style="margin-left: 5px"><input type="button" id="upload" name="upload" class=" upload btn btn-link btn-sm" readonly></a>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="approve" disabled>Approve By :</label>
-                            <input type="text" name="approve" class="form-control" id="approve" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
-                            <input type="text" name="approveit" class="form-control" id="approveit" readonly>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approve" disabled>Approve By :</label>
+                                    <input type="text" name="approve" class="form-control" id="approve" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
+                                    <input type="text" name="approveit" class="form-control" id="approveit" readonly>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
@@ -1006,7 +1030,14 @@
         $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
             var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
-            var filecomment = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
+            var file_data = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
+            // const file_data = $('#filecomment').prop('files')[0];
+            // var filecomment = document.getElementById("filecomment").files[0].name;
+            // var file_data = $('#filecomment').prop('files')[0];  
+            // var formData = new FormData(); 
+            // formData.append("filecomment", file_data);
+
+            // console.log(formData);
          
             $.ajax({
                 headers: {
@@ -1017,8 +1048,10 @@
                 data: {
                     'ticketno' : ticketno, 
                     'comment_body' : comment_body,
-                    'fileomment' : filecomment
+                    'filecomment' : file_data
                 },
+                // contentType: false, 
+                // processData: false,
                 success: function(response){ 
                     // console.log(response["disc"]);
                     var $viewComment = $('.modal-content .modal-body');
@@ -1026,9 +1059,9 @@
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
-                        var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
-                        var $filecomment = "<input type=button id=file name=file class=upload btn btn-link btn-sm style=font-size:15px readonly>"
-                        $viewComment.append($nama,$date,$comment);
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</textarea>";
+                        var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
+                        $viewComment.append($nama,$date,$filecomment,$comment,);
                     });
                     // $('#modal-view-user').modal('show');
                     // $('#modal-view-user form[id="view-user"] input[id="comment"]').reset();
@@ -1086,7 +1119,8 @@
                     var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
                     var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
                     var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px>" +data["COMMENT"]+"</textarea>";
-                    $viewComment.append($nama,$date,$comment);
+                    var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
+                    $viewComment.append($nama,$date,$filecomment,$comment);
                 });
                 $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
             }

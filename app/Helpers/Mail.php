@@ -16,7 +16,16 @@ class Mail
     {
         $username = Session::get('username');
         $useremail = Session::get('usermail');
-        $emails = array($useremail, $emailSign, $emailReq, $emailApprove1);
+        if($useremail == null || $emailSign == null || $emailReq == null || $emailApprove1 == null){
+            $emails = array(
+                    $useremail => 'blank@lionwings.com',
+                    $emailSign => 'blank@lionwings.com',
+                    $emailReq => 'blank@lionwings.com',
+                    $emailApprove1 => 'blank@lionwings.com'
+                );
+        } else {
+            $emails = array($useremail, $emailSign, $emailReq, $emailApprove1);
+        }
         
         $mailData = array(
             'username' => $username,

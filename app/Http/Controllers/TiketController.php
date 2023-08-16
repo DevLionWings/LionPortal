@@ -566,9 +566,9 @@ class TiketController extends Controller
             $auth = true;
         } else {
             $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();
-            $emailSign = $dataEmail[2]->usermail;
-            $assignNameSign = $dataEmail[2]->username;
-            $emailReq = $dataEmail[0]->usermail;
+            $emailSign = $dataEmail[0]->usermail;
+            $assignNameSign = $dataEmail[0]->username;
+            $emailReq = $dataEmail[2]->usermail;
             $emailApprove1 = $dataEmail[1]->usermail;
             $auth = true;
         }

@@ -62,6 +62,7 @@
             </p>
           </a>
         </li>
+        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD002')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-ticket-alt"></i>
@@ -89,7 +90,8 @@
             </li>
           </ul>
         </li>
-        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006')
+        @endif
+        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('departmentid')  == 'DD005')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-tachometer-alt"></i>

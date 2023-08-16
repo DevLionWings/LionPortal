@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Http\File;
 use App\Models\Useraccount;
 use App\Models\User;
 use App\Models\Tiket;
@@ -16,16 +19,30 @@ class CommentController extends Controller
 
     public function addComment(Request $request)
     {   
-
+        $userid = Session::get('userid');
         $comment_body = $request->comment_body;
         $ticketno = $request->ticketno;
         $file = $request->filecomment;
-
+        $strfile = str_replace( "\\", '/', $file);
+        $basefile = basename($strfile);
+      
         $validate = $request->validate([
             'comment_body' => 'required'
         ]);
-        
+
         if($validate){
+            
+            $upload = array();
+            if (!empty($request->file('filecomment'))){
+                $doc = $request->file('filecomment');
+                $path = Storage::putFileAs("public/comment/".$userid."/".$ticketno, new File($doc), $ticketno."_".date('Y-m-d').".".$doc->getClientOriginalExtension());
+                $path = explode("/", $path);
+                $path[0] = "storage";
+                array_push($upload, join("/",$path));
+            } else {
+                $upload = [''];
+            }
+
             /* Generate Ticket Number */ 
             $year = date("Y");
             $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT002')->where('period', $year)->first();
@@ -50,7 +67,7 @@ class CommentController extends Controller
             } else 
                 $last_numb = '0000';
             /* End */
-            
+
             $userid = Session::get('userid');
             $counterno = $prefix. $period. $last_numb;
             
@@ -60,7 +77,7 @@ class CommentController extends Controller
                 'counterno' => $counterno,
                 'senderid' => $userid,
                 'comment' => $request->comment_body,
-                'attachment' => '',
+                'attachment' => $basefile,
                 'createdon' =>  date('Y-m-d H:i:s'),
             ]);
 
@@ -77,7 +94,7 @@ class CommentController extends Controller
             $disc = ''; 
             $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
-                ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment')
+                ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment', 'a.attachment')
                 ->where('a.ticketno', $ticketno)
                 ->latest('a.ticketno')
                 ->first();
@@ -88,7 +105,8 @@ class CommentController extends Controller
             array_push($commentArray, [
                 "COMMENT" => trim($dataCommnt->comment),
                 "SENDER" => trim($dataCommnt->username),
-                "DATE" => trim($dataCommnt->createdon)
+                "DATE" => trim($dataCommnt->createdon),
+                "FILE" => trim($dataCommnt->attachment),
             ]);
 
             $data['disc'] = $commentArray; 
@@ -108,7 +126,7 @@ class CommentController extends Controller
         // $jsonCmmnt = json_decode($dataCommnt, true);
         $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
-                ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment')
+                ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment', 'a.attachment')
                 ->where('a.ticketno', $ticketno)
                 ->get();
         $jsonCmmnt = json_decode($dataCommnt, true);
@@ -120,7 +138,8 @@ class CommentController extends Controller
             array_push($commentArray, [
                 "COMMENT" => trim($value['comment']),
                 "SENDER" => trim($value['username']),
-                "DATE" => trim($value['createdon'])
+                "DATE" => trim($value['createdon']),
+                "FILE" => trim($value['attachment']),
             ]);
         }
 
