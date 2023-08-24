@@ -13,6 +13,9 @@ use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\KwitansiController;
 use App\Http\Controllers\CutiController;
+use App\Http\Controllers\CounterController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +52,7 @@ Route::post('/closetiket', [TiketController::class,'closedTiket'])->name('close-
 
 Route::get('/mytiket', [MyticketController::class,'myTiket'])->name('mytiket');
 Route::get('/mytiket/get', [MyticketController::class,'myTiketList'])->name('my-tiket');
+Route::post('/closemytiket', [MyticketController::class,'closedTiket'])->name('close-mytiket');
 
 // Route::get('/get/comment', [CommentController::class,'displayComment'])->name('comment-get');
 Route::post('/add/comment', [CommentController::class,'addComment'])->name('comment-add');
@@ -77,9 +81,29 @@ Route::get('/shift', [AbsensipayrollController::class,'getShift'])->name('get-sh
 
 /* Print Kwitansi */
 Route::get('/kwitansi', [KwitansiController::class,'kwitansi'])->name('kwitansi');
-Route::post('/simulasi', [KwitansiController::class,'getSimulasi'])->name('simulasi-kwitansi');
 Route::get('/print', [KwitansiController::class,'print'])->name('print-kwitansi');
+Route::get('/kwitansi/list', [KwitansiController::class,'getList'])->name('list-kwitansi');
+Route::post('/simulasi', [KwitansiController::class,'getSimulasi'])->name('simulasi-kwitansi');
+Route::post('/insert', [KwitansiController::class,'temporer'])->name('insert-kwitansi');
+Route::post('/delete', [KwitansiController::class,'delete'])->name('delete-kwitansi');
 
 Route::get('/kwitansi/cuti', [CutiController::class,'index'])->name('kwitansi-cuti');
 Route::post('/simulasi/cuti', [CutiController::class,'getSimulasi'])->name('simulasi-cuti');
 Route::get('/print/cuti', [CutiController::class,'print'])->name('print-cuti');
+
+/* Master Data */
+Route::get('/counter', [CounterController::class,'index'])->name('counter');
+Route::get('/counter/list', [CounterController::class,'dataList'])->name('counter-list');
+Route::post('/counter/delete', [CounterController::class,'delete'])->name('counter-delete');
+Route::post('/counter/insert', [CounterController::class,'insert'])->name('counter-insert');
+
+Route::get('/category', [CategoryController::class,'index'])->name('category');
+Route::get('/category/list', [CategoryController::class,'dataList'])->name('category-list');
+Route::post('/category/delete', [CategoryController::class,'delete'])->name('category-delete');
+Route::post('/category/insert', [CategoryController::class,'insert'])->name('category-insert');
+
+
+Route::get('/user', [UserController::class,'index'])->name('user');
+Route::get('/user/list', [UserController::class,'dataList'])->name('user-list');
+Route::post('/user/delete', [UserController::class,'delete'])->name('user-delete');
+Route::post('/user/insert', [UserController::class,'insert'])->name('user-insert');

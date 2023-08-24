@@ -56,6 +56,42 @@
           </ul> -->
         <!-- </li> -->
         <li class="nav-item">
+          <a href="#" class="nav-link" >
+            <i class="nav-icon fas fa fa-database"></i>
+            <p>
+              Master
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('user') }}" class="nav-link" type="submit" id="m-user"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Master User
+                </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('counter') }}" class="nav-link" type="submit" id="m-counter"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Master Counter
+                </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('category') }}" class="nav-link" type="submit" id="m-category"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Master Category
+                </p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
           <a href="{{ url('absensi') }}" class="nav-link" type="submit" id="m-Attendance"><i class="nav-icon fas fa-calendar-check"></i>
             <p>
               Attendance

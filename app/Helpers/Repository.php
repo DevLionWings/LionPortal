@@ -594,10 +594,10 @@ class Repository
                     'priorid' => $priority,
                     'rejectedby' => '',
                     'remark' => $remark,
-                    'approvedby1_date' => date('Y-m-d H:i:s'),
-                    'approvedby2_date' => date('Y-m-d H:i:s'),
-                    'approvedby3_date' => date('Y-m-d H:i:s'),
-                    'approvedbyit_date' => date('Y-m-d H:i:s'),
+                    'approvedby1_date' => date('Y-m-d'),
+                    'approvedby2_date' => date('Y-m-d'),
+                    'approvedby3_date' => date('Y-m-d '),
+                    'approvedbyit_date' => date('Y-m-d'),
                     'createdby' => $createdby
                 );
             } else {

@@ -75,12 +75,12 @@
         </div>
     </section>
     <!-- /.content -->
-    <div id="modal-view-user" class="modal fade show" aria-modal="true">
+    <div id="modal-view-user" class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">View Ticket</h4>
-                    <button type="button" class="close" id=close-btn data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" id=close-btn aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -92,21 +92,33 @@
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
                             <input type="text" name="id" class="form-control" readonly>
                         </div> -->
-                        <div class="form-group">
-                            <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
-                            <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                                    <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="requestor" disabled>User Request :</label>
+                                    <input type="text" name="requestor" class="form-control" id="requestor" readonly>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="requestor" disabled>User Request :</label>
-                            <input type="text" name="requestor" class="form-control" id="requestor" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="category" disabled>Category :</label>
-                            <input type="text" name="category" class="form-control" id="category" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="priority" disabled>Priority :</label>
-                            <input type="text" name="priority" class="form-control" id="priority" readonly>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="category" disabled>Category :</label>
+                                    <input type="text" name="category" class="form-control" id="category" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="priority" disabled>Priority :</label>
+                                    <input type="text" name="priority" class="form-control" id="priority" readonly>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
@@ -114,163 +126,80 @@
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="detail" disabled>Detail Issue :</label>
-                            <textarea type="text" name="detail" class="form-control" id="detail" readonly></textarea>
+                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" readonly></textarea>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="assignto" disabled>Assigned To :</label>
-                            <input type="text" name="assignto" class="form-control" id="assignto" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="status" disabled>Status :</label>
-                            <input type="text" name="status" class="label-success" id="status" readonly>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="form-group">
+                                    <label class="form-check-label" for="assignto" disabled>Assigned To :</label>
+                                    <input type="text" name="assignto" class="form-control" id="assignto" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="form-group">
+                                    <label class="form-check-label" for="status" disabled>Status :</label>
+                                    <input type="text" name="status" class="label-success" id="status" readonly>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="upload" disabled>Attachment :</label>
                             <!-- <a href="/download" id="upload" name="upload" class="btn btn-large pull-right"><i class="icon-download-alt"> -->
+                            <!-- <input type="hidden" id="upload" name="upload" class="form-control">
+                            <button style="margin-left: 5px" class="upload btn btn-link btn-sm">Download File</button> -->
                             <a style="margin-left: 5px"><input type="button" id="upload" name="upload" class=" upload btn btn-link btn-sm" readonly></a>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="approve" disabled>Approve By :</label>
-                            <input type="text" name="approve" class="form-control" id="approve" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
-                            <input type="text" name="approveit" class="form-control" id="approveit" readonly>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approve" disabled>Approve By :</label>
+                                    <input type="text" name="approve" class="form-control" id="approve" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
+                                    <input type="text" name="approveit" class="form-control" id="approveit" readonly>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="created" disabled>Created Ticket :</label>
                             <input type="text" name="created" class="form-control" id="created" readonly>
                         </div>
                         <hr />
+                        <!-- <label class="form-check-label">Display Comment :</label> -->
                         <h4 class="modal-title">Display Comment :</h4>
-                            <hr />
+                        <hr />
                             <div class="form-group">
                                 <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
-                                <textarea type="text" name="comment_body" class="form-control" id="comment_body" required></textarea>
+                                <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="filecomment" id="filecomment" class="form-control">
                             </div>
                             <div class="form-group">
                                 <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
                             </div>
                             <div class="form-group">
-                                <input type="text" name="comment" class="modal-input">
+                                <input type="text" name="comment" id="comment" class="modal-input">
+                                    <!-- <h4 class="form-check-label" style="color:red"></h4>
+                                    <span class="form-check-label" style="font-size:10px"></span>
+                                    <p type="text" style="font-family:'Courier New';font-size:20px" class="form-control" ></p> -->
                             </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
-                        <!-- <button type="button" id="update-btn" class="btn btn-primary">Save</button> -->
-                    </div>
+                        <hr />
+                        <div class="form-group">
+                            <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>    
                 </form>
+                <!-- <div class="modal-body">
+                    <div class="form-group">
+                        <button id="comment" name="comment" class="comment btn-submit btn btn-secondary" ><i class="fas fa-comments"></i>View Comment</button>
+                    </div>
+                </div> -->
             </div>
         </div>
-    </div>
-    <div id="modal-update-user"  class="modal fade show"  aria-modal="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Update Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form action="{{route('update-tiket')}}" method="post" name='update'>
-                    @csrf
-                    <input type="hidden" id="update-ticketno" name="ticketno"/>
-                    <input type="hidden" id="update-userid" name="userid"/>
-                    <input type="hidden" id="update-rejectedby" name="rejectedby"/>
-                    <div class="modal-body">
-                    <p>Are You Sure ? <span class="text-bold"></span></p>
-                        @if(session('roleid') == 'RD006')
-                        <div class="form-group">
-                            <div class="name">Assigned To :</div>
-                            <div class="input-group value">
-                                <select id="assignto" name="assignto" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($assn as $assncode)
-                                    <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD002">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedbyit_date" name="approvedbyit_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedbyit" name="approvedbyit" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
-                            </div>
-                        </div>
-                        @endif
-                        @if(session('roleid') == 'RD002')
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD001">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="WAITING APPROVAL IT">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedby1_date" name="approvedby1_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedby1" name="approvedby1" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="assignto" name="assignto" class="form-control input--style-6" type="hidden" value="101943">
-                            </div>
-                        </div>
-                        @endif
-                        @if(session('roleid') == 'RD004' || session('roleid') == 'RD005')
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD002">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="IN PROGRESS">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedbyit" name="approvedbyit" class="form-control input--style-6" type="hidden" value="{{ session('mgrid') }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedby1" name="approvedby1" class="form-control input--style-6" type="hidden" value="{{ session('mgrid') }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="assignto" name="assignto" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
-                            </div>
-                        </div>
-                        @endif
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Yes</button>
-                    </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
     </div>
     <div id="modal-reject-user"  class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
@@ -327,7 +256,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{route('update-tiket')}}" method="post" name='closed'>
+                <form action="{{route('close-mytiket')}}" method="post" name='closed'>
                     @csrf
                     <input type="hidden" id="closed-ticketno" name="ticketno"/>
                     <input type="hidden" id="closed-userid" name="userid"/>
@@ -648,7 +577,7 @@
                         minutes = minutes;
                         seconds = seconds;
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year + " " + hour + ":" + minutes ;
+                        var date = day + "/" + month + "/" + year;
                         return date;   
                     }
                 },

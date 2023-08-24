@@ -39,14 +39,14 @@
                                 <!-- <form id="formData" name="formData" method="get" action="{{ route('add.form') }}">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-success btn-sm">+ Tambah Ticket</button> -->
-                            </form>
+                            <!-- </form> -->
                             </div>
                             <div class="row align-items-end">
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label>Requestor :</label>
                                         <div class="input-group value">
-                                            <select id="requestor" name="requestor" class="form-control input--style-6" required>
+                                            <select id="requestor" name="requestor" class="select2" style="width: 100%;">
                                             <option value="10"> all</option>
                                                 @foreach($usreq as $usreqcode)
                                                 <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
@@ -57,9 +57,9 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label>Ticket No :</label>
+                                        <label>Ticket :</label>
                                         <div class="input-group value">
-                                            <select id="ticketno" name="ticketno" class="form-control input--style-6" required>
+                                            <select id="ticketno" name="ticketno" class="form-control input--style-6">
                                             <option value="HLP"> all</option>
                                                 @foreach($tick as $tickcode)
                                                 <option value="{{ $tickcode['ID'] }}">{{ $tickcode['NAME'] }}</option>
@@ -72,7 +72,7 @@
                                     <div class="form-group">
                                         <label>Assign To :</label>
                                         <div class="input-group value">
-                                            <select id="assignto" name="assignto" class="form-control input--style-6" required>
+                                            <select id="assignto" name="assignto" class="form-control input--style-6">
                                                 <option value="10"> all</option>
                                                 @foreach($assn as $assncode)
                                                 <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
@@ -85,7 +85,7 @@
                                     <div class="form-group">
                                         <label>Status :</label>
                                         <div class="input-group value">
-                                            <select id="status" name="status" class="form-control input--style-6" required>
+                                            <select id="status" name="status" class="form-control input--style-6">
                                                 <option value="SD00"> all</option>
                                                 @foreach($stat as $statcode)
                                                 <option value="{{ $statcode['ID'] }}">{{ $statcode['NAME'] }}</option>
@@ -177,7 +177,7 @@
                         <div class="form-group">
                             <div class="name">User Request :</div>
                             <div class="input-group value">
-                                <select id="user" name="user" class="form-control input--style-6" required>
+                                <select id="user" name="user" class="select2" style="width: 100%;" required>
                                     <option value=""> Masukkan Pilihan :</option>
                                     @foreach($usreq as $usreqcode)
                                     <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
@@ -360,7 +360,8 @@
                                     <span class="form-check-label" style="font-size:10px"></span>
                                     <p type="text" style="font-family:'Courier New';font-size:20px" class="form-control" ></p> -->
                             </div>
-                        <div class="modal-footer justify-content-between">
+                        <hr />
+                        <div class="form-group">
                             <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </div>    

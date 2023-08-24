@@ -234,88 +234,116 @@ class CutiController extends Controller
     public function print(Request $request)
     {
         
-        $type = $request->opsi;
-        $tglpisah = $request->tglpisah;
-        $tglmasuk = $request->tglmasuk;
-        $id = $request->idkaryawan;
-        $category = $request->category;
-        $keterangan = $request->keterangan;
-        $total = $request->total;
-        $to = $request->to;
-        $masakerja = $request->masakerja;
-        $nominal = $request->total.',-';
-        $exp = explode('.', $total);
-        $imp = implode('', $exp);
-        $terbilang = $this->convertion->TERBILANG($imp).' '.'RUPIAH';
-        $format = date('l, d F Y');
-        $year = date('Y');
-        $month = date('M');
-        $numb = 0000 + 1;
-        $nokwitansi = 'No.'.'000'.$numb.'/LW'.'/'.$month.'/'.$year;
-        $selisih = $request->selisih;
-        $subs = substr($selisih, 3, 30);
-        $exp = explode('.', $subs);
-        $convSelisih = implode('', $exp);
-        $terbilangSelisih = $this->convertion->TERBILANG($convSelisih).' '.'RUPIAH';
-        $rapel = $request->rapel;
+        // $type = $request->opsi;
+        // $tglpisah = $request->tglpisah;
+        // $tglmasuk = $request->tglmasuk;
+        // $id = $request->idkaryawan;
+        // $category = $request->category;
+        // $keterangan = $request->keterangan;
+        // $total = $request->total;
+        // $to = $request->to;
+        // $masakerja = $request->masakerja;
+        // $nominal = $request->total.',-';
+        // $exp = explode('.', $total);
+        // $imp = implode('', $exp);
+        // $terbilang = $this->convertion->TERBILANG($imp).' '.'RUPIAH';
+        // $format = date('l, d F Y');
+        // $year = date('Y');
+        // $month = date('M');
+        // $numb = 0000 + 1;
+        // $nokwitansi = 'No.'.'000'.$numb.'/LW'.'/'.$month.'/'.$year;
+        // $selisih = $request->selisih;
+        // $subs = substr($selisih, 3, 30);
+        // $exp = explode('.', $subs);
+        // $convSelisih = implode('', $exp);
+        // $terbilangSelisih = $this->convertion->TERBILANG($convSelisih).' '.'RUPIAH';
 
-        $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee')
-            ->where('Nip', $id)
-            ->where('Endda', '9998-12-31')
-            ->select('Nip','Nama')
-            ->first();
+        // $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee')
+        //     ->where('Nip', $id)
+        //     ->where('Endda', '9998-12-31')
+        //     ->select('Nip','Nama')
+        //     ->first();
 
-        $datakwintansi = DB::connection('pgsql')->table('master_data.m_counter')
-            ->where('counterid', 'CT003')
-            ->where('prefix', 'KWS')
-            ->select('period','start_number', 'end_number', 'last_number')
-            ->first();
+        // $datakwintansi = DB::connection('pgsql')->table('master_data.m_counter')
+        //     ->where('counterid', 'CT003')
+        //     ->where('prefix', 'KWS')
+        //     ->select('period','start_number', 'end_number', 'last_number')
+        //     ->first();
         
-        $format = \Carbon\Carbon::today()->translatedFormat('l, d F Y');
-        $year = date('Y');
-        $month = date('m');
-        $convMonth = $this->convertion->ROMAWI($month);
-        $last = $datakwintansi->last_number + 1;
-        $nokwitansi = 'No.'.'000'.$last.'/LW'.'/'.$convMonth.'/'.$year;
-        $last = $datakwintansi->last_number + 1;
-        $nokwitansi = 'No.'.'000'.$last.'/LW'.'/'.$convMonth.'/'.$year;
-        $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT003')->where('period', $year)->update([
-            'last_number' => $last
-        ]);
-        
-        if(empty($rapel)){
-            $data = array(
-                "type" => $type,
-                "nokwitansi" => $nokwitansi,
-                "nama" => trim($datakaryawan->Nama),
-                "terimadari" => 'PT LION WINGS, JAKARTA',
-                "nominal" => $nominal,
-                "terbilang" => $terbilang,
-                "tanggal" => $format,
-                "keterangan" => $to.' '.$keterangan,
-                "lamakerja" => $masakerja,
-                "tglmasuk" => $tglmasuk,
-                "rapel" => $rapel
-            );
+        // $format = \Carbon\Carbon::today()->translatedFormat('l, d F Y');
+        // $year = date('Y');
+        // $month = date('m');
+        // $convMonth = $this->convertion->ROMAWI($month);
+        // $last = $datakwintansi->last_number + 1;
+        // $nokwitansi = 'No.'.'000'.$last.'/LW'.'/'.$convMonth.'/'.$year;
+        // $last = $datakwintansi->last_number + 1;
+        // $nokwitansi = 'No.'.'000'.$last.'/LW'.'/'.$convMonth.'/'.$year;
+        // $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT003')->where('period', $year)->update([
+        //     'last_number' => $last
+        // ]);
+        // $rapel = $request->rapel;
+        $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
+        $datajson =  array(
+                        "data" => array()
+                    );
+        if($datakwitansi == true){
+            foreach($datakwitansi as $key => $value){
+                if($value->type == 3 ||  $value->type == 1.5){
+                    if($value->selisih == 0 ){
+                        array_push($datajson["data"], [
+                                "rapel" => "",
+                                "type" => trim($value->type),
+                                "nokwitansi" => trim($value->idkwitansi),
+                                "nama" => trim($value->namakaryawan),
+                                "terimadari" => 'PT.LION WINGS, JAKARTA',
+                                "nominal" => number_format($value->total,0,',','.').',-',
+                                "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
+                                "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                                "keterangan" => trim($value->untuk).trim($value->keterangan),
+                                "lamakerja" => trim($value->masakerja),
+                                "tglmasuk" => trim($value->tanggalmasuk),
+                                "periode" => "Periode Cuti : ".trim($value->tanggalcuti).' - '.trim($value->tanggalmasuk)
+                        ]);
+                    } else {
+                        array_push($datajson["data"], [
+                                "type" => 'on',
+                                "nokwitansi" => trim($value->idkwitansi),
+                                "nama" => trim($value->namakaryawan),
+                                "terimadari" => 'PT.LION WINGS, JAKARTA',
+                                "nominal" => number_format($value->total,0,',','.').',-',
+                                "terbilang" => $this->convertion->TERBILANG($value->selisih).' '.'RUPIAH',
+                                "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                                "keterangan" => "Selisih"." ".trim($value->untuk).trim($value->keterangan),
+                                "lamakerja" => trim($value->masakerja),
+                                "tglmasuk" => trim($value->tanggalmasuk),
+                                "selisih" => number_format($value->selisih,0,',','.').',-',
+                                "periode" => "Periode Cuti : ".trim($value->tanggalcuti).' - '.trim($value->tanggalmasuk)
+                        ]);
+                    }
+                } else {
+                    array_push($datajson["data"], [
+                            "rapel" => "",
+                            "type" => trim($value->type),
+                            "nokwitansi" => trim($value->idkwitansi),
+                            "nama" => trim($value->namakaryawan),
+                            "terimadari" => 'PT.LION WINGS, JAKARTA',
+                            "nominal" => number_format($value->total,0,',','.').',-',
+                            "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
+                            "tanggal" => "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                            "keterangan" => trim($value->keterangan),
+                            "lamakerja" => trim($value->masakerja),
+                            "tglpisah" => trim($value->tglpisah)
+                    ]);  
+                }
+            }
+            $datajson = json_decode(json_encode($datajson));
+            $data['alldata'] = $datajson->data;
         } else {
-            /* kwitansi rapel */
-            $data = array(
-                "type" => 'on',
-                "nokwitansi" => $nokwitansi,
-                "nama" => trim($datakaryawan->Nama),
-                "terimadari" => 'PT LION WINGS, JAKARTA',
-                "nominal" => $nominal,
-                "terbilang" => $terbilangSelisih,
-                "tanggal" => $format,
-                "keterangan" => $to.' '.$keterangan,
-                "lamakerja" => $masakerja,
-                "tglmasuk" => $tglmasuk,
-                "selisih" => $selisih,
-                "rapel" => $rapel
-            );
+            $data = ['']; 
+            
         }
-        
-        $pdf = PDF::loadview('receipt.templatekwitansi', $data)->setPaper('F4', 'portrait');
+
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('receipt.templatekwitansi', $data)->setPaper('f4', 'portrait');
         return $pdf->stream('Print_Kwitansi' . date('dmYHis') . '.pdf');
     }
 }
