@@ -16,6 +16,10 @@ use App\Http\Controllers\CutiController;
 use App\Http\Controllers\CounterController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PlantController;
+use App\Http\Controllers\KaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,19 +95,41 @@ Route::get('/kwitansi/cuti', [CutiController::class,'index'])->name('kwitansi-cu
 Route::post('/simulasi/cuti', [CutiController::class,'getSimulasi'])->name('simulasi-cuti');
 Route::get('/print/cuti', [CutiController::class,'print'])->name('print-cuti');
 
+Route::get('/karyawan', [KaryawanController::class,'index'])->name('karyawan');
+Route::get('/karyawan/list', [KaryawanController::class,'dataList'])->name('karyawan-list');
+Route::post('/karyawan/delete', [KaryawanController::class,'delete'])->name('karyawan-delete');
+Route::post('/karyawan/insert', [KaryawanController::class,'insert'])->name('karyawan-insert');
+Route::post('/karyawan/update', [KaryawanController::class,'update'])->name('karyawan-update');
+
 /* Master Data */
+// Master Counter //
 Route::get('/counter', [CounterController::class,'index'])->name('counter');
 Route::get('/counter/list', [CounterController::class,'dataList'])->name('counter-list');
 Route::post('/counter/delete', [CounterController::class,'delete'])->name('counter-delete');
 Route::post('/counter/insert', [CounterController::class,'insert'])->name('counter-insert');
-
+// Master Category //
 Route::get('/category', [CategoryController::class,'index'])->name('category');
 Route::get('/category/list', [CategoryController::class,'dataList'])->name('category-list');
 Route::post('/category/delete', [CategoryController::class,'delete'])->name('category-delete');
 Route::post('/category/insert', [CategoryController::class,'insert'])->name('category-insert');
-
-
+// Master User //
 Route::get('/user', [UserController::class,'index'])->name('user');
 Route::get('/user/list', [UserController::class,'dataList'])->name('user-list');
 Route::post('/user/delete', [UserController::class,'delete'])->name('user-delete');
 Route::post('/user/insert', [UserController::class,'insert'])->name('user-insert');
+Route::post('/user/update', [UserController::class,'update'])->name('user-update');
+// Master Departement //
+Route::get('/department', [DepartmentController::class,'index'])->name('department');
+Route::get('/department/list', [DepartmentController::class,'dataList'])->name('department-list');
+Route::post('/department/delete', [DepartmentController::class,'delete'])->name('department-delete');
+Route::post('/department/insert', [DepartmentController::class,'insert'])->name('department-insert');
+// Master Role //
+Route::get('/role', [RoleController::class,'index'])->name('role');
+Route::get('/role/list', [RoleController::class,'dataList'])->name('role-list');
+Route::post('/role/delete', [RoleController::class,'delete'])->name('role-delete');
+Route::post('/role/insert', [RoleController::class,'insert'])->name('role-insert');
+// Master Plantation // 
+Route::get('/plant', [PlantController::class,'index'])->name('plant');
+Route::get('/plant/list', [PlantController::class,'dataList'])->name('plant-list');
+Route::post('/plant/delete', [PlantController::class,'delete'])->name('plant-delete');
+Route::post('/plant/insert', [PlantController::class,'insert'])->name('plant-insert');

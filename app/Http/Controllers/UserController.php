@@ -72,6 +72,7 @@ class UserController extends Controller
             array_push($dataTrimArray, [
                 "userid" => trim($value->userid),
                 "username" => trim($value->username),
+                "pass" => trim($value->pass),
                 "departmentid" => trim($value->departmentid),
                 "plantid" => trim($value->plantid),
                 "roleid" => trim($value->roleid),
@@ -81,11 +82,14 @@ class UserController extends Controller
             ]);
         }
         $data['dat'] = $dataTrimArray;
-
+        
         return DataTables::of($data['dat'])
         ->addColumn('action', function($row){
             $deleteBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-userid="'.$row["userid"].'" ><i class="fa fa-trash" aria-hidden="true"></i></a>';
-            return $deleteBtn;
+            $editBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm" 
+            data-userid="'.$row["userid"].'" data-username="'.$row["username"].'" data-pass="'.$row["pass"].'" data-departmentid="'.$row["departmentid"].'" data-plantid="'.$row["plantid"].'" data-roleid="'.$row["roleid"].'" 
+            data-spvid="'.$row["spvid"].'" data-mgrid="'.$row["mgrid"].'" data-usermail="'.$row["usermail"].'"><i class="fas fa-edit"></i></a>';
+            return $deleteBtn.$editBtn;
             
         })
         ->rawColumns(['action'])
@@ -110,6 +114,27 @@ class UserController extends Controller
 
         if($insert == true){
             return redirect()->route('user')->with("success", "Data insert successfully");
+        } else { 
+            return redirect()->back()->with("error", "error");
+        }
+    }
+
+    public function update(Request $request)
+    {
+        $update = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $request->userid)->update([
+            'userid' => $request->userid,
+            'username' => $request->username,
+            'departmentid' => $request->deptid,
+            'plantid' => $request->plantid,
+            'roleid' => $request->roleid,
+            'spvid' => $request->spvid,
+            'mgrid' => $request->mgrid,
+            'createdon' => date('Y-m-d'),
+            'usermail' => $request->usermail,
+        ]);
+
+        if($update == true){
+            return redirect()->route('user')->with("success", "Data update successfully");
         } else { 
             return redirect()->back()->with("error", "error");
         }

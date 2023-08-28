@@ -108,19 +108,19 @@
                                                     <div class="col-md-4">
                                                         <div class="mb-3">
                                                             <label class="form-check-label" >Uang Makan:</label>
-                                                            <input type="text" name="um" id="um" class="form-control" placeholder="di isi/ubah jika perlu">
+                                                            <input type="text" name="um" id="um" class="form-control" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="mb-3">
                                                             <label class="form-check-label" >SPSI:</label>
-                                                            <input type="text" name="spsi" id="spsi" class="form-control" placeholder="di isi/ubah jika perlu">
+                                                            <input type="text" name="spsi" id="spsi" class="form-control" readonly>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <div class="mb-3">
                                                             <label class="form-check-label" >Koperasi:</label>
-                                                            <input type="text" name="koperasi" id="koperasi" class="form-control" placeholder="di isi/ubah jika perlu">
+                                                            <input type="text" name="koperasi" id="koperasi" class="form-control" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -445,7 +445,7 @@
                     'selisih' : selisih
                 },
                 success: function(response){ 
-                    // console.log(response[0]);
+                    console.log(response[0]);
                     if(response == "Max"){
                         alert("Type Tidak Boleh Sama atau Maximum Input 4 Kwitansi");
                     } else {

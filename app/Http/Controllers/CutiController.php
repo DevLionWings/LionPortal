@@ -60,31 +60,13 @@ class CutiController extends Controller
                             ->where('a.Endda', '9998-12-31')
                             ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
                             ->first();
-                        
-            // $mastertunjangan = DB::connection('pgsql')->table('master_data.m_tunjangan')
-            //     ->where('categoryid', 'CA004')
-            //     ->get();
-        
-            // $namaTj = $mastertunjangan->categorydescr;
-            // $amountTj = $mastertunjangan->value;
-           
-            if (empty($uangmakanReq) && empty($spsiReq) && empty($koperasiReq)){
-                $uangmakan = '20000';  
-                $spsi = '27000'; 
-                $koperasi = '20000';
-            } else {
-                $uangmakan = $uangmakanReq;
-                $spsi = $spsiReq; 
-                $koperasi = $koperasiReq;
-                // $subs = substr($uangmakanReq, 3, 6);
-                // $exp = explode('.', $subs);
-                // $uangmakan = implode('', $exp);
-                // $subs = substr($spsiReq, 3, 6);
-                // $spsi = explode('.', $subs);
-                // $subs = substr($koperasiReq, 3, 6);
-                // $koperasi = explode('.', $subs);
-            }
             
+            $datakaryawan2 = DB::connection('pgsql')->table('hris.t_karyawan')->where('idsmu', $id)->first();
+           
+            $uangmakan = '20000';
+            $spsi = $datakaryawan2->spsi; 
+            $koperasi = $datakaryawan2->koperasi;
+        
             // $formatUm = 'Rp.'.number_format($uangmakan,0,',','.');
             // $formatSpsi = 'Rp.'.number_format($spsi,0,',','.');
             // $formatKoperasi = 'Rp.'.number_format($koperasi,0,',','.');
@@ -121,7 +103,7 @@ class CutiController extends Controller
                 $hitung4 = 3 * $spsi;
                 $hitung5 = 3 * $koperasi;
                 $hitung6 = 3 * ($gaji * 2/100);
-                $untuk = "Uang Pengganti Cuti Hamil a/n ".$nama.' bagian: '.$bagian.' id: '.$id.',';
+                $untuk = "Uang Pengganti Cuti Hamil a/n ".$nama.' bagian: '.$bagian.' id: '.$id.', '.' ';
                 $keterangan = "3x(GP + UM) - 3x(JHT) - (Cuti Haid) - 3x(SPSI) - 3x(Koperasi) - 3x(Bpjs + Pensiun) : ". $hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
                 /* Count Months */
                 $tglcuti = $request->tglcuti;
@@ -159,8 +141,8 @@ class CutiController extends Controller
                 $hitung4 = 2 * $spsi;
                 $hitung5 = 2 * $koperasi;
                 $hitung6 = 2 * ($gaji * 2/100);
-                $untuk = "Uang Pengganti Cuti Keguguran a/n ".$nama.' bagian: '.$bagian.' id: '.$id.',';
-                $keterangan = "1.5x(GP + UM) - 2x(JHT) - (Cuti Haid) - 2x(SPSI) - 2x(Koperasi) - 2x(Bpjs + Pensiun) :". $hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
+                $untuk = "Uang Pengganti Cuti Keguguran a/n ".$nama.' bagian: '.$bagian.' id: '.$id.','.' ';
+                $keterangan = "1.5x(GP + UM) - 2x(JHT) - (Cuti Haid) - 2x(SPSI) - 2x(Koperasi) - 2x(Bpjs + Pensiun)  : ". $hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
                 /* Count Months */
                 $tglcuti = $request->tglcuti;
                 $date = new DateTime($tglcuti);
@@ -301,8 +283,8 @@ class CutiController extends Controller
                                 "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
                                 "keterangan" => trim($value->untuk).trim($value->keterangan),
                                 "lamakerja" => trim($value->masakerja),
-                                "tglmasuk" => trim($value->tanggalmasuk),
-                                "periode" => "Periode Cuti : ".trim($value->tanggalcuti).' - '.trim($value->tanggalmasuk)
+                                "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
+                                "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y')
                         ]);
                     } else {
                         array_push($datajson["data"], [
@@ -315,9 +297,9 @@ class CutiController extends Controller
                                 "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
                                 "keterangan" => "Selisih"." ".trim($value->untuk).trim($value->keterangan),
                                 "lamakerja" => trim($value->masakerja),
-                                "tglmasuk" => trim($value->tanggalmasuk),
+                                "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
                                 "selisih" => number_format($value->selisih,0,',','.').',-',
-                                "periode" => "Periode Cuti : ".trim($value->tanggalcuti).' - '.trim($value->tanggalmasuk)
+                                "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y')
                         ]);
                     }
                 } else {
@@ -332,7 +314,7 @@ class CutiController extends Controller
                             "tanggal" => "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
                             "keterangan" => trim($value->keterangan),
                             "lamakerja" => trim($value->masakerja),
-                            "tglpisah" => trim($value->tglpisah)
+                            "tglpisah" => Carbon::parse(trim($value->tglpisah))->translatedFormat('d F Y')
                     ]);  
                 }
             }

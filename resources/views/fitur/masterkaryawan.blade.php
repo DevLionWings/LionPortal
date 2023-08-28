@@ -15,7 +15,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h5>Master User</h5>
+                    <h5>Master Karyawan</h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -35,7 +35,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="float-sm-right">
-                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#modal-add-user"><i class="fa fa-plus" aria-hidden="true"></i>Add User</button>
+                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#modal-add-user"><i class="fa fa-plus" aria-hidden="true"></i>Add Karyawan</button>
                             </div>
                         </div>
                        
@@ -61,14 +61,19 @@
                             <table id="list" class="table table-bordered table-hover display nowrap" width="100%">
                                 <thead>
                                     <tr>
-                                        <th>User Id</th>
-                                        <th>Username</th>
-                                        <th>Departmentid</th>
-                                        <th>Plantid</th>
-                                        <th>Roleid</th>
-                                        <th>Spvid</th>
-                                        <th>Mgrid</th>
-                                        <th>Usermail</th>
+                                        <th>IdSmu</th>
+                                        <!-- <th>Id</th> -->
+                                        <th>Nama</th>
+                                        <th>Tanggal In</th>
+                                        <th>Sex</th>
+                                        <th>Departement</th>
+                                        <th>Tanggal Lahir</th>
+                                        <th>Gaji</th>
+                                        <th>Turun Gaji</th>
+                                        <th>Jabatan</th>
+                                        <th>Spsi</th>
+                                        <th>Koperasi</th>
+                                        <!-- <th>Date</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -90,65 +95,58 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form id="form" name="form" action="{{ route('user-insert') }}" method="post" enctype="multipart/form-data">
+                <form id="form" name="form" action="{{ route('karyawan-insert') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="form-check-label" for="userid">Userid Id:</label>
-                            <input type="text" name="userid" class="form-control" id="userid" maxlength="6">
+                            <label class="form-check-label" for="idsmu">Id Smu:</label>
+                            <input type="text" name="idsmu" class="form-control" id="idsmu" maxlength="6">
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="username">Username:</label>
-                            <input type="text" name="username" class="form-control" id="username"></input>
+                        <!-- <div class="form-group">
+                            <label class="form-check-label" for="id">Id:</label>
+                            <input type="text" name="id" class="form-control" id="id" maxlength="5">
+                        </div> -->
+                        <div class="mb-3">
+                            <label class="form-check-label" for="nama">Nama:</label>
+                            <input type="text" name="nama" id="nama" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="pass">Password:</label>
-                            <input type="text" name="pass" id="pass" class="form-control">
+                            <label class="form-check-label" for="tgl_in">Tgl In:</label>
+                            <input type="date" name="tgl_in" id="tgl_in" class="form-control">
                         </div>
                         <div class="form-group">
-                            <div class="name">Departmentid:</div>
+                            <div class="name">Sex:</div>
                             <div class="input-group value">
-                                <select id="deptid" name="deptid" class="form-control input--style-6" required>
+                                <select id="sex" name="sex" class="form-control input--style-6" required>
                                     <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($dept as $deptcode)
-                                    <option value="{{ $deptcode['ID'] }}">{{ $deptcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="name">Plantid:</div>
-                            <div class="input-group value">
-                                <select id="plantid" name="plantid" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($plnt as $plntcode)
-                                    <option value="{{ $plntcode['ID'] }}">{{ $plntcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="name">Roleid:</div>
-                            <div class="input-group value">
-                                <select id="roleid" name="roleid" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($rol as $rolcode)
-                                    <option value="{{ $rolcode['ID'] }}">{{ $rolcode['NAME'] }}</option>
-                                    @endforeach
+                                    <option value="L">L</option>
+                                    <option value="P">P</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="spvid">spvid:</label>
-                            <input type="text" name="spvid" id="spvid" class="form-control" maxlength="6">
+                            <label class="form-check-label" for="bagian">Department:</label>
+                            <input type="text" name="bagian" id="bagian" class="form-control" maxlength="6">
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="mgrid">mgrid:</label>
-                            <input type="text" name="mgrid" id="mgrid" class="form-control" maxlength="6">
+                            <label class="form-check-label" for="tgl_lahir">Tanggal Lahir:</label>
+                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control" maxlength="6">
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="email">Usermail:</label>
-                            <input type="text" name="email" id="email" class="form-control">
+                            <label class="form-check-label" for="gaji">Gaji:</label>
+                            <input type="text" name="gaji" id="gaji" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label" for="jabatan">Jabatan:</label>
+                            <input type="text" name="jabatan" id="jabatan" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label" for="spsi">Spsi:</label>
+                            <input type="text" name="spsi" id="spsi" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label" for="koperasi">Koperasi:</label>
+                            <input type="text" name="koperasi" id="koperasi" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -161,7 +159,7 @@
         </div>
     </div>
 
-    <div id="modal-update-user"  class="modal fade show"  aria-modal="true">
+    <div id="modal-update-karyawan"  class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -170,62 +168,58 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('user-update') }}" method="post" name='update-user' id='update-user'>
+                <form action="{{ route('karyawan-update') }}" method="post" name='update-karyawan' id='update-karyawan'>
                     @csrf
                     <div class="modal-body">
-                    <div class="form-group">
-                            <label class="form-check-label" for="userid">Userid Id:</label>
-                            <input type="text" name="userid" class="form-control" id="userid" maxlength="6">
-                        </div>
                         <div class="form-group">
-                            <label class="form-check-label" for="username">Username:</label>
-                            <input type="text" name="username" class="form-control" id="username"></input>
+                            <label class="form-check-label" for="idsmu">Id Smu:</label>
+                            <input type="text" name="idsmu" class="form-control" id="idsmu" maxlength="6">
+                        </div>
+                        <!-- <div class="form-group">
+                            <label class="form-check-label" for="id">Id:</label>
+                            <input type="text" name="id" class="form-control" id="id" maxlength="5">
+                        </div> -->
+                        <div class="mb-3">
+                            <label class="form-check-label" for="nama">Nama:</label>
+                            <input type="text" name="nama" id="nama" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="pass">Password:</label>
-                            <input type="text" name="pass" id="pass" class="form-control">
+                            <label class="form-check-label" for="tgl_in">Tgl In:</label>
+                            <input type="date" name="tgl_in" id="tgl_in" class="form-control">
                         </div>
                         <div class="form-group">
-                            <div class="name">Departmentid:</div>
+                            <div class="name">Sex:</div>
                             <div class="input-group value">
-                                <select id="deptid" name="deptid" class="form-control input--style-6" required>
-                                    @foreach($dept as $deptcode)
-                                    <option value="{{ $deptcode['ID'] }}">{{ $deptcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="name">Plantid:</div>
-                            <div class="input-group value">
-                                <select id="plantid" name="plantid" class="form-control input--style-6" required>
-                                    @foreach($plnt as $plntcode)
-                                    <option value="{{ $plntcode['ID'] }}">{{ $plntcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="name">Roleid:</div>
-                            <div class="input-group value">
-                                <select id="roleid" name="roleid" class="form-control input--style-6" required>
-                                    @foreach($rol as $rolcode)
-                                    <option value="{{ $rolcode['ID'] }}">{{ $rolcode['NAME'] }}</option>
-                                    @endforeach
+                                <select id="sex" name="sex" class="form-control input--style-6" required>
+                                    <option value=""> Masukkan Pilihan :</option>
+                                    <option value="L">L</option>
+                                    <option value="P">P</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="spvid">spvid:</label>
-                            <input type="text" name="spvid" id="spvid" class="form-control" maxlength="6">
+                            <label class="form-check-label" for="bagian">Department:</label>
+                            <input type="text" name="bagian" id="bagian" class="form-control" maxlength="6">
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="mgrid">mgrid:</label>
-                            <input type="text" name="mgrid" id="mgrid" class="form-control" maxlength="6">
+                            <label class="form-check-label" for="tgl_lahir">Tanggal Lahir:</label>
+                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control" maxlength="6">
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="usermail">Usermail:</label>
-                            <input type="text" name="usermail" id="usermail" class="form-control">
+                            <label class="form-check-label" for="gaji">Gaji:</label>
+                            <input type="text" name="gaji" id="gaji" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label" for="jabatan">Jabatan:</label>
+                            <input type="text" name="jabatan" id="jabatan" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label" for="spsi">Spsi:</label>
+                            <input type="text" name="spsi" id="spsi" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label" for="koperasi">Koperasi:</label>
+                            <input type="text" name="koperasi" id="koperasi" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -243,16 +237,16 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete User</h4>
+                    <h4 class="modal-title">Delete Karyawan</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{route('user-delete')}}" method="post">
+                <form action="{{route('karyawan-delete')}}" method="post">
                     @csrf
-                    <input type="hidden" id="delete-user-id" name="id"/>
+                    <input type="hidden" id="delete-karyawan-id" name="id"/>
                     <div class="modal-body">
-                        <p>Yakin ingin menghapus <span class="text-bold" id="delete-user-no"></span></p>
+                        <p>Yakin ingin menghapus <span class="text-bold"></span></p>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -280,8 +274,8 @@
 
 <script>
     $('.nav-link.active').removeClass('active');
-    $('#m-user').addClass('active');
-    $('#m-user').parent().parent().parent().addClass('menu-is-opening menu-open');
+    $('#m-karyawan').addClass('active');
+    $('#m-karyawan').parent().parent().parent().addClass('menu-is-opening menu-open');
 </script>
 <script>
     $(function () {    
@@ -292,48 +286,35 @@
         });
 
         $(document).on('click', '.delete', function () {
-            $('#delete-user-id').val($(this).attr("data-userid"));
+            $('#delete-karyawan-id').val($(this).attr("data-idsmu"));
             $('#modal-delete-user').modal('show');;
         })
 
         $(document).on('click', '.edit', function() {
-            $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
-            var userid = $(this).attr('data-userid');
-            var username = $(this).attr('data-username');
-            var pass = $(this).attr('data-pass');
-            var departmentid = $(this).attr('data-departmentid');
-            var plantid = $(this).attr('data-plantid');
-            var roleid = $(this).attr('data-roleid');
-            var spvid  = $(this).attr('data-spvid');
-            var mgrid  = $(this).attr('data-mgrid');
-            var usermail  = $(this).attr('data-usermail');
-            var $modal = $('#modal-update-user');
-            var $form = $modal.find('form[name="update-user"]');
-            $form.find('input[name="userid"]').val(userid);
-            $form.find('input[name="username"]').val(username);
-            $form.find('input[name="pass"]').val(pass);
-            $form.find('input[name="spvid"]').val(spvid);
-            $form.find('input[name="mgrid"]').val(mgrid);
-            $form.find('input[name="usermail"]').val(usermail);
-            var deptid_options = $form_update.find("select[name='deptid'").children();
-            $.each(deptid_options, function(key, value) {
-                if($(value).val() === departmentid[0]) {
-                    $(value).attr('selected', true);
-                } else {
-                    $(value).attr('selected', false);
-                }
-            });
-            var plantid_options = $form_update.find("select[name='plantid'").children();
-            $.each(plantid_options, function(key, value) {
-                if($(value).val() === plantid[0]) {
-                    $(value).attr('selected', true);
-                } else {
-                    $(value).attr('selected', false);
-                }
-            });
-            var roleid_options = $form_update.find("select[name='roleid'").children();
-            $.each(roleid_options, function(key, value) {
-                if($(value).val() === roleid[0]) {
+            $('#modal-update-karyawan').modal({backdrop: 'static', keyboard: false})  
+            var idsmu = $(this).attr('data-idsmu');
+            var nama = $(this).attr('data-nama');
+            var tgl_in = $(this).attr('data-tgl_in');
+            var department = $(this).attr('data-bagian');
+            var tgl_lahir = $(this).attr('data-tgl_lahir');
+            var gaji = $(this).attr('data-gaji');
+            var jabatan  = $(this).attr('data-jabatan');
+            var spsi  = $(this).attr('data-spsi');
+            var koperasi  = $(this).attr('data-koperasi');
+            var $modal = $('#modal-update-karyawan');
+            var $form = $modal.find('form[name="update-karyawan"]');
+            $form.find('input[name="idsmu"]').val(idsmu);
+            $form.find('input[name="nama"]').val(nama);
+            $form.find('input[name="tgl_in"]').val(tgl_in);
+            $form.find('input[name="department"]').val(department);
+            $form.find('input[name="tgl_lahir"]').val(tgl_lahir);
+            $form.find('input[name="gaji"]').val(gaji);
+            $form.find('input[name="jabatan"]').val(jabatan);
+            $form.find('input[name="spsi"]').val(spsi);
+            $form.find('input[name="koperasi"]').val(koperasi);
+            var sex_options = $form_update.find("select[name='sex'").children();
+            $.each(sex_options, function(key, value) {
+                if($(value).val() === sex[0]) {
                     $(value).attr('selected', true);
                 } else {
                     $(value).attr('selected', false);
@@ -352,41 +333,61 @@
             buttons: [
                 'excel'
             ],
-            ajax: "{{ route('user-list') }}",
-            order: [[ 4, "desc" ]],
+            ajax: "{{ route('karyawan-list') }}",
+            order: [[ 3, "desc" ]],
             columns: [
                 {
-                    data: 'userid',
-                    name: 'userid'
+                    data: 'idsmu',
+                    name: 'idsmu'
+                },
+                // {
+                //     data: 'id',
+                //     name: 'id'
+                // },
+                {
+                    data: 'nama',
+                    name: 'nama'
                 },
                 {
-                    data: 'username',
-                    name: 'username'
+                    data: 'tgl_in',
+                    name: 'tgl_in'
                 },
                 {
-                    data: 'departmentid',
-                    name: 'departmentid'
+                    data: 'sex',
+                    name: 'sex'
                 },
                 {
-                    data: 'plantid',
-                    name: 'plantid'
+                    data: 'bagian',
+                    name: 'bagian'
                 },
                 {
-                    data: 'roleid',
-                    name: 'roleid'
+                    data: 'tgl_lahir',
+                    name: 'tgl_lahir'
                 },
                 {
-                    data: 'spvid',
-                    name: 'spvid'
+                    data: 'gaji',
+                    name: 'gaji'
                 },
                 {
-                    data: 'mgrid',
-                    name: 'mgrid'
+                    data: 'turun_gaji',
+                    name: 'turun_gaji'
                 },
                 {
-                    data: 'usermail',
-                    name: 'usermail'
+                    data: 'jabatan',
+                    name: 'jabatan'
                 },
+                {
+                    data: 'spsi',
+                    name: 'spsi'
+                },
+                {
+                    data: 'koperasi',
+                    name: 'koperasi'
+                },
+                // {
+                //     data: 'data_update',
+                //     name: 'data_update'
+                // },
                 {
                     data: 'action',
                     name: 'action',

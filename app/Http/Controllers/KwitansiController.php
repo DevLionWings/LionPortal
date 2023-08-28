@@ -76,47 +76,47 @@ class KwitansiController extends Controller
                 $year = $interval->format('%y');
     
                 if($year >= 1 && $year <= 3){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 1);
                     $month = 1;
                 } else if ($year >= 3 && $year <= 6){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 2);
                     $month = 2;
                 } else if ($year >= 6 && $year <= 9){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 3);
                     $month = 3;
                 } else if ($year >= 9 && $year <= 12){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 4);
                     $month = 4;
                 } else if ($year >= 12 && $year <= 15){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 5);
                     $month = 5;
                 } else if ($year >= 15 && $year <= 18){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 6);
                     $month = 6;
                 } else if ($year >= 18 && $year <= 21){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 7);
                     $month = 7;
                 } else if ($year >= 21 && $year <= 24){
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 8);
                     $month = 8;
                 } else {
-                    $gajibersih = $gaji;
+                    $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 10);
                     $month = 10;
@@ -124,7 +124,7 @@ class KwitansiController extends Controller
                 
                 $formatrupiah = 'Rp.'.number_format($totalpisah,0,',','.');
                 $lamakerja = $interval->format('%y Tahun %m Bulan %d Hari');
-                $keterangan = 'Uang Pisah a/n '.$nama.','.'ID:'.$id.','.$gaji.'+'.$tunjangan.'*'.$month.'.';
+                $keterangan = 'Uang Pisah a/n '.$nama.' , '.' ID: '.$id.', '.$gaji.' + '.$tunjangan.' * '.$month.' . ';
     
                 $dataArray = [];  
                 $dataAll = array_push($dataArray, [
@@ -171,11 +171,11 @@ class KwitansiController extends Controller
             $nominal = 'Rp.'.number_format($mastertunjangan->value,0,',','.');
 
             if($type == "DUKA"){
-                $keterangan = 'Uang Tunjangan Duka Cita atas Meninggalnya '.$categoryname.' dari '.$nama.','.' ID:'.$id;
+                $keterangan = 'Uang Tunjangan Duka Cita atas Meninggalnya '.$categoryname.' dari '.$nama.', '.' ID: '.$id;
             } else if($type == "PERNIKAHAN"){
-                $keterangan = 'Uang Tunjangan Pernikahan a/n '.$nama.','.' ID:'.$id;
+                $keterangan = 'Uang Tunjangan Pernikahan a/n '.$nama.', '.' ID: '.$id;
             } else {
-                $keterangan = 'Uang Tunjangan Kelahiran Anak ke-1 dari: '.$nama.','.' ID:'.$id;
+                $keterangan = 'Uang Tunjangan Kelahiran Anak ke-1 dari: '.$nama.', '.' ID: '.$id;
             }
         
             $dataArray = [];  
@@ -248,8 +248,8 @@ class KwitansiController extends Controller
                                 "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
                                 "keterangan" => trim($value->untuk).trim($value->keterangan),
                                 "lamakerja" => trim($value->masakerja),
-                                "tglmasuk" => trim($value->tanggalmasuk),
-                                "periode" => "Periode Cuti : ".trim($value->tanggalcuti).' - '.trim($value->tanggalmasuk)
+                                "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
+                                "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y')
                         ]);
                     } else {
                         array_push($datajson["data"], [
@@ -262,9 +262,9 @@ class KwitansiController extends Controller
                                 "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
                                 "keterangan" => "Selisih"." ".trim($value->untuk).trim($value->keterangan),
                                 "lamakerja" => trim($value->masakerja),
-                                "tglmasuk" => trim($value->tanggalmasuk),
+                                "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
                                 "selisih" => number_format($value->selisih,0,',','.').',-',
-                                "periode" => "Periode Cuti : ".trim($value->tanggalcuti).' - '.trim($value->tanggalmasuk)
+                                "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y')
                         ]);
                     }
                 } else {
@@ -279,7 +279,7 @@ class KwitansiController extends Controller
                             "tanggal" => "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
                             "keterangan" => trim($value->keterangan),
                             "lamakerja" => trim($value->masakerja),
-                            "tglpisah" => trim($value->tglpisah)
+                            "tglpisah" => Carbon::parse(trim($value->tglpisah))->translatedFormat('d F Y')
                     ]);  
                 }
             }
@@ -323,6 +323,13 @@ class KwitansiController extends Controller
         $count = DB::connection('pgsql')->table('hris.t_kwitansi')->count();
         $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
         $firstkwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->first();
+        if($firstkwitansi == null){
+            $typedb = '';
+            $nik = '';
+        } else {
+            $typedb = trim($firstkwitansi->type);
+            $nik = trim($firstkwitansi->nik);
+        }
 
         $datacounter = DB::connection('pgsql')->table('master_data.m_counter')
             ->where('counterid', 'CT003')
@@ -365,7 +372,9 @@ class KwitansiController extends Controller
             $exp = explode(".", $subselisih);
             $selisih = implode("", $exp);
             
-            if($count != 4 || $type != trim($firstkwitansi->idkwitansi)){
+            if($count == 4 || $type == $typedb && $id == $nik){
+                return $data = 'Max';
+            } else {
                 $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
                     'idkwitansi' => $nokwitansi,
                     'type' => $type,
@@ -393,7 +402,7 @@ class KwitansiController extends Controller
     
                 $kwn = '';
                 $dataTrim = [];
-                if($datakwitansi == true){
+                if($insert == true){
                     foreach($datakwitansi as $key => $value){
                         array_push($dataTrim, [
                             "idkwitansi" => trim($value->idkwitansi),
@@ -411,8 +420,6 @@ class KwitansiController extends Controller
                 } else {
                     $data = ['']; 
                 }
-            } else {
-                return $data = 'Max';
             }
 
         } else {
@@ -431,8 +438,10 @@ class KwitansiController extends Controller
             $untuk = "";
             $terbilang = "";
             $jamsostek = 0;
-
-            if($count != 4 || $type != trim($firstkwitansi->idkwitansi)){
+            
+            if($count == 4 || $type == $typedb && $id == $nik){
+                return $data = 'Max';
+            } else {
                 $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
                     'idkwitansi' => $nokwitansi,
                     'type' => $type,
@@ -447,10 +456,9 @@ class KwitansiController extends Controller
                     'masakerja' => $masakerja,
                     'tglpisah' => $tglpisah
                 ]);
-    
-                $kwn = '';
-                $dataTrim = [];
-                if($datakwitansi == true){
+            
+                if($insert == true){
+                    $dataTrim = [];
                     foreach($datakwitansi as $key => $value){
                         array_push($dataTrim, [
                             "idkwitansi" => trim($value->idkwitansi),
@@ -468,8 +476,6 @@ class KwitansiController extends Controller
                 } else {
                     $data = ['']; 
                 }
-            } else {
-                return $data = 'Max';
             }
         }   
     }
@@ -501,8 +507,47 @@ class KwitansiController extends Controller
     }
 
     public function delete(Request $request)
-    {
-        $deletedata = DB::connection('pgsql')->table('hris.t_kwitansi')->delete();
-        return $data = 'success';
+    {   
+        $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
+
+        foreach($datakwitansi as $data){
+            $arrayInsert = [];
+            for ($i=0; $i < count($datakwitansi); $i++){
+                $draw = [
+                    'idkwitansi' => $data->idkwitansi,
+                    'type' => $data->type,
+                    'nik' => $data->nik,
+                    'namakaryawan' => $data->namakaryawan,
+                    'bagian' => $data->bagian,
+                    'tanggalcuti' => $data->tanggalcuti,
+                    'tanggalmasuk' => $data->tanggalmasuk,
+                    'jumlahchh' => $data->jumlahchh,
+                    'gaji' => $data->gaji,
+                    'jabatan' => $data->jabatan,
+                    'jamsostek' => $data->jamsostek,
+                    'uangmakan' => $data->uangmakan,
+                    'uangspsi' => $data->uangspsi,
+                    'uangkoperasi' => $data->uangkoperasi,
+                    'lamacuti' => $data->lamacuti,
+                    'total' => $data->total,
+                    'untuk' => $data->untuk,
+                    'keterangan' => $data->keterangan,
+                    'terbilang' => $data->terbilang,
+                    'haribaru' => $data->haribaru,
+                    'harilama' => $data->harilama,
+                    'selisih' => $data->selisih
+                ];
+                $arrayInsert[] = $draw;   
+            }    
+             
+            $insert_bulk = DB::connection('pgsql')->table('hris.t_kwitansi_backup')->insert($arrayInsert);
+        }
+        if ($insert_bulk == true){
+            $deletedata = DB::connection('pgsql')->table('hris.t_kwitansi')->delete();
+            return $data = 'success';
+        } else {
+            return $data = 'failed';
+        }
+       
     }
 }

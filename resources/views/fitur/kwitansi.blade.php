@@ -237,7 +237,7 @@
                             'category' : category
                         },
                         success: function(response) {
-                            console.log(response);
+                            // console.log(response);
                             $('#nama').val(response[0]['NAME']);
                             $('#tglmasuk').val(response[0]['TGLMASUK']);
                             $('#gaji').val(response[0]['GAJI']);
@@ -366,7 +366,7 @@
                     'tglpisah' : tglpisah
                 },
                 success: function(response){ 
-                    console.log(response[0]);
+                    console.log(response);
                     if(response == "Max"){
                         alert("Type Tidak Boleh Sama atau Maximum Input 4 Kwitansi");
                     } else {
@@ -389,8 +389,13 @@
                 url: "/delete",
                 type: 'POST',
                 success: function(response){ 
-                    $('#datakwitansi').DataTable().ajax.reload();
-                    alert("Delete Successfully");
+                    console.log(response);
+                    if(response == 'success'){
+                        $('#datakwitansi').DataTable().ajax.reload();
+                        alert("Delete Successfully");
+                    } else {
+                        alert("Delete Failed");
+                    }
                 },
                 error: function (error) {
                     console.error(error);

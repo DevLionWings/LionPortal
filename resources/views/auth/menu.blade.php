@@ -55,6 +55,7 @@
             </li>
           </ul> -->
         <!-- </li> -->
+        @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD006')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa fa-database"></i>
@@ -90,7 +91,35 @@
               </a>
             </li>
           </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('department') }}" class="nav-link" type="submit" id="m-department"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Master Department
+                </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('role') }}" class="nav-link" type="submit" id="m-role"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Master Role
+                </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('plant') }}" class="nav-link" type="submit" id="m-plant"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  Master Plant
+                </p>
+              </a>
+            </li>
+          </ul>
         </li>
+        @endif
         <li class="nav-item">
           <a href="{{ url('absensi') }}" class="nav-link" type="submit" id="m-Attendance"><i class="nav-icon fas fa-calendar-check"></i>
             <p>
@@ -98,7 +127,7 @@
             </p>
           </a>
         </li>
-        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD002')
+        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-ticket-alt"></i>
@@ -127,7 +156,7 @@
           </ul>
         </li>
         @endif
-        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('departmentid')  == 'DD005')
+        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('departmentid')  == 'DD005' || session('roleid')  == 'RD001')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -163,15 +192,15 @@
               </a>
             </li>
           </ul>
-          <!-- <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="" class="nav-link" type="submit" id="m-Attendance"><i class="far fas fa-receipt nav-icon"></i>
+              <a href="{{ url('karyawan') }}" class="nav-link" type="submit" id="m-karyawan"><i class="far fa-circle nav-icon"></i>
                 <p>
-                  Payroll
+                  List Karyawan
                 </p>
               </a>
             </li>
-          </ul> -->
+          </ul>
           @endif
         </li>
       </ul>

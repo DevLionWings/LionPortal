@@ -57,15 +57,15 @@
                                 
                                 <div class="input-group mb-3">
                                     <input type="text" id="userid" name="userid" class="form-control {{ $errors->has('userid') ? 'is-invalid' : '' }}"
-                                        value="{{ old('userid') }}" placeholder="NIK" autofocus>
+                                        value="{{ old('userid') }}" placeholder="NIK"  maxlength="6" autofocus>
                                     <div class="input-group-append">
                                         <div class="input-group-text">
                                             <span class="fas fa-at"></span>
                                         </div>
                                     </div>
                                     @if($errors->has('userid'))
-                                        <div class="invalid-feedback">
-                                            <strong>{{ $errors->first('userid') }}</strong>
+                                        <div class="invalid-feedback" >
+                                            <strong >{{ $errors->first('userid') }}</strong>
                                         </div>
                                     @endif
                                 </div>
