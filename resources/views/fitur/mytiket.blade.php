@@ -152,13 +152,13 @@
                         <div class="row">
                             <div class="col-md-6">  
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="approve" disabled>Approve By :</label>
+                                    <label class="form-check-label" for="approve" disabled>Approve Manager User :</label>
                                     <input type="text" name="approve" class="form-control" id="approve" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
+                                    <label class="form-check-label" for="approveit" disabled>Approve Manager IT:</label>
                                     <input type="text" name="approveit" class="form-control" id="approveit" readonly>
                                 </div>
                             </div>
@@ -585,7 +585,7 @@
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
 				"sProcessing": "Loading...",
-				"sSearch": "Search :",
+				"sSearch": "Keyword :",
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });

@@ -214,7 +214,8 @@ class TiketController extends Controller
                     $itBtn = $parentBtn. $download_btn.' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                     $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn.' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
                     $managerBtn = $parentBtn. $download_btn. $approveMgrBtn. $rejectBtn;
                     $itBtn = $parentBtn. $download_btn;
@@ -223,13 +224,18 @@ class TiketController extends Controller
                     $managerItBtn = $parentBtn. $download_btn.$approveBtn. $rejectBtn;
                     $itBtn = $parentBtn. $download_btn;
                     $managerBtn = $parentBtn. $download_btn;
+                } else if ($row["statusid"] == 'SD002'){
+                    $itBtn = $parentBtn. $download_btn;
+                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn.' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                 } else {
                     $itBtn = $parentBtn. $download_btn;
                     $managerBtn = $parentBtn. $download_btn;
                     $managerItBtn = $parentBtn. $download_btn;
                 }
                 
-                if($roleid == 'RD004' || $roleid == 'RD005'){
+                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008'){
                     return $itBtn;
                 }
                 if($roleid == 'RD002'){ 
@@ -347,7 +353,8 @@ class TiketController extends Controller
                     $itBtn = $parentBtn. $download_btn.' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
                     data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                     $managerBtn = $parentBtn. $download_btn;
-                    $managerItBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn.' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
                     $managerBtn = $parentBtn. $download_btn. $approveMgrBtn. $rejectBtn;
                     $itBtn = $parentBtn. $download_btn;
@@ -362,7 +369,7 @@ class TiketController extends Controller
                     $managerItBtn = $parentBtn. $download_btn;
                 }
                 
-                if($roleid == 'RD004' || $roleid == 'RD005'){
+                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008'){
                     return $itBtn;
                 }
                 if($roleid == 'RD002'){ 
@@ -573,12 +580,13 @@ class TiketController extends Controller
             $auth = true;
         }
         /* End */
+        $note = '';
 
         if ($auth){
             /* Insert Ticket */ 
             $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix);
             /* Send Email */
-            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1);
+            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1);
        
             return redirect()->route('tiket')->with("success", "Data insert successfully");
         } else { 
@@ -708,7 +716,7 @@ class TiketController extends Controller
         $status = $request->status;
         $approveby_1_date = $request->approvedby1_date;
         $approveby_it_date = $request->approvedbyit_date;
-        $remark = $request->remark;
+        $note = $request->remark;
         
         /* Get Data Ticket */
         $dataTicketapprove = $this->repository->GETTICKETAPPROVE($userid, $ticketno, $roleid);
@@ -721,9 +729,10 @@ class TiketController extends Controller
         $priority = $json['data'][0]['priorid'];
         $priorityName = $json['data'][0]['priority'];
         $subject = $json['data'][0]['subject'];
+        $remark = $json['data'][0]['detail'];
         // $status = $json['data'][0]['status'];
         $mgrApp = $json['data'][0]['mgrid'];
-        
+
         /* Get User Email */ 
         if($category == 'CD001 '){//ketika kategori incindent
             if(!empty($mgrid)){
@@ -801,7 +810,7 @@ class TiketController extends Controller
         /* Update Ticket */
         $updateTicket = $this->repository->CLOSEDTICKET($ticketno, $assignto, $statusid, $remark);
         /* Send Mail */
-        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
+        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
     
         return redirect()->route('tiket')->with("success", "successfully");
     }

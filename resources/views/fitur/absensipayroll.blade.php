@@ -116,7 +116,6 @@
                                             <label>NIP :</label>
                                             <div class="input-group value">
                                                 <select class="select2" data-placeholder="Include NIP" multiple="multiple" id="nip" name="data_nip" style="width: 100%;">
-                                                    <option value=[] >all</option>
                                                     @foreach($nip as $nipcode)
                                                     <option value="{{ $nipcode['ID'] }}">{{ $nipcode['ID'] }} | {{ $nipcode['NAME'] }}</option>
                                                     @endforeach

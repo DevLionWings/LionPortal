@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\File;
+use App\Helpers\Mail;
 use App\Models\Useraccount;
 use App\Models\User;
 use App\Models\Tiket;
@@ -16,6 +17,11 @@ use App\Models\Counter;
 
 class CommentController extends Controller
 {
+    public function __construct(Mail $mail)
+    {
+        $this->mail = $mail;
+    }
+
 
     public function addComment(Request $request)
     {   
@@ -91,14 +97,25 @@ class CommentController extends Controller
             ]);
             DB::commit();
 
+            /* Send Email */
+            $getTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')->where('ticketno', $ticketno)->first();
+            $assignto = $getTicket->assignedto;
+            $dataFrom= DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
+            $dataAssign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
+            $emailFrom = $dataFrom->usermail;
+            $emailSign =  $dataAssign->usermail;
+            $assignNameSign = $dataAssign->username;
+            $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom);
+            /* End Send Email */
+
             $disc = ''; 
             $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
                 ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment', 'a.attachment')
                 ->where('a.ticketno', $ticketno)
-                ->latest('a.ticketno')
-                ->first();
-            
+                ->orderBy('a.createdon', 'desc')
+                ->first();    
+        
             /* Get Comment */
             $commentArray = [];
 

@@ -11,7 +11,7 @@
     <link href="{{asset('plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/dropzone/min/dropzone.min.css')}}" rel="stylesheet">
     <!-- add icon link -->
-    <link rel="stylesheet" href = "{{asset('images/lion.png')}}" type="image/x-icon">
+    <link rel="icon" href = "{{asset('images/iconlion.png')}}" type="image/x-icon">
     @yield('extend-css')
     <link href="{{asset('css/adminlte.css')}}" rel="stylesheet">
     <link href="{{asset('dist/css/adminlte.min.css')}}" rel="stylesheet">
@@ -177,7 +177,7 @@
 
         function timerIncrement($userid) {
             idleTime = idleTime + 1;
-            if (idleTime > 15 && !isIdle) { // 15 minutes
+            if (idleTime > 5 && !isIdle) { // 1 minutes
                 isIdle = true;
                 alert("Session timeout");
                 var url = "{{ route('login') }}";

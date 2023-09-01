@@ -1,126 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
 
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Lion-Log in</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- add icon link -->
-    <link rel="icon" href = "{{asset('images/lion.png')}}" type="image/x-icon">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet"
-        href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
-    <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <style>
-        .login-box, .register-box {
-            width: 100%!important;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>Lion - Portal</title>
+    <!-- <link rel="apple-touch-icon" href="{{asset('backend/images/ico/apple-icon-120.png')}}"> -->
+    <link rel="icon" href="{{asset('images/iconlion.png')}}">
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="{{asset('backend/images/ico/favicon.ico')}}"> -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
+
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/vendors/css/vendors.min.css')}}">
+    <!-- END: Vendor CSS-->
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/bootstrap.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/bootstrap-extended.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/colors.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/components.css')}}">
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/core/colors/palette-gradient.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/pages/authentication.css')}}">
+    <!-- END: Page CSS-->
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/style.css')}}">
+    <!-- END: Custom CSS-->
+
 </head>
-
-<body class="hold-transition login-page">
-    <div class="d-flex flex-row col-md-6 info-box">
-        <div class="d-flex justify-content-center align-items-center col-md-6">
-            <img src="{{ asset('images/logo-login.png') }}" class="img-fluid p-3">
-        </div>
-        <div class="d-flex col-md-6 justify-content-center align-items-center">
-            <form action="#" method="POST">
-                <div class="{{ $auth_type ?? 'login' }}-box">
-                    <div class="card {{ config('card-outline card-primary') }}">
-                        <div class="card-header">
-                            <h3 class="card-title">Selamat Datang</h3>
-                        </div>
-                        <div class="card-body">
-                            <form id="formData" name="formData" method="POST" action="{{ route('login') }}">
-                                {{ csrf_field() }}
-
-                                @if(Session::has('error'))
-                                    <div class="alert alert-danger alert-message">
-                                        {{Session::get('error')}}
-                                    </div>
-                                @endif
-
-                                @if($errors->any())
-                                    <div class="alert alert-danger alert-message">
-                                        {{$errors->first()}}
-                                    </div>
-                                @endif
-                                
-                                <div class="input-group mb-3">
-                                    <input type="text" id="userid" name="userid" class="form-control {{ $errors->has('userid') ? 'is-invalid' : '' }}"
-                                        value="{{ old('userid') }}" placeholder="NIK"  maxlength="6" autofocus>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <span class="fas fa-at"></span>
-                                        </div>
-                                    </div>
-                                    @if($errors->has('userid'))
-                                        <div class="invalid-feedback" >
-                                            <strong >{{ $errors->first('userid') }}</strong>
-                                        </div>
-                                    @endif
+<body class="vertical-layout vertical-menu-modern 1-column  navbar-floating footer-static bg-full-screen-image  blank-page blank-page" data-open="click" data-menu="vertical-menu-modern" data-col="1-column">
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body"> 
+                <section class="row flexbox-container">
+                    <div class="col-xl-8 col-11 d-flex justify-content-center">
+                        <div class="card bg-authentication rounded-0 mb-0">
+                            <div class="row m-0">
+                                <div class="col-lg-6 d-lg-block d-none text-center align-self-center px-1 py-0">
+                                    <img src="{{ asset('images/newlogin3.png') }}" >
                                 </div>
-                                <div class="input-group mb-3">
-                                    <input type="password" id="password" name="password"
-                                        class="form-control {{ $errors->has('pass') ? 'is-invalid' : '' }}"
-                                        placeholder="Password">
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <span
-                                                class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                                <div class="col-lg-6 col-12 p-0">
+                                    <div class="card rounded-0 mb-0 px-2">
+                                        <div class="card-header pb-1">
+                                            @if($message = Session::get('error'))
+                                            <div class="alert alert-danger alert-block">
+                                                <strong>{{ $message }}</strong>
+                                            </div>
+                                            @endif
+                                            <div class="card-title">
+                                                <h4 class="mb-0">Login Lion-Portal</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                    @if($errors->has('pass'))
-                                        <div class="invalid-feedback">
-                                            <strong>{{ $errors->first('pass') }}</strong>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <button type=submit
-                                            class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}"
-                                            style="background-color: #00a150; border-color:#00a150">
-                                            <span class="fas fa-sign-in-alt"></span>
-                                            Login
-                                        </button>
-                                    </div>
-                                </div>
+                                        <p class="px-2">Selamat Datang, Masuk Menggunakan Akun Kamu.</p>
+                                        <div class="card-content">
+                                            <div class="card-body pt-1">
+                                                <form action="{{route('login')}}" method="POST">
+                                                                        
+                                                    @if(Session::has('error'))
+                                                        <div class="alert alert-danger alert-message">
+                                                            {{Session::get('error')}}
+                                                        </div>
+                                                    @endif
 
-                            </form>
+                                                    @if($errors->any())
+                                                        <div class="alert alert-danger alert-message">
+                                                            {{$errors->first()}}
+                                                        </div>
+                                                    @endif
+
+                                                    @csrf
+                                                    <fieldset class="form-label-group form-group position-relative has-icon-left">
+                                                        <input type="text" name="userid" class="form-control {{ $errors->has('userid') ? 'is-invalid' : '' }}" id="userid" placeholder="User ID" value="{{ old('userid') }}" maxlength="6">
+                                                        @if($errors->has('userid'))
+                                                        <span class="invalid-feedback text-danger" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @endif
+                                                        <div class="form-control-position">
+                                                            <i class="feather icon-user"></i>
+                                                        </div>
+                                                        <label for="userid">Userid</label>
+                                                    </fieldset>
+
+                                                    <fieldset class="form-label-group position-relative has-icon-left">
+                                                        <input type="password" name="password" class="form-control {{ $errors->has('pass') ? 'is-invalid' : '' }}"" id="user-password" placeholder="Password">
+                                                        @if($errors->has('pass'))
+                                                        <span class="invalid-feedback text-danger" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                        @endif
+                                                        <div class="form-control-position">
+                                                            <i class="feather icon-lock"></i>
+                                                        </div>
+                                                        <label for="user-password">Password</label>
+                                                    </fieldset>
+                                                    <button type="submit" class="btn btn-success float-right btn-inline btn-block">Login</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <!-- <span class="mt-1 ml-2" style="text-align: left"><a href="">Lupa Password ?</a></span> -->
+                                        <div class="login-footer">
+                                            <div class="divider">
+                                                <div class="divider-text"><a>Lion-Portal</a></div>
+                                            </div>
+                                            <p style="font-size:10px;text-align:center">Build With <i class="feather icon-heart text-danger"></i> by <a>ozi</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                </div>
-            </form>
+                </section>
+            </div>
         </div>
     </div>
-    <!-- /.login-box -->
 
-    <!-- jQuery -->
-    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('js/adminlte.min.js') }}"></script>
+    <!-- BEGIN: Vendor JS-->
+    <script src="{{asset('backend/vendors/js/vendors.min.js')}}"></script>
+    <!-- BEGIN Vendor JS-->
 
-    <script>
-    window.setTimeout(function() {
-    $(".alert-message").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove(); 
-    });
-    }, 5000);
-    </script>
+    <!-- BEGIN: Page Vendor JS-->
+    <!-- END: Page Vendor JS-->
 
+    <!-- BEGIN: Theme JS-->
+    <script src="{{asset('backend/js/core/app-menu.js')}}"></script>
+    <script src="{{asset('backend/js/core/app.js')}}"></script>
+    <script src="{{asset('backend/js/scripts/components.js')}}"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <!-- END: Page JS-->
 </body>
-
 </html>
+

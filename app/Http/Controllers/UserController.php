@@ -96,6 +96,39 @@ class UserController extends Controller
         ->make(true);
     }
 
+    public function dataListLogin(Request $request)
+    {
+        $status = (int)$request->login;
+       
+        $datacounter = DB::connection('pgsql')->table('master_data.m_user')->where('status_login', $status)->get();
+        $dataTrimArray = [];
+        foreach ($datacounter as $key => $value) {
+            array_push($dataTrimArray, [
+                "userid" => trim($value->userid),
+                "username" => trim($value->username),
+                "pass" => trim($value->pass),
+                "departmentid" => trim($value->departmentid),
+                "plantid" => trim($value->plantid),
+                "roleid" => trim($value->roleid),
+                "spvid" => trim($value->spvid),
+                "mgrid" => trim($value->mgrid),
+                "usermail" => trim($value->usermail),
+                "status" => trim($value->status_login)
+            ]);
+        }
+        $data['dat'] = $dataTrimArray;
+        
+        return DataTables::of($data['dat'])
+        ->addColumn('action', function($row){
+            $editloginBtn = '<a href="javascript:void(0)" class="editlogin btn btn-danger btn-sm" 
+            data-userid="'.$row["userid"].'" data-username="'.$row["username"].'"  data-status="'.$row["status"].'"><i class="fas fa-sign-in-alt"></i></a>';
+            return $editloginBtn;
+            
+        })
+        ->rawColumns(['action'])
+        ->make(true);
+    }
+
     public function insert(Request $request)
     {
         $insert = DB::connection('pgsql')->table('master_data.m_user')->insert([
@@ -130,7 +163,20 @@ class UserController extends Controller
             'spvid' => $request->spvid,
             'mgrid' => $request->mgrid,
             'createdon' => date('Y-m-d'),
-            'usermail' => $request->usermail,
+            'usermail' => $request->usermail
+        ]);
+
+        if($update == true){
+            return redirect()->route('user')->with("success", "Data update successfully");
+        } else { 
+            return redirect()->back()->with("error", "error");
+        }
+    }
+
+    public function updateLogin(Request $request)
+    {
+        $update = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $request->userid)->update([
+            'status_login' => $request->status,
         ]);
 
         if($update == true){

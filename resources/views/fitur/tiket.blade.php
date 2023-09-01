@@ -325,13 +325,13 @@
                         <div class="row">
                             <div class="col-md-6">  
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="approve" disabled>Approve By :</label>
+                                    <label class="form-check-label" for="approve" disabled>Approve Manager User :</label>
                                     <input type="text" name="approve" class="form-control" id="approve" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="approveit" disabled>Last Approve :</label>
+                                    <label class="form-check-label" for="approveit" disabled>Approve Manager IT:</label>
                                     <input type="text" name="approveit" class="form-control" id="approveit" readonly>
                                 </div>
                             </div>
@@ -348,23 +348,24 @@
                                 <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
                                 <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <input type="file" name="filecomment" id="filecomment" class="form-control">
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
                             </div>
                             <div class="form-group">
                                 <input type="text" name="comment" id="comment" class="modal-input">
-                                    <!-- <h4 class="form-check-label" style="color:red"></h4>
-                                    <span class="form-check-label" style="font-size:10px"></span>
-                                    <p type="text" style="font-family:'Courier New';font-size:20px" class="form-control" ></p> -->
+
                             </div>
-                        <hr />
-                        <div class="form-group">
+                        
+                    </div> 
+                    <hr />
+                    <div class="col-md-6">
+                        <div class="mb-3">
                             <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
-                    </div>    
+                    </div>   
                 </form>
                 <!-- <div class="modal-body">
                     <div class="form-group">
@@ -638,6 +639,7 @@
 <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script data-pace-options='{ "ajax": false }' src="{{ asset('js/pace.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 
@@ -646,24 +648,8 @@
     $('#m-tiket').addClass('active');
     $('#m-tiket').parent().parent().parent().addClass('menu-is-opening menu-open');
 </script>
-<script>
+<script >
     $(function () {    
-        // var today = new Date();
-        // var day = today.getDate() + "";
-        // var month = (today.getMonth() + 1) + "";
-        // var year = today.getFullYear() + "";
-        // var hour = today.getHours() + "";
-        // var minutes = today.getMinutes() + "";
-        // var seconds = today.getSeconds() + "";
-
-        // day = day;
-        // month = month;
-        // year = year;
-        // hour = hour;
-        // minutes = minutes;
-        // seconds = seconds;
-
-        // var date_range = year + "-" + month + "-" + day;
         var $btn_submit = $("button#btn-sumbit-ticket");
 
         //Initialize Select2 Elements
@@ -677,8 +663,8 @@
         });
 
         $(document).on('click', '.view', function() {
-            $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
             getComment($(this).attr('data-ticket'));
+            
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -697,6 +683,7 @@
             var upload  = $(this).attr('data-upload');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view-user"]');
+            
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="requestor"]').val(requestor);
@@ -713,7 +700,7 @@
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="upload"]').val(upload);
-            $modal.modal('show');
+            $modal.modal('show').reload();
         });
 
         $(document).on('click', '.update', function () {
@@ -897,7 +884,7 @@
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
                     "sProcessing": "Loading...",
-                    "sSearch": "Search:",
+                    "sSearch": "Keyword:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
                 },
                 drawCallback: function() {
@@ -1022,7 +1009,7 @@
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
 				"sProcessing": "Loading...",
-				"sSearch": "Search:",
+				"sSearch": "Keyword:",
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });
@@ -1051,24 +1038,24 @@
                     'comment_body' : comment_body,
                     'filecomment' : file_data
                 },
-                // contentType: false, 
-                // processData: false,
+                // contentType: true, 
+                // processData: true,
                 success: function(response){ 
                     // console.log(response["disc"]);
                     var $viewComment = $('.modal-content .modal-body');
                     var target = $viewComment.find('form-group .modal-input');
+                   
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
-                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</textarea>";
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px readonly>"+data["COMMENT"]+"</textarea>";
                         var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
                         $viewComment.append($nama,$date,$filecomment,$comment,);
                     });
-                    // $('#modal-view-user').modal('show');
-                    // $('#modal-view-user form[id="view-user"] input[id="comment"]').reset();
+    
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().modal('show');
-                    // $view = $('#modal-view-user').find('form[id="view-user"]').find('input[id="comment"]').html($viewComment);
+                    $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
                   
                 },
                 error: function (error) {
@@ -1119,11 +1106,13 @@
                 $.each(response["disc"], function(key, data) {
                     var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
                     var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-                    var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px>" +data["COMMENT"]+"</textarea>";
+                    var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
                     var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
                     $viewComment.append($nama,$date,$filecomment,$comment);
                 });
+                
                 $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+                $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
             }
         })
     }
@@ -1137,16 +1126,16 @@
 }, 5000);
 </script>
 <script>
-    $('#document').ready(function(){
-            $('#close-btn').on('click', function(){
-                location.reload();
-        });
-    });
-    $('#document').ready(function(){
-            $('#close-btn2').on('click', function(){
-                location.reload();
-        });
-    });
+    // $('#document').ready(function(){
+    //         $('#close-btn').on('click', function(){
+    //             location.reload();
+    //     });
+    // });
+    // $('#document').ready(function(){
+    //         $('#close-btn2').on('click', function(){
+    //             location.reload();
+    //     });
+    // });
 </script>
 <script>
     $('.toast').toast('show');

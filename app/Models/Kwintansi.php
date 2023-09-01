@@ -31,6 +31,12 @@ class Kwintansi extends Model
         'keterangan',
         'terbilang',
         'masakerja',
-        'tglpisah'
+        'tglpisah',
+        'type',
+        'category',
+        'selisih',
+        'ket_selisih',
+        'haribaru',
+        'harilama'
     ];
 }

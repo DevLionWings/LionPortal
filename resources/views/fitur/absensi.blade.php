@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <div class="form-group">
-                                            <button id="absen" name="absen" class="absen btn-submit btn btn-success" >Search</button>
+                                            <button id="absen" name="absen" class="absen btn-submit btn btn-secondary" ><i class="fas fa-search"></i></button>
                                         </div>
                                     </div>
                                     <!-- <div class="col-md-2">
@@ -143,7 +143,20 @@
 
         //Initialize Select2 Elements
         $('.select2').select2()
-        $('.datepicker').daterangepicker();
+        $('.datepicker').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('input[name="data_date_range"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        });
+
+        $('input[name="data_date_range"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
 
         $(document).on('click', '.absen', function submit() {
             daterange = $('input[name="data_date_range"]').val();
@@ -253,7 +266,7 @@
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
                     "sProcessing": "Loading...",
-                    "sSearch": "Search:",
+                    "sSearch": "Keyword:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
                 },
             });
@@ -265,6 +278,7 @@
             responsive: false,
             scrollX: true,
             searching: true,
+            pageLength: 30,
             dom: 'Blfrtip',
             buttons: [
                 'excel'
@@ -353,7 +367,7 @@
             oLanguage: {
                 "sLengthMenu": "Tampilkan _MENU_ data",
                 "sProcessing": "Loading...",
-                "sSearch": "Search:",
+                "sSearch": "Keyword:",
                 "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data"
             },
             rowCallback: function(row, data, index){

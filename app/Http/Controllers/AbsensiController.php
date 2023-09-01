@@ -35,11 +35,17 @@ class AbsensiController extends Controller
         $mgrid = Session::get('mgrid');
         $id =  substr($userid, 2);
         $date_arr = $request->get('daterange');
-        $start = explode(' - ',$date_arr)[0];
-        $start_date = date("Y-m-d", strtotime($start));
-        $end = explode(' - ',$date_arr)[1];
-        $end_date = date("Y-m-d", strtotime($end));
-        
+        if(empty($date_arr)){
+            $start = explode(' - ',$date_arr);
+            $start_date = date("Y-m-d");
+            $end = explode(' - ',$date_arr);
+            $end_date = date("Y-m-d");
+        } else {
+            $start = explode(' - ',$date_arr)[0];
+            $start_date = date("Y-m-d", strtotime($start));
+            $end = explode(' - ',$date_arr)[1];
+            $end_date = date("Y-m-d", strtotime($end));
+        }
         /* GET DATA ABSEN */
         $dataAbsen = $this->repository->GETABSEN($id, $userid, $start_date, $end_date, $roleid, $departementid, $mgrid);
         $json = json_decode($dataAbsen, true);

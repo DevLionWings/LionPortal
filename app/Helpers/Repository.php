@@ -241,7 +241,7 @@ class Repository
     public static function GETTIKET($userid, $roleid)
     {   
         try{
-            if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006') {
+            if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008') {
 
                 $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
@@ -330,7 +330,7 @@ class Repository
         // $ticketno = "HLP20230002";
         // $assignto = "101017";
         try{
-            if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006') {
+            if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008') {
                 // $count = DB::connection('pgsql')->table('helpdesk.t_ticket')->count();
                 $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')

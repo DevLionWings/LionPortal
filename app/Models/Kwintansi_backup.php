@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kwintansi extends Model
+class Kwintansibackup extends Model
 {
     use HasFactory;
     protected $connection = 'pgsql';
@@ -31,6 +31,12 @@ class Kwintansi extends Model
         'keterangan',
         'terbilang',
         'masakerja',
-        'tglpisah'
+        'tglpisah',
+        'type',
+        'category',
+        'selisih',
+        'ket_selisih',
+        'haribaru',
+        'harilama'
     ];
 }

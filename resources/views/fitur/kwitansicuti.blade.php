@@ -415,49 +415,69 @@
             var harilama = $('input[name="amountDay2"]').val();
             var selisih = $('input[name="selisih"]').val();
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "/insert",
-                type: 'POST',
-                data: {
-                    'idkaryawan' : id, 
-                    'opsi' : type,
-                    'lamacuti' : lamacuti,
-                    'tglmasuk' : tglmasuk,
-                    'tglcuti' : tglcuti,
-                    'chh' : chh,
-                    'uangmakan' : uangmakan,
-                    'uangspsi' : spsi,
-                    'uangkoperasi' : koperasi,
-                    'nama' : namakaryawan,
-                    'bagian' : bagiankaryawan,
-                    'gaji' : gaji,
-                    'jabatan' : jabatan,
-                    'jamsostek': jamsostek,
-                    'untuk' : untuk,
-                    'keterangan' : keterangan,
-                    'total' : total,
-                    'terbilang' : terbilang,
-                    'haribaru' : haribaru,
-                    'harilama' : harilama,   
-                    'selisih' : selisih
-                },
-                success: function(response){ 
-                    console.log(response[0]);
-                    if(response == "Max"){
-                        alert("Type Tidak Boleh Sama atau Maximum Input 4 Kwitansi");
-                    } else {
-                        document.getElementById("form").reset();
-                        $('#datakwitansi').DataTable().ajax.reload();
-                    }  
-                
-                },
-                error: function (error) {
-                    console.error(error);
-                },
-            });
+            if(id.length < 1) {
+                alert('id harus di isi');
+                return;
+            } else if (tglcuti.length < 1){
+                alert('Tanggal Cuti harus di isi');
+                return;
+            } else if (tglmasuk.length < 1){
+                alert('Tanggal Masuk harus di isi');
+                return;
+            } else if (lamacuti.lengtg < 1){
+                alert('Lama Cuti harus di isi');
+                return;
+            } else if (chh.length < 1){
+                alert('Jumlah Cuti Haid harus di isi');
+                return;
+            } else {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "/insert",
+                    type: 'POST',
+                    data: {
+                        'idkaryawan' : id, 
+                        'opsi' : type,
+                        'lamacuti' : lamacuti,
+                        'tglmasuk' : tglmasuk,
+                        'tglcuti' : tglcuti,
+                        'chh' : chh,
+                        'uangmakan' : uangmakan,
+                        'uangspsi' : spsi,
+                        'uangkoperasi' : koperasi,
+                        'nama' : namakaryawan,
+                        'bagian' : bagiankaryawan,
+                        'gaji' : gaji,
+                        'jabatan' : jabatan,
+                        'jamsostek': jamsostek,
+                        'untuk' : untuk,
+                        'keterangan' : keterangan,
+                        'total' : total,
+                        'terbilang' : terbilang,
+                        'haribaru' : haribaru,
+                        'harilama' : harilama,   
+                        'selisih' : selisih
+                    },
+                    success: function(response){ =
+                        if(response == "Max"){
+                            alert("Maximum Input 4 Kwitansi");
+                        } else if(response == "Duplicate"){
+                            alert("Type Tidak Boleh Sama");
+                        } else if(response == "already exist"){
+                                alert("Kwitansi sudah pernah dibuat");
+                        } else {
+                            document.getElementById("form").reset();
+                            $('#datakwitansi').DataTable().ajax.reload();
+                        }  
+                    
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    },
+                });
+            }
         })
 
         $(document).on('click', '.delete', function() {

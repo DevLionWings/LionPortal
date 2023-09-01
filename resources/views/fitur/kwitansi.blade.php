@@ -345,40 +345,180 @@
             var jabatan = $('input[name="jabatan"]').val();
             var total = $('input[name="total"]').val();
             var masakerja = $('input[name="masakerja"]').val();
-            
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "/insert",
-                type: 'POST',
-                data: {
-                    'idkaryawan' : id, 
-                    'opsi' : type,
-                    'category' : category,
-                    'keterangan' : keterangan,
-                    'nama' : namakaryawan,
-                    'tglmasuk' : tglmasuk,
-                    'gaji' : gaji,
-                    'jabatan' : jabatan,
-                    'total' : total,
-                    'masakerja' : masakerja,
-                    'tglpisah' : tglpisah
-                },
-                success: function(response){ 
-                    console.log(response);
-                    if(response == "Max"){
-                        alert("Type Tidak Boleh Sama atau Maximum Input 4 Kwitansi");
-                    } else {
-                        document.getElementById("form1").reset();
-                        $('#datakwitansi').DataTable().ajax.reload();
-                    }  
-                
-                },
-                error: function (error) {
-                    console.error(error);
-                },
-            });
+            if(type == 'UangPisah'){
+                if(id.length < 6){
+                    alert('id harus di isi');
+                    return;
+                } else if (tglpisah.length < 1) {
+                    alert('tgl pisah harus di isi');
+                    return;
+                } else {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "/insert",
+                        type: 'POST',
+                        data: {
+                            'idkaryawan' : id, 
+                            'opsi' : type,
+                            'category' : category,
+                            'keterangan' : keterangan,
+                            'nama' : namakaryawan,
+                            'tglmasuk' : tglmasuk,
+                            'gaji' : gaji,
+                            'jabatan' : jabatan,
+                            'total' : total,
+                            'masakerja' : masakerja,
+                            'tglpisah' : tglpisah
+                        },
+                        success: function(response){ 
+                            console.log(response);
+                            if(response == "Max"){
+                                alert("Maximum Input 4 Kwitansi");
+                            } else if(response == "Duplicate"){
+                                alert("Type Tidak Boleh Sama");
+                            } else if(response == "already exist"){
+                                alert("Kwitansi sudah pernah dibuat");
+                            } else {
+                                document.getElementById("form1").reset();
+                                $('#datakwitansi').DataTable().ajax.reload();
+                            }  
+                        
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        },
+                    });
+                }
+            } else if (type == 'DUKA') {
+                if(id.length < 1){
+                    alert('digit ID kurang');
+                    return;
+                } else if (category.length < 1) {
+                    alert('category harus di isi');
+                    return;
+                } else {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "/insert",
+                        type: 'POST',
+                        data: {
+                            'idkaryawan' : id, 
+                            'opsi' : type,
+                            'category' : category,
+                            'keterangan' : keterangan,
+                            'nama' : namakaryawan,
+                            'tglmasuk' : tglmasuk,
+                            'gaji' : gaji,
+                            'jabatan' : jabatan,
+                            'total' : total,
+                            'masakerja' : masakerja,
+                            'tglpisah' : tglpisah
+                        },
+                        success: function(response){ 
+                            console.log(response);
+                            if(response == "Max"){
+                                alert("Maximum Input 4 Kwitansi");
+                            } else if(response == "Duplicate"){
+                                alert("Type Tidak Boleh Sama");
+                            } else if(response == "already exist"){
+                                alert("Kwitansi sudah pernah dibuat");
+                            } else {
+                                document.getElementById("form1").reset();
+                                $('#datakwitansi').DataTable().ajax.reload();
+                            }  
+                        
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        },
+                    });
+                }
+            } else if (type == 'PERNIKAHAN' || type == 'KELAHIRAN') {
+                if(id.length < 1){
+                    alert('id harus di isi');
+                    return;
+                } else {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "/insert",
+                        type: 'POST',
+                        data: {
+                            'idkaryawan' : id, 
+                            'opsi' : type,
+                            'category' : category,
+                            'keterangan' : keterangan,
+                            'nama' : namakaryawan,
+                            'tglmasuk' : tglmasuk,
+                            'gaji' : gaji,
+                            'jabatan' : jabatan,
+                            'total' : total,
+                            'masakerja' : masakerja,
+                            'tglpisah' : tglpisah
+                        },
+                        success: function(response){ 
+                            console.log(response);
+                            if(response == "Max"){
+                                alert("Maximum Input 4 Kwitansi");
+                            } else if(response == "Duplicate"){
+                                alert("Type Tidak Boleh Sama");
+                            } else if(response == "already exist"){
+                                alert("Kwitansi sudah pernah dibuat");
+                            } else {
+                                document.getElementById("form1").reset();
+                                $('#datakwitansi').DataTable().ajax.reload();
+                            }  
+                        
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        },
+                    });
+                }
+            } else {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "/insert",
+                    type: 'POST',
+                    data: {
+                        'idkaryawan' : id, 
+                        'opsi' : type,
+                        'category' : category,
+                        'keterangan' : keterangan,
+                        'nama' : namakaryawan,
+                        'tglmasuk' : tglmasuk,
+                        'gaji' : gaji,
+                        'jabatan' : jabatan,
+                        'total' : total,
+                        'masakerja' : masakerja,
+                        'tglpisah' : tglpisah
+                    },
+                    success: function(response){ 
+                        console.log(response);
+                        if(response == "Max"){
+                            alert("Maximum Input 4 Kwitansi");
+                        } else if(response == "Duplicate"){
+                            alert("Type Tidak Boleh Sama");
+                        } else if(response == "already exist"){
+                                alert("Kwitansi sudah pernah dibuat");
+                        } else {
+                            document.getElementById("form1").reset();
+                            $('#datakwitansi').DataTable().ajax.reload();
+                        }  
+                    
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    },
+                });
+            }
         })
 
         $(document).on('click', '.delete', function() {

@@ -20,6 +20,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,12 +95,16 @@ Route::post('/delete', [KwitansiController::class,'delete'])->name('delete-kwita
 Route::get('/kwitansi/cuti', [CutiController::class,'index'])->name('kwitansi-cuti');
 Route::post('/simulasi/cuti', [CutiController::class,'getSimulasi'])->name('simulasi-cuti');
 Route::get('/print/cuti', [CutiController::class,'print'])->name('print-cuti');
-
+/* Master Karyawan */
 Route::get('/karyawan', [KaryawanController::class,'index'])->name('karyawan');
 Route::get('/karyawan/list', [KaryawanController::class,'dataList'])->name('karyawan-list');
 Route::post('/karyawan/delete', [KaryawanController::class,'delete'])->name('karyawan-delete');
 Route::post('/karyawan/insert', [KaryawanController::class,'insert'])->name('karyawan-insert');
 Route::post('/karyawan/update', [KaryawanController::class,'update'])->name('karyawan-update');
+/* History Kwintansi */
+Route::get('/history', [HistoryController::class,'index'])->name('history');
+Route::get('/history/list', [HistoryController::class,'dataList'])->name('history-list');
+Route::post('/history/delete', [HistoryController::class,'delete'])->name('history-delete');
 
 /* Master Data */
 // Master Counter //
@@ -115,9 +120,11 @@ Route::post('/category/insert', [CategoryController::class,'insert'])->name('cat
 // Master User //
 Route::get('/user', [UserController::class,'index'])->name('user');
 Route::get('/user/list', [UserController::class,'dataList'])->name('user-list');
+Route::get('/login/list', [UserController::class,'dataListLogin'])->name('login-list');
 Route::post('/user/delete', [UserController::class,'delete'])->name('user-delete');
 Route::post('/user/insert', [UserController::class,'insert'])->name('user-insert');
 Route::post('/user/update', [UserController::class,'update'])->name('user-update');
+Route::post('/login/update', [UserController::class,'updateLogin'])->name('login-update');
 // Master Departement //
 Route::get('/department', [DepartmentController::class,'index'])->name('department');
 Route::get('/department/list', [DepartmentController::class,'dataList'])->name('department-list');

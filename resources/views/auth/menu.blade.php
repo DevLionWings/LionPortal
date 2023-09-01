@@ -2,7 +2,7 @@
 <aside class="main-sidebar sidebar-dark-primary">
   <!-- Brand Logo -->
   <a class="brand-link">
-    <img src="{{ asset('images/logobar1.png') }}" class="brand-image">
+    <img src="{{ asset('images/logobar1.png') }}" class="brand-image" >
     <span class="brand-text font-weight-light">PORTAL</span>
   </a>
 
@@ -10,7 +10,7 @@
   <div class="sidebar">
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{asset('images/lion.png')}}" class="img-circle elevation-2" alt="User Image">
+        <img src="{{asset('images/iconlion.png')}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
         <a class="d-block">{{ session('username') }}</a>
@@ -55,7 +55,7 @@
             </li>
           </ul> -->
         <!-- </li> -->
-        @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD006')
+        @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD006' || session('roleid')  == 'RD004')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa fa-database"></i>
@@ -127,7 +127,7 @@
             </p>
           </a>
         </li>
-        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
+        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-ticket-alt"></i>
@@ -156,7 +156,7 @@
           </ul>
         </li>
         @endif
-        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('departmentid')  == 'DD005' || session('roleid')  == 'RD001')
+        @if(session('roleid')  == 'RD006' || session('departmentid')  == 'DD005' || session('roleid')  == 'RD001')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -197,6 +197,15 @@
               <a href="{{ url('karyawan') }}" class="nav-link" type="submit" id="m-karyawan"><i class="far fa-circle nav-icon"></i>
                 <p>
                   List Karyawan
+                </p>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ url('history') }}" class="nav-link" type="submit" id="m-history"><i class="far fa-circle nav-icon"></i>
+                <p>
+                  History kwitansi
                 </p>
               </a>
             </li>

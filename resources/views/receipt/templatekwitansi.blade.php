@@ -36,7 +36,7 @@
 							<td style="text-align: right; font-size:13px; vertical-align:bottom;">{{ $data->tanggal }}</td>
 						</tr> 	
 						<tr>  
-						<td style="vertical-align:bottom; font-size:12px;" >&nbsp;&nbsp;&nbsp;Rp <b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
+						<td style="vertical-align:bottom; font-size:12px;" >Rp <b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
 						</tr>
 					</table> 
 				</td>
@@ -82,7 +82,7 @@
 							<td style="font-size:12px;">&nbsp;&nbsp;&nbsp;</td>  
 						</tr> 
 						<tr>  
-							<td style="vertical-align:bottom; font-size:12px;" >&nbsp;&nbsp;&nbsp;Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>  
+							<td style="vertical-align:bottom; font-size:12px;" >Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>  
 						</tr>
 					</table> 
 				</td>
@@ -128,7 +128,7 @@
 							<td style="font-size:12px;">&nbsp;&nbsp;&nbsp;</td>  
 						</tr> 
 						<tr>  
-						<td style="vertical-align:bottom; font-size:12px;" >&nbsp;&nbsp;&nbsp;Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
+						<td style="vertical-align:bottom; font-size:12px;" >Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
 							<td style="vertical-align:bottom; font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selisih Rp <b style="font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ $data->selisih }}</b></td>  
 						</tr>
 					</table> 
@@ -175,7 +175,7 @@
 							<td style="font-size:12px;">&nbsp;&nbsp;&nbsp;</td>  
 						</tr> 
 						<tr>  
-						<td style="vertical-align:bottom; font-size:12px;" >&nbsp;&nbsp;&nbsp;Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
+						<td style="vertical-align:bottom; font-size:12px;" >Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
 							<td style="font-size:13px; text-align: right; vertical-align:top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->tanggal }}</td>  
 						</tr>
 					</table> 

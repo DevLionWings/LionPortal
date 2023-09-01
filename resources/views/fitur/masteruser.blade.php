@@ -37,8 +37,26 @@
                             <div class="float-sm-right">
                                 <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#modal-add-user"><i class="fa fa-plus" aria-hidden="true"></i>Add User</button>
                             </div>
+                            <div class="row align-items-end">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>User Login :</label>
+                                        <div class="input-group value">
+                                            <select id="status" name="status" class="form-control input--style-6" style="width: 100%;">
+                                            <option value=""> all</option>
+                                                <option value="1">Login</option>
+                                                <option value="0">Logout</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <button id="login" name="login" class="login btn-submit btn btn-secondary" ><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                       
                         <div class="card-body">
                             @if(session('success'))
                                 <div class="alert alert-success alert-dismissible alert-message" >
@@ -174,7 +192,7 @@
                     @csrf
                     <div class="modal-body">
                     <div class="form-group">
-                            <label class="form-check-label" for="userid">Userid Id:</label>
+                            <label class="form-check-label" for="userid">Userid:</label>
                             <input type="text" name="userid" class="form-control" id="userid" maxlength="6">
                         </div>
                         <div class="form-group">
@@ -226,6 +244,55 @@
                         <div class="mb-3">
                             <label class="form-check-label" for="usermail">Usermail:</label>
                             <input type="text" name="usermail" id="usermail" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <div class="name">Status Login:</div>
+                            <div class="input-group value">
+                                <select id="status" name="status" class="form-control input--style-6" required>
+                                    <option value="1">Login</option>
+                                    <option value="0">Logout</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div id="modal-updatelogin-user"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Login</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('login-update') }}" method="post" name='updatelogin-user' id='updatelogin-user'>
+                    @csrf
+                    <div class="modal-body">
+                    <div class="form-group">
+                            <label class="form-check-label" for="userid">Userid:</label>
+                            <input type="text" name="userid" class="form-control" id="userid" maxlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="username">Username:</label>
+                            <input type="text" name="username" class="form-control" id="username"></input>
+                        </div>
+                        <div class="form-group">
+                            <div class="name">Status Login:</div>
+                            <div class="input-group value">
+                                <select id="status" name="status" class="form-control input--style-6" required>
+                                    <option value="1">Login</option>
+                                    <option value="0">Logout</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -306,6 +373,7 @@
             var roleid = $(this).attr('data-roleid');
             var spvid  = $(this).attr('data-spvid');
             var mgrid  = $(this).attr('data-mgrid');
+            var status  = $(this).attr('data-status');
             var usermail  = $(this).attr('data-usermail');
             var $modal = $('#modal-update-user');
             var $form = $modal.find('form[name="update-user"]');
@@ -339,8 +407,104 @@
                     $(value).attr('selected', false);
                 }
             });
+            var status_options = $form_update.find("select[name='status'").children();
+            $.each(status_options, function(key, value) {
+                if($(value).val() === status[0]) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
             $modal.modal('show');
         });
+
+        $(document).on('click', '.editlogin', function() {
+            $('#modal-updatelogin-user').modal({backdrop: 'static', keyboard: false})  
+            var userid = $(this).attr('data-userid');
+            var username = $(this).attr('data-username');
+            var $modal = $('#modal-updatelogin-user');
+            var $form = $modal.find('form[name="updatelogin-user"]');
+            $form.find('input[name="userid"]').val(userid);
+            $form.find('input[name="username"]').val(username);
+            var status_options = $form_update.find("select[name='status'").children();
+            $.each(status_options, function(key, value) {
+                if($(value).val() === status[0]) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            $modal.modal('show');
+        });
+
+        $(document).on('click', '.login', function submit() {
+            var login = $('select[name="status"] option:selected').val();
+           
+            $('#list').DataTable().clear().destroy();
+            var table = $('#list').DataTable({
+                processing: true,
+                scrollX: true,
+                serverSide: true,
+                responsive: false,
+                searching: true,
+                dom: 'Blfrtip',
+                buttons: [
+                    'excel'
+                ],
+                ajax: {
+                    url: "{{ route('login-list') }}",
+                    "data": function (d) {
+                        d.login = $('select[name="status"] option:selected').val();
+                    }
+                },
+                order: [[ 4, "desc" ]],
+                columns: [
+                    {
+                        data: 'userid',
+                        name: 'userid'
+                    },
+                    {
+                        data: 'username',
+                        name: 'username'
+                    },
+                    {
+                        data: 'departmentid',
+                        name: 'departmentid'
+                    },
+                    {
+                        data: 'plantid',
+                        name: 'plantid'
+                    },
+                    {
+                        data: 'roleid',
+                        name: 'roleid'
+                    },
+                    {
+                        data: 'spvid',
+                        name: 'spvid'
+                    },
+                    {
+                        data: 'mgrid',
+                        name: 'mgrid'
+                    },
+                    {
+                        data: 'usermail',
+                        name: 'usermail'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                    },
+                ],
+                oLanguage: {
+                    "sLengthMenu": "Tampilkan _MENU_ data",
+                    "sProcessing": "Loading...",
+                    "sSearch": "Search:",
+                    "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
+                },
+            });
+        });
+
 
         var table = $('#list').DataTable({
             processing: true,
