@@ -31,7 +31,7 @@ Helpdesk Ticket
     <p>this ticket has been rejected, here is the detail : </p>
 @endif
 
-<table sstyle="text-align: left;">
+<table style="text-align: left;">
     <tbody>
         <tr>
             <td>Ticket No</td>

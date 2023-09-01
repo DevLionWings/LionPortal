@@ -173,7 +173,7 @@
                     <input type="hidden" id="status" name="status">
                     <input type="hidden" id="roleid" name="roleid">
                     <div class="modal-body">
-                        @if(session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD006')
+                        @if(session('roleid') == 'RD001' || session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD006' || session('roleid') == 'RD007' || session('roleid') == 'RD008')
                         <div class="form-group">
                             <div class="name">User Request :</div>
                             <div class="input-group value">
@@ -355,7 +355,11 @@
                                 <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
                             </div>
                             <div class="form-group">
-                                <input type="text" name="comment" id="comment" class="modal-input">
+                                <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
+                            </div>
+
+                            <div class="form-group">
+                                <span type="text" name="comment" id="comment" class="modal-input" readonly></span>
 
                             </div>
                         
@@ -639,7 +643,6 @@
 <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-<script data-pace-options='{ "ajax": false }' src="{{ asset('js/pace.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 
@@ -663,8 +666,7 @@
         });
 
         $(document).on('click', '.view', function() {
-            getComment($(this).attr('data-ticket'));
-            
+            // getComment($(this).attr('data-ticket'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -700,7 +702,7 @@
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="upload"]').val(upload);
-            $modal.modal('show').reload();
+            $modal.modal('show');
         });
 
         $(document).on('click', '.update', function () {
@@ -1053,10 +1055,8 @@
                         $viewComment.append($nama,$date,$filecomment,$comment,);
                     });
     
-                    $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().modal('show');
-                    $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
-                  
+                    document.getElementById("view-user").reset();
                 },
                 error: function (error) {
                     console.error(error);
@@ -1088,34 +1088,64 @@
             });
         })
 
+        $(document).on('click', '.viewcomment', function() {
+            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/comment",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                success: function(response) {
+                    // console.log(response["disc"])
+                    var $viewComment = $(' <div class="form-group"></div>');
+                    $.each(response["disc"], function(key, data) {
+                        var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
+                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
+                        var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
+                        $viewComment.append($nama,$date,$filecomment,$comment);
+                    });
+    
+                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);                
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
+
     });
 
-    function getComment(ticketno) {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: "POST",
-            url: "/get/comment",
-            data: {
-                'ticketno' : ticketno, 
-            },
-            success: function(response) {
-                // console.log(response["disc"])
-                var $viewComment = $(' <div class="form-group"></div>');
-                $.each(response["disc"], function(key, data) {
-                    var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
-                    var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-                    var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
-                    var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-                    $viewComment.append($nama,$date,$filecomment,$comment);
-                });
+    // function getComment(ticketno) {
+    //     $.ajax({
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         type: "POST",
+    //         url: "/get/comment",
+    //         data: {
+    //             'ticketno' : ticketno, 
+    //         },
+    //         success: function(response) {
+    //             // console.log(response["disc"])
+    //             var $viewComment = $(' <div class="form-group"></div>');
+    //             $.each(response["disc"], function(key, data) {
+    //                 var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
+    //                 var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
+    //                 var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
+    //                 var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
+    //                 $viewComment.append($nama,$date,$filecomment,$comment);
+    //             });
                 
-                $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
-                $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
-            }
-        })
-    }
+    //             $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+    //             // $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
+    //         }
+    //     })
+    // }
 </script>
 
 <script>

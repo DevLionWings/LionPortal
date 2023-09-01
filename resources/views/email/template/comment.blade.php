@@ -38,7 +38,7 @@ Helpdesk Ticket
 
 <p>{{ $mailData['assigned_to'] }} Your ticket has a new comment  : </p>
 
-<table style="margin-bottom: 5px;">
+<table style="text-align: left;">
     <tbody>
         <tr>
             <td>Ticket No</td>
