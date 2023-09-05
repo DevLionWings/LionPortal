@@ -77,42 +77,42 @@ class KwitansiController extends Controller
                 $interval = $datetime1->diff($datetime2);
                 $year = $interval->format('%y');
     
-                if($year >= 1 && $year <= 3){
+                if($year >= 1 && $year < 3){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 1);
                     $month = 1;
-                } else if ($year >= 3 && $year <= 6){
+                } else if ($year >= 3 && $year < 6){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 2);
                     $month = 2;
-                } else if ($year >= 6 && $year <= 9){
+                } else if ($year >= 6 && $year < 9){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 3);
                     $month = 3;
-                } else if ($year >= 9 && $year <= 12){
+                } else if ($year >= 9 && $year < 12){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 4);
                     $month = 4;
-                } else if ($year >= 12 && $year <= 15){
+                } else if ($year >= 12 && $year < 15){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 5);
                     $month = 5;
-                } else if ($year >= 15 && $year <= 18){
+                } else if ($year >= 15 && $year < 18){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 6);
                     $month = 6;
-                } else if ($year >= 18 && $year <= 21){
+                } else if ($year >= 18 && $year < 21){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 7);
                     $month = 7;
-                } else if ($year >= 21 && $year <= 24){
+                } else if ($year >= 21 && $year < 24){
                     $gajibersih = $gaji + $tunjangan;
                     $formatgaji = 'Rp.'.number_format($gajibersih,0,',','.');
                     $totalpisah = round($gajibersih * 8);

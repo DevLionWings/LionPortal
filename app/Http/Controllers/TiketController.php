@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response as FacadeResponse;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use Illuminate\Http\File;
 use App\Helpers\Mail;
 use App\Helpers\Response;
 use App\Helpers\Repository;
+use App\Helpers\Validate;
 use App\Models\Counter;
 use App\Models\Tiketdiscussion;
 use DataTables;
@@ -19,11 +21,12 @@ Use Redirect;
 
 class TiketController extends Controller
 {
-    public function __construct(Repository $repository, Response $response, Mail $mail)
+    public function __construct(Repository $repository, Response $response, Mail $mail, Validate $validate)
     {
         $this->repository = $repository;
         $this->response = $response;
         $this->mail = $mail;
+        $this->validate = $validate;
     }
 
     public function tiket(Request $request)
@@ -394,7 +397,7 @@ class TiketController extends Controller
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $spvid = Session::get('spvid');
-        $mgrid = Session::get('mgrid');
+        $mgrUser = Session::get('mgrid');
         $departmentid = Session::get('departmentid');
         $createdby = Session::get('userid');
 
@@ -460,18 +463,18 @@ class TiketController extends Controller
             $approvedby_1 = $userid;
             $approvedby_it = $userid;
             $auth = true;
-        } else if($roleid == 'RD004' || $roleid == 'RD005') {
+        } else if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008') {
             $assign = $userid;
             $approvedby_1 = '';
-            $approvedby_it = $mgrid;
+            $approvedby_it = $mgrUser;
             $auth = true;
         } else if($category == 'CD001'){
             $assign = '';
             $approvedby_1 = '';
-            $approvedby_it = '';
+            $approvedby_it = $mgrIt;
             $auth = true;
         } else {
-            $assign = $mgrid;
+            $assign = $mgrUser;
             $approvedby_1 = '';
             $approvedby_it = '';
             $auth = true;
@@ -482,7 +485,7 @@ class TiketController extends Controller
         $dataCategory = DB::connection('pgsql')->table('master_data.m_category')->where('categoryid', $category)->first();
         $flaggingCat =  $dataCategory->approval;
         $cateName =  $dataCategory->description;
-        $cateId =  $dataCategory->categoryid;
+        $category =  $dataCategory->categoryid;
         if ($flaggingCat == 'X' ){
             if ($roleid == 'RD002'){
                 $status = 'WAITING FOR APPROVAL';
@@ -491,7 +494,7 @@ class TiketController extends Controller
                 $status = 'WAITING FOR APPROVAL';
                 $statusid = 'SD001';
                 $auth = true;
-            } else if($roleid == 'RD004' || $roleid == 'RD005') {
+            } else if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008') {
                 $status = 'IN PROGRESS';
                 $statusid = 'SD002';
                 $auth = true;
@@ -500,7 +503,7 @@ class TiketController extends Controller
                 $statusid = 'SD002';
                 $auth = true;
             }
-        } else if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006') {
+        } else if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008') {
             $status = 'IN PROGRESS';
             $statusid = 'SD002';
             $auth = true;
@@ -509,85 +512,25 @@ class TiketController extends Controller
             $statusid = 'SD006';
             $auth = true;
         }
-       
-         /* Get User Email */ 
-        if($cateId == "CD001"){
-            if ($roleid == "RD002"){
-                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->first();
-                $emailSign = $dataEmail->usermail;
-                $assignNameSign = $dataEmail->username;
-                $emailReq = 'blank@lionwings.com';
-                $emailApprove1 = 'blank@lionwings.com';
-                $auth = true;
-            } else if ($roleid == "RD006"){
-                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
-                $emailSign = $dataEmail[1]->usermail;
-                $assignNameSign = $dataEmail[1]->username;
-                $emailReq = $dataEmail[0]->usermail;
-                $emailApprove1 = 'blank@lionwings.com';
-                $auth = true;
-            } else {
-                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();
-                $emailSign = $dataEmail[2]->usermail;
-                $assignNameSign = $dataEmail[2]->username;
-                $emailReq = $dataEmail[0]->usermail;
-                $emailApprove1 = $dataEmail[1]->usermail;
-                $auth = true;
-            }
-        } else if ($roleid == "RD002"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->first();
-            $emailSign = $dataEmail->usermail;
-            $assignNameSign = $dataEmail->username;
-            $emailReq = 'blank@lionwings.com';
-            $emailApprove1 = 'blank@lionwings.com';
-            $auth = true;
-        } else if ($roleid == "RD003"){
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->first();
-            $emailSign = $dataEmail->usermail;
-            $assignNameSign = $dataEmail->username;
-            $emailReq = 'blank@lionwings.com';
-            $emailApprove1 = 'blank@lionwings.com';
-            $auth = true;
-        } else if ($roleid == "RD006"){
-            if($userreq == $userid) {
-                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
-                $emailSign = $dataEmail[1]->usermail;
-                $assignNameSign = $dataEmail[1]->username;
-                $emailReq = $dataEmail[0]->usermail;
-                $emailApprove1 = $dataEmail[0]->usermail;
-                $auth = true;
-            } else {
-                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $assignto])->get();
-                $emailSign = $dataEmail[1]->usermail;
-                $assignNameSign = $dataEmail[1]->username;
-                $emailReq = $dataEmail[0]->usermail;
-                $emailApprove1 = $dataEmail[0]->usermail;
-                $auth = true;
-            }
-        } else if ($userreq == $mgrIt) {
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();
-            $emailSign = $dataEmail[1]->usermail;
-            $assignNameSign = $dataEmail[1]->username;
-            $emailReq = $dataEmail[0]->usermail;
-            $emailApprove1 = $dataEmail[0]->usermail;
-            $auth = true;
-        } else {
-            $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', [$userreq, $mgrIt, $userid])->get();
-            $emailSign = $dataEmail[2]->usermail;
-            $assignNameSign = $dataEmail[2]->username;
-            $emailReq = $dataEmail[0]->usermail;
-            $emailApprove1 = $dataEmail[1]->usermail;
-            $auth = true;
-        }
-        /* End */
+        
+        $flag = 'ADD';
         $note = '';
 
+        /* Get User Email */ 
+        $emailADD = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
+        $emailSign = $emailADD['emailSign'];
+        $emailReq = $emailADD['emailReq'];
+        $assignNameSign = $emailADD['assignNameSign'];
+        $emailApprove1 = $emailADD['emailApprove1'];
+        $emailApproveit =  $emailADD['emailApproveit'];
+        /* End */
+        
         if ($auth){
             /* Insert Ticket */ 
             $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix);
             /* Send Email */
-            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1);
-       
+            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag);
+    
             return redirect()->route('tiket')->with("success", "Data insert successfully");
         } else { 
             return redirect()->back()->with("error", "error");
@@ -614,9 +557,9 @@ class TiketController extends Controller
         /* Get Data Ticket */
         $dataTicketapprove = $this->repository->GETTICKETAPPROVE($userid, $ticketno, $roleid);
         $json = json_decode($dataTicketapprove, true);
-        $requestor = $json['data'][0]['userid'];
-        $approve1 = $json['data'][0]['approvedby_1'];
-        $approveit = $json['data'][0]['approvedby_it'];
+        $userreq = $json['data'][0]['userid'];
+        $mgrUser = $json['data'][0]['approvedby_1'];
+        $mgrIt = $json['data'][0]['approvedby_it'];
         $category = $json['data'][0]['categoryid'];
         $cateName= $json['data'][0]['category'];
         $priority = $json['data'][0]['priorid'];
@@ -624,78 +567,23 @@ class TiketController extends Controller
         $subject = $json['data'][0]['subject'];
         // $status = $json['data'][0]['status'];
         $remark = $json['data'][0]['detail'];
-        $mgrApp = $json['data'][0]['mgrid'];
-        
+        // $mgrApp = $json['data'][0]['mgrid'];
+        $flag = 'UPD';
+        $note = '';
+
         /* Get User Email */ 
-        if($category == 'CD001 '){//ketika kategori incindent
-            if(!empty($mgrid)){
-                /* Get Email Signto */
-                $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->get();
-                $emailSign = $dataEmailSign[0]->usermail;
-                $assignNameSign = $dataEmailSign[0]->username;
-            } else {
-                /* Get Email Signto */
-                $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assign)->get();
-                $emailSign = $dataEmailSign[0]->usermail;
-                $assignNameSign = $dataEmailSign[0]->username;
-            }
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            /* Get Email Approve 1 */
-            if(!empty($mgrid)){
-                /*  Get Email Approve 1 */
-                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrApp)->get();
-                $emailApprove1 = $dataEmailSign[0]->usermail;
-                $assignNameApprove1 = $dataEmailSign[0]->username;
-            } else {
-                /*  Get Email Approve 1 */
-                $emailApprove1 = 'blank@lionwings.com';
-                $assignNameApprove1 = 'Blank';
-            }
-        } else if($roleid == 'RD002'){ //ketika kategori incindent
-            /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
-            $emailSign = $dataEmailSign[0]->usermail;
-            $assignNameSign = $dataEmailSign[0]->username;
-            $emailApprove1 = 'blank@lionwings.com';
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            $emailApprove1 = 'blank@lionwings.com';
-        } else if($roleid == 'RD006'){ 
-            /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
-            $emailSign = $dataEmailSign[0]->usermail;
-            $assignNameSign = $dataEmailSign[0]->username;
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            /* Get Email Approve 1 */
-            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
-            $emailApprove1 = $dataEmailApprove1[0]->usermail;
-            $assignNameApprove1 = $dataEmailApprove1[0]->username;
-        } else {
-            /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
-            $emailSign = $dataEmailSign[0]->usermail;
-            $assignNameSign = $dataEmailSign[0]->username;
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            /* Get Email Approve 1 */
-            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
-            $emailApprove1 = $dataEmailApprove1[0]->usermail;
-            $assignNameApprove1 = $dataEmailApprove1[0]->username;
-        }
+        $emailADD = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
+        $emailSign = $emailADD['emailSign'];
+        $emailReq = $emailADD['emailReq'];
+        $assignNameSign = $emailADD['assignNameSign'];
+        $emailApprove1 = $emailADD['emailApprove1'];
+        $emailApproveit =  $emailADD['emailApproveit'];
+        /* End */
+
         /* Update Ticket */
         $updateTicket = $this->repository->UPDATETICKET($userid, $ticketno, $assignto, $approvedby1, $approveby_it, $rejectedby, $statusid, $approveby_1_date, $approveby_it_date, $roleid);
         /* Send Mail */
-        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
+        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag); 
 
         return redirect()->route('tiket')->with("success", "successfully");
     }
@@ -721,9 +609,9 @@ class TiketController extends Controller
         /* Get Data Ticket */
         $dataTicketapprove = $this->repository->GETTICKETAPPROVE($userid, $ticketno, $roleid);
         $json = json_decode($dataTicketapprove, true);
-        $requestor = $json['data'][0]['userid'];
-        $approve1 = $json['data'][0]['approvedby_1'];
-        $approveit = $json['data'][0]['approvedby_it'];
+        $userreq = $json['data'][0]['userid'];
+        $mgrUser = $json['data'][0]['approvedby_1'];
+        $mgrIt = $json['data'][0]['approvedby_it'];
         $category = $json['data'][0]['categoryid'];
         $cateName= $json['data'][0]['category'];
         $priority = $json['data'][0]['priorid'];
@@ -732,85 +620,21 @@ class TiketController extends Controller
         $remark = $json['data'][0]['detail'];
         // $status = $json['data'][0]['status'];
         $mgrApp = $json['data'][0]['mgrid'];
+        $flag = 'CLS';
 
         /* Get User Email */ 
-        if($category == 'CD001 '){//ketika kategori incindent
-            if(!empty($mgrid)){
-                /* Get Email Signto */
-                $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
-                $emailSign = $dataEmailSign[0]->usermail;
-                $assignNameSign = $dataEmailSign[0]->username;
-            } else {
-                /* Get Email Signto */
-                $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approveit)->get();
-                $emailSign = $dataEmailSign[0]->usermail;
-                $assignNameSign = $dataEmailSign[0]->username;
-            }
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            /* Get Email Approve 1 */
-            if(!empty($mgrid)){
-                /*  Get Email Approve 1 */
-                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrApp)->get();
-                $emailApprove1 = $dataEmailSign[0]->usermail;
-                $assignNameApprove1 = $dataEmailSign[0]->username;
-            } else {
-                /*  Get Email Approve 1 */
-                $emailSign = 'Blank';
-                $assignNameSign = 'blank@lionwings.com';
-            }
-        } else if($roleid == 'RD002'){ //ketika kategori incindent
-            /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
-            $emailSign = $dataEmailSign[0]->usermail;
-            $assignNameSign = $dataEmailSign[0]->username;
-            $emailApprove1 = 'blank@lionwings.com';
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            $emailApprove1 = 'blank@lionwings.com';
-        } else if($roleid == 'RD006'){ 
-            /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->get();
-            $emailSign = $dataEmailSign[0]->usermail;
-            $assignNameSign = $dataEmailSign[0]->username;
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            /* Get Email Approve 1 */
-            $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->get();
-            $emailApprove1 = $dataEmailApprove1[0]->usermail;
-            $assignNameApprove1 = $dataEmailApprove1[0]->username;
-        } else {
-            /* Get Email Signto */
-            $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrid)->get();
-            $emailSign = $dataEmailSign[0]->usermail;
-            $assignNameSign = $dataEmailSign[0]->username;
-            /* Get Email Requestor */
-            $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->get();
-            $emailReq = $dataEmailReq[0]->usermail;
-            $assignNameReq = $dataEmailReq[0]->username;
-            if(!empty($approve1)){
-                /* Get Email Approve IT */
-                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approveit)->first();
-                $emailApprove1 = $dataEmailApprove1->usermail;
-                $assignNameApprove1 = $dataEmailApprove1->username;
-            } else {
-                /* Get Email Approve 1 */
-                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $approve1)->first();
-                $emailApprove1 = $dataEmailApprove1->usermail;
-                $assignNameApprove1 = $dataEmailApprove1->username;
-            }
+        $dataCLS = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
+        $emailSign = $dataCLS['emailSign'];
+        $emailReq = $dataCLS['emailReq'];
+        $assignNameSign = $dataCLS['assignNameSign'];
+        $emailApprove1 = $dataCLS['emailApprove1'];
+        $emailApproveit =  $dataCLS['emailApproveit'];
+        /* End */
         
-        }
         /* Update Ticket */
-        $updateTicket = $this->repository->CLOSEDTICKET($ticketno, $assignto, $statusid, $remark);
+        $updateTicket = $this->repository->CLOSEDTICKET($ticketno, $assignto, $statusid, $note);
         /* Send Mail */
-        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1); 
+        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag); 
     
         return redirect()->route('tiket')->with("success", "successfully");
     }

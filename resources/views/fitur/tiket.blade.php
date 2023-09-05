@@ -358,7 +358,7 @@
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" id="viewcomment">
                                 <span type="text" name="comment" id="comment" class="modal-input" readonly></span>
 
                             </div>
@@ -495,7 +495,7 @@
                             </div>
                         </div>
                         @endif
-                        @if(session('roleid') == 'RD004' || session('roleid') == 'RD005')
+                        @if(session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD007' || session('roleid') == 'RD008')
                         <div class="form-group">
                             <div class="input-group value">
                                 <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD002">
@@ -1016,6 +1016,36 @@
 			},
         });
 
+        $(document).on('click', '.viewcomment', function() {
+            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/comment",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                success: function(response) {
+                    // console.log(response["disc"])
+                    var $viewComment = $(' <div class="form-group"></div>');
+                    $.each(response["disc"], function(key, data) {
+                        var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
+                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
+                        var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
+                        $viewComment.append($nama,$date,$filecomment,$comment);
+                    });
+    
+                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
+                             
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
 
         $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
@@ -1056,7 +1086,7 @@
                     });
     
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().modal('show');
-                    document.getElementById("view-user").reset();
+        
                 },
                 error: function (error) {
                     console.error(error);
@@ -1087,36 +1117,6 @@
                 }
             });
         })
-
-        $(document).on('click', '.viewcomment', function() {
-            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: "POST",
-                url: "/get/comment",
-                data: {
-                    'ticketno' : ticketno, 
-                },
-                success: function(response) {
-                    // console.log(response["disc"])
-                    var $viewComment = $(' <div class="form-group"></div>');
-                    $.each(response["disc"], function(key, data) {
-                        var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
-                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
-                        var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-                        $viewComment.append($nama,$date,$filecomment,$comment);
-                    });
-    
-                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);                
-                },
-                error: function (error) {
-                    console.error(error);
-                },
-            })
-        });
 
     });
 

@@ -13,12 +13,12 @@ Helpdesk Ticket
 
 @if($mailData['statusid'] == 'SD001')
     <p style="font-weight: bold;">Halo, {{ $mailData['assigned_to'] }}</p>
-    <p>{{ $mailData['username'] }} this ticket need your approval, please open helpdesk website : </p>
+    <p>this ticket need your approval, please open helpdesk website : </p>
 @endif
 
 @if($mailData['statusid'] == 'SD002')
     <p style="font-weight: bold;">Halo, {{ $mailData['assigned_to'] }}</p>
-    <p>{{ $mailData['username'] }} has been assigned this ticket  to you, here is the detail :</p>
+    <p>this ticket assigned to you, here is the detail :</p>
 @endif
 
 @if($mailData['statusid'] == 'SD003')
@@ -31,39 +31,40 @@ Helpdesk Ticket
     <p>this ticket has been rejected, here is the detail : </p>
 @endif
 
-<table style="text-align: left;">
+<table style="text-align: top;" cellspacing="10">
     <tbody>
         <tr>
-            <td>Ticket No</td>
+            <td style="text-align: top;">Ticket No :</td>
             <td>: {{ $mailData['ticketno'] }}</td>
         </tr>
         <tr>
-            <td>Category</td>
+            <td style="text-align: top;">Category</td>
             <td>: {{ $mailData['categoryname'] }}</td>
         </tr>
         <tr>
-            <td>Priority</td>
+            <td style="text-align: top;">Priority</td>
             <td>: {{ $mailData['priorityname'] }}</td>
         </tr>
         <tr>
-            <td>Subject</td>
+            <td style="text-align: top;">Subject</td>
             <td>: {{ $mailData['subject'] }}</td>
         </tr>
         <tr>
-            <td>Detail</td>
+            <td style="text-align: top;">Detail</td>
             <td>: {{ $mailData['detail'] }}</td>
         </tr>
         <tr>
-            <td>Status</td>
+            <td style="text-align: top;">Status</td>
             <td>: {{ $mailData['status'] }}</td>
         </tr>
+        @if($mailData['note'] != '')
         <tr>
-            <td>Remark</td>
+            <td style="text-align: top;">Remark</td>
             <td>: {{ $mailData['note'] }}</td>
         </tr>
-
+        @endif
         <tr>
-            <td>Assigned To</td>
+            <td style="text-align: top;">Assign To</td>
             <td>: {{ $mailData['assigned_to'] }}</td>
         </tr>
     </tbody>

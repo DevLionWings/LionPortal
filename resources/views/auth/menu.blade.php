@@ -127,7 +127,7 @@
             </p>
           </a>
         </li>
-        @if(session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
+        @if(session('roleid')  == 'RD003' || session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-ticket-alt"></i>
