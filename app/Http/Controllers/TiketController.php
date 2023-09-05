@@ -595,7 +595,7 @@ class TiketController extends Controller
         $roleid = Session::get('roleid');
         $mgrid = Session::get('mgrid');
         $ticketno = $request->ticketno;
-        $assignto = $request->assignto;
+        // $assignto = $request->assignto; #assign to mgrIT#
         $assign = $request->assignto;
         $approvedby1 = $request->approvedby1;
         $approveby_it = $request->approvedbyit;
@@ -605,7 +605,7 @@ class TiketController extends Controller
         $approveby_1_date = $request->approvedby1_date;
         $approveby_it_date = $request->approvedbyit_date;
         $note = $request->remark;
-        
+    
         /* Get Data Ticket */
         $dataTicketapprove = $this->repository->GETTICKETAPPROVE($userid, $ticketno, $roleid);
         $json = json_decode($dataTicketapprove, true);
@@ -618,6 +618,7 @@ class TiketController extends Controller
         $priorityName = $json['data'][0]['priority'];
         $subject = $json['data'][0]['subject'];
         $remark = $json['data'][0]['detail'];
+        $assignto = $json['data'][0]['assignedto'];
         // $status = $json['data'][0]['status'];
         $mgrApp = $json['data'][0]['mgrid'];
         $flag = 'CLS';

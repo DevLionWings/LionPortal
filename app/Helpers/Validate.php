@@ -184,19 +184,32 @@ class Validate
             }
             return $dataUPD;
         } else if($flag == 'CLS'){
-            if(isset($mgrUser)){
+            if($roleid == "RD006"){
                 /* Get Email Signto */
-                $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
+                $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
                 // $emailSign = $dataEmailSign->usermail;
                 // $assignNameSign = $dataEmailSign->username;
                 /* Get Email Requestor */
                 $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userreq)->first();
                 // $emailReq = $dataEmailReq->usermail;
                 // $assignNameReq = $dataEmailReq->username;
+                /* Get Email Approve1 */
+                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
+                // $emailApprove1 = $dataEmailApprove1->usermail;
                 /* Get Email IT */
-                $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
-                // $emailApprove1 = $dataEmailApproveit->usermail;
                 $dataEmailApproveit = 'NOT';
+            }  else if(isset($mgrUser)){ #incident#
+                    /* Get Email Signto */
+                    $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
+                    // $emailSign = $dataEmailSign->usermail;
+                    // $assignNameSign = $dataEmailSign->username;
+                    /* Get Email Requestor */
+                    $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userreq)->first();
+                    // $emailReq = $dataEmailReq->usermail;
+                    /* Get Email IT */
+                    $dataEmailApprove1 = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
+                    // $emailApproveit = $dataEmailApproveit->usermail;
+                    $dataEmailApproveit = 'NOT';
             } else {
                 /* Get Email Signto */
                 $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
