@@ -173,7 +173,7 @@ class TiketController extends Controller
                     "approvedbyit_date" => trim($value['approvedbyit_date']),
                     "createdby" => trim($value['createdby']),
                     "approvedby1Name" => trim($value['approved1']),
-                    "approvedbyitName" => trim($value['approvedit']),
+                    "approvedbyitName" => trim($value['approvedit'])
                     
                 ]);
             }

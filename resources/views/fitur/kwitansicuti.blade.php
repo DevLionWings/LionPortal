@@ -218,7 +218,7 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-check-label" for="keterangan">Keterangan:</label>
-                                                    <textarea type="text" name="keterangan" class="form-control" id="keterangan" readonly></textarea>
+                                                    <textarea type="text" name="keterangan" class="form-control" id="keterangan"></textarea>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-check-label" for="total">Total:</label>

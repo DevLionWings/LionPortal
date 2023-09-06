@@ -93,7 +93,7 @@
                                                 </div>
                                                 <div class="mb-3" id="hide4">
                                                     <label class="form-check-label" for="detail">Keterangan:</label>
-                                                    <textarea type="text" name="keterangan" class="form-control" id="keterangan" readonly></textarea>
+                                                    <textarea type="text" name="keterangan" class="form-control" id="keterangan"></textarea>
                                                 </div>
                                                 <div class="mb-6" id="hide12">
                                                     <button type="button" id="check" class="check btn btn-primary btn-md float-right">Check</button>
@@ -103,6 +103,10 @@
                                                 <div class="mb-3" id="hide5">
                                                     <label class="form-check-label" for="nama">Nama Karyawan:</label>
                                                     <input type="text" name="nama" id="nama" class="form-control"  $value="" readonly>
+                                                </div>
+                                                <div class="mb-3" id="hide15">
+                                                    <label class="form-check-label" for="bagian">Bagian Karyawan:</label>
+                                                    <input type="text" name="bagian" id="bagian" class="form-control" readonly>
                                                 </div>
                                                 <div class="mb-3" id="hide6">
                                                     <label class="form-check-label" >Tanggal Masuk:</label>
@@ -213,6 +217,7 @@
     $(function () { 
         $(document).on('click', '.check', function() {
             var id = $('input[name="idkaryawan"]').val();
+            var bagian = $('input[name="bagian"]').val();
             var tglpisah = $('input[name="tglpisah"]').val();
             var type = $('select[name="opsi"] option:selected').val();
             var category = $('select[name="category"] option:selected').val();
@@ -239,6 +244,7 @@
                         success: function(response) {
                             // console.log(response);
                             $('#nama').val(response[0]['NAME']);
+                            $('#bagian').val(response[0]['BAGIAN']);
                             $('#tglmasuk').val(response[0]['TGLMASUK']);
                             $('#gaji').val(response[0]['GAJI']);
                             $('#jabatan').val(response[0]['TUNJANGAN']);
@@ -270,6 +276,7 @@
                         },
                         success: function(response) {
                             $('#nama').val(response[0]['NAME']);
+                            $('#bagian').val(response[0]['BAGIAN']);
                             $('#tglmasuk').val(response[0]['TGLMASUK']);
                             $('#gaji').val(response[0]['GAJI']);
                             $('#jabatan').val(response[0]['TUNJANGAN']);
@@ -298,6 +305,7 @@
                         },
                         success: function(response) {
                             $('#nama').val(response[0]['NAME']);
+                            $('#bagian').val(response[0]['BAGIAN']);
                             $('#tglmasuk').val(response[0]['TGLMASUK']);
                             $('#gaji').val(response[0]['GAJI']);
                             $('#jabatan').val(response[0]['TUNJANGAN']);
@@ -322,6 +330,7 @@
                     },
                     success: function(response) {
                         $('#nama').val(response[0]['NAME']);
+                        $('#bagian').val(response[0]['BAGIAN']);
                         $('#tglmasuk').val(response[0]['TGLMASUK']);
                         $('#gaji').val(response[0]['GAJI']);
                         $('#tunjangan').val(response[0]['TUNJANGAN']);
@@ -335,6 +344,7 @@
 
         $(document).on('click', '.save', function() {
             var id = $('input[name="idkaryawan"]').val();
+            var bagian = $('input[name="bagian"]').val();
             var tglpisah = $('input[name="tglpisah"]').val();
             var type = $('select[name="opsi"] option:selected').val();
             var category = $('select[name="category"] option:selected').val();
@@ -462,7 +472,7 @@
                             'tglpisah' : tglpisah
                         },
                         success: function(response){ 
-                            console.log(response);
+                            // console.log(response);
                             if(response == "Max"){
                                 alert("Maximum Input 4 Kwitansi");
                             } else if(response == "Duplicate"){
@@ -501,7 +511,7 @@
                         'tglpisah' : tglpisah
                     },
                     success: function(response){ 
-                        console.log(response);
+                        // console.log(response);
                         if(response == "Max"){
                             alert("Maximum Input 4 Kwitansi");
                         } else if(response == "Duplicate"){
@@ -623,6 +633,7 @@
         var hide12 = $("#hide12");
         var hide13 = $("#hide13");
         var hide14 = $("#hide14");
+        var hide15 = $("#hide15");
         
         hide1.hide();
         hide2.hide();
@@ -638,6 +649,7 @@
         hide12.hide();
         hide13.hide();
         hide14.hide();
+        hide15.hide();
 
         select.change(function() {
             value = $(this).find(":selected").val()
@@ -656,6 +668,7 @@
                 hide12.show();
                 hide13.show();
                 hide14.show();
+                hide15.show();
             } else if(value == 'DUKA'){
                 hide1.show();
                 hide2.hide();
@@ -672,6 +685,7 @@
                 hide12.show();
                 hide13.show();
                 hide14.hide();
+                hide15.show();
             } else {
                 hide1.show();
                 hide2.hide();
@@ -688,6 +702,7 @@
                 hide12.show();
                 hide13.show();
                 hide14.hide();
+                hide15.show();
             }
         });
     });

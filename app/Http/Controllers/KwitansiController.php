@@ -60,12 +60,14 @@ class KwitansiController extends Controller
             if(DB::connection('mysql2')->table('personalia.masteremployee')->where('Nip', $id)->exists()){
                 $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee as a')
                                 ->join('personalia.masterjabatan as b', 'a.Kode Jabatan', '=', 'b.Kode Jabatan')
+                                ->join('personalia.masterbagian as c', 'a.Kode Bagian', '=', 'b.Kode Bagian')
                                 ->where('a.Nip', $id)
                                 ->where('a.Endda', '9998-12-31')
-                                ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan')
+                                ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
                                 ->first();
                 
                 $nip = $datakaryawan->Nip;
+                $bagian = $datakaryawan->bagian;
                 $nama = trim($datakaryawan->Nama);
                 $tglmasuk = $datakaryawan->tglmasuk;
                 $gaji = $datakaryawan->gaji; 
@@ -126,11 +128,12 @@ class KwitansiController extends Controller
                 
                 $formatrupiah = 'Rp.'.number_format($totalpisah,0,',','.');
                 $lamakerja = $interval->format('%y Tahun %m Bulan %d Hari');
-                $keterangan = 'Uang Pisah a/n '.$nama.' , '.' ID: '.$id.', '.$gaji.' + '.$tunjangan.' * '.$month.' . ';
+                $keterangan = 'Uang Pisah a/n '.$nama.' , '.' bagian: '.$bagian.', ID: '.$id.', '.$gaji.' + '.$tunjangan.' * '.$month.' . ';
     
                 $dataArray = [];  
                 $dataAll = array_push($dataArray, [
                             "NAME" => $nama,
+                            "BAGIAN" => $bagian,
                             "TGLMASUK" => $tglmasuk,
                             "TGLPISAH" => $tglpisah,
                             "GAJI" => $formatgaji,
@@ -151,10 +154,12 @@ class KwitansiController extends Controller
                 return $dataArray = [''];
             }
         } else {
-            $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee')
-                ->where('Nip', $id)
-                ->where('Endda', '9998-12-31')
-                ->select('Nip','Nama')
+            $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee as a')
+                ->join('personalia.masterjabatan as b', 'a.Kode Jabatan', '=', 'b.Kode Jabatan')
+                ->join('personalia.masterbagian as c', 'a.Kode Bagian', '=', 'b.Kode Bagian')
+                ->where('a.Nip', $id)
+                ->where('a.Endda', '9998-12-31')
+                ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
                 ->first();
 
             if($type == "DUKA"){
@@ -168,21 +173,23 @@ class KwitansiController extends Controller
                     ->first();
             }
             $nip = $datakaryawan->Nip;
+            $bagian = $datakaryawan->bagian;
             $nama = trim($datakaryawan->Nama);
             $categoryname = trim($mastertunjangan->categorydescr);
             $nominal = 'Rp.'.number_format($mastertunjangan->value,0,',','.');
 
             if($type == "DUKA"){
-                $keterangan = 'Uang Tunjangan Duka Cita atas Meninggalnya '.$categoryname.' dari '.$nama.', '.' ID: '.$id;
+                $keterangan = 'Uang Tunjangan Duka Cita atas Meninggalnya '.$categoryname.' dari '.$nama.', '.' bagian: '.$bagian.', ID: '.$id;
             } else if($type == "PERNIKAHAN"){
-                $keterangan = 'Uang Tunjangan Pernikahan a/n '.$nama.', '.' ID: '.$id;
+                $keterangan = 'Uang Tunjangan Pernikahan a/n '.$nama.', '.' bagian: '.$bagian.' ID: '.$id;
             } else {
-                $keterangan = 'Uang Tunjangan Kelahiran Anak ke-1 dari: '.$nama.', '.' ID: '.$id;
+                $keterangan = 'Uang Tunjangan Kelahiran Anak ke-() :( nama anak ) dari: '.$nama.', '.' bagian: '.$bagian.', ID: '.$id;
             }
         
             $dataArray = [];  
             $dataAll = array_push($dataArray, [
                     "NAME" => $nama,
+                    "BAGIAN" => $bagian,
                     "TGLMASUK" => " ",
                     "TGLPISAH" => " ",
                     "GAJI" => "Rp.0",

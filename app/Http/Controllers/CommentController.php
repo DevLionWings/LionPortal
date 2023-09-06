@@ -26,6 +26,7 @@ class CommentController extends Controller
     public function addComment(Request $request)
     {   
         $userid = Session::get('userid');
+        $useremail = Session::get('usermail');
         $comment_body = $request->comment_body;
         $ticketno = $request->ticketno;
         $file = $request->filecomment;
@@ -96,16 +97,16 @@ class CommentController extends Controller
                     'last_number' => $last
             ]);
             DB::commit();
-
+            
             /* Send Email */
             $getTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')->where('ticketno', $ticketno)->first();
             $assignto = $getTicket->assignedto;
-            $dataFrom= DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
+            $detail = $getTicket->detail;
             $dataAssign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
-            $emailFrom = $dataFrom->usermail;
+            $emailFrom = $useremail;
             $emailSign =  $dataAssign->usermail;
             $assignNameSign = $dataAssign->username;
-            $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom);
+            $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail);
             /* End Send Email */
 
             $disc = ''; 

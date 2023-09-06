@@ -355,10 +355,10 @@
                                 <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
                             </div>
                             <div class="form-group">
+                                <!-- <button type="button" id="refreshcomment" class="refreshcomment btn btn-link btn-xs"><i class="fas fa-refresh"></i>Refresh</button> -->
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
                             </div>
-
-                            <div class="form-group" id="viewcomment">
+                            <div class="form-group" id="comment">
                                 <span type="text" name="comment" id="comment" class="modal-input" readonly></span>
 
                             </div>
@@ -666,6 +666,7 @@
         });
 
         $(document).on('click', '.view', function() {
+            $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
             // getComment($(this).attr('data-ticket'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
@@ -703,6 +704,9 @@
             $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="upload"]').val(upload);
             $modal.modal('show');
+            $modal.on('hidden.bs.modal', function () {
+                $('#view-user input').val('');
+            });
         });
 
         $(document).on('click', '.update', function () {
@@ -1016,7 +1020,8 @@
 			},
         });
 
-        $(document).on('click', '.viewcomment', function() {
+        $(document).on('click', '.viewcomment', function(e) {
+            e.preventDefault();
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
             $.ajax({
                 headers: {
@@ -1027,17 +1032,57 @@
                 data: {
                     'ticketno' : ticketno, 
                 },
+                // contentType: true, 
+                processData: true,
                 success: function(response) {
-                    // console.log(response["disc"])
+                    console.log(response["disc"])
+                    // document.getElementById("comment").reset(response);
+                    $("#view-user").serialize(),
+                    $("#comment").css("display","inline");
                     var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
-                        var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
+                        var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
                         var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
                         var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
                         var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-                        $viewComment.append($nama,$date,$filecomment,$comment);
+                        $viewComment.append($nama,$date,$filecomment,$comment).serialize();
                     });
-    
+                    
+                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment).serialize();  
+                             
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
+
+        $(document).on('click', '.refreshcomment', function(e) {
+            e.preventDefault();
+            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/comment",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                // contentType: true, 
+                processData: true,
+                success: function(response) {
+                    console.log(response["disc"])
+                    $("#view-user").serialize();
+                    var $viewComment = $(' <div class="form-group"></div>');
+                    $.each(response["disc"], function(key, data) {
+                        var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
+                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
+                        var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
+                        $viewComment.append($nama,$date,$filecomment,$comment).serialize();
+                    });
+                   
                     $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
                              
                 },
@@ -1074,18 +1119,19 @@
                 // processData: true,
                 success: function(response){ 
                     // console.log(response["disc"]);
+                    document.getElementById("comment_body").value = "";
                     var $viewComment = $('.modal-content .modal-body');
                     var target = $viewComment.find('form-group .modal-input');
                    
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
-                        var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
+                        var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
                         var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px readonly>"+data["COMMENT"]+"</textarea>";
                         var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
                         $viewComment.append($nama,$date,$filecomment,$comment,);
                     });
     
-                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().modal('show');
+                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().modal('show');
         
                 },
                 error: function (error) {
@@ -1141,7 +1187,7 @@
     //                 $viewComment.append($nama,$date,$filecomment,$comment);
     //             });
                 
-    //             $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+    //             $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);
     //             // $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
     //         }
     //     })
@@ -1156,16 +1202,16 @@
 }, 5000);
 </script>
 <script>
-    // $('#document').ready(function(){
-    //         $('#close-btn').on('click', function(){
-    //             location.reload();
-    //     });
-    // });
-    // $('#document').ready(function(){
-    //         $('#close-btn2').on('click', function(){
-    //             location.reload();
-    //     });
-    // });
+    $('#document').ready(function(){
+            $('#close-btn').on('click', function(){
+                $("#comment").css("display","none");
+        });
+    });
+    $('#document').ready(function(){
+            $('#close-btn2').on('click', function(){
+                $("#comment").css("display","none");
+        });
+    });
 </script>
 <script>
     $('.toast').toast('show');

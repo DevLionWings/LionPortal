@@ -155,10 +155,10 @@
 						</tr>  
 						<tr>  
 							<td style="font-size:14px;">&nbsp;&nbsp;&nbsp;Uang sejumlah </td>  
-							<td style="font-size:14px; background-color: #D8D8D8;"><b># {{ $data->terbilang }} # &nbsp;&nbsp;&nbsp;<b></td>  
+							<td style="font-size:14px; background-color: #D8D8D8;"><b># {{ $data->terbilang }} # &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b></td>  
 						</tr>  
 						<tr>  
-							<td style="font-size:12px;">&nbsp;&nbsp;&nbsp;Untuk pembayaran &nbsp;&nbsp;&nbsp;</td>  
+							<td style="font-size:12px;">&nbsp;&nbsp;&nbsp;Untuk pembayaran &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>  
 							<td style="font-size:12px;">{{ $data->keterangan }}</td>  
 						</tr> 
 						<tr>  
@@ -176,7 +176,7 @@
 						</tr> 
 						<tr>  
 						<td style="vertical-align:bottom; font-size:12px;" >Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
-							<td style="font-size:13px; text-align: right; vertical-align:top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->tanggal }}</td>  
+							<td style="font-size:13px; text-align: right; vertical-align:top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->tanggal }}</td>  
 						</tr>
 					</table> 
 				</td>

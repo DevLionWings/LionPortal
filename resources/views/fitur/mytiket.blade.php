@@ -616,8 +616,9 @@
                     });
                     // $('#modal-view-user').modal('show');
                     // $('#modal-view-user form[id="view-user"] input[id="comment"]').reset();
-                    $('#modal-view-user form[name="view-user"] input[name="comment"]').remove();
-                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().modal('show');
+                    
+                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+                    $('#modal-view-user form[name="view-user"] input[name="comment"]').modal('hide');
                     // $view = $('#modal-view-user').find('form[id="view-user"]').find('input[id="comment"]').html($viewComment);
                   
                 },

@@ -47,13 +47,14 @@ class Mail
         SendtoMail::to($emails)->send(new SendMail($mailData));
     }
 
-    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom)
+    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail)
     {
-        $emails = array($emailSign);
+        $emails = array($emailSign, $emailFrom);
       
         $mailData = array(
             'comment' => $comment_body,
             'ticketno' => $ticketno,
+            'detail' => $detail,
             'assigned_to' => $assignNameSign
         );
        
