@@ -257,7 +257,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="" name="view-user" id="view-user">
+                <form action="" name="view1" id="view1">
                     @csrf
                     <div class="modal-body">
                     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -342,27 +342,24 @@
                         </div>
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
+                        
                         <h4 class="modal-title">Display Comment :</h4>
                         <hr />
-                            <div class="form-group">
-                                <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
-                                <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
-                            </div>
-                            <!-- <div class="form-group">
-                                <input type="file" name="filecomment" id="filecomment" class="form-control">
-                            </div> -->
-                            <div class="form-group">
-                                <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
-                            </div>
-                            <div class="form-group">
-                                <!-- <button type="button" id="refreshcomment" class="refreshcomment btn btn-link btn-xs"><i class="fas fa-refresh"></i>Refresh</button> -->
-                                <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
-                            </div>
-                            <div class="form-group" id="comment">
-                                <span type="text" name="comment" id="comment" class="modal-input" readonly></span>
-
-                            </div>
-                        
+                        <div class="form-group" id="hidecmnt">
+                            <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
+                            <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
+                        </div>
+                        <!-- <div class="form-group">
+                            <input type="file" name="filecomment" id="filecomment" class="form-control">
+                        </div> -->
+                        <div class="form-group">
+                            <!-- <button type="button" id="refreshcomment" class="refreshcomment btn btn-link btn-xs"><i class="fas fa-refresh"></i>Refresh</button> -->
+                            <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
+                        </div>
+                        <div class="form-group" id="comment1">
+                            <span type="text" name="comment" id="comment" class="modal-input" readonly></span>
+                        </div>   
                     </div> 
                     <hr />
                     <div class="col-md-6">
@@ -666,6 +663,7 @@
         });
 
         $(document).on('click', '.view', function() {
+            $("#comment1").load(" #comment1");
             $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
             // getComment($(this).attr('data-ticket'));
             var user_id = $(this).attr('data-id');
@@ -685,8 +683,12 @@
             var approveit  = $(this).attr('data-approveitname');
             var upload  = $(this).attr('data-upload');
             var $modal = $('#modal-view-user');
-            var $form = $modal.find('form[name="view-user"]');
-            
+            var $form = $modal.find('form[name="view1"]');
+            var hide = $("#hidecmnt");
+            hide.show();
+            if(statusid == 'SD003'){
+                hide.hide();
+            }
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="requestor"]').val(requestor);
@@ -704,9 +706,6 @@
             $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="upload"]').val(upload);
             $modal.modal('show');
-            $modal.on('hidden.bs.modal', function () {
-                $('#view-user input').val('');
-            });
         });
 
         $(document).on('click', '.update', function () {
@@ -901,16 +900,17 @@
         });
 
         var table = $('#tiket_list').DataTable({
+            scrollX: true,
             processing: true,
             serverSide: true,
-            responsive: true,
+            responsive: false,
             searching: true,
             dom: 'Blfrtip',
             buttons: [
                 'excel'
             ],
             ajax: "{{ route('get-tiket') }}",
-            order: [[ 0, "desc" ]],
+            order: [[ 7, "desc" ]],
             autoWidth: false,
             fixedColumns: false,
             columns: [
@@ -1019,7 +1019,7 @@
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });
-
+        
         $(document).on('click', '.viewcomment', function(e) {
             e.preventDefault();
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
@@ -1032,13 +1032,10 @@
                 data: {
                     'ticketno' : ticketno, 
                 },
-                // contentType: true, 
-                processData: true,
                 success: function(response) {
-                    console.log(response["disc"])
-                    // document.getElementById("comment").reset(response);
-                    $("#view-user").serialize(),
+                    // console.log(response["disc"])
                     $("#comment").css("display","inline");
+                   
                     var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
@@ -1048,43 +1045,8 @@
                         $viewComment.append($nama,$date,$filecomment,$comment).serialize();
                     });
                     
-                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment).serialize();  
-                             
-                },
-                error: function (error) {
-                    console.error(error);
-                },
-            })
-        });
-
-        $(document).on('click', '.refreshcomment', function(e) {
-            e.preventDefault();
-            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: "POST",
-                url: "/get/comment",
-                data: {
-                    'ticketno' : ticketno, 
-                },
-                // contentType: true, 
-                processData: true,
-                success: function(response) {
-                    console.log(response["disc"])
-                    $("#view-user").serialize();
-                    var $viewComment = $(' <div class="form-group"></div>');
-                    $.each(response["disc"], function(key, data) {
-                        var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
-                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
-                        var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-                        $viewComment.append($nama,$date,$filecomment,$comment).serialize();
-                    });
-                   
-                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
-                             
+                    $('#modal-view-user form[name="view1"] span[name="comment"]').parent().html($viewComment);  
+                    
                 },
                 error: function (error) {
                     console.error(error);
@@ -1094,8 +1056,8 @@
 
         $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
-            var file_data = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
+            var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
+            var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
             // var filecomment = document.getElementById("filecomment").files[0].name;
             // var file_data = $('#filecomment').prop('files')[0];  
@@ -1115,14 +1077,11 @@
                     'comment_body' : comment_body,
                     'filecomment' : file_data
                 },
-                // contentType: true, 
-                // processData: true,
                 success: function(response){ 
-                    // console.log(response["disc"]);
-                    document.getElementById("comment_body").value = "";
-                    var $viewComment = $('.modal-content .modal-body');
-                    var target = $viewComment.find('form-group .modal-input');
-                   
+                    // console.log(response);
+                    // var $viewComment = $('.modal-content .modal-body');
+                    // var target = $viewComment.find('form-group .modal-input');
+                    var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
@@ -1130,8 +1089,8 @@
                         var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
                         $viewComment.append($nama,$date,$filecomment,$comment,);
                     });
-    
-                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().modal('show');
+                    document.getElementById("comment_body").value = "";
+                    $('#modal-view-user form[name="view1"] span[name="comment"]').parent().html($viewComment);
         
                 },
                 error: function (error) {
@@ -1141,7 +1100,7 @@
         })
 
         $(document).on('click', '.upload', function() {
-            var upload = $('#modal-view-user input[name="upload"]').val();
+            var upload = $('#modal-view-use1 input[name="upload"]').val();
          
             $.ajax({
                 headers: {
@@ -1202,16 +1161,22 @@
 }, 5000);
 </script>
 <script>
-    $('#document').ready(function(){
-            $('#close-btn').on('click', function(){
-                $("#comment").css("display","none");
-        });
-    });
-    $('#document').ready(function(){
-            $('#close-btn2').on('click', function(){
-                $("#comment").css("display","none");
-        });
-    });
+    // $('#document').ready(function(){
+    //         $('#close-btn').on('click', function(){
+    //             $("#cmment1").css("display","none");
+    //             $('#modal-view-user form[name="view1"]').parent().modal('hide');
+    //             document.getElementById("comment1").value = "";
+               
+    //     });
+    // });
+    // $('#document').ready(function(){
+    //         $('#close-btn2').on('click', function(){
+    //             $("#comment1").css("display","none"); 
+    //             $('#modal-view-user form[name="view1"]').parent().modal('hide');
+    //             document.getElementById("comment1").value = "";
+                
+    //     });
+    // });
 </script>
 <script>
     $('.toast').toast('show');

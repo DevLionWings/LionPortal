@@ -95,6 +95,7 @@
                 <form action="{{route('history-delete')}}" method="post">
                     @csrf
                     <input type="hidden" id="delete-history-id" name="id"/>
+                    <input type="hidden" id="delete-history-idkwitansi" name="idkwitansi"/>
                     <div class="modal-body">
                         <p>Yakin ingin menghapus <span class="text-bold"></span></p>
                     </div>
@@ -137,6 +138,7 @@
 
         $(document).on('click', '.delete', function () {
             $('#delete-history-id').val($(this).attr("data-nik"));
+            $('#delete-history-idkwitansi').val($(this).attr("data-idkwitansi"));
             $('#modal-delete-user').modal('show');;
         })
 

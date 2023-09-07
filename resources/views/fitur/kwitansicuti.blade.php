@@ -460,7 +460,7 @@
                         'harilama' : harilama,   
                         'selisih' : selisih
                     },
-                    success: function(response){ =
+                    success: function(response){
                         if(response == "Max"){
                             alert("Maximum Input 4 Kwitansi");
                         } else if(response == "Duplicate"){

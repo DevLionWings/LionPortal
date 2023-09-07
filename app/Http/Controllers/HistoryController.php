@@ -65,7 +65,7 @@ class HistoryController extends Controller
         
         return DataTables::of($data['dat'])
         ->addColumn('action', function($row){
-            $deleteBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-nik="'.$row["nik"].'" ><i class="fa fa-trash" aria-hidden="true"></i></a>';
+            $deleteBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-nik="'.$row["nik"].'" data-idkwitansi="'.$row["idkwitansi"].'"><i class="fa fa-trash" aria-hidden="true"></i></a>';
             return $deleteBtn;
             
         })
@@ -75,7 +75,7 @@ class HistoryController extends Controller
 
     public function delete(Request $request)
     {   
-        $deletedata = DB::connection('pgsql')->table('hris.t_kwitansi_backup')->where('nik', $request->id)->delete();
+        $deletedata = DB::connection('pgsql')->table('hris.t_kwitansi_backup')->where('nik', $request->id)->where('idkwitansi', $request->idkwitansi)->delete();
         if($deletedata == true){
             return redirect()->back()->with("success", "Data deleted successfully");
         } else {

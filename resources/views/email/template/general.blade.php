@@ -31,43 +31,42 @@ Helpdesk Ticket
     <p>this ticket has been rejected, here is the detail : </p>
 @endif
 
-<table style="text-align: top;" cellspacing="10">
-    <tbody>
-        <tr>
-            <td style="text-align: top;">Ticket No :</td>
-            <td>: {{ $mailData['ticketno'] }}</td>
-        </tr>
-        <tr>
-            <td style="text-align: top;">Category</td>
-            <td>: {{ $mailData['categoryname'] }}</td>
-        </tr>
-        <tr>
-            <td style="text-align: top;">Priority</td>
-            <td>: {{ $mailData['priorityname'] }}</td>
-        </tr>
-        <tr>
-            <td style="text-align: top;">Subject</td>
-            <td>: {{ $mailData['subject'] }}</td>
-        </tr>
-        <tr>
-            <td style="text-align: top;">Detail</td>
-            <td>: {{ $mailData['detail'] }}</td>
-        </tr>
-        <tr>
-            <td style="text-align: top;">Status</td>
-            <td>: {{ $mailData['status'] }}</td>
-        </tr>
-        @if($mailData['note'] != '')
-        <tr>
-            <td style="text-align: top;">Remark</td>
-            <td>: {{ $mailData['note'] }}</td>
-        </tr>
-        @endif
-        <tr>
-            <td style="text-align: top;">Assign To</td>
-            <td>: {{ $mailData['assigned_to'] }}</td>
-        </tr>
-    </tbody>
+<table style="text-align: left;">
+    <tr>
+        <td style="text-align: left;">TicketNo</td>
+        <td style="text-align: left;">: {{ $mailData['ticketno'] }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Category</td>
+        <td style="text-align: left;">: {{ $mailData['categoryname'] }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Priority</td>
+        <td style="text-align: left;">: {{ $mailData['priorityname'] }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Subject</td>
+        <td style="text-align: left;">: {{ $mailData['subject'] }}</td>
+    </tr>
+    <tr>
+        <td style="vertical-align:top;" >Detail</td>
+        <td style="text-align: left;">: {{ $mailData['detail'] }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Status</td>
+        <td style="text-align: left;">: {{ $mailData['status'] }}</td>
+    </tr>
+    @if($mailData['note'] != '')
+    <tr>
+        <td style="vertical-align:top;">Remark</td>
+        <td style="text-align: left;">: {{ $mailData['note'] }}</td>
+    </tr>
+    @endif
+    <tr>
+        <td style="text-align: left;">AssignTo</td>
+        <td style="text-align: left;">: {{ $mailData['assigned_to'] }}</td>
+    </tr>
+    
 </table>
 
 <hr>
