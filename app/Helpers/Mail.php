@@ -27,7 +27,7 @@ class Mail
         } else {
             $emails = array($useremail, $emailSign, $emailReq, $emailApprove1);
         }
-        
+       
         $mailData = array(
             'username' => $username,
             'ticketno' => $ticketno,

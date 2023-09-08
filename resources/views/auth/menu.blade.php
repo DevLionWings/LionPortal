@@ -127,7 +127,7 @@
             </p>
           </a>
         </li>
-        @if(session('roleid')  == 'RD003' || session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
+        @if(session('roleid')  == 'RD003' || session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD009' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-ticket-alt"></i>
@@ -165,6 +165,7 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          @if(session('departmentid')  != 'DD005')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('absensipayroll') }}" class="nav-link" type="submit" id="m-absensipayroll"><i class="far fa-circle nav-icon"></i>
@@ -174,6 +175,7 @@
               </a>
             </li>
           </ul>
+          @endif
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('kwitansi') }}" class="nav-link" type="submit" id="m-kwitansi"><i class="far fa-circle nav-icon"></i>

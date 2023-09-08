@@ -63,6 +63,7 @@
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
                                         <th>Created On</th>
+                                        <th>Target Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -163,9 +164,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="created" disabled>Created Ticket :</label>
-                            <input type="text" name="created" class="form-control" id="created" readonly>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="dateapprove" disabled>Date Approve User :</label>
+                                    <input type="text" name="dateapprove" class="form-control" id="dateapprove" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="dateapproveit" disabled>Date Approve IT:</label>
+                                    <input type="text" name="dateapproveit" class="form-control" id="dateapproveit" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="created" disabled>Created Ticket :</label>
+                                    <input type="text" name="created" class="form-control" id="created" readonly>
+                                </div> 
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
+                                    <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
+                                </div>
+                            </div>
                         </div>
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
@@ -396,7 +421,8 @@
             var assign  = $(this).attr('data-assignto');
             var statusid  = $(this).attr('data-statusid');
             var roleid  = $(this).attr('data-roleid');
-            var created  = $(this).attr('data-created');
+            var targetdate  = $(this).attr('data-targetdate');
+            var created  = $(this).attr('data-createdname');
             var approve  = $(this).attr('data-approve1name');
             var approveit  = $(this).attr('data-approveitname');
             var upload  = $(this).attr('data-upload');
@@ -419,20 +445,12 @@
             $form.find('input[name="roleid"]').val(roleid);
             $form.find('input[name="status"]').val(status);
             $form.find('input[name="created"]').val(created);
+            $form.find('input[name="targetdate"]').val(targetdate);
             $form.find('input[name="approve"]').val(approve);
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="upload"]').val(upload);
             $modal.modal('show');
         });
-
-        // $('#modal-view-user form[name="view-user"] button#update-btn').on('click',function() {
-        //     alert("test");
-        //     var $inputs = $('#modal-view-user form[name="view-user"] :input');
-        //     var $form_valid = $('#modal-view-user form[name="view-user"] :input.is-invalid');
-        //     if ($form_valid.length === 0) {
-        //         $('#modal-view-user form[name="view-user"]').submit();
-        //     }
-        // });
 
         $(document).on('click', '.update', function () {
             $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
@@ -508,7 +526,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -588,6 +606,33 @@
                         return date;   
                     }
                 },
+                {
+                    data: 'targetdate',
+                    render: function(data) {
+                        console.log(data);
+                        if(data == ''){
+                            var date = "";
+                        } else {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year;
+                        }
+                        return date;   
+                    }
+                },
             ],
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
@@ -633,9 +678,10 @@
             })
         });
 
-        $('#btncomment').on('click', function () {
+        $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
             var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+            var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
          
             $.ajax({
                 headers: {
@@ -649,16 +695,19 @@
                 },
                 success: function(response){ 
                     // console.log(response["disc"]);
-                    var $viewComment = $('.modal-content .modal-body');
-                    var target = $viewComment.find('form-group .modal-input');
+                    // var $viewComment = $('.modal-content .modal-body');
+                    // var target = $viewComment.find('form-group .modal-input');
+                    var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
                         var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
-                        $viewComment.append($nama,$date,$comment);
+                        var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
+                        $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     document.getElementById("comment_body").value = "";
-                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment)
+                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+                    $("#comment1").load(" #comment1");
                 },
                 error: function (error) {
                     console.error(error);

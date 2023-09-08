@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('image-upload/image-uploader.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endsection
 @section('body')
 <!-- Site wrapper -->
@@ -146,6 +147,7 @@
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
                                         <th>Created On</th>
+                                        <th>Target Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -173,7 +175,7 @@
                     <input type="hidden" id="status" name="status">
                     <input type="hidden" id="roleid" name="roleid">
                     <div class="modal-body">
-                        @if(session('roleid') == 'RD001' || session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD006' || session('roleid') == 'RD007' || session('roleid') == 'RD008')
+                        @if(session('roleid') == 'RD001' || session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD006' || session('roleid') == 'RD007' || session('roleid') == 'RD008' || session('roleid') == 'RD009')
                         <div class="form-group">
                             <div class="name">User Request :</div>
                             <div class="input-group value">
@@ -209,7 +211,7 @@
                                 <input type="hidden" id="priorityname" name="priorityname" value="{{ $priorcode['NAME'] }}">
                             </div>
                         </div>
-                        @if(session('roleid') == 'RD006')
+                        @if(session('roleid') == 'RD006' || session('roleid') == 'RD009')
                         <div class="form-group">
                             <div class="name">Assigned To :</div>
                             <div class="input-group value">
@@ -223,15 +225,19 @@
                         </div>
                         @endif
                         <div class="form-group">
-                            <label class="form-check-label" for="group">Subject</label>
+                                <label class="form-check-label" >Target Date :</label>
+                                <input type="date" name="targetdate" id="targetdate" class="form-control"> 
+                            </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="group">Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-check-label" for="detail">Detail Issue</label>
+                            <label class="form-check-label" for="detail">Detail Issue :</label>
                             <textarea type="text" name="detail" class="form-control" id="detail" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-check-label" for="files">File:</label>
+                            <label class="form-check-label" for="files">File :</label>
                             <input type="file" name="files" id="files" class="form-control">
                         </div>
                         <!-- <div class="input-field">
@@ -336,9 +342,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="created" disabled>Created Ticket :</label>
-                            <input type="text" name="created" class="form-control" id="created" readonly>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="dateapprove" disabled>Date Approve User :</label>
+                                    <input type="text" name="dateapprove" class="form-control" id="dateapprove" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="dateapproveit" disabled>Date Approve IT:</label>
+                                    <input type="text" name="dateapproveit" class="form-control" id="dateapproveit" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="created" disabled>Created Ticket :</label>
+                                    <input type="text" name="created" class="form-control" id="created" readonly>
+                                </div> 
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
+                                    <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
+                                </div>
+                            </div>
                         </div>
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
@@ -642,6 +672,7 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
+<script src="{{ asset('plugins/jquery/jquery-ui.js') }}"></script>
 
 <script>
     $('.nav-link.active').removeClass('active');
@@ -678,7 +709,8 @@
             var assign  = $(this).attr('data-assignto');
             var statusid  = $(this).attr('data-statusid');
             var roleid  = $(this).attr('data-roleid');
-            var created  = $(this).attr('data-created');
+            var targetdate  = $(this).attr('data-targetdate');
+            var created  = $(this).attr('data-createdname');
             var approve  = $(this).attr('data-approve1name');
             var approveit  = $(this).attr('data-approveitname');
             var upload  = $(this).attr('data-upload');
@@ -701,6 +733,7 @@
             $form.find('input[name="roleid"]').val(roleid);
             $form.find('input[name="status"]').val(status);
             $form.find('input[name="created"]').val(created);
+            $form.find('input[name="targetdate"]').val(targetdate);
             $form.find('input[name="approve"]').val(approve);
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="comment_body"]').val(comment_body);
@@ -763,9 +796,10 @@
             $('#tiket_list').DataTable().clear().destroy();
             var $dataticket = $('#tiket_list').DataTable({
                 destroy: true,
+                scrollX: true,
                 processing: true,
                 serverSide: true,
-                responsive: true,
+                responsive: false,
                 searching: true,
                 dom: 'Blfrtip',
                 buttons: [
@@ -786,7 +820,7 @@
                         return settings.data;
                     },
                 },
-                order: [[ 0, "desc" ]],
+                order: [[ 7, "desc" ]],
                 columns: [
                     // {
                     //     data: 'ticketno',
@@ -805,7 +839,7 @@
                     {
                         data: 'ticketno',
                         render: function(data, type, row){
-                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'">'+data+'</a>'
+                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'">'+data+'</a>'
                         }
                     },
                     {
@@ -885,6 +919,33 @@
                             return date;   
                         }
                     },
+                    {
+                    data: 'targetdate',
+                        render: function(data) {
+                            console.log(data);
+                            if(data == ''){
+                                var date = "";
+                            } else {
+                                var today = new Date(data);
+                                var day = today.getDate() + "";
+                                var month = (today.getMonth() + 1) + "";
+                                var year = today.getFullYear() + "";
+                                var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                                var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                                var seconds = today.getSeconds() + "";
+
+                                day = day;
+                                month = month;
+                                year = year;
+                                hour = hour;
+                                minutes = minutes;
+                                seconds = seconds;
+                                // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                                var date = day + "/" + month + "/" + year;
+                            }
+                            return date;   
+                        }
+                    },
                 ],
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
@@ -911,8 +972,6 @@
             ],
             ajax: "{{ route('get-tiket') }}",
             order: [[ 7, "desc" ]],
-            autoWidth: false,
-            fixedColumns: false,
             columns: [
                 // {
                 //     data: 'ticketno',
@@ -931,7 +990,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -1008,6 +1067,33 @@
                         seconds = seconds;
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
                         var date = day + "/" + month + "/" + year;
+                        return date;   
+                    }
+                },
+                {
+                    data: 'targetdate',
+                    render: function(data) {
+                        console.log(data);
+                        if(data == ''){
+                            var date = "";
+                        } else {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year;
+                        }
                         return date;   
                     }
                 },
@@ -1091,6 +1177,7 @@
                     });
                     document.getElementById("comment_body").value = "";
                     $('#modal-view-user form[name="view1"] span[name="comment"]').parent().html($viewComment);
+                    $("#comment1").load(" #comment1");
         
                 },
                 error: function (error) {
@@ -1154,29 +1241,23 @@
 </script>
 
 <script>
-    window.setTimeout(function() {
-    $(".alert-message").fadeTo(500, 0).slideUp(500, function(){
-        $(this).remove(); 
+    // Use datepicker on the date inputs
+    $("input[type=date]").datepicker({
+        dateFormat: 'yy-mm-dd',
+        onSelect: function(dateText, inst) {
+            $(inst).val(dateText); // Write the value in the input
+        }
     });
-}, 5000);
-</script>
-<script>
-    // $('#document').ready(function(){
-    //         $('#close-btn').on('click', function(){
-    //             $("#cmment1").css("display","none");
-    //             $('#modal-view-user form[name="view1"]').parent().modal('hide');
-    //             document.getElementById("comment1").value = "";
-               
-    //     });
-    // });
-    // $('#document').ready(function(){
-    //         $('#close-btn2').on('click', function(){
-    //             $("#comment1").css("display","none"); 
-    //             $('#modal-view-user form[name="view1"]').parent().modal('hide');
-    //             document.getElementById("comment1").value = "";
-                
-    //     });
-    // });
+    // Code below to avoid the classic date-picker
+    $("input[type=date]").on('click', function() {
+        return false;
+    });
+
+    window.setTimeout(function() {
+        $(".alert-message").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove(); 
+        });
+    }, 5000);
 </script>
 <script>
     $('.toast').toast('show');

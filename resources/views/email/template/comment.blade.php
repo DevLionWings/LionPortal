@@ -40,7 +40,7 @@ Helpdesk Ticket
 
 <table style="text-align: left;">
     <tr>
-        <td style="text-align: left;">Ticket No</td>
+        <td style="text-align: left;">TicketNo</td>
         <td>:&nbsp;&nbsp;{{ $mailData['ticketno'] }}</td>
     </tr>
     <tr>
@@ -52,7 +52,7 @@ Helpdesk Ticket
         <td>:&nbsp;&nbsp;{{ $mailData['comment'] }}</td>
     </tr>
     <tr>
-        <td style="text-align: left;">Assign To</td>
+        <td style="text-align: left;">AssignTo</td>
         <td>:&nbsp;&nbsp;{{ $mailData['assigned_to'] }}</td>
     </tr>
 </table>

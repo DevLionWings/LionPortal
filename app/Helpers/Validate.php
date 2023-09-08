@@ -25,7 +25,7 @@ class Validate
                     // $emailReq = 'blank@lionwings.com';
                     // $emailApprove1 = 'blank@lionwings.com';
                     // $auth = true;
-                } else if ($roleid == "RD006"){
+                } else if ($roleid == "RD006" || $roleid == "RD009"){
                     $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userreq)->first();
                     $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
 
@@ -71,9 +71,9 @@ class Validate
                 // $emailReq = 'blank@lionwings.com';
                 // $emailApprove1 = 'blank@lionwings.com';
                 // $auth = true;
-            } else if ($roleid == "RD006"){
+            } else if ($roleid == "RD006" || $roleid == "RD009"){
                 $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
-                $dataEmail = 'NOT';
+                $dataEmail = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userreq)->first();
 
                 // $emailSign = $dataEmailSign->usermail;
                 // $assignNameSign = $dataEmailSign->username;
@@ -111,7 +111,7 @@ class Validate
             return $dataADD;
         } else if($flag == 'UPD'){
             if($cateId == "CD001 "){
-                if($roleid == 'RD006'){ 
+                if($roleid == 'RD006' || $roleid == "RD009"){ 
                     /* Get Email Signto */
                     $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
                     $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userreq)->first();
@@ -139,7 +139,7 @@ class Validate
                 // $emailReq = $dataEmailReq->usermail;
                 // $assignNameReq = $dataEmailReq->username;
                 // $emailApprove1 = 'blank@lionwings.com';
-            } else if($roleid == 'RD006'){ 
+            } else if($roleid == 'RD006' || $roleid == "RD009"){ 
                 /* Get Email Signto */
                 $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
                 $dataEmailReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userreq)->first();
@@ -184,7 +184,7 @@ class Validate
             }
             return $dataUPD;
         } else if($flag == 'CLS'){
-            if($roleid == "RD006"){
+            if($roleid == "RD006" || $roleid == "RD009"){
                 /* Get Email Signto */
                 $dataEmailSign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
                 // $emailSign = $dataEmailSign->usermail;

@@ -12,17 +12,19 @@ use Illuminate\Support\Facades\DB;
 use App\Helpers\Mail;
 use App\Helpers\Response;
 use App\Helpers\Repository;
+use App\Helpers\Validate;
 use App\Models\Counter;
 use DataTables;
 Use Redirect;
 
 class MyticketController extends Controller
 {
-    public function __construct(Repository $repository, Response $response, Mail $mail)
+    public function __construct(Repository $repository, Response $response, Mail $mail, Validate $validate)
     {
         $this->repository = $repository;
         $this->response = $response;
         $this->mail = $mail;
+        $this->validate = $validate;
     }
 
     public function myTiket(Request $request)
@@ -169,9 +171,10 @@ class MyticketController extends Controller
                     "approvedby3_date" => trim($value['approvedby3_date']),
                     "approvedbyit_date" => trim($value['approvedbyit_date']),
                     "createdby" => trim($value['createdby']),
+                    "targetdate" => trim($value['target_date']),
                     "approvedby1Name" => trim($value['approved1']),
                     "approvedbyitName" => trim($value['approvedit']),
-                    
+                    "createdname" => trim($value['created'])  
                 ]);
             }
             $data['dat'] = $dataTrimArray;
@@ -189,7 +192,7 @@ class MyticketController extends Controller
                 $parentBtn = '<a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$row["attachment"].'" 
-                data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $document_name = str_replace("storage/", "", $row["attachment"]);
                 $download_btn = '<a download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-link btn-xs" 

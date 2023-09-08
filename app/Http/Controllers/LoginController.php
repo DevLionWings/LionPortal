@@ -106,6 +106,7 @@ class LoginController extends Controller
                 $roleid = $data->roleid;
                 $plantid = $data->plantid;
                 $spvid = $data->spvid;
+                $headid = $data->headid;
                 $mgrid = $data->mgrid;
 
                 $datTicket = $this->repository->GETMYTICKET($userid, $roleid);
@@ -123,6 +124,7 @@ class LoginController extends Controller
                     'roleid' => $roleid,
                     'plantud' => $plantid,
                     'spvid' => $spvid,
+                    'headid' => $headid,
                     'mgrid' => $mgrid,
                     'status' => $status
                 );
@@ -136,6 +138,7 @@ class LoginController extends Controller
                 Session::put('roleid', $roleid);
                 Session::put('plantid', $plantid);
                 Session::put('spvid', $spvid);
+                Session::put('headid', $headid);
                 Session::put('mgrid', $mgrid);
                 Session::put('status', $status);
         

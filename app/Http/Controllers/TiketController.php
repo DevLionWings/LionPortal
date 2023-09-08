@@ -171,9 +171,11 @@ class TiketController extends Controller
                     "approvedby2_date" => trim($value['approvedby2_date']),
                     "approvedby3_date" => trim($value['approvedby3_date']),
                     "approvedbyit_date" => trim($value['approvedbyit_date']),
+                    "targetdate" => trim($value['target_date']),
                     "createdby" => trim($value['createdby']),
                     "approvedby1Name" => trim($value['approved1']),
-                    "approvedbyitName" => trim($value['approvedit'])
+                    "approvedbyitName" => trim($value['approvedit']),
+                    "createdname" => trim($value['created'])
                     
                 ]);
             }
@@ -190,11 +192,11 @@ class TiketController extends Controller
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
                 $document_name = str_replace("storage/", "", $row["attachment"]);
-
+            
                 $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
-                data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $download_btn = ' <a  download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
@@ -238,7 +240,7 @@ class TiketController extends Controller
                     $managerItBtn = $parentBtn. $download_btn;
                 }
                 
-                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD001'){
+                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001'){
                     return $itBtn;
                 }
                 if($roleid == 'RD002'){ 
@@ -274,7 +276,7 @@ class TiketController extends Controller
 
         /* Get Filter Ticket */
         $dataFilter = $this->repository->GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid);
-        // return $dataFilter;
+       
         $json = json_decode($dataFilter, true);
         
         $dat = '';
@@ -311,9 +313,11 @@ class TiketController extends Controller
                     "approvedby2_date" => trim($value['approvedby2_date']),
                     "approvedby3_date" => trim($value['approvedby3_date']),
                     "approvedbyit_date" => trim($value['approvedbyit_date']),
+                    "targetdate" => trim($value['target_date']),
                     "createdby" => trim($value['createdby']),
                     "approvedby1Name" => trim($value['approved1']),
                     "approvedbyitName" => trim($value['approvedit']),
+                    "createdname" => trim($value['created'])
                 ]);
             }
             $data['dat'] = $dataTrimArray;
@@ -333,7 +337,7 @@ class TiketController extends Controller
                 $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
-                data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $download_btn = ' <a  download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
@@ -372,7 +376,7 @@ class TiketController extends Controller
                     $managerItBtn = $parentBtn. $download_btn;
                 }
                 
-                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD001'){
+                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001'){
                     return $itBtn;
                 }
                 if($roleid == 'RD002'){ 
@@ -397,6 +401,7 @@ class TiketController extends Controller
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $spvid = Session::get('spvid');
+        $headid = Session::get('headid');
         $mgrUser = Session::get('mgrid');
         $departmentid = Session::get('departmentid');
         $createdby = Session::get('userid');
@@ -409,6 +414,7 @@ class TiketController extends Controller
         $subject = $request->subject;
         $remark = $request->detail;
         $assignto = $request->assignto;
+        $targetdate = $request->targetdate;
 
         /* Generate Ticket Number */ 
         $year = date("Y");
@@ -446,11 +452,9 @@ class TiketController extends Controller
         } else {
             $upload = [''];
         }
-        /* Validasi Approve manager by user login */
-        // $dataApprove = $this->repository->GETAPPROVEBYDEPARTMENT($departmentid, $userid);
-        // $mgridApprove = $dataApprove['data'][0]['mgrid'];
-        // $userApprove = $dataApprove['data'][0]['userid'];
+        /* End */
 
+        /* Validasi Approve manager by user login */
         $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('roleid', 'RD006')->first();
         $mgrIt = $dataMgrIt->userid;
         if($roleid == 'RD002'){
@@ -463,9 +467,14 @@ class TiketController extends Controller
             $approvedby_1 = $userid;
             $approvedby_it = $userid;
             $auth = true;
+        } else if ($roleid == 'RD009'){
+            $assign = $request->assignto;
+            $approvedby_1 = $mgrUser;
+            $approvedby_it = $mgrUser;
+            $auth = true;
         } else if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008') {
             $assign = $userid;
-            $approvedby_1 = '';
+            $approvedby_1 = $mgrUser;
             $approvedby_it = $mgrUser;
             $auth = true;
         } else if($category == 'CD001'){
@@ -503,7 +512,7 @@ class TiketController extends Controller
                 $statusid = 'SD002';
                 $auth = true;
             }
-        } else if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008') {
+        } else if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009') {
             $status = 'IN PROGRESS';
             $statusid = 'SD002';
             $auth = true;
@@ -512,6 +521,7 @@ class TiketController extends Controller
             $statusid = 'SD006';
             $auth = true;
         }
+        /* End */
         
         $flag = 'ADD';
         $note = '';
@@ -527,10 +537,11 @@ class TiketController extends Controller
         
         if ($auth){
             /* Insert Ticket */ 
-            $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix);
+            $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix, $targetdate);
             /* Send Email */
             $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag);
-    
+           
+            /* End */
             return redirect()->route('tiket')->with("success", "Data insert successfully");
         } else { 
             return redirect()->back()->with("error", "error");
@@ -570,6 +581,7 @@ class TiketController extends Controller
         // $mgrApp = $json['data'][0]['mgrid'];
         $flag = 'UPD';
         $note = '';
+        /* End */
 
         /* Get User Email */ 
         $emailADD = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
