@@ -60,7 +60,7 @@ class KwitansiController extends Controller
             if(DB::connection('mysql2')->table('personalia.masteremployee')->where('Nip', $id)->exists()){
                 $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee as a')
                                 ->join('personalia.masterjabatan as b', 'a.Kode Jabatan', '=', 'b.Kode Jabatan')
-                                ->join('personalia.masterbagian as c', 'a.Kode Bagian', '=', 'b.Kode Bagian')
+                                ->join('personalia.masterbagian as c', 'c.Kode Bagian', '=', 'a.Kode Bagian')
                                 ->where('a.Nip', $id)
                                 ->where('a.Endda', '9998-12-31')
                                 ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
@@ -128,7 +128,7 @@ class KwitansiController extends Controller
                 
                 $formatrupiah = 'Rp.'.number_format($totalpisah,0,',','.');
                 $lamakerja = $interval->format('%y Tahun %m Bulan %d Hari');
-                $keterangan = 'Uang Pisah a/n '.$nama.' , '.' bagian: '.$bagian.', ID: '.$id.', '.$gaji.' + '.$tunjangan.' * '.$month.' . ';
+                $keterangan = 'Uang Pisah a/n '.$nama.' , '.' bagian: '.$bagian.', ID: '.$id. PHP_EOL .$gaji.' + '.$tunjangan.' * '.$month.' . ';
     
                 $dataArray = [];  
                 $dataAll = array_push($dataArray, [
@@ -207,73 +207,41 @@ class KwitansiController extends Controller
 
     public function print(Request $request)
     {
-        // $type = $request->opsi;
-        // $tglpisah = $request->tglpisah;
-        // $id = $request->idkaryawan;
-        // $category = $request->category;
-        // $keterangan = $request->keterangan;
-        // $total = $request->total;
-        // $masakerja = $request->masakerja;
-        // $nominal = $request->total.',-';
-        // $exp = explode('.', $total);
-        // $imp = implode('', $exp);
-        // $terbilang = $this->convertion->TERBILANG($imp).' '.'RUPIAH';
-
-        // $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee as a')
-        //     ->join('personalia.masterjabatan as b', 'a.Kode Jabatan', '=', 'b.Kode Jabatan')
-        //     ->join('personalia.masterbagian as c', 'a.Kode Bagian', '=', 'b.Kode Bagian')
-        //     ->where('a.Nip', $id)
-        //     ->where('a.Endda', '9998-12-31')
-        //     ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
-        //     ->first();
-
-        // $datakwintansi = DB::connection('pgsql')->table('master_data.m_counter')
-        //     ->where('counterid', 'CT003')
-        //     ->where('prefix', 'KWS')
-        //     ->select('period','start_number', 'end_number', 'last_number')
-        //     ->first();
-
-        // $format = \Carbon\Carbon::today()->translatedFormat('l, d F Y');
-        // $year = date('Y');
-        // $month = date('m');
-        // $convMonth = $this->convertion->ROMAWI($month);
-
         $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
         $datajson =  array(
                         "data" => array()
                     );
         if($datakwitansi == true){
             foreach($datakwitansi as $key => $value){
-                if($value->type == 3 ||  $value->type == 1.5){
-                    if($value->selisih == 0 ){
+                if($value->type == 3 ||  $value->type == 1.5 || $value->type == 0){
+                    if($value->lamacuti == 0 ){
                         array_push($datajson["data"], [
-                                "rapel" => "",
-                                "type" => trim($value->type),
-                                "nokwitansi" => trim($value->idkwitansi),
-                                "nama" => trim($value->namakaryawan),
-                                "terimadari" => 'PT.LION WINGS, JAKARTA',
-                                "nominal" => number_format($value->total,0,',','.').',-',
-                                "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
-                                "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
-                                "keterangan" => trim($value->untuk).trim($value->keterangan),
-                                "lamakerja" => trim($value->masakerja),
-                                "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
-                                "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y')
+                            "type" => trim($value->type),
+                            "nokwitansi" => trim($value->idkwitansi),
+                            "nama" => trim($value->namakaryawan),
+                            "terimadari" => 'PT.LION WINGS, JAKARTA',
+                            "nominal" => number_format($value->total,0,',','.').',-',
+                            "terbilang" => $this->convertion->TERBILANG($value->selisih).' '.'RUPIAH',
+                            "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                            "keterangan" => "Selisih"." ".$value->untuk.PHP_EOL.$value->keterangan,
+                            "lamakerja" => trim($value->masakerja),
+                            "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
+                            "selisih" => number_format($value->selisih,0,',','.').',-',
+                            "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim(date($value->tanggalmasuk)))->subDays(1)->translatedFormat('d F Y')
                         ]);
                     } else {
                         array_push($datajson["data"], [
-                                "type" => 'on',
-                                "nokwitansi" => trim($value->idkwitansi),
-                                "nama" => trim($value->namakaryawan),
-                                "terimadari" => 'PT.LION WINGS, JAKARTA',
-                                "nominal" => number_format($value->total,0,',','.').',-',
-                                "terbilang" => $this->convertion->TERBILANG($value->selisih).' '.'RUPIAH',
-                                "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
-                                "keterangan" => "Selisih"." ".trim($value->untuk).trim($value->keterangan),
-                                "lamakerja" => trim($value->masakerja),
-                                "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
-                                "selisih" => number_format($value->selisih,0,',','.').',-',
-                                "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y')
+                            "type" => trim($value->type),
+                            "nokwitansi" => trim($value->idkwitansi),
+                            "nama" => trim($value->namakaryawan),
+                            "terimadari" => 'PT.LION WINGS, JAKARTA',
+                            "nominal" => number_format($value->total,0,',','.').',-',
+                            "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
+                            "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                            "keterangan" => $value->keterangan,
+                            "lamakerja" => trim($value->masakerja),
+                            "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
+                            "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim(date($value->tanggalmasuk)))->subDays(1)->translatedFormat('d F Y')
                         ]);
                     }
                 } else {
@@ -340,19 +308,6 @@ class KwitansiController extends Controller
             $typedb = trim($firstkwitansi->type);
             $nik = trim($firstkwitansi->nik);
         }
-        // $datakwitansibackup = DB::connection('pgsql')->table('hris.t_kwitansi_backup')
-        //     ->where('nik', $id)
-        //     ->select('nik', 'type', 'category')
-        //     ->get();
-        
-        // foreach($datakwitansibackup as $data){
-        //     if($data->nik == $id && $data->type == $type && $data->category == $category){
-        //         $data = 'invalid';
-        //     } else {
-        //         $data = 'valid';
-        //     }
-        // }
-        // $jsonValidasi = json_decode($data, TRUE);
 
         $datacounter = DB::connection('pgsql')->table('master_data.m_counter')
             ->where('counterid', 'CT003')
@@ -369,7 +324,7 @@ class KwitansiController extends Controller
             'last_number' => $last
         ]);
         
-        if($type == 3 || $type == 1.5){
+        if($type == 3 || $type == 1.5 || $type == 0){
             /* Non Cuti */
             $tglpisah = "";
             $category ="";
@@ -422,7 +377,7 @@ class KwitansiController extends Controller
                     'terbilang' => $terbilang,
                     'haribaru' => $haribaru,
                     'harilama' => $harilama,
-                    'selisih' => $selisih
+                    'selisih' => $selisih,
                 ]);
     
                 $kwn = '';

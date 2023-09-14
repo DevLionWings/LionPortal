@@ -70,6 +70,7 @@
                                                                         <option value=""> Masukkan Pilihan :</option>
                                                                         <option value="3">Cuti Hamil</option>
                                                                         <option value="1.5">Cuti Keguguran</option> 
+                                                                        <option value="0">Rapel Cuham</option> 
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -124,13 +125,30 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3">
+                                                <!-- <div class="mb-3">
                                                     <input type="checkbox" id="rapel" name="rapel" value="on">
                                                     <label for="rapel">Rapel</label><br>
-                                                </div>
-                                                <div class="mb-3" id="hide1">
-                                                    <label class="form-check-label" for="amountrapel">Total Nominal Kwitansi Lama:</label>
-                                                    <input type="text" name="amountrapel" id="amountrapel" class="form-control">
+                                                </div> -->
+                                                <!-- <div class="mb-3" id="hide1">
+                                                    <label class="form-check-label" for="idrapel">ID Karyawan:</label>
+                                                    <input type="text" name="idrapel" id="idrapel" class="form-control">
+                                                </div> -->
+                                                </hr>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3">
+                                                            <div class="form-group" id="hide16">
+                                                                <div class="name">Type Cuti :</div>
+                                                                <div class="input-group value">
+                                                                    <select id="opsicuti" name="opsicuti" class="form-control input--style-6">
+                                                                        <option value="select"> Masukkan Pilihan :</option>
+                                                                        <option value="3">Cuti Hamil</option>
+                                                                        <option value="1.5">Cuti Keguguran</option> 
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
@@ -160,9 +178,51 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide10">
+                                                            <label class="form-check-label" for="gajibaru">Gaji Baru:</label>
+                                                            <textarea type="text" name="gajibaru" id="gajibaru" class="form-control" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide11">
+                                                            <label class="form-check-label" for="gajilama">Gaji Lama</label>
+                                                            <textarea type="text" name="gajilama" id="gajilama" class="form-control" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide12">
+                                                            <label class="form-check-label" for="ketgajibaru">Ket.Gaji Baru:</label>
+                                                            <textarea type="text" name="ketgajibaru" id="ketgajibaru" class="form-control" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide13">
+                                                            <label class="form-check-label" for="ketgajilama">Ket.Gaji Lama</label>
+                                                            <textarea type="text" name="ketgajilama" id="ketgajilama" class="form-control" readonly></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="mb-3" id="hide6">
-                                                    <input type="checkbox" id="bpjs" name="bpjs" value="on">
-                                                    <label for="rapel">Sudah di potong, saat terakhir bekerja</label><br>
+                                                    <input type="checkbox" id="bpjs" name="bpjs" value="0">
+                                                    <label for="bpjs">Sudah di potong, saat terakhir bekerja</label><br>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide14">
+                                                            <label class="form-check-label" for="blngajibaru">Bulan Gaji Baru:</label>
+                                                            <input type="text" name="blngajibaru" id="blngajibaru" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3" id="hide15">
+                                                            <label class="form-check-label" for="blngajilama">Bulan Gaji Lama</label>
+                                                            <input type="text" name="blngajilama" id="blngajilama" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3" id="hide7">
                                                     <label class="form-check-label" for="selisih">Selisih:</label>
@@ -314,6 +374,7 @@
 
         $(document).on('click', '.check', function() {
             var type = $('select[name="opsi"] option:selected').val();
+            var typecuti = $('select[name="opsicuti"] option:selected').val();
             var id = $('input[name="idkaryawan"]').val();
             var tglcuti = $('input[name="tglcuti"]').val();
             var lamacuti = $('input[name="lamacuti"]').val();
@@ -322,73 +383,148 @@
             var uangmakan = $('input[name="um"]').val();
             var spsi = $('input[name="spsi"]').val();
             var koperasi = $('input[name="koperasi"]').val();
-            var amountrapel = $('input[name="amountrapel"]').val();
+            var idrapel = $('input[name="idrapel"]').val();
             var totalamount = $('input[name="totalamount"]').val();
             var selisih = $('input[name="selisih"]').val();
-            var rapel = $("input[type='checkbox']").val();
             var bpjs = $("input[name='bpjs']").val();
-            // console.log(rapel);
 
-            if(id.length < 1) {
-                alert('id harus di isi');
-                return;
-            } else if (tglcuti.length < 1){
-                alert('Tanggal Cuti harus di isi');
-                return;
-            } else if (tglmasuk.length < 1){
-                alert('Tanggal Masuk harus di isi');
-                return;
-            } else if (lamacuti.lengtg < 1){
-                alert('Lama Cuti harus di isi');
-                return;
-            } else if (jmlhchh.length < 1){
-                alert('Jumlah Cuti Haid harus di isi');
-                return;
+            if(type == "0"){
+                if(id.length < 1) {
+                    alert('id harus di isi');
+                    return;
+                } else if (tglcuti.length < 1){
+                    alert('Tanggal Cuti harus di isi');
+                    return;
+                } else if (tglmasuk.length < 1){
+                    alert('Tanggal Masuk harus di isi');
+                    return;
+                } else if (lamacuti.lengtg < 1){
+                    alert('Lama Cuti harus di isi');
+                    return;
+                } else if (jmlhchh.length < 1){
+                    alert('Jumlah Cuti Haid harus di isi');
+                    return;
+                } else if (typecuti == "select"){
+                    alert('Type Kwitansi harus di isi');
+                    return;
+                } else {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "POST",
+                        url: "/simulasi/cuti",
+                        data: {
+                            'type' : type,
+                            'typecuti' : typecuti,
+                            'idkaryawan' : id, 
+                            'tglcuti' : tglcuti,
+                            'lamacuti' : lamacuti,
+                            'jmlhchh' : jmlhchh,
+                            'bpjs' : bpjs,
+                            'uangmakan' : uangmakan,
+                            'spsi' : spsi,
+                            'koperasi' : koperasi,
+                            'idrapel' : idrapel,
+                            'totalamount' : totalamount,
+                            'selisih' : selisih,
+                            'bpjs' : bpjs
+                        },
+                        success: function(response) {
+                            // console.log(response[0]);
+                            $('#nama').val(response[0]['NAME']);
+                            $('#bagian').val(response[0]['BAGIAN']);
+                            $('#gaji').val(response[0]['GAJI']);
+                            $('#tglmasuk').val(response[0]['TGLMASUK']);
+                            $('#enddate').val(response[0]['TGLCUTI']);
+                            $('#startdate').val(response[0]['TGLMASUK']);
+                            $('#amountDay').val(response[0]['HARI BARU']);
+                            $('#amountDay2').val(response[0]['HARI LAMA']);
+                            $('#jabatan').val(response[0]['JABATAN']);
+                            $('#um').val(response[0]['UANGMAKAN']);
+                            $('#jstk').val(response[0]['JAMSOSTEK']);
+                            $('#spsi').val(response[0]['SPSI']);
+                            $('#koperasi').val(response[0]['KOPERASI']);
+                            $('#to').val(response[0]['UNTUK']);
+                            $('#keterangan').val(response[0]['KETERANGAN']);
+                            $('#total').val(response[0]['TOTAL']);
+                            $('#terbilang').val(response[0]['TERBILANG']);
+                            $('#selisih').val(response[0]['SELISIH']);
+                            $('#gajilama').val(response[0]['GAJILAMA']);
+                            $('#gajibaru').val(response[0]['GAJIBARU']);
+                            $('#ketgajilama').val(response[0]['KETERANGANGAJILAMA']);
+                            $('#ketgajibaru').val(response[0]['KETERANGANGAJIBARU']);
+                            $('#blngajilama').val(response[0]['BULANLAMA']);
+                            $('#blngajibaru').val(response[0]['BULANBARU']);
+                        }
+                    });
+                }
             } else {
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: "POST",
-                    url: "/simulasi/cuti",
-                    data: {
-                        'type' : type,
-                        'idkaryawan' : id, 
-                        'tglcuti' : tglcuti,
-                        'lamacuti' : lamacuti,
-                        'jmlhchh' : jmlhchh,
-                        'bpjs' : bpjs,
-                        'uangmakan' : uangmakan,
-                        'spsi' : spsi,
-                        'koperasi' : koperasi,
-                        'amountrapel' : amountrapel,
-                        'totalamount' : totalamount,
-                        'selisih' : selisih,
-                        'rapel' : rapel,
-                        'bpjs' : bpjs
-                    },
-                    success: function(response) {
-                        // console.log(response[0]);
-                        $('#nama').val(response[0]['NAME']);
-                        $('#bagian').val(response[0]['BAGIAN']);
-                        $('#gaji').val(response[0]['GAJI']);
-                        $('#tglmasuk').val(response[0]['TGLMASUK']);
-                        $('#enddate').val(response[0]['TGLCUTI']);
-                        $('#startdate').val(response[0]['TGLMASUK']);
-                        $('#amountDay').val(response[0]['HARI BARU']);
-                        $('#amountDay2').val(response[0]['HARI LAMA']);
-                        $('#jabatan').val(response[0]['JABATAN']);
-                        $('#um').val(response[0]['UANGMAKAN']);
-                        $('#jstk').val(response[0]['JAMSOSTEK']);
-                        $('#spsi').val(response[0]['SPSI']);
-                        $('#koperasi').val(response[0]['KOPERASI']);
-                        $('#to').val(response[0]['UNTUK']);
-                        $('#keterangan').val(response[0]['KETERANGAN']);
-                        $('#total').val(response[0]['TOTAL']);
-                        $('#terbilang').val(response[0]['TERBILANG']);
-                        $('#selisih').val(response[0]['SELISIH']);
-                    }
-                });
+                if(id.length < 1) {
+                    alert('id harus di isi');
+                    return;
+                } else if (tglcuti.length < 1){
+                    alert('Tanggal Cuti harus di isi');
+                    return;
+                } else if (tglmasuk.length < 1){
+                    alert('Tanggal Masuk harus di isi');
+                    return;
+                } else if (lamacuti.lengtg < 1){
+                    alert('Lama Cuti harus di isi');
+                    return;
+                } else if (jmlhchh.length < 1){
+                    alert('Jumlah Cuti Haid harus di isi');
+                    return;
+                } else {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "POST",
+                        url: "/simulasi/cuti",
+                        data: {
+                            'type' : type,
+                            'typecuti' : typecuti,
+                            'idkaryawan' : id, 
+                            'tglcuti' : tglcuti,
+                            'lamacuti' : lamacuti,
+                            'jmlhchh' : jmlhchh,
+                            'bpjs' : bpjs,
+                            'uangmakan' : uangmakan,
+                            'spsi' : spsi,
+                            'koperasi' : koperasi,
+                            'idrapel' : idrapel,
+                            'totalamount' : totalamount,
+                            'selisih' : selisih,
+                            'bpjs' : bpjs
+                        },
+                        success: function(response) {
+                            // console.log(response[0]);
+                            $('#nama').val(response[0]['NAME']);
+                            $('#bagian').val(response[0]['BAGIAN']);
+                            $('#gaji').val(response[0]['GAJI']);
+                            $('#tglmasuk').val(response[0]['TGLMASUK']);
+                            $('#enddate').val(response[0]['TGLCUTI']);
+                            $('#startdate').val(response[0]['TGLMASUK']);
+                            $('#amountDay').val(response[0]['HARI BARU']);
+                            $('#amountDay2').val(response[0]['HARI LAMA']);
+                            $('#jabatan').val(response[0]['JABATAN']);
+                            $('#um').val(response[0]['UANGMAKAN']);
+                            $('#jstk').val(response[0]['JAMSOSTEK']);
+                            $('#spsi').val(response[0]['SPSI']);
+                            $('#koperasi').val(response[0]['KOPERASI']);
+                            $('#to').val(response[0]['UNTUK']);
+                            $('#keterangan').val(response[0]['KETERANGAN']);
+                            $('#total').val(response[0]['TOTAL']);
+                            $('#terbilang').val(response[0]['TERBILANG']);
+                            $('#selisih').val(response[0]['SELISIH']);
+                            $('#gajilama').val(response[0]['GAJILAMA']);
+                            $('#gajibaru').val(response[0]['GAJIBARU']);
+                            $('#ketgajilama').val(response[0]['KETERANGANGAJILAMA']);
+                            $('#ketgajibaru').val(response[0]['KETERANGANGAJIBARU']);
+                        }
+                    });
+                }
             }
         })
 
@@ -414,6 +550,8 @@
             var haribaru = $('input[name="amountDay"]').val();
             var harilama = $('input[name="amountDay2"]').val();
             var selisih = $('input[name="selisih"]').val();
+            var bulangajilama = $("input[name='blngajilama']").val();
+            var bulangajibaru = $("input[name='blngajibaru']").val();
 
             if(id.length < 1) {
                 alert('id harus di isi');
@@ -458,7 +596,9 @@
                         'terbilang' : terbilang,
                         'haribaru' : haribaru,
                         'harilama' : harilama,   
-                        'selisih' : selisih
+                        'selisih' : selisih,
+                        'bulangajilama' : bulangajilama,
+                        'bulangajibaru' : bulangajibaru,
                     },
                     success: function(response){
                         if(response == "Max"){
@@ -539,11 +679,12 @@
             },
         });
 
-        // $('#btn-submit-form').on('click', function() {
-        //     $('#form').submit();
-        //     $(this).attr('disabled', true);
-        //     $(this).text("Loading ...");
-        // });
+        $(':checkbox').on('change', function() {
+            if (this.checked == true)
+                $(this).val("1"); 
+            else
+                $(this).val("0");
+        });
 
         // Use datepicker on the date inputs
         $("input[type=date]").datepicker({
@@ -558,30 +699,6 @@
         return false;
         });
 
-        /* Dengan Rupiah */
-        var dengan_rupiah = document.getElementById('amountrapel');
-        dengan_rupiah.addEventListener('keyup', function(e)
-        {
-            dengan_rupiah.value = formatRupiah(this.value);
-        });
-        
-        /* Fungsi */
-        function formatRupiah(angka, prefix)
-        {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split    = number_string.split(','),
-                sisa     = split[0].length % 3,
-                rupiah     = split[0].substr(0, sisa),
-                ribuan     = split[0].substr(sisa).match(/\d{3}/gi);
-                
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-            
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-        }
     });
 </script>
 <script type="text/javascript">
@@ -592,7 +709,8 @@
 </script>
 <script>
     $(function() {
-        var checkbox = $("#rapel");
+        var form = $("#form");
+        var select = $("#opsi");
         var hide1 = $("#hide1");
         var hide2 = $("#hide2");
         var hide3 = $("#hide3");
@@ -602,6 +720,13 @@
         var hide7 = $("#hide7");
         var hide8 = $("#hide8");
         var hide9 = $("#hide9");
+        var hide10 = $("#hide10");
+        var hide11 = $("#hide11");
+        var hide12 = $("#hide12");
+        var hide13 = $("#hide13");
+        var hide14 = $("#hide14");
+        var hide15 = $("#hide15");
+        var hide16 = $("#hide16");
 
         hide1.hide();
         hide2.hide();
@@ -612,9 +737,17 @@
         hide7.hide();
         hide8.hide();
         hide9.show();
+        hide10.hide();
+        hide11.hide();
+        hide12.hide();
+        hide13.hide();
+        hide14.hide();
+        hide15.hide();
+        hide16.hide();
 
-        checkbox.change(function() {
-            if (checkbox.is(':checked')) {
+        select.change(function() {
+            value = $(this).find(":selected").val()
+            if (value == '0') {
                 hide1.show();
                 hide2.show();
                 hide3.show();
@@ -624,6 +757,13 @@
                 hide7.show();
                 hide8.show();
                 hide9.show();
+                hide10.show();
+                hide11.show();
+                hide12.show();
+                hide13.show();
+                hide14.show();
+                hide15.show();
+                hide16.show();
             } else {
                 hide1.hide();
                 hide2.hide();
@@ -634,6 +774,13 @@
                 hide7.hide();
                 hide8.hide();
                 hide9.show();
+                hide10.hide();
+                hide11.hide();
+                hide12.hide();
+                hide13.hide();
+                hide14.hide();
+                hide15.hide();
+                hide16.hide();
             }
         });
     });

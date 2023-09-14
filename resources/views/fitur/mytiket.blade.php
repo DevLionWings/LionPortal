@@ -498,9 +498,10 @@
         })
 
         var table = $('#tiket_list').DataTable({
+            scrollX: true,
             processing: true,
             serverSide: true,
-            responsive: true,
+            responsive: false,
             searching: true,
             ajax: "{{ route('my-tiket') }}",
             order: [[ 7, "desc" ]],

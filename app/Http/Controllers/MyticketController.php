@@ -232,7 +232,7 @@ class MyticketController extends Controller
                     $managerItBtn = $parentBtn. $download_btn;
                 }
                 
-                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD001'){
+                if($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001'){
                     return $itBtn;
                 }
                 if($roleid == 'RD002'){ 

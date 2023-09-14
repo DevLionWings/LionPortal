@@ -383,7 +383,7 @@
                         <!-- <div class="form-group">
                             <input type="file" name="filecomment" id="filecomment" class="form-control">
                         </div> -->
-                        <div class="form-group">
+                        <div class="form-group" id="hideviewcmnt">
                             <!-- <button type="button" id="refreshcomment" class="refreshcomment btn btn-link btn-xs"><i class="fas fa-refresh"></i>Refresh</button> -->
                             <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
                         </div>
@@ -1121,7 +1121,7 @@
                 success: function(response) {
                     // console.log(response["disc"])
                     $("#comment").css("display","inline");
-                   
+                    var hide = $("#hideviewcmnt");
                     var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";

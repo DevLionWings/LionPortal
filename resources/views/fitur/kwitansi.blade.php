@@ -206,7 +206,6 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery/jquery-ui.js') }}"></script>
-
 <script>
     $('.nav-link.active').removeClass('active');
     $('#m-kwitansi').addClass('active');
