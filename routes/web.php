@@ -62,6 +62,7 @@ Route::post('/closemytiket', [MyticketController::class,'closedTiket'])->name('c
 // Route::get('/get/comment', [CommentController::class,'displayComment'])->name('comment-get');
 Route::post('/add/comment', [CommentController::class,'addComment'])->name('comment-add');
 Route::post('/get/comment', [CommentController::class,'listComment'])->name('get-comment');
+Route::post('/get/count/comment', [CommentController::class,'countComment'])->name('count-comment');
 
 /* Upload */
 // Route::post('/download', [TiketController::class,'downloadFile'])->name('download.file');

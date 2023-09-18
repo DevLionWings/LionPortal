@@ -599,7 +599,7 @@ class Repository
         try{
             $year = date('Y');
             /* passing Data to Array */
-            if ($roleid == 'RD002' || $roleid == 'RD003') {
+            if ($roleid == 'RD002') {
                 $value = array(
                     'ticketno' => $ticketno,
                     'categoryid' => $category,
@@ -618,9 +618,34 @@ class Repository
                     'rejectedby' => '',
                     'remark' => $remark,
                     'approvedby1_date' => date('Y-m-d'),
-                    'approvedby2_date' => date('Y-m-d'),
-                    'approvedby3_date' => date('Y-m-d '),
-                    'approvedbyit_date' => date('Y-m-d'),
+                    'approvedby2_date' => null,
+                    'approvedby3_date' => null,
+                    'approvedbyit_date' => null,
+                    'createdby' => $createdby,
+                    'targetdate' => $targetdate
+                );
+            } else if ($roleid == 'RD003') {
+                $value = array(
+                    'ticketno' => $ticketno,
+                    'categoryid' => $category,
+                    'userid' => $userid,
+                    'subject' => $subject,
+                    'detail' => $remark,
+                    'attachment' => $upload,
+                    'assignedto' => $assign,
+                    'statusid' => $statusid,
+                    'createdon' => $createdon,
+                    'approvedby_1' => $approvedby_1,
+                    'approvedby_2' => '',
+                    'approvedby_3' => '',
+                    'approvedby_it' => $approvedby_it,
+                    'priorid' => $priority,
+                    'rejectedby' => '',
+                    'remark' => $remark,
+                    'approvedby1_date' => null,
+                    'approvedby2_date' => null,
+                    'approvedby3_date' => null,
+                    'approvedbyit_date' => null,
                     'createdby' => $createdby,
                     'targetdate' => $targetdate
                 );
@@ -642,9 +667,9 @@ class Repository
                     'priorid' => $priority,
                     'rejectedby' => '',
                     'remark' => $remark,
-                    'approvedby1_date' => date('Y-m-d H:i:s'),
-                    'approvedby2_date' => date('Y-m-d H:i:s'),
-                    'approvedby3_date' => date('Y-m-d H:i:s'),
+                    'approvedby1_date' => null,
+                    'approvedby2_date' => null,
+                    'approvedby3_date' => null,
                     'approvedbyit_date' => date('Y-m-d H:i:s'),
                     'createdby' => $createdby,
                     'targetdate' => $targetdate

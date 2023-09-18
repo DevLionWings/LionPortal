@@ -425,6 +425,8 @@
             var created  = $(this).attr('data-createdname');
             var approve  = $(this).attr('data-approve1name');
             var approveit  = $(this).attr('data-approveitname');
+            var approvedate  = $(this).attr('data-approvedby1');
+            var approveitdate  = $(this).attr('data-approvedbyit');
             var upload  = $(this).attr('data-upload');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view-user"]');
@@ -448,6 +450,8 @@
             $form.find('input[name="targetdate"]').val(targetdate);
             $form.find('input[name="approve"]').val(approve);
             $form.find('input[name="approveit"]').val(approveit);
+            $form.find('input[name="dateapprove"]').val(approvedate);
+            $form.find('input[name="dateapproveit"]').val(approveitdate);
             $form.find('input[name="upload"]').val(upload);
             $modal.modal('show');
         });

@@ -140,13 +140,13 @@ class CommentController extends Controller
     public function listComment(Request $request){
         $disc = ''; 
         $ticketno = $request->ticketno;
-        // $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $request->ticketno)->get();
-        // $jsonCmmnt = json_decode($dataCommnt, true);
+
         $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
                 ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment', 'a.attachment')
                 ->where('a.ticketno', $ticketno)
                 ->get();
+      
         $jsonCmmnt = json_decode($dataCommnt, true);
 
         /* Get Comment */
@@ -162,6 +162,32 @@ class CommentController extends Controller
         }
 
         $data['disc'] = $commentArray; 
+
+        return $data;
+    }
+
+    public function countComment(Request $request){
+        $disc = ''; 
+        $ticketno = $request->ticketno;
+
+        $countCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
+                ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
+                ->where('a.ticketno', $ticketno)
+                ->count();
+      
+        $jsonCmmnt = json_decode($countCommnt, true);
+
+        /* Get Comment */
+        // $comment = $jsonCmmnt;
+        // $commentArray = [];
+        // foreach ($comment as $key => $value) {
+        //     return $value;
+        //     array_push($commentArray, [
+        //         "COUNT" => trim($value),
+        //     ]);
+        // }
+
+        $data['disc'] = $countCommnt; 
 
         return $data;
     }
