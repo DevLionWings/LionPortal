@@ -212,10 +212,13 @@ class KwitansiController extends Controller
                         "data" => array()
                     );
         if($datakwitansi == true){
+            $counter = 0;
             foreach($datakwitansi as $key => $value){
+                ++$counter;
                 if($value->type == 3 ||  $value->type == 1.5 || $value->type == 0){
                     if($value->lamacuti == 0 ){
                         array_push($datajson["data"], [
+                            "counter" => $counter,
                             "type" => trim($value->type),
                             "nokwitansi" => trim($value->idkwitansi),
                             "nama" => trim($value->namakaryawan),
@@ -231,6 +234,7 @@ class KwitansiController extends Controller
                         ]);
                     } else {
                         array_push($datajson["data"], [
+                            "counter" => $counter,
                             "type" => trim($value->type),
                             "nokwitansi" => trim($value->idkwitansi),
                             "nama" => trim($value->namakaryawan),
@@ -246,6 +250,7 @@ class KwitansiController extends Controller
                     }
                 } else {
                     array_push($datajson["data"], [
+                            "counter" => $counter,
                             "rapel" => "",
                             "type" => trim($value->type),
                             "nokwitansi" => trim($value->idkwitansi),
