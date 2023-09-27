@@ -218,6 +218,7 @@
                             <div class="input-group value">
                                 <select id="plantid" name="plantid" class="form-control input--style-6" required>
                                     @foreach($plnt as $plntcode)
+                                    <option value="">Masukan Pilihan</option>
                                     <option value="{{ $plntcode['ID'] }}">{{ $plntcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
@@ -228,6 +229,7 @@
                             <div class="input-group value">
                                 <select id="roleid" name="roleid" class="form-control input--style-6" required>
                                     @foreach($rol as $rolcode)
+                                    <option value="">Masukan Pilihan</option>
                                     <option value="{{ $rolcode['ID'] }}">{{ $rolcode['NAME'] }}</option>
                                     @endforeach
                                 </select>

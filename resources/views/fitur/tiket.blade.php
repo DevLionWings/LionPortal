@@ -392,7 +392,6 @@
                         <div class="row">
                             <div class="col-md-3"> 
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i>View Comment</button>
-                                
                             </div>
                             <div class="col-md-1" id="comment2"> 
                                 <span type="text" name="countcomment" id="countcomment" class="modal-input" readonly></span>
@@ -706,9 +705,9 @@
 
         $(document).on('click', '.view', function() {
             $("#comment1").load(" #comment1");
-            $("#comment2").load(" #comment2");
             $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
             getComment($(this).attr('data-ticket'));
+            $("#comment2").load(" #comment2");
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');

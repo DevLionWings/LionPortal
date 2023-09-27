@@ -145,6 +145,7 @@ class CommentController extends Controller
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')
                 ->select('a.senderid', 'b.username', 'a.createdon', 'a.comment', 'a.attachment')
                 ->where('a.ticketno', $ticketno)
+                ->orderBy('a.createdon', 'desc')
                 ->get();
       
         $jsonCmmnt = json_decode($dataCommnt, true);
@@ -176,16 +177,6 @@ class CommentController extends Controller
                 ->count();
       
         $jsonCmmnt = json_decode($countCommnt, true);
-
-        /* Get Comment */
-        // $comment = $jsonCmmnt;
-        // $commentArray = [];
-        // foreach ($comment as $key => $value) {
-        //     return $value;
-        //     array_push($commentArray, [
-        //         "COUNT" => trim($value),
-        //     ]);
-        // }
 
         $data['disc'] = $countCommnt; 
 
