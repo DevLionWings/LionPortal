@@ -148,8 +148,8 @@
 
 <script>
     $('.nav-link.active').removeClass('active');
-    $('#m-user').addClass('active');
-    $('#m-user').parent().parent().parent().addClass('menu-is-opening menu-open');
+    $('#m-department').addClass('active');
+    $('#m-department').parent().parent().parent().addClass('menu-is-opening menu-open');
 </script>
 <script>
     $(function () {    

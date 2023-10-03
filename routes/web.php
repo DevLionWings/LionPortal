@@ -21,6 +21,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\MeetingroomController;
+use App\Http\Controllers\ViewroomController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -141,3 +144,20 @@ Route::get('/plant', [PlantController::class,'index'])->name('plant');
 Route::get('/plant/list', [PlantController::class,'dataList'])->name('plant-list');
 Route::post('/plant/delete', [PlantController::class,'delete'])->name('plant-delete');
 Route::post('/plant/insert', [PlantController::class,'insert'])->name('plant-insert');
+
+/* Menu Room Meeting */
+// View
+Route::get('/view', [ViewroomController::class,'viewRoom'])->name('view-room');
+Route::get('/view/list', [ViewroomController::class,'listRoom'])->name('list-room');
+// Admin
+Route::get('/admin/index', [MeetingroomController::class,'adminIndex'])->name('admin-index');
+Route::get('/room/get', [MeetingroomController::class,'roomList'])->name('room-list');
+Route::get('/count/get', [MeetingroomController::class,'countRoom'])->name('get-count');
+Route::post('/add/room', [MeetingroomController::class,'addRoom'])->name('add-room');
+// User
+Route::get('/user/index', [MeetingroomController::class,'userIndex'])->name('user-index');
+Route::get('/room/user/get', [MeetingroomController::class,'roomListUser'])->name('room-list-user');
+Route::post('/book/room', [MeetingroomController::class,'bookRoom'])->name('book-room');
+Route::get('/get/room', [MeetingroomController::class,'getRoom'])->name('get-room');
+Route::post('/cancel/room', [MeetingroomController::class,'cancelRoom'])->name('cancel-room');
+Route::post('/avail/room', [MeetingroomController::class,'availRoom'])->name('avail-room');

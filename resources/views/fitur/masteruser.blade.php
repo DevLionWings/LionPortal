@@ -291,8 +291,8 @@
                             <div class="name">Status Login:</div>
                             <div class="input-group value">
                                 <select id="status" name="status" class="form-control input--style-6" required>
-                                    <option value="1">Login</option>
                                     <option value="0">Logout</option>
+                                    <option value="1">Login</option>
                                 </select>
                             </div>
                         </div>

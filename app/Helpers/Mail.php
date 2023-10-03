@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail as SendtoMail;
 use App\Mail\SendMail;
 use App\Mail\SendMailComment;
+use App\Mail\SendMailBooking;
 
 use Auth;
 
@@ -47,9 +48,9 @@ class Mail
         SendtoMail::to($emails)->send(new SendMail($mailData));
     }
 
-    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail)
+    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor)
     {
-        $emails = array($emailSign, $emailFrom);
+        $emails = array($emailSign, $emailFrom, $emailMgrIt, $emailMgrUser, $emailRequestor);
       
         $mailData = array(
             'comment' => $comment_body,
@@ -59,5 +60,22 @@ class Mail
         );
        
         SendtoMail::to($emails)->send(new SendMailComment($mailData));
+    }
+
+    public static function SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy)
+    {
+        $emails = array($emailBook, $emailBookBy);
+      
+        $mailData = array(
+            'bookid' => $newBookId,
+            'subject' => $subject,
+            'desc' => $desc,
+            'date' => $date,
+            'starttime' => $starttime,
+            'endtime' => $endtime,
+            'bookingname' => $assignNameBookBy
+        );
+    
+        SendtoMail::to($emails)->send(new SendMailBooking($mailData));
     }
 }

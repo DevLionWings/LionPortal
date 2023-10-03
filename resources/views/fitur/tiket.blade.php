@@ -266,6 +266,9 @@
                 <form action="" name="view1" id="view1">
                     @csrf
                     <div class="modal-body">
+                    <input type="hidden" id="approveId" name="approveId">
+                    <input type="hidden" id="approveItId" name="approveItId">
+                    <input type="hidden" id="requestorid" name="requestorid">
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                         <!-- <div class="form-group">
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
@@ -722,6 +725,9 @@
             var roleid  = $(this).attr('data-roleid');
             var targetdate  = $(this).attr('data-targetdate');
             var created  = $(this).attr('data-createdname');
+            var approveId  = $(this).attr('data-approvedby_1');
+            var approveItId  = $(this).attr('data-approvedby_it');
+            var requestorId  = $(this).attr('data-requestorid');
             var approve  = $(this).attr('data-approve1name');
             var approveit  = $(this).attr('data-approveitname');
             var approvedate  = $(this).attr('data-approvedby1');
@@ -750,6 +756,9 @@
             $form.find('input[name="approve"]').val(approve);
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="dateapprove"]').val(approvedate);
+            $form.find('input[name="approveId"]').val(approveId);
+            $form.find('input[name="approveItId"]').val(approveItId);
+            $form.find('input[name="requestorid"]').val(user_id);
             $form.find('input[name="dateapproveit"]').val(approveitdate);
             $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="upload"]').val(upload);
@@ -1005,7 +1014,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -1156,7 +1165,10 @@
         });
 
         $(document).on('click', '.btncomment', function() {
-            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            var ticketno = $('#modal-view-user form[name="view1"] input[name="ticketno"]').val();
+            var requestor = $('#modal-view-user form[name="view1"] input[name="requestorid"]').val();
+            var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
+            var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
             var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
             var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
@@ -1174,7 +1186,10 @@
                 url: "/add/comment",
                 type: 'POST',
                 data: {
-                    'ticketno' : ticketno, 
+                    'ticketno' : ticketno,
+                    'requestor' : requestor,
+                    'approve' : approve,
+                    'approveit' : approveit, 
                     'comment_body' : comment_body,
                     'filecomment' : file_data
                 },

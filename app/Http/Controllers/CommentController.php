@@ -27,9 +27,14 @@ class CommentController extends Controller
     {   
         $userid = Session::get('userid');
         $useremail = Session::get('usermail');
+        $mgrid = Session::get('mgrid');
+        $roleid = Session::get('roleid');
         $comment_body = $request->comment_body;
         $ticketno = $request->ticketno;
         $file = $request->filecomment;
+        $requestor = $request->requestor;
+        $mgrUser = $request->approve;
+        $mgrIt = $request->approveit;
         $strfile = str_replace( "\\", '/', $file);
         $basefile = basename($strfile);
       
@@ -103,10 +108,19 @@ class CommentController extends Controller
             $assignto = $getTicket->assignedto;
             $detail = $getTicket->detail;
             $dataAssign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
+            $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
+            $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
+            $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
+
             $emailFrom = $useremail;
-            $emailSign =  $dataAssign->usermail;
             $assignNameSign = $dataAssign->username;
-            $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail);
+            $emailSign =  $dataAssign->usermail;
+            $emailMgrIt =  $dataMgrIt->usermail;
+            $emailMgrUser =  $dataMgrUser->usermail;
+            $emailRequestor = $dataReq->usermail;
+
+            $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor);
+    
             /* End Send Email */
 
             $disc = ''; 
