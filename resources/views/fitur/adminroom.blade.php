@@ -443,7 +443,7 @@
 
         // Code below to avoid the classic date-picker
         $('#startdate').on('click', function() {
-            alert('test');
+            // alert('test');
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
             var hide1 = $("#hideroom");
