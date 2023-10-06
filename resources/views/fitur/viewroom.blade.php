@@ -240,7 +240,7 @@
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
                         var date = day + "-" + month + "-" + year;
                         statusText = `<i class="far fa-calendar-alt"></i>`;
-                        return statusText + ' ' + date;  
+                        return statusText + ' ' + data;  
                     }
                 },
                 // {

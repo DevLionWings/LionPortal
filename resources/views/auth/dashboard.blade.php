@@ -31,7 +31,7 @@
                         <div class="col-sm-12">
                             <h6>Tickets for a Week</h6>
                         </div>
-                        <div class="col-12 col-sm-6 col-md-3">
+                        <div class="col-12 col-sm-6 col-md-4">
                             <div class="info-box">
                                 <span class="info-box-icon bg-success elevation-1"><i class="fas fa-sign-in-alt"></i></span>
                 
@@ -45,7 +45,7 @@
                             </div>
                             <!-- /.info-box -->
                         </div>
-                        <div class="col-12 col-sm-6 col-md-3">
+                        <div class="col-12 col-sm-6 col-md-4">
                             <div class="info-box">
                                 <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-sign-out-alt"></i></span>
                 
@@ -59,7 +59,7 @@
                             </div>
                             <!-- /.info-box -->
                         </div>
-                        <div class="col-12 col-sm-6 col-md-3">
+                        <div class="col-12 col-sm-6 col-md-4">
                             <div class="info-box">
                                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-file-invoice"></i></span>
                 

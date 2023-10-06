@@ -110,6 +110,24 @@
                         <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
+                                    <label class="form-check-label" for="systemid" disabled>System :</label>
+                                    <input type="text" name="systemid" class="form-control" id="systemid" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="objectid" disabled>Object Type :</label>
+                                    <input type="text" name="objectid" class="form-control" id="objectid" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="moduleid" disabled>Module :</label>
+                            <input type="text" name="moduleid" class="form-control" id="moduleid" readonly>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
                                     <label class="form-check-label" for="category" disabled>Category :</label>
                                     <input type="text" name="category" class="form-control" id="category" readonly>
                                 </div>
@@ -187,10 +205,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
-                                    <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
+                                    <label class="form-check-label" for="createdon" disabled>Created Date:</label>
+                                    <input type="text" name="createdon" class="form-control" id="createdon" readonly>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
+                            <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
                         </div>
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
@@ -408,7 +430,7 @@
         $(document).on('click', '.view', function() {
             $("#comment1").load(" #comment1");
             $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
-            // getComment($(this).attr('data-ticket'));
+            getComment($(this).attr('data-ticket'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -427,7 +449,11 @@
             var approveit  = $(this).attr('data-approveitname');
             var approvedate  = $(this).attr('data-approvedby1');
             var approveitdate  = $(this).attr('data-approvedbyit');
+            var systemid  = $(this).attr('data-systemid');
+            var moduleid  = $(this).attr('data-moduleid');
+            var objectid  = $(this).attr('data-objectid');
             var upload  = $(this).attr('data-upload');
+            var createdon  = $(this).attr('data-createdon');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view-user"]');
             var hide = $("#hidecmnt");
@@ -452,7 +478,11 @@
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="dateapprove"]').val(approvedate);
             $form.find('input[name="dateapproveit"]').val(approveitdate);
+            $form.find('input[name="systemid"]').val(systemid);
+            $form.find('input[name="moduleid"]').val(moduleid);
+            $form.find('input[name="objectid"]').val(objectid);
             $form.find('input[name="upload"]').val(upload);
+            $form.find('input[name="createdon"]').val(createdon);
             $modal.modal('show');
         });
 
@@ -531,7 +561,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -539,24 +569,34 @@
                     render: function(data) {
                         if(data == 'INCIDENT'){
                             statusText = `<span class="badge badge-danger">INCIDENT</span>`;
-                        } else if (data == 'SAP CHANGE REQUEST'){
+                        } else if (data == 'CHANGE REQUEST'){
                             statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
-                        } else if (data == 'NON SAP CHANGE REQUEST'){
-                            statusText = `<span class="badge badge-info">NON SAP CHANGE REQUEST</span>`;
-                        } else if (data == 'USER SAP REQUEST'){
-                            statusText = `<span class="badge badge-warning">USER SAP REQUEST</span>`;
-                        } else if (data == 'SAP AUTHORIZATION'){
-                            statusText = `<span class="badge badge-dark">SAP AUTHORIZATION</span>`;
+                        } else if (data == 'HARDWARE'){
+                            statusText = `<span class="badge badge-info">HARDWARE</span>`;
+                        } else if (data == 'USER REQUEST'){
+                            statusText = `<span class="badge badge-warning">USER REQUEST</span>`;
+                        } else if (data == 'AUTHORIZATION'){
+                            statusText = `<span class="badge badge-dark">AUTHORIZATION</span>`;
                         } else if (data == 'INTERNET ACCESS'){
                             statusText = `<span class="badge badge-primary">INTERNET ACCESS</span>`;
-                        } else if (data == 'EMAIL ACCESS'){
+                        } else if (data == 'EMAIL'){
                             statusText = `<span class="badge badge-dark">EMAIL ACCESS</span>`;
-                        } else if (data == 'NEW HARDWARE'){
-                            statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
-                        } else if (data == 'NON SAP ACCESS'){
-                            statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
+                        } else if (data == 'INTERNET'){
+                            statusText = `<span class="badge badge-primary">INTERNET</span>`;
+                        } else if (data == 'DATA'){
+                            statusText = `<span class="badge badge-info">DATA</span>`;
                         } else if (data == 'OTHER'){
-                            statusText = `<span class="badge badge-dark">OTHER</span>`;
+                            statusText = `<span class="badge badge-warning">OTHER</span>`;
+                        } else if (data == 'IMPROVEMENT'){
+                            statusText = `<span class="badge badge-primary">IMPROVEMENT</span>`;
+                        } else if (data == 'PROCEDURE'){
+                            statusText = `<span class="badge badge-info">PROCEDURE</span>`;
+                        } else if (data == 'INFRASTRUCTURE'){
+                            statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
+                        } else if (data == 'SOFTWARE'){
+                            statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
+                        } else if (data == 'VPN'){
+                            statusText = `<span class="badge badge-warning">VPN</span>`;
                         }
                             
                         return statusText;
@@ -647,6 +687,42 @@
 			},
         });
 
+        // $(document).on('click', '.viewcomment', function(e) {
+        //     e.preventDefault();
+        //     var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         type: "POST",
+        //         url: "/get/comment",
+        //         data: {
+        //             'ticketno' : ticketno, 
+        //         },
+        //         // contentType: true, 
+        //         // processData: true,
+        //         success: function(response) {
+        //             // console.log(response["disc"])
+        //             $("#view-user").serialize();
+        //             $("#comment1").css("display","inline");
+        //             var $viewComment = $(' <div class="form-group"></div>');
+        //             $.each(response["disc"], function(key, data) {
+        //                 var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
+        //                 var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
+        //                 var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
+        //                 var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
+        //                 $viewComment.append($nama,$date,$filecomment,$comment).serialize();
+        //             });
+                    
+        //             $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
+                
+        //         },
+        //         error: function (error) {
+        //             console.error(error);
+        //         },
+        //     })
+        // });
+
         $(document).on('click', '.viewcomment', function(e) {
             e.preventDefault();
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
@@ -659,12 +735,10 @@
                 data: {
                     'ticketno' : ticketno, 
                 },
-                // contentType: true, 
-                // processData: true,
                 success: function(response) {
-                    console.log(response["disc"])
-                    $("#view-user").serialize();
-                    $("#comment1").css("display","inline");
+                    // console.log(response["disc"])
+                    $("#comment").css("display","inline");
+                    // var hide = $("#hideviewcmnt");
                     var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
@@ -675,7 +749,7 @@
                     });
                     
                     $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
-                
+                    
                 },
                 error: function (error) {
                     console.error(error);
@@ -683,10 +757,57 @@
             })
         });
 
+        // $(document).on('click', '.btncomment', function() {
+        //     var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+        //     var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+        //     var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
+         
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         url: "/add/comment",
+        //         type: 'POST',
+        //         data: {
+        //             'ticketno' : ticketno, 
+        //             'comment_body' : comment_body,
+        //         },
+        //         success: function(response){ 
+        //             // console.log(response["disc"]);
+        //             // var $viewComment = $('.modal-content .modal-body');
+        //             // var target = $viewComment.find('form-group .modal-input');
+        //             var $viewComment = $(' <div class="form-group"></div>');
+        //             $.each(response["disc"], function(key, data) {
+        //                 var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
+        //                 var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
+        //                 var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
+        //                 var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
+        //                 $viewComment.append($nama,$date,$filecomment,$comment);
+        //             });
+        //             document.getElementById("comment_body").value = "";
+        //             $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+        //             $("#comment1").load(" #comment1");
+        //         },
+        //         error: function (error) {
+        //             console.error(error);
+        //         },
+        //     });
+        // })
+
         $(document).on('click', '.btncomment', function() {
-            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+            var ticketno = $('#modal-view-user form[name="view1"] input[name="ticketno"]').val();
+            var requestor = $('#modal-view-user form[name="view1"] input[name="requestorid"]').val();
+            var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
+            var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
+            var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
             var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
+            // const file_data = $('#filecomment').prop('files')[0];
+            // var filecomment = document.getElementById("filecomment").files[0].name;
+            // var file_data = $('#filecomment').prop('files')[0];  
+            // var formData = new FormData(); 
+            // formData.append("filecomment", file_data);
+
+            // console.log(formData);
          
             $.ajax({
                 headers: {
@@ -695,24 +816,28 @@
                 url: "/add/comment",
                 type: 'POST',
                 data: {
-                    'ticketno' : ticketno, 
+                    'ticketno' : ticketno,
+                    'requestor' : requestor,
+                    'approve' : approve,
+                    'approveit' : approveit, 
                     'comment_body' : comment_body,
+                    'filecomment' : file_data
                 },
                 success: function(response){ 
-                    // console.log(response["disc"]);
+                    // console.log(response);
                     // var $viewComment = $('.modal-content .modal-body');
                     // var target = $viewComment.find('form-group .modal-input');
                     var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
-                        var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
-                        var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
+                        var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px readonly>"+data["COMMENT"]+"</textarea>";
                         var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
                         $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     document.getElementById("comment_body").value = "";
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
-                    $("#comment1").load(" #comment1");
+        
                 },
                 error: function (error) {
                     console.error(error);
@@ -733,7 +858,7 @@
                     'upload' : upload, 
                 },
                 success: function(response){ 
-                    console.log(response);
+                    // console.log(response);
                     window.open(response);
                     // var blob = new Blob([response]);
                     // var link = document.createElement('a');
@@ -745,30 +870,31 @@
         })
     });
 
-    // function getComment(ticketno) {
-    //     $.ajax({
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         type: "POST",
-    //         url: "/get/comment",
-    //         data: {
-    //             'ticketno' : ticketno, 
-    //         },
-    //         success: function(response) {
-    //             console.log(response["disc"])
-    //             var $viewComment = $(' <div class="form-group"></div>');
-    //             $.each(response["disc"], function(key, data) {
-    //                 var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+ "</label>";
-    //                 var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-    //                 var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px>" +data["COMMENT"]+"</textarea>";
-    //                 $viewComment.append($nama,$date,$comment);
-    //             });
+    function getComment(ticketno) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            url: "/get/count/comment",
+            data: {
+                'ticketno' : ticketno, 
+            },
+            success: function(response) {
+                // console.log(response["disc"])
+                var $countComment = $(' <div class="form-group"></div>');
                 
-    //             $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
-    //         }
-    //     })
-    // }
+                var $count = "<span class=form-check-label style=color:blue style=font-size:11px>(" +response["disc"]+ ")</span>";
+                $countComment.append($count);
+                
+                $('#modal-view-user form[name="view1"] span[name="countcomment"]').parent().html($countComment);  
+                
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        })
+    }
 </script>
 <script>
     window.setTimeout(function() {

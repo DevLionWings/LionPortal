@@ -255,7 +255,7 @@
                                     <div class="form-group">
                                         <label class="form-check-label">Start Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="starttime" name="starttime" class="select2" style="width: 100%;"  onchange="myFunction(event)">
+                                            <select  type="text" id="starttime" name="starttime" class="btntime select2" style="width: 100%;"  onchange="myFunction(event)">
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['START'] }}">{{ $tmcode['START'] }}</option>
                                                 @endforeach
@@ -269,7 +269,7 @@
                                     <div class="form-group">
                                         <label class="form-check-label">End Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="endtime" name="endtime" class="select2" style="width: 100%;"  onchange="myFunction(event)">
+                                            <select  type="text" id="endtime" name="endtime" class="btntime select2" style="width: 100%;"  onchange="myFunction(event)">
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['END'] }}">{{ $tmcode['END'] }}</option>
                                                 @endforeach
@@ -288,7 +288,7 @@
                         </div> 
                         <div class="form-group" id="hideroom">   
                             <label class="form-check-label" for="roomAvail">Room Meeting Available :</label>
-                            <select type="text" id="roomAvail" name="roomAvail" class="form-control input--style-6" style="width: 100%;">
+                            <select type="text" id="roomAvail" name="roomAvail" class="select2" style="width: 100%;">
                                 <option value="">Chose Room Meeting</option>
                             </select>  
                         </div> 
@@ -442,54 +442,56 @@
         // });
 
         // Code below to avoid the classic date-picker
-        $('#startdate').on('click', function() {
-            // alert('test');
-            $("#hideroom").load(" #hideroom");
-            $("#hideroombooked").load(" #hideroombooked");
-            var hide1 = $("#hideroom");
-            var hide2 = $("#hideroombooked");
-            hide1.hide();
-            hide2.hide();
+        // $('#startdate').on('click', function() {
+        //     $("#hideroom").load(" #hideroom");
+        //     $("#hideroombooked").load(" #hideroombooked");
+        //     var hide1 = $("#hideroom");
+        //     var hide2 = $("#hideroombooked");
+        //     hide1.hide();
+        //     hide2.hide();
 
-            var startdate = $('#modal-booked-user input[name="startdate"]').val();
-            var enddate = $('#modal-booked-user input[name="enddate"]').val();
+        //     var startdate = $('#modal-booked-user input[name="startdate"]').val();
+        //     var enddate = $('#modal-booked-user input[name="enddate"]').val();
+        //     console.log(startdate);
+        //     console.log(enddate);
+        //     console.log(date);
 
-            $("select option").each(function() {
-                var $thisOption = $(this);
-                if(startdate == date || enddate == date){
-                    if($thisOption.val() < time) {
-                        $thisOption.attr("disabled", true);
-                    }
-                } else {
-                    $thisOption.attr("disabled", false);
-                }
-            });
+        //     $("select option").each(function() {
+        //         var $thisOption = $(this);
+        //         if(startdate == date || enddate == date){
+        //             if($thisOption.val() < time) {
+        //                 $thisOption.attr("disabled", true);
+        //             }
+        //         } else {
+        //             $thisOption.attr("disabled", false);
+        //         }
+        //     });
             
-        });
+        // });
 
-        $('#enddate').on('click', function() {
-            $("#hideroom").load(" #hideroom");
-            $("#hideroombooked").load(" #hideroombooked");
-            var hide1 = $("#hideroom");
-            var hide2 = $("#hideroombooked");
-            hide1.hide();
-            hide2.hide();
+        // $('#enddate').on('click', function() {
+        //     $("#hideroom").load(" #hideroom");
+        //     $("#hideroombooked").load(" #hideroombooked");
+        //     var hide1 = $("#hideroom");
+        //     var hide2 = $("#hideroombooked");
+        //     hide1.hide();
+        //     hide2.hide();
             
-            var startdate = $('#modal-booked-user input[name="startdate"]').val();
-            var enddate = $('#modal-booked-user input[name="enddate"]').val();
+        //     var startdate = $('#modal-booked-user input[name="startdate"]').val();
+        //     var enddate = $('#modal-booked-user input[name="enddate"]').val();
 
-            $("select option").each(function() {
-                var $thisOption = $(this);
-                if(startdate == date || enddate == date){
-                    if($thisOption.val() < time) {
-                        $thisOption.attr("disabled", true);
-                    }
-                } else {
-                    $thisOption.attr("disabled", false);
-                }
-            });
+        //     $("select option").each(function() {
+        //         var $thisOption = $(this);
+        //         if(startdate == date || enddate == date){
+        //             if($thisOption.val() < time) {
+        //                 $thisOption.attr("disabled", true);
+        //             }
+        //         } else {
+        //             $thisOption.attr("disabled", false);
+        //         }
+        //     });
             
-        });
+        // });
 
         $('#save-btn').on('click', function() {
             $('#form').submit();
@@ -600,7 +602,7 @@
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
                         var date = day + "-" + month + "-" + year;
                         statusText = `<i class="far fa-calendar-alt"></i>`;
-                        return statusText + ' ' + date;    
+                        return statusText + ' ' + data;    
                     }
                 },
                 {
@@ -627,7 +629,7 @@
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
                         var date = day + "-" + month + "-" + year;
                         statusText = `<i class="far fa-calendar-alt"></i>`;
-                        return statusText + ' ' + date;  
+                        return statusText + ' ' + data;  
                     }
                 },
                 {
@@ -668,7 +670,7 @@
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
                         var date = day + "-" + month + "-" + year;
                         statusText = `<i class="far fa-calendar-alt"></i>`;
-                        return statusText + ' ' + date;   
+                        return statusText + ' ' + data;   
                     }
                 },
                 {
@@ -777,10 +779,55 @@
             hide2.hide();
             
         });
+
+        $(document).on('click', '.btntime', function(e) {
+            alert('test');
+            var startdate = $('#modal-booked-user input[name="startdate"]').val();
+            var enddate = $('#modal-booked-user input[name="enddate"]').val();
+            console.log(startdate);
+            console.log(enddate);
+            console.log(date);
+
+            $("select option").each(function() {
+                var $thisOption = $(this);
+                if(startdate == date || enddate == date){
+                    if($thisOption.val() < time) {
+                        $thisOption.attr("disabled", true);
+                    }
+                } else {
+                    $thisOption.attr("disabled", false);
+                }
+            });
+
+            $("#hideroom").load(" #hideroom");
+            $("#hideroombooked").load(" #hideroombooked");
+            var hide1 = $("#hideroom");
+            var hide2 = $("#hideroombooked");
+            hide1.hide();
+            hide2.hide();            
+        });
     });
 </script>
 <script type="text/javascript">
     function myFunction(e) {
+        var today = new Date();
+        var day = today.getDate() + "";
+        var month = (today.getMonth() + 1) + "";
+        var year = today.getFullYear() + "";
+        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+        var seconds = today.getSeconds() + "";
+
+        if (day < 10) {
+            day = '0' + day;
+        }
+
+        if (month < 10) {
+            month = `0${month}`;
+        }
+
+        var time = hour + ":" + minutes + ":" + seconds;
+        var date = year + "-" + month + "-" + day;
         // console.log(e.target.value);
         $("#hideroom").load(" #hideroom");
         $("#hideroombooked").load(" #hideroombooked");
@@ -788,7 +835,23 @@
         var hide2 = $("#hideroombooked");
         hide1.hide();
         hide2.hide();
-     
+
+        var startdate = $('#modal-booked-user input[name="startdate"]').val();
+        var enddate = $('#modal-booked-user input[name="enddate"]').val();
+        console.log(startdate);
+        console.log(enddate);
+        console.log(date);
+
+        $("select option").each(function() {
+            var $thisOption = $(this);
+            if(startdate == date || enddate == date){
+                if($thisOption.val() < time) {
+                    $thisOption.attr("disabled", true);
+                }
+            } else {
+                $thisOption.attr("disabled", false);
+            }
+        });
     }
 </script>
 <script>

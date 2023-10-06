@@ -188,29 +188,6 @@
                             </div>
                         </div>
                         @endif
-                        <div class="form-group">
-                            <div class="name">Category :</div>
-                            <div class="input-group value">
-                                <select id="category" name="category" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($categ as $categcode)
-                                    <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="name">Priority :</div>
-                            <div class="input-group value">
-                                <select id="priority" name="priority" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($prior as $priorcode)
-                                    <option value="{{ $priorcode['ID'] }}">{{ $priorcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="hidden" id="priorityname" name="priorityname" value="{{ $priorcode['NAME'] }}">
-                            </div>
-                        </div>
                         @if(session('roleid') == 'RD006' || session('roleid') == 'RD009')
                         <div class="form-group">
                             <div class="name">Assigned To :</div>
@@ -224,10 +201,86 @@
                             </div>
                         </div>
                         @endif
-                        <div class="form-group">
-                                <label class="form-check-label" >Target Date :</label>
-                                <input type="date" name="targetdate" id="targetdate" class="form-control"> 
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">System :</div>
+                                        <div class="input-group value">
+                                            <select id="system" name="system" class="form-control input--style-6" required>
+                                                <option value=""> Masukkan Pilihan :</option>
+                                                @foreach($sys as $syscode)
+                                                <option value="{{ $syscode['NAME'] }}">{{ $syscode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">Category :</div>
+                                        <div class="input-group value">
+                                            <select id="category" name="category" class="form-control input--style-6" required>
+                                                <option value=""> Masukkan Pilihan :</option>
+                                                @foreach($categ as $categcode)
+                                                <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">Priority :</div>
+                                        <div class="input-group value">
+                                            <select id="priority" name="priority" class="form-control input--style-6" required>
+                                                <option value=""> Masukkan Pilihan :</option>
+                                                @foreach($prior as $priorcode)
+                                                <option value="{{ $priorcode['ID'] }}">{{ $priorcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                            <input type="hidden" id="priorityname" name="priorityname" value="{{ $priorcode['NAME'] }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">Object Type:</div>
+                                        <div class="input-group value">
+                                            <select id="objecttype" name="objecttype" class="form-control input--style-6" required>
+                                                <option value=""> Masukkan Pilihan :</option>
+                                                @foreach($obj as $objcode)
+                                                <option value="{{ $objcode['NAME'] }}">{{ $objcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="module">
+                            <div class="name">Module :</div>
+                            <div class="input-group value">
+                                <select id="module" name="module" class="form-control input--style-6" required>
+                                    <option value=""> Masukkan Pilihan :</option>
+                                    @foreach($mdl as $mdlcode)
+                                    <option value="{{ $mdlcode['ID'] }}">{{ $mdlcode['NAME'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" >Target Date :</label>
+                            <input type="date" name="targetdate" id="targetdate" class="form-control"> 
+                        </div>
                         <div class="form-group">
                             <label class="form-check-label" for="group">Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject" required>
@@ -244,6 +297,12 @@
                             <label class="active">Upload Photos<small>(max size: 1mb)</small></label>
                             <div class="input-images" style="padding-top: .5rem;"></div>
                         </div> -->
+                        <div class="form-group">
+                            <label class="form-check-label" >Created Date :</label>
+                            <div class="input-group value">
+                                <input type="text"  id="createdate" name="createdate" class="form-control input--style-6" readonly>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -291,16 +350,34 @@
                         <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
+                                    <label class="form-check-label" for="systemid" disabled>System :</label>
+                                    <input type="text" name="systemid" class="form-control" id="systemid" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
                                     <label class="form-check-label" for="category" disabled>Category :</label>
                                     <input type="text" name="category" class="form-control" id="category" readonly>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <label class="form-check-label" for="priority" disabled>Priority :</label>
                                     <input type="text" name="priority" class="form-control" id="priority" readonly>
                                 </div>
                             </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="objectid" disabled>Object Type :</label>
+                                    <input type="text" name="objectid" class="form-control" id="objectid" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="moduleid" disabled>Module :</label>
+                            <input type="text" name="moduleid" class="form-control" id="moduleid" readonly>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
@@ -368,20 +445,23 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
-                                    <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
+                                    <label class="form-check-label" for="createdon" disabled>Created Date:</label>
+                                    <input type="text" name="createdon" class="form-control" id="createdon" readonly>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
+                            <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
                         </div>
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
                         
-                        <h4 class="modal-title">Display Comment :</h4>
-                        <hr />
+                        <h4 class="modal-title">Activity :</h4>
                         <div class="form-group" id="hidecmnt">
-                            <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
-                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
-                            <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
+                            <!-- <label class="form-check-label" for="comment_body" disabled></label> -->
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" placeholder="Write a comment..."></textarea>
+                            <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs">Save</button>
                         </div>
                         <!-- <div class="form-group">
                             <input type="file" name="filecomment" id="filecomment" class="form-control">
@@ -394,7 +474,7 @@
                         </div> -->
                         <div class="row">
                             <div class="col-md-3"> 
-                                <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i>View Comment</button>
+                                <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> Show Details</button>
                             </div>
                             <div class="col-md-1" id="comment2"> 
                                 <span type="text" name="countcomment" id="countcomment" class="modal-input" readonly></span>
@@ -686,11 +766,22 @@
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 <script src="{{ asset('plugins/jquery/jquery-ui.js') }}"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 
 <script>
     $('.nav-link.active').removeClass('active');
     $('#m-tiket').addClass('active');
     $('#m-tiket').parent().parent().parent().addClass('menu-is-opening menu-open');
+</script>
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#comment_body' ) )
+        // .then( editor => {
+        //         console.log( editor );
+        // } )
+        // .catch( error => {
+        //         console.error( error );
+        // } );
 </script>
 <script >
     $(function () {    
@@ -710,7 +801,6 @@
             $("#comment1").load(" #comment1");
             $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
             getComment($(this).attr('data-ticket'));
-            $("#comment2").load(" #comment2");
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -732,7 +822,11 @@
             var approveit  = $(this).attr('data-approveitname');
             var approvedate  = $(this).attr('data-approvedby1');
             var approveitdate  = $(this).attr('data-approvedbyit');
+            var systemid  = $(this).attr('data-systemid');
+            var moduleid  = $(this).attr('data-moduleid');
+            var objectid  = $(this).attr('data-objectid');
             var upload  = $(this).attr('data-upload');
+            var createdon  = $(this).attr('data-createdon');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view1"]');
             var hide = $("#hidecmnt");
@@ -761,7 +855,11 @@
             $form.find('input[name="requestorid"]').val(user_id);
             $form.find('input[name="dateapproveit"]').val(approveitdate);
             $form.find('input[name="comment_body"]').val(comment_body);
+            $form.find('input[name="systemid"]').val(systemid);
+            $form.find('input[name="moduleid"]').val(moduleid);
+            $form.find('input[name="objectid"]').val(objectid);
             $form.find('input[name="upload"]').val(upload);
+            $form.find('input[name="createdon"]').val(createdon);
             $modal.modal('show');
         });
 
@@ -863,7 +961,7 @@
                     {
                         data: 'ticketno',
                         render: function(data, type, row){
-                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'">'+data+'</a>'
+                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
                         }
                     },
                     {
@@ -871,24 +969,34 @@
                         render: function(data) {
                             if(data == 'INCIDENT'){
                             statusText = `<span class="badge badge-danger">INCIDENT</span>`;
-                            } else if (data == 'SAP CHANGE REQUEST'){
+                            } else if (data == 'CHANGE REQUEST'){
                                 statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
-                            } else if (data == 'NON SAP CHANGE REQUEST'){
-                                statusText = `<span class="badge badge-info">NON SAP CHANGE REQUEST</span>`;
-                            } else if (data == 'USER SAP REQUEST'){
-                                statusText = `<span class="badge badge-warning">USER SAP REQUEST</span>`;
-                            } else if (data == 'SAP AUTHORIZATION'){
-                                statusText = `<span class="badge badge-dark">SAP AUTHORIZATION</span>`;
+                            } else if (data == 'HARDWARE'){
+                                statusText = `<span class="badge badge-info">HARDWARE</span>`;
+                            } else if (data == 'USER REQUEST'){
+                                statusText = `<span class="badge badge-warning">USER REQUEST</span>`;
+                            } else if (data == 'AUTHORIZATION'){
+                                statusText = `<span class="badge badge-dark">AUTHORIZATION</span>`;
                             } else if (data == 'INTERNET ACCESS'){
                                 statusText = `<span class="badge badge-primary">INTERNET ACCESS</span>`;
-                            } else if (data == 'EMAIL ACCESS'){
+                            } else if (data == 'EMAIL'){
                                 statusText = `<span class="badge badge-dark">EMAIL ACCESS</span>`;
-                            } else if (data == 'NEW HARDWARE'){
-                                statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
-                            } else if (data == 'NON SAP ACCESS'){
-                                statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
+                            } else if (data == 'INTERNET'){
+                                statusText = `<span class="badge badge-primary">INTERNET</span>`;
+                            } else if (data == 'DATA'){
+                                statusText = `<span class="badge badge-info">DATA</span>`;
                             } else if (data == 'OTHER'){
-                                statusText = `<span class="badge badge-dark">OTHER</span>`;
+                                statusText = `<span class="badge badge-warning">OTHER</span>`;
+                            } else if (data == 'IMPROVEMENT'){
+                                statusText = `<span class="badge badge-primary">IMPROVEMENT</span>`;
+                            } else if (data == 'PROCEDURE'){
+                                statusText = `<span class="badge badge-info">PROCEDURE</span>`;
+                            } else if (data == 'INFRASTRUCTURE'){
+                                statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
+                            } else if (data == 'SOFTWARE'){
+                                statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
+                            } else if (data == 'VPN'){
+                                statusText = `<span class="badge badge-warning">VPN</span>`;
                             }
                             
                             return statusText;
@@ -1014,7 +1122,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -1022,26 +1130,37 @@
                     render: function(data) {
                         if(data == 'INCIDENT'){
                             statusText = `<span class="badge badge-danger">INCIDENT</span>`;
-                        } else if (data == 'SAP CHANGE REQUEST'){
+                        } else if (data == 'CHANGE REQUEST'){
                             statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
-                        } else if (data == 'NON SAP CHANGE REQUEST'){
-                            statusText = `<span class="badge badge-info">NON SAP CHANGE REQUEST</span>`;
-                        } else if (data == 'USER SAP REQUEST'){
-                            statusText = `<span class="badge badge-warning">USER SAP REQUEST</span>`;
-                        } else if (data == 'SAP AUTHORIZATION'){
-                            statusText = `<span class="badge badge-dark">SAP AUTHORIZATION</span>`;
+                        } else if (data == 'HARDWARE'){
+                            statusText = `<span class="badge badge-info">HARDWARE</span>`;
+                        } else if (data == 'USER REQUEST'){
+                            statusText = `<span class="badge badge-warning">USER REQUEST</span>`;
+                        } else if (data == 'AUTHORIZATION'){
+                            statusText = `<span class="badge badge-dark">AUTHORIZATION</span>`;
                         } else if (data == 'INTERNET ACCESS'){
                             statusText = `<span class="badge badge-primary">INTERNET ACCESS</span>`;
-                        } else if (data == 'EMAIL ACCESS'){
+                        } else if (data == 'EMAIL'){
                             statusText = `<span class="badge badge-dark">EMAIL ACCESS</span>`;
-                        } else if (data == 'NEW HARDWARE'){
-                            statusText = `<span class="badge badge-success">NEW HARDWARE</span>`;
-                        } else if (data == 'NON SAP ACCESS'){
-                            statusText = `<span class="badge badge-info">NON SAP ACCESS</span>`;
+                        } else if (data == 'INTERNET'){
+                            statusText = `<span class="badge badge-primary">INTERNET</span>`;
+                        } else if (data == 'DATA'){
+                            statusText = `<span class="badge badge-info">DATA</span>`;
                         } else if (data == 'OTHER'){
-                            statusText = `<span class="badge badge-dark">OTHER</span>`;
+                            statusText = `<span class="badge badge-warning">OTHER</span>`;
+                        } else if (data == 'IMPROVEMENT'){
+                            statusText = `<span class="badge badge-primary">IMPROVEMENT</span>`;
+                        } else if (data == 'PROCEDURE'){
+                            statusText = `<span class="badge badge-info">PROCEDURE</span>`;
+                        } else if (data == 'INFRASTRUCTURE'){
+                            statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
+                        } else if (data == 'SOFTWARE'){
+                            statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
+                        } else if (data == 'VPN'){
+                            statusText = `<span class="badge badge-warning">VPN</span>`;
                         }
                             
+                        
                         return statusText;
                     }
                 },
@@ -1149,8 +1268,8 @@
                     var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
-                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
+                        var $date = "&nbsp;<label class=form-check-label style=font-size:9px>" +data["DATE"]+"</label>";
+                        var $comment = "<b><textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea></b>";
                         var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
                         $viewComment.append($nama,$date,$filecomment,$comment).serialize();
                     });
@@ -1170,6 +1289,7 @@
             var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
             var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
             var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
+            console.log(comment_body);
             var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
             // var filecomment = document.getElementById("filecomment").files[0].name;
@@ -1200,7 +1320,7 @@
                     var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
-                        var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
+                        var $date = "<label class=form-check-label style=font-size:9px>"+data["DATE"]+"<label>";
                         var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px readonly>"+data["COMMENT"]+"</textarea>";
                         var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
                         $viewComment.append($nama,$date,$filecomment,$comment);
@@ -1255,7 +1375,7 @@
                 // console.log(response["disc"])
                 var $countComment = $(' <div class="form-group"></div>');
                 
-                var $count = "<span class=form-check-label style=color:blue style=font-size:11px>(" +response["disc"]+ ")</span>";
+                var $count = "<span style=color:blue style=font-size:8px>(" +response["disc"]+ ")</span>";
                 $countComment.append($count);
                 
                 $('#modal-view-user form[name="view1"] span[name="countcomment"]').parent().html($countComment);  
@@ -1267,8 +1387,52 @@
         })
     }
 </script>
-
 <script>
+    $(function() {
+        var form = $("#form");
+        var select = $("#system");
+        var hide1 = $("#module");
+        
+        hide1.hide();
+
+        select.change(function() {
+            value = $(this).find(":selected").val()
+            if (value == 'SAP') {
+                hide1.show();
+            } else {
+                hide1.hide();
+            }
+        });
+    });
+</script>
+<script>
+    $('#document').ready(function(){
+        $('#close-btn').on('click', function(){
+            $("#comment2").load(" #comment2");
+        });
+    });
+    $('#document').ready(function(){
+        $('#close-btn2').on('click', function(){
+            $("#comment2").load(" #comment2"); 
+        });
+    });
+</script>
+<script>
+    var today = new Date();
+    var day = today.getDate() + "";
+    var month = (today.getMonth() + 1) + "";
+    var year = today.getFullYear() + "";
+
+    var date = day + "-" + month + "-" + year;
+
+    var optSimple = {
+        dateFormat: 'dd-mm-yy',
+        todayHighlight: true,
+        autoclose: true
+    };
+    $( '#createdate' ).datepicker( optSimple );
+    $( '#createdate' ).datepicker( 'setDate', date );
+
     // Use datepicker on the date inputs
     $("input[type=date]").datepicker({
         dateFormat: 'yy-mm-dd',

@@ -91,9 +91,9 @@ class MeetingroomController extends Controller
             ->whereIn('status', [0, 1, 2])
             ->where('roompublic', 1)
             ->where('active', 1)
-            ->where('startdate', $date)
+            ->where('b.startdate', '>=', $date)
+            ->where('b.enddate', '>=', $date)
             ->get();
-
         $dataTrimArray = [];
 
         foreach ($dataRoom as $key => $value) {
@@ -295,7 +295,8 @@ class MeetingroomController extends Controller
             ->whereIn('status', [1, 2])
             ->where('roompublic', 1)
             ->where('active', 1)
-            ->where('startdate', $date)
+            ->where('b.startdate', '>=', $date)
+            ->where('b.enddate', '>=', $date)
             ->get();
         $dataTrimArray = [];
 

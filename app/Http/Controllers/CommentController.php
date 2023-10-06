@@ -25,11 +25,13 @@ class CommentController extends Controller
 
     public function addComment(Request $request)
     {   
+        return $request->all();
         $userid = Session::get('userid');
         $useremail = Session::get('usermail');
         $mgrid = Session::get('mgrid');
         $roleid = Session::get('roleid');
-        $comment_body = $request->comment_body;
+        $comment_body = $request->input('comment_body');
+        // $comment_body = $request->comment_body;
         $ticketno = $request->ticketno;
         $file = $request->filecomment;
         $requestor = $request->requestor;

@@ -16,6 +16,9 @@ use App\Helpers\Repository;
 use App\Helpers\Validate;
 use App\Models\Counter;
 use App\Models\Tiketdiscussion;
+use App\Models\Module;
+use App\Models\Objecttype;
+use App\Models\System;
 use DataTables;
 Use Redirect;
 
@@ -43,6 +46,9 @@ class TiketController extends Controller
         $assn = '';
         $stat = '';
         $tick = '';
+        $mdl = '';
+        $sys = '';
+        $obj = '';
 
         $dataUsr = $this->repository->GETUSERBYROLE();
         $json = json_decode($dataUsr, true);
@@ -125,6 +131,37 @@ class TiketController extends Controller
             $data['tick'] = $ticketnoArray; 
             /* End */
         }   
+
+        $dataSystem = DB::connection('pgsql')->table('master_data.m_system')->get();
+        $dataTrimArray = [];
+        foreach ($dataSystem as $key => $value) {
+            array_push($dataTrimArray, [
+                "NAME" => trim($value->description),
+                "ID" => trim($value->systemid)
+            ]);
+        }
+        $data['sys'] = $dataTrimArray; 
+
+        $dataModule = DB::connection('pgsql')->table('master_data.m_module')->get();
+        $dataTrimArray = [];
+        foreach ($dataModule as $key => $value) {
+            array_push($dataTrimArray, [
+                "NAME" => trim($value->description),
+                "ID" => trim($value->moduleid)
+            ]);
+        }
+        $data['mdl'] = $dataTrimArray;
+        
+        $dataObject = DB::connection('pgsql')->table('master_data.m_object_type')->get();
+        $dataTrimArray = [];
+        foreach ($dataObject as $key => $value) {
+            array_push($dataTrimArray, [
+                "NAME" => trim($value->description),
+                "ID" => trim($value->objectid)
+            ]);
+        }
+        $data['obj'] = $dataTrimArray; 
+
         
         return view('fitur.tiket', $data);
     }
@@ -175,7 +212,10 @@ class TiketController extends Controller
                     "createdby" => trim($value['createdby']),
                     "approvedby1Name" => trim($value['approved1']),
                     "approvedbyitName" => trim($value['approvedit']),
-                    "createdname" => trim($value['created'])
+                    "createdname" => trim($value['created']),
+                    "systemid" => trim($value['systemid']),
+                    "moduleid" => trim($value['moduleid']),
+                    "objectid" => trim($value['objectid']),
                     
                 ]);
             }
@@ -197,7 +237,8 @@ class TiketController extends Controller
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
-                data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-approvedby_1="'.$row["approvedby_1"].'" data-approvedby_it="'.$row["approvedby_it"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-moduleid="'.$row["moduleid"].'" 
+                data-objectid="'.$row["objectid"].'"  data-createdon="'.$row["createdon"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $download_btn = ' <a  download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
@@ -318,7 +359,10 @@ class TiketController extends Controller
                     "createdby" => trim($value['createdby']),
                     "approvedby1Name" => trim($value['approved1']),
                     "approvedbyitName" => trim($value['approvedit']),
-                    "createdname" => trim($value['created'])
+                    "createdname" => trim($value['created']),
+                    "systemid" => trim($value['systemid']),
+                    "moduleid" => trim($value['moduleid']),
+                    "objectid" => trim($value['objectid'])
                 ]);
             }
             $data['dat'] = $dataTrimArray;
@@ -339,7 +383,8 @@ class TiketController extends Controller
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
-                data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-moduleid="'.$row["moduleid"].'" 
+                data-objectid="'.$row["objectid"].'"  data-createdon="'.$row["createdon"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $download_btn = ' <a  download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-link btn-xs" 
                 style="margin-left: 5px"><i class="fa fa-download" aria-hidden="true"></i><i class="far fa-file-pdf"></i></a>';
@@ -417,6 +462,9 @@ class TiketController extends Controller
         $remark = $request->detail;
         $assignto = $request->assignto;
         $targetdate = $request->targetdate;
+        $system = $request->system;
+        $module = $request->module;
+        $object = $request->objecttype;
 
         /* Generate Ticket Number */ 
         $year = date("Y");
@@ -539,7 +587,8 @@ class TiketController extends Controller
         
         if ($auth){
             /* Insert Ticket */ 
-            $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix, $targetdate);
+            $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix, $targetdate, $system, $module, $object);
+            return $addTicket;
             /* Send Email */
             $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag);
            
