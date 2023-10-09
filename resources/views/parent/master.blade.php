@@ -177,7 +177,7 @@
 
         function timerIncrement($userid) {
             idleTime = idleTime + 1;
-            if (idleTime > 50 && !isIdle) { // 5 minutes
+            if (idleTime > 5 && !isIdle) { // 5 minutes
                 isIdle = true;
                 // alert("Session timeout");
                 var url = "{{ route('login') }}";
