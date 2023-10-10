@@ -25,7 +25,6 @@ class CommentController extends Controller
 
     public function addComment(Request $request)
     {   
-        return $request->all();
         $userid = Session::get('userid');
         $useremail = Session::get('usermail');
         $mgrid = Session::get('mgrid');

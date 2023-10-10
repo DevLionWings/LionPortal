@@ -417,6 +417,11 @@ class TiketController extends Controller
                     $managerItBtn = $parentBtn. $download_btn.$approveBtn. $rejectBtn;
                     $itBtn = $parentBtn. $download_btn;
                     $managerBtn = $parentBtn. $download_btn;
+                } else if ($row["statusid"] == 'SD002'){
+                    $itBtn = $parentBtn. $download_btn;
+                    $managerBtn = $parentBtn. $download_btn;
+                    $managerItBtn = $parentBtn. $download_btn.' <button href="javascript:void(0)" class="closed btn btn-outline-danger btn-xs" data-status="'.$row["status"].'" data-statusid="SD003" data-status="'.$row["status"].'" data-assignto="'.$userid.'"
+                    data-approvedby1="'.$row["approvedby_1"].'" data-approvedbyit="'.$mgrid.'" data-rejectedby="'.$row["rejectedby"].'" data-ticketno="'.$row["ticketno"].'" data-userid="'.$userid.'"><i class="fa fa-window-close" aria-hidden="true"></i></button>';
                 } else {
                     $itBtn = $parentBtn. $download_btn;
                     $managerBtn = $parentBtn. $download_btn;

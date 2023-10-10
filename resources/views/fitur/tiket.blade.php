@@ -773,16 +773,6 @@
     $('#m-tiket').addClass('active');
     $('#m-tiket').parent().parent().parent().addClass('menu-is-opening menu-open');
 </script>
-<script>
-    ClassicEditor
-        .create( document.querySelector( '#comment_body' ) )
-        // .then( editor => {
-        //         console.log( editor );
-        // } )
-        // .catch( error => {
-        //         console.error( error );
-        // } );
-</script>
 <script >
     $(function () {    
         var $btn_submit = $("button#btn-sumbit-ticket");
@@ -1250,7 +1240,6 @@
         });
              
         $(document).on('click', '.viewcomment', function(e) {
-            e.preventDefault();
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
             $.ajax({
                 headers: {
@@ -1271,7 +1260,7 @@
                         var $date = "&nbsp;<label class=form-check-label style=font-size:9px>" +data["DATE"]+"</label>";
                         var $comment = "<b><textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea></b>";
                         var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-                        $viewComment.append($nama,$date,$filecomment,$comment).serialize();
+                        $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     
                     $('#modal-view-user form[name="view1"] span[name="comment"]').parent().html($viewComment);  
@@ -1289,7 +1278,6 @@
             var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
             var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
             var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
-            console.log(comment_body);
             var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
             // var filecomment = document.getElementById("filecomment").files[0].name;
@@ -1315,9 +1303,9 @@
                 },
                 success: function(response){ 
                     // console.log(response);
-                    // var $viewComment = $('.modal-content .modal-body');
-                    // var target = $viewComment.find('form-group .modal-input');
-                    var $viewComment = $(' <div class="form-group"></div>');
+                    var $viewComment = $('.modal-content .modal-body');
+                    var target = $viewComment.find('form-group .modal-input');
+                    // var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:9px>"+data["DATE"]+"<label>";
@@ -1408,12 +1396,14 @@
 <script>
     $('#document').ready(function(){
         $('#close-btn').on('click', function(){
+            $("#comment1").load(" #comment1");
             $("#comment2").load(" #comment2");
         });
     });
     $('#document').ready(function(){
         $('#close-btn2').on('click', function(){
-            $("#comment2").load(" #comment2"); 
+            $("#comment1").load(" #comment1"); 
+            $("#comment2").load(" #comment2");
         });
     });
 </script>

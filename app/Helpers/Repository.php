@@ -182,7 +182,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
@@ -210,7 +213,10 @@ class Repository
                 ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                 ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                 ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
-                ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                ->leftjoin('master_data.m_category as e',  function($q){
+                    $q->on('a.categoryid', '=', 'e.categoryid')
+                    ->on( 'a.systemid', '<=', 'e.systemid' );
+                })
                 ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                 ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                 ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
@@ -255,7 +261,10 @@ class Repository
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
                     ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
@@ -269,7 +278,10 @@ class Repository
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
                     ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
@@ -286,7 +298,10 @@ class Repository
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
@@ -305,7 +320,10 @@ class Repository
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
@@ -352,7 +370,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
@@ -380,7 +401,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
@@ -411,7 +435,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','b.username as assigned_to', 'a.createdon', 'b.departmentid', 'a.detail', 'b.mgrid')
@@ -442,7 +469,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'a.priorid', 'c.description', 'a.assignedto', 'a.createdon' )
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid', 'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
-                    ->join('master_data.m_category as e', 'a.categoryid', '=', 'e.categoryid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '<=', 'e.systemid' );
+                    })
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto', 'a.createdon' )
                     ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','b.username as assigned_to', 

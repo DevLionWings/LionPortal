@@ -88,6 +88,9 @@
                 <form action="" name="view-user" id="view-user">
                     @csrf
                     <div class="modal-body">
+                    <input type="hidden" id="approveId" name="approveId">
+                    <input type="hidden" id="approveItId" name="approveItId">
+                    <input type="hidden" id="requestorid" name="requestorid">
                     <meta name="csrf-token" content="{{ csrf_token() }}">
                         <!-- <div class="form-group">
                             <label class="form-check-label" for="id" disabled>ID Requestor</label>
@@ -216,23 +219,25 @@
                         </div>
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
-                        <h4 class="modal-title">Display Comment :</h4>
-                        <hr />
+                        <h4 class="modal-title">Activity :</h4>
                         <div class="form-group" id="hidecmnt">
-                            <label class="form-check-label" for="comment_body" disabled>Add Comment</label>
-                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" ></textarea>
-                            <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs"><i class="fas fa-comment"></i> Save</button>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" placeholder="Write a comment..."></textarea>
+                            <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs">Save</button>
                         </div>
                         <!-- <div class="form-group">
                             <input type="file" name="filecomment" id="filecomment" class="form-control">
                         </div> -->
-                        <div class="form-group">
-                            <!-- <button type="button" id="refreshcomment" class="refreshcomment btn btn-link btn-xs"><i class="fas fa-refresh"></i>Refresh</button> -->
-                            <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
+                        <div class="row">
+                            <div class="col-md-3"> 
+                                <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> Show Details</button>
+                            </div>
+                            <div class="col-md-1" id="comment2"> 
+                                <span type="text" name="countcomment" id="countcomment" class="modal-input" readonly></span>
+                            </div>
                         </div>
                         <div class="form-group" id="comment1">
                             <span type="text" name="comment" id="comment" class="modal-input" readonly></span>
-                        </div> 
+                        </div>   
                     </div>   
                     <hr /> 
                     <div class="col-md-6">
@@ -445,6 +450,9 @@
             var roleid  = $(this).attr('data-roleid');
             var targetdate  = $(this).attr('data-targetdate');
             var created  = $(this).attr('data-createdname');
+            var approveId  = $(this).attr('data-approvedby_1');
+            var approveItId  = $(this).attr('data-approvedby_it');
+            var requestorId  = $(this).attr('data-requestorid');
             var approve  = $(this).attr('data-approve1name');
             var approveit  = $(this).attr('data-approveitname');
             var approvedate  = $(this).attr('data-approvedby1');
@@ -477,7 +485,11 @@
             $form.find('input[name="approve"]').val(approve);
             $form.find('input[name="approveit"]').val(approveit);
             $form.find('input[name="dateapprove"]').val(approvedate);
+            $form.find('input[name="approveId"]').val(approveId);
+            $form.find('input[name="approveItId"]').val(approveItId);
+            $form.find('input[name="requestorid"]').val(user_id);
             $form.find('input[name="dateapproveit"]').val(approveitdate);
+            $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="systemid"]').val(systemid);
             $form.find('input[name="moduleid"]').val(moduleid);
             $form.find('input[name="objectid"]').val(objectid);
@@ -561,7 +573,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -687,44 +699,7 @@
 			},
         });
 
-        // $(document).on('click', '.viewcomment', function(e) {
-        //     e.preventDefault();
-        //     var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-        //     $.ajax({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         type: "POST",
-        //         url: "/get/comment",
-        //         data: {
-        //             'ticketno' : ticketno, 
-        //         },
-        //         // contentType: true, 
-        //         // processData: true,
-        //         success: function(response) {
-        //             // console.log(response["disc"])
-        //             $("#view-user").serialize();
-        //             $("#comment1").css("display","inline");
-        //             var $viewComment = $(' <div class="form-group"></div>');
-        //             $.each(response["disc"], function(key, data) {
-        //                 var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
-        //                 var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-        //                 var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
-        //                 var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-        //                 $viewComment.append($nama,$date,$filecomment,$comment).serialize();
-        //             });
-                    
-        //             $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
-                
-        //         },
-        //         error: function (error) {
-        //             console.error(error);
-        //         },
-        //     })
-        // });
-
         $(document).on('click', '.viewcomment', function(e) {
-            e.preventDefault();
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();
             $.ajax({
                 headers: {
@@ -745,7 +720,7 @@
                         var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
                         var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
                         var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-                        $viewComment.append($nama,$date,$filecomment,$comment).serialize();
+                        $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     
                     $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
@@ -757,50 +732,13 @@
             })
         });
 
-        // $(document).on('click', '.btncomment', function() {
-        //     var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-        //     var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
-        //     var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
-         
-        //     $.ajax({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         url: "/add/comment",
-        //         type: 'POST',
-        //         data: {
-        //             'ticketno' : ticketno, 
-        //             'comment_body' : comment_body,
-        //         },
-        //         success: function(response){ 
-        //             // console.log(response["disc"]);
-        //             // var $viewComment = $('.modal-content .modal-body');
-        //             // var target = $viewComment.find('form-group .modal-input');
-        //             var $viewComment = $(' <div class="form-group"></div>');
-        //             $.each(response["disc"], function(key, data) {
-        //                 var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
-        //                 var $date = "<label class=form-check-label style=font-size:10px>"+data["DATE"]+"<label>";
-        //                 var $comment = "<p type=text class=form-control style=font-family:'Courier New';font-size:20px>"+data["COMMENT"]+"</p>";
-        //                 var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
-        //                 $viewComment.append($nama,$date,$filecomment,$comment);
-        //             });
-        //             document.getElementById("comment_body").value = "";
-        //             $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
-        //             $("#comment1").load(" #comment1");
-        //         },
-        //         error: function (error) {
-        //             console.error(error);
-        //         },
-        //     });
-        // })
-
         $(document).on('click', '.btncomment', function() {
-            var ticketno = $('#modal-view-user form[name="view1"] input[name="ticketno"]').val();
-            var requestor = $('#modal-view-user form[name="view1"] input[name="requestorid"]').val();
-            var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
-            var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
-            var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
-            var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
+            var ticketno = $('#modal-view-user form[name="view-user"] input[name="ticketno"]').val();
+            var requestor = $('#modal-view-user form[name="view-user"] input[name="requestorid"]').val();
+            var approve = $('#modal-view-user form[name="view-user"] input[name="approveId"]').val();
+            var approveit = $('#modal-view-user form[name="view-user"] input[name="approveItId"]').val();
+            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+            var file_data = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
             // var filecomment = document.getElementById("filecomment").files[0].name;
             // var file_data = $('#filecomment').prop('files')[0];  
@@ -825,9 +763,9 @@
                 },
                 success: function(response){ 
                     // console.log(response);
-                    // var $viewComment = $('.modal-content .modal-body');
-                    // var target = $viewComment.find('form-group .modal-input');
-                    var $viewComment = $(' <div class="form-group"></div>');
+                    var $viewComment = $('.modal-content .modal-body');
+                    var target = $viewComment.find('form-group .modal-input');
+                    // var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
@@ -884,10 +822,10 @@
                 // console.log(response["disc"])
                 var $countComment = $(' <div class="form-group"></div>');
                 
-                var $count = "<span class=form-check-label style=color:blue style=font-size:11px>(" +response["disc"]+ ")</span>";
+                var $count = "<span style=color:blue style=font-size:8px>(" +response["disc"]+ ")</span>";
                 $countComment.append($count);
                 
-                $('#modal-view-user form[name="view1"] span[name="countcomment"]').parent().html($countComment);  
+                $('#modal-view-user form[name="view-user"] span[name="countcomment"]').parent().html($countComment);  
                 
             },
             error: function (error) {
@@ -904,22 +842,18 @@
 }, 5000);
 </script>
 <script>
-    // $('#document').ready(function(){
-    //         $('#close-btn').on('click', function(){
-    //             $("#comment1").css("display","none");
-    //             $("#comment1").empty(); 
-    //             document.getElementById("comment1").value = "";
-               
-    //     });
-    // });
-    // $('#document').ready(function(){
-    //         $('#close-btn2').on('click', function(){
-    //             $("#comment1").css("display","none"); 
-    //             $("#comment1").empty(); 
-    //             document.getElementById("comment1").value = "";
-                
-    //     });
-    // });
+     $('#document').ready(function(){
+        $('#close-btn').on('click', function(){
+            $("#comment1").load(" #comment1");
+            $("#comment2").load(" #comment2");
+        });
+    });
+    $('#document').ready(function(){
+        $('#close-btn2').on('click', function(){
+            $("#comment1").load(" #comment1"); 
+            $("#comment2").load(" #comment2");
+        });
+    });
 </script>
 <script>
     $('.toast').toast('show');
