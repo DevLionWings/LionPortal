@@ -23,7 +23,7 @@ class LoginController extends Controller
     }
     
     public function showLoginPage()
-    {
+    {   
         return view('auth.login');
     }
 
@@ -75,20 +75,23 @@ class LoginController extends Controller
     public function login(Request $request){
         $userid = $request->userid;
         $password = trim($request->password);
-
+        
         $credentials = $request->validate([
             "userid"=>"required",
             "password"=>"required"
         ]);
-
+        
+        // $isLogin = Session::get('status_login');
         $datLogin = $this->repository->GETUSER($userid, $password);
         $json = json_decode($datLogin);
         $data = $json->data;
-        if($json->rc == '00'){ 
+        if($json->data->status_login == 1) {
+            return redirect()->route('home');
+        } else {
             /* Update status */
             $update = $this->updateLogin($userid, $password);
             $json = json_decode($update);
-       
+        
             if(!empty($update)){
                 /* checked status login */
                 if ($data->status_login == 1){
@@ -144,11 +147,11 @@ class LoginController extends Controller
         
                 return redirect()->route('home')
                     ->withSuccess('You have successfully logged in!');
+                         
             } else {
-                return back()->withErrors(['error' => 'If you are already logged in, please log out first or call admin',]);
-            }           
-        } else {
-            return back()->withErrors(['error' => 'Wrong Password',]);
+                return back()->withErrors(['error' => 'Wrong Password',]);
+            }
+
         }
     } 
 
@@ -165,7 +168,7 @@ class LoginController extends Controller
         $update = $this->updateLogout($userid, $password); 
         /* End */ 
 
-        return redirect()->route('login');
+        return redirect()->route('login-page');
     }  
     
 }
