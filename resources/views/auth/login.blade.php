@@ -10,7 +10,7 @@
     <!-- <link rel="apple-touch-icon" href="{{asset('backend/images/ico/apple-icon-120.png')}}"> -->
     <link rel="icon" href="{{asset('images/iconlion.png')}}">
     <!-- <link rel="shortcut icon" type="image/x-icon" href="{{asset('backend/images/ico/favicon.ico')}}"> -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet"> -->
 
     <!-- BEGIN: Vendor CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset('backend/vendors/css/vendors.min.css')}}">
@@ -27,7 +27,7 @@
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="{{asset('backend/css/style.css')}}">
+    <!-- <link rel="stylesheet" type="text/css" href="{{asset('backend/css/style.css')}}"> -->
     <!-- END: Custom CSS-->
 
 </head>
@@ -91,7 +91,7 @@
                                                     </fieldset>
 
                                                     <fieldset class="form-label-group position-relative has-icon-left">
-                                                        <input type="password" name="password" class="form-control {{ $errors->has('pass') ? 'is-invalid' : '' }}"" id="user-password" placeholder="Password">
+                                                        <input type="password" name="password" class="form-control {{ $errors->has('pass') ? 'is-invalid' : '' }}" id="user-password" placeholder="Password">
                                                         @if($errors->has('pass'))
                                                         <span class="invalid-feedback text-danger" role="alert">
                                                             <strong>{{ $message }}</strong>
@@ -124,16 +124,16 @@
     </div>
 
     <!-- BEGIN: Vendor JS-->
-    <script src="{{asset('backend/vendors/js/vendors.min.js')}}"></script>
+    <!-- <script src="{{asset('backend/vendors/js/vendors.min.js')}}"></script> -->
     <!-- BEGIN Vendor JS-->
 
     <!-- BEGIN: Page Vendor JS-->
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Theme JS-->
-    <script src="{{asset('backend/js/core/app-menu.js')}}"></script>
+    <!-- <script src="{{asset('backend/js/core/app-menu.js')}}"></script>
     <script src="{{asset('backend/js/core/app.js')}}"></script>
-    <script src="{{asset('backend/js/scripts/components.js')}}"></script>
+    <script src="{{asset('backend/js/scripts/components.js')}}"></script> -->
     <!-- END: Theme JS-->
 
     <!-- BEGIN: Page JS-->

@@ -168,11 +168,6 @@ class TiketController extends Controller
 
     public function tiketList(Request $request)
     {   
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        }
-
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
 
@@ -309,11 +304,6 @@ class TiketController extends Controller
 
     public function tiketFilter(Request $request)
     {   
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        }
-        
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $requestor = $request->requestor;
