@@ -154,6 +154,7 @@ Route::get('/admin/index', [MeetingroomController::class,'adminIndex'])->name('a
 Route::get('/room/get', [MeetingroomController::class,'roomList'])->name('room-list');
 Route::get('/count/get', [MeetingroomController::class,'countRoom'])->name('get-count');
 Route::post('/add/room', [MeetingroomController::class,'addRoom'])->name('add-room');
+Route::post('/edit/room', [MeetingroomController::class,'editRoom'])->name('edit-room');
 // User
 Route::get('/user/index', [MeetingroomController::class,'userIndex'])->name('user-index');
 Route::get('/room/user/get', [MeetingroomController::class,'roomListUser'])->name('room-list-user');

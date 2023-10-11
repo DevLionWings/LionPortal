@@ -24,15 +24,6 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {   
-        // $isLogin = session('login');
-        // if(!$isLogin) {
-        //     return redirect()->route('login-page');
-        // }
-        // $isLogin = Session::get('status');
-        // if($isLogin != 1) {
-        //     return redirect()->route('login-page');
-        // }
-        // $allSessions = session()->all();
         $password = trim(Session::get('password'));
         $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
         $json = json_decode($datLogin);

@@ -111,7 +111,7 @@
                                             <div class="divider">
                                                 <div class="divider-text"><a>Lion-Portal</a></div>
                                             </div>
-                                            <p style="font-size:10px;text-align:center">Build With <i class="feather icon-heart text-danger"></i> by <a>ozi</a></p>
+                                            <p style="font-size:10px;text-align:center">Copyright<i class="fa fa-copyright" aria-hidden="true"></i> 2023 <a>Lion Wings Indonesia. All rights reserved.</a></p>
                                         </div>
                                     </div>
                                 </div>

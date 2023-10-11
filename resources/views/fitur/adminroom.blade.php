@@ -208,54 +208,46 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Booked Room Meeting</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h4 class="modal-title">Booking Room Meeting</h4>
+                    <button type="button" class="close btnclose" id="btnclose" nama="btnclose" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{route('book-room')}}" method="post" name='booked-user'>
+                <form action="{{route('book-room')}}" method="post" name='booked-user' id='booked-user'>
                     @csrf
+                    <input id="userid" name="userid" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label class="form-check-label">Booking By :</label>
-                            <div class="input-group value">
-                                <select id="bookedby" name="bookedby" class="select2" style="width: 100%;">
-                                <option value="10"> Pilih User Request</option>
-                                    @foreach($usreq as $usreqcode)
-                                    <option value="{{ $usreqcode['NAME'] }}">{{ $usreqcode['NAME'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="form-check-label" for="subject" disabled>Add Title :</label>
                             <input type="text" name="subject" class="form-control" id="subject">
                         </div>
+                        <input type="checkbox" class="largerCheckbox" name="range" id="range">
+                        <label for="">Range Date</label><br>    
                         <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label class="form-check-label" for="startdate">Start Date:</label>
-                                        <input type="text" name="startdate" id="startdate" class="btndate form-control" > 
+                                        <input type="text" name="startdate" id="startdate" class="btndate form-control" value=""> 
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6"> 
                                 <div class="mb-3">
-                                    <div class="form-group">
+                                    <div class="form-group" id="hidedate">
                                         <label class="form-check-label" for="enddate">End Date:</label>
-                                        <input type="text" name="enddate" id="enddate" class="form-control" > 
+                                        <input type="text" name="enddate" id="enddate" class="btndate form-control" value=""> 
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>  
                         <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label class="form-check-label">Start Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="starttime" name="starttime" class="btntime select2" style="width: 100%;"  onchange="myFunction(event)">
+                                            <select  type="text" id="starttime" name="starttime" class="btntime btnbooked" style="width: 100%;"  onchange="myFunction(event)">
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['START'] }}">{{ $tmcode['START'] }}</option>
                                                 @endforeach
@@ -269,7 +261,7 @@
                                     <div class="form-group">
                                         <label class="form-check-label">End Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="endtime" name="endtime" class="btntime select2" style="width: 100%;"  onchange="myFunction(event)">
+                                            <select  type="text" id="endtime" name="endtime" class="btntime btnbooked" style="width: 100%;"  onchange="myFunction(event)">
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['END'] }}">{{ $tmcode['END'] }}</option>
                                                 @endforeach
@@ -288,12 +280,94 @@
                         </div> 
                         <div class="form-group" id="hideroom">   
                             <label class="form-check-label" for="roomAvail">Room Meeting Available :</label>
-                            <select type="text" id="roomAvail" name="roomAvail" class="select2" style="width: 100%;">
+                            <select type="text" id="roomAvail" name="roomAvail" class="btnbooked" style="width: 100%;">
                                 <option value="">Chose Room Meeting</option>
                             </select>  
                         </div> 
                         <div class="form-group" id="hideroombooked">   
                             <span class="form-check-label" id="roomBook" name="roomBook">Not Available : </span>
+                        </div> 
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default btnclose" id="btnclose" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success" >Booked</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="modal-edit-room"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{route('edit-room')}}" method="post" name='edit-room'>
+                    @csrf
+                    <div class="modal-body">
+                    <input type="hidden" id="bookid" name="bookid">
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label" for="startdate1">Start Date:</label>
+                                        <input type="text" name="startdate1" id="startdate1" class="btndate1 form-control" > 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label" for="enddate1">End Date:</label>
+                                        <input type="text" name="enddate1" id="enddate1" class="btndate1 form-control" > 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label">Start Time :</label>
+                                        <div class="input-group value">
+                                            <select  type="text" id="starttime1" name="starttime1" class="btntime1 editbooked" style="width: 100%;"  onchange="myFunction1(event)">
+                                                @foreach($tm as $tmcode)
+                                                <option value="{{ $tmcode['START'] }}">{{ $tmcode['START'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label">End Time :</label>
+                                        <div class="input-group value">
+                                            <select  type="text" id="endtime1" name="endtime1" class="btntime1 editbooked" style="width: 100%;"  onchange="myFunction1(event)">
+                                                @foreach($tm as $tmcode)
+                                                <option value="{{ $tmcode['END'] }}">{{ $tmcode['END'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="form-group">
+                            <button type="button" id="editroom" name="editroom" class="editroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Pilih Room Meeting</i></button>
+                        </div> 
+                        <div class="form-group" id="hideroomedit">   
+                            <label class="form-check-label" for="roomAvail1">Room Meeting Available :</label>
+                            <select type="text" id="roomAvail1" name="roomAvail1" class="editbooked" style="width: 100%;">
+                                <option value="">Chose Room Meeting</option>
+                            </select>  
+                        </div> 
+                        <div class="form-group" id="hideroombookededit">   
+                            <span class="form-check-label" id="roomBook1" name="roomBook1">Not Available : </span>
                         </div> 
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -381,10 +455,26 @@
 </script>
 <script>
     $(function () {   
-        //Initialize Select2 Elements
-        $('.select2').select2();
+        var hide1 = $("#hideroom");
+        var hide2 = $("#hideroombooked");
+        var hide3 = $("#hideroomedit");
+        var hide4 = $("#hideroombookededit");
+        hide1.hide();
+        hide2.hide();
+        hide3.hide();
+        hide4.hide();
 
-        //disabled < timenow
+        $('#save-btn').on('click', function() {
+            $('#form').submit();
+            $(this).attr('disabled', true);
+            $(this).text("Loading ...");
+        });
+
+        //Initialize Select2 Elements
+        $('.btnbooked').select2();
+        $('.editbooked').select2();
+
+        // format date time //
         var today = new Date();
         var day = today.getDate() + "";
         var month = (today.getMonth() + 1) + "";
@@ -403,23 +493,57 @@
 
         var time = hour + ":" + minutes + ":" + seconds;
         var date = year + "-" + month + "-" + day;
-        //end
+        // end //
 
+        //Initialize datepicker Elements
         var optSimple = {
             dateFormat: 'yy-mm-dd',
             todayHighlight: true,
-            autoclose: true
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            onSelect: function(a) {
+                // console.log(date);
+                var startdate = $('#modal-booked-user input[name="startdate"]').val();
+                var enddate = $('#modal-booked-user input[name="enddate"]').val();
+                var startdate1 = $('#modal-edit-room input[name="startdate1"]').val();
+                var enddate1 = $('#modal-edit-room input[name="enddate1"]').val();
+                $( '#enddate' ).datepicker( 'setDate', startdate );
+                // Modals booked //
+                $("select option").each(function() {
+                    var $thisOption = $(this);
+                    if(startdate == date){
+                        if($thisOption.val() < time) {
+                            $thisOption.attr("disabled", true);
+                        }
+                    } else {
+                        $thisOption.attr("disabled", false);
+                    }
+                });
+                // Modals Edit //
+                $("select option").each(function() {
+                    var $thisOption = $(this);
+                    if(startdate1 == date){
+                        console.log('masuk');
+                        if($thisOption.val() < time) {
+                            $thisOption.attr("disabled", true);
+                        }
+                    } else {
+                        $thisOption.attr("disabled", false);
+                    }
+                });
+            }
         };
         $( '#startdate' ).datepicker( optSimple );
         $( '#enddate' ).datepicker( optSimple );
-        $( '#enddate, #startdate' ).datepicker( 'setDate', date );
+        $( '#startdate1' ).datepicker( optSimple );
+        $( '#enddate1' ).datepicker( optSimple );
+        $( '#enddate, #startdate, #enddate1, #startdate1').datepicker( 'setDate', date );
+        // end //
 
+        // Checked option time //
         var startdate = $('#modal-booked-user input[name="startdate"]').val();
         var enddate = $('#modal-booked-user input[name="enddate"]').val();
-        // console.log(startdate);
-        // console.log(enddate);
-        // console.log(date);
-
         $("select option").each(function() {
             var $thisOption = $(this);
             if(startdate == date && enddate == date){
@@ -430,89 +554,17 @@
                 $thisOption.attr("disabled", false);
             }
         });
-
-        // Use datepicker on the date inputs
-        // $("input[type=date]").datepicker({
-        //     dateFormat: 'yy-mm-dd',
-        //     changeMonth: true,
-        //     changeYear: true,
-        //     onSelect: function(dateText, inst) {
-        //         $(inst).val(dateText); // Write the value in the input
-        //     }
-        // });
-
-        // Code below to avoid the classic date-picker
-        // $('#startdate').on('click', function() {
-        //     $("#hideroom").load(" #hideroom");
-        //     $("#hideroombooked").load(" #hideroombooked");
-        //     var hide1 = $("#hideroom");
-        //     var hide2 = $("#hideroombooked");
-        //     hide1.hide();
-        //     hide2.hide();
-
-        //     var startdate = $('#modal-booked-user input[name="startdate"]').val();
-        //     var enddate = $('#modal-booked-user input[name="enddate"]').val();
-        //     console.log(startdate);
-        //     console.log(enddate);
-        //     console.log(date);
-
-        //     $("select option").each(function() {
-        //         var $thisOption = $(this);
-        //         if(startdate == date || enddate == date){
-        //             if($thisOption.val() < time) {
-        //                 $thisOption.attr("disabled", true);
-        //             }
-        //         } else {
-        //             $thisOption.attr("disabled", false);
-        //         }
-        //     });
-            
-        // });
-
-        // $('#enddate').on('click', function() {
-        //     $("#hideroom").load(" #hideroom");
-        //     $("#hideroombooked").load(" #hideroombooked");
-        //     var hide1 = $("#hideroom");
-        //     var hide2 = $("#hideroombooked");
-        //     hide1.hide();
-        //     hide2.hide();
-            
-        //     var startdate = $('#modal-booked-user input[name="startdate"]').val();
-        //     var enddate = $('#modal-booked-user input[name="enddate"]').val();
-
-        //     $("select option").each(function() {
-        //         var $thisOption = $(this);
-        //         if(startdate == date || enddate == date){
-        //             if($thisOption.val() < time) {
-        //                 $thisOption.attr("disabled", true);
-        //             }
-        //         } else {
-        //             $thisOption.attr("disabled", false);
-        //         }
-        //     });
-            
-        // });
-
-        $('#save-btn').on('click', function() {
-            $('#form').submit();
-            $(this).attr('disabled', true);
-            $(this).text("Loading ...");
-        });
-
-        var hide1 = $("#hideroom");
-        var hide2 = $("#hideroombooked");
-        hide1.hide();
-        hide2.hide();
+        //  Cheked option time //
 
         $(document).on('click', '.cancel', function () {
             $('#bookid').val($(this).attr("data-bookid"));
             $('#modal-cancel-room').modal('show');
         })
 
-        $(document).on('click', '.avail', function () {
-            $('#bookid').val($(this).attr("data-bookid"));
-            $('#modal-avail-room').modal('show');
-        })
+        // $(document).on('click', '.avail', function () {
+        //     $('#bookid').val($(this).attr("data-bookid"));
+        //     $('#modal-avail-room').modal('show');
+        // })
 
         var table = $('#room_list').DataTable({
             scrollX: true,
@@ -690,25 +742,135 @@
 			},
         });
 
-        $.ajax({
-            url: '{{ route("get-count") }}',
-            type: 'GET',
-            success: function(response) {
-                $('span[name="available"]').text(response['ava'])
-                $('span[name="booked"]').text(response['book'])
-                $('span[name="canceled"]').text(response['cncl'])
-                $('span[name="newroom"]').text(response['nwrm'])    
-            }, error: function(err) {
-                console.log(err)
-                alert('Opps, something wrong with dashboard chart');
-            }
-        })
+        $(document).on('click', '.edit', function() {
+            $('#modal-edit-room').modal({backdrop: 'static', keyboard: false})  
+            var startdate = $(this).data('startdate');
+            var enddate = $(this).data('enddate');
+            var starttime = $(this).data('starttime');
+            var endtime = $(this).data('endtime');
+            var roomid = $(this).data('roomid');
+            var bookid = $(this).data('bookid');
+            var $modal = $('#modal-edit-room');
+            var $form = $modal.find('form[name="edit-room"]');
+            console.log(startdate);
+            console.log(enddate);
+            console.log(starttime);
+            console.log(endtime);
+            // $form.find('input[name="startdate"]').val(startdate);
+            // $form.find('input[name="enddate"]').val(enddate);
+            // $form.find('input[name="starttime"]').val(starttime);
+            // $form.find('input[name="endtime"]').val(endtime);
+            // $form.find('input[name="roomid"]').val(roomid);
+            $form.find('input[name="bookid"]').val(bookid)
+            var room_options = $form.find('select[name="roomAvail1"]').children();
+            $.each(room_options, function(key, value) {
+                if($(value).val() === roomid) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            var startdate_options = $form.find('select[name="startdate1"]').children();
+            $.each(startdate_options, function(key, value) {
+                if($(value).val() === startdate) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            var enddate_options = $form.find('select[name="enddate1"]').children();
+            $.each(enddate_options, function(key, value) {
+                if($(value).val() === enddate) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            var starttime_options = $form.find('select[name="starttime1"]').children();
+            $.each(starttime_options, function(key, value) {
+                console.log(value);
+                if($(value).val() === starttime) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            var endtime_options = $form.find('select[name="endtime1"]').children();
+            $.each(endtime_options, function(key, value) {
+                if($(value).val() === endtime) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            $modal.modal('show');
+        });
 
         $(document).on('click', '.btnroom', function(e) {
             var startdate = $('#modal-booked-user input[name="startdate"]').val();
             var enddate = $('#modal-booked-user input[name="enddate"]').val();
             var starttime = $('#modal-booked-user select[name="starttime"]  option:selected').val();
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
+            if(startdate.length < 1){
+                alert('startdate required');
+                return;
+            } else if(enddate.length < 1){
+                alert('endate required');
+                return;
+            } else if(endtime < starttime){
+                alert('something wrong endtime (backtime)');
+                return;
+            } else {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: "GET",
+                    url: "/get/room",
+                    data: {
+                        'startdate' : startdate, 
+                        'enddate' : enddate, 
+                        'starttime' : starttime, 
+                        'endtime' : endtime, 
+                    },
+                    success: function(response) {
+                        // console.log(response);
+                        var hide1 = $("#hideroom");
+                        var hide2 = $("#hideroombooked");
+                        hide1.show();
+                        hide2.show();
+                        // $("#hideroom").css("display","inline");
+                        // $("#hideroombooked").css("display","inline");
+                        var $select_room_avail = $('#roomAvail');
+                        var $select_room_book = $('#roomBook');
+                        $.each(response["dataAvail"], function(key, data) {
+                            var $options1 = "<option value='"+data["roomid"]+"'>"+data["roomname"]+" | Capacity: "+data["roomcapacity"]+"</option>";
+                            $select_room_avail.append($options1);
+                        });
+                        $.each(response["dataBook"], function(key, data) {
+                            var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   ",</p></label>";
+                            $select_room_book.append($options2);
+                        });
+                        // $('#modal-booked-user form[name="book-user"] select[name="roomBook"]').prop('disabled', true);
+                        $('#modal-booked-user form[name="book-user"]').html($select_room_avail);  
+                        $('#modal-booked-user form[name="book-user"]').html($select_room_book);  
+                        $('.btnbooked').select2()
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    },
+                })
+            }
+        });
+
+        $(document).on('click', '.editroom', function(e) {
+            var bookid = $('#modal-edit-room input[name="bookid"]').val();
+            var roomid = $('#modal-edit-room input[name="roomAvail1"]').val();
+            var startdate = $('#modal-edit-room input[name="startdate1"]').val();
+            var enddate = $('#modal-edit-room input[name="enddate1"]').val();
+            var starttime = $('#modal-edit-room select[name="starttime1"]  option:selected').val();
+            var endtime = $('#modal-edit-room select[name="endtime1"]  option:selected').val();
+         
             if(startdate.length < 1){
                 alert('startdate required');
                 return;
@@ -733,25 +895,31 @@
                         'enddate' : enddate, 
                         'starttime' : starttime, 
                         'endtime' : endtime, 
+                        'bookid' : bookid,
+                        'roomid' : roomid
                     },
                     success: function(response) {
                         // console.log(response);
-                        $("#hideroom").css("display","inline");
-                        $("#hideroombooked").css("display","inline");
-                        var $select_room_avail = $('#roomAvail');
-                        var $select_room_book = $('#roomBook');
+                        var hide1 = $("#hideroomedit");
+                        var hide2 = $("#hideroombookededit");
+                        hide1.show();
+                        hide2.show();
+                        // $("#hideroomedit").css("display","inline");
+                        // $("#hideroombookededit").css("display","inline");
+                        var $select_room_avail = $('#roomAvail1');
+                        var $select_room_book = $('#roomBook1');
                         $.each(response["dataAvail"], function(key, data) {
-                            var $options1 = "<option value='"+data["roomid"]+"'>"+data["roomname"]+"</option>";
+                            var $options1 = "<option value='"+data["roomid"]+"'>"+data["roomname"]+" | Capacity: "+data["roomcapacity"]+"</option>";
                             $select_room_avail.append($options1);
                         });
                         $.each(response["dataBook"], function(key, data) {
-                            // var $options2 = "<option value='"+data["roomid"]+"'>"+data["roomname"]+"</option>";
                             var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   ",</p></label>";
                             $select_room_book.append($options2);
                         });
-                        $('#modal-booked-user form[name="book-user"] select[name="roomBook"]').prop('disabled', true);
-                        $('#modal-booked-user form[name="book-user"]').html($select_room_avail);  
-                        $('#modal-booked-user form[name="book-user"]').html($select_room_book);  
+                        // $('#modal-edit-room form[name="edit-room"] select[name="roomBook1"]').prop('disabled', true);
+                        $('#modal-edit-room form[name="edit-room"] select[name="roomAvail1"]').parent().html($select_room_avail);  
+                        $('#modal-edit-room form[name="edit-room"] select[name="roomBook1"]').parent().html($select_room_book);
+                        $('.editbooked').select2();
                     },
                     error: function (error) {
                         console.error(error);
@@ -764,15 +932,22 @@
             // document.getElementById("booked-user").reset();
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
+            $("#hideroomedit").load(" #hideroomedit");
+            $("#hideroombookededit").load(" #hideroombookededit");
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
+            var hide3 = $("#hideroomedit");
+            var hide4 = $("#hideroombookededit");
             hide1.hide();
             hide2.hide();
+            hide3.hide();
+            hide4.hide();
         });
 
         $(document).on('click', '.btndate', function(e) {
+            $('.btnbooked').select2();
             $("#hideroom").load(" #hideroom");
-            $("#hideroombooked").load(" #hideroombooked");
+            $("#hideroombooked").load(" #hideroombooked"); 
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
             hide1.hide();
@@ -780,79 +955,117 @@
             
         });
 
+        $(document).on('click', '.btndate1', function(e) {
+            $('.editbooked').select2();
+            $("#hideroomedit").load(" #hideroomedit");
+            $("#hideroombookededit").load(" #hideroombookededit");
+            var hide3 = $("#hideroomedit");
+            var hide4 = $("#hideroombookededit");
+            hide3.hide();
+            hide4.hide();
+            
+        });
+
         $(document).on('click', '.btntime', function(e) {
-            alert('test');
+            $('.btnbooked').select2();
             var startdate = $('#modal-booked-user input[name="startdate"]').val();
             var enddate = $('#modal-booked-user input[name="enddate"]').val();
-            console.log(startdate);
-            console.log(enddate);
-            console.log(date);
+            // console.log(startdate);
+            // console.log(enddate);
+            // console.log(date);
 
             $("select option").each(function() {
                 var $thisOption = $(this);
-                if(startdate == date || enddate == date){
+                if(startdate == date){
                     if($thisOption.val() < time) {
                         $thisOption.attr("disabled", true);
                     }
                 } else {
                     $thisOption.attr("disabled", false);
                 }
-            });
-
-            $("#hideroom").load(" #hideroom");
-            $("#hideroombooked").load(" #hideroombooked");
-            var hide1 = $("#hideroom");
-            var hide2 = $("#hideroombooked");
-            hide1.hide();
-            hide2.hide();            
+            });       
         });
+
+        $(document).on('click', '.btntime1', function(e) {  
+            $('.editbooked').select2();
+            var startdate = $('#modal-booked-user input[name="startdate1"]').val();
+            var enddate = $('#modal-booked-user input[name="enddate1"]').val();
+            // console.log(startdate);
+            // console.log(enddate);
+            // console.log(date);
+
+            $("select option").each(function() {
+                var $thisOption = $(this);
+                if(startdate == date){
+                    if($thisOption.val() < time) {
+                        $thisOption.attr("disabled", true);
+                    }
+                } else {
+                    $thisOption.attr("disabled", false);
+                }
+            });        
+        });
+
+        // stats count booked & canceled //
+        $.ajax({
+            url: '{{ route("get-count") }}',
+            type: 'GET',
+            success: function(response) {
+                $('span[name="available"]').text(response['ava'])
+                $('span[name="booked"]').text(response['book'])
+                $('span[name="canceled"]').text(response['cncl'])
+                $('span[name="newroom"]').text(response['nwrm'])    
+            }, error: function(err) {
+                console.log(err)
+                alert('Opps, something wrong with dashboard chart');
+            }
+        })
+        // end //
     });
 </script>
 <script type="text/javascript">
     function myFunction(e) {
-        var today = new Date();
-        var day = today.getDate() + "";
-        var month = (today.getMonth() + 1) + "";
-        var year = today.getFullYear() + "";
-        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-        var seconds = today.getSeconds() + "";
-
-        if (day < 10) {
-            day = '0' + day;
-        }
-
-        if (month < 10) {
-            month = `0${month}`;
-        }
-
-        var time = hour + ":" + minutes + ":" + seconds;
-        var date = year + "-" + month + "-" + day;
-        // console.log(e.target.value);
+        $('.btnbooked').select2();
         $("#hideroom").load(" #hideroom");
         $("#hideroombooked").load(" #hideroombooked");
         var hide1 = $("#hideroom");
         var hide2 = $("#hideroombooked");
         hide1.hide();
         hide2.hide();
+    }
 
-        var startdate = $('#modal-booked-user input[name="startdate"]').val();
-        var enddate = $('#modal-booked-user input[name="enddate"]').val();
-        console.log(startdate);
-        console.log(enddate);
-        console.log(date);
+    function myFunction1(e) {
+        $('.editbooked').select2();
+        $("#hideroomedit").load(" #hideroomedit");
+        $("#hideroombookededit").load(" #hideroombookededit");
+        var hide3 = $("#hideroomedit");
+        var hide4 = $("#hideroombookededit");
+        hide3.hide();
+        hide4.hide();
+    }
+</script>
+<script>
+    $(function() {
+        var form = $("#booked-user");
+        var checked = $("#range");
+        var hide1 = $("#hideroom");
+        var hide2 = $("#hideroombooked");
+        var hide3 = $("#hidedate");
+        hide1.hide();
+        hide2.hide();
+        hide3.hide();
+   
 
-        $("select option").each(function() {
-            var $thisOption = $(this);
-            if(startdate == date || enddate == date){
-                if($thisOption.val() < time) {
-                    $thisOption.attr("disabled", true);
-                }
+        checked.change(function() {
+            if (checked.is(':checked')) {
+                var startdate = $('#modal-booked-user input[name="startdate"]').val();
+                $( '#enddate' ).datepicker( 'setDate', startdate );
+                hide3.show();
             } else {
-                $thisOption.attr("disabled", false);
+                hide3.hide();
             }
         });
-    }
+    });
 </script>
 <script>
     window.setTimeout(function() {

@@ -118,7 +118,7 @@ class MeetingroomController extends Controller
             ]);
         }
         $data['dat'] = $dataTrimArray;
-      
+        
         return DataTables::of($data['dat'])
         ->addColumn('action', function($row){
             $datenow = date('Y-m-d');
@@ -129,8 +129,11 @@ class MeetingroomController extends Controller
             // data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'">Available</i></a>';
             $cancelBtn = '<a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
             data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'">Cancel</i></a>';
+            $editBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm" 
+            data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
+            data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'"><i class="fas fa-edit"></i></a>';
             if($row["statusroom"] == '1'){
-                return $cancelBtn;
+                return $cancelBtn. $editBtn;
             }
         })
         
@@ -242,6 +245,25 @@ class MeetingroomController extends Controller
             'createddate' => date('Y-m-d'),
             
         ]);
+    }
+
+    public function editRoom(Request $request)
+    {
+        return $request->all();
+        $update = DB::connection('pgsql')->table('master_data.m_meeting_room')->where('bookid', $request->bookid)->update([
+            'bookid' => $request->bookid,
+            'startdate' => $request->startdate,
+            'enddate' => $request->enddate,
+            'starttime' => $request->starttime,
+            'endtime' => $request->endtime,
+            'roomid' => $request->roomid,
+        ]);
+        return $update;
+        if($update == true){
+            return redirect()->route('admin-index')->with("success", "Room update successfully");
+        } else { 
+            return redirect()->back()->with("error", "error");
+        }
     }
 
     public function userIndex(Request $request)

@@ -39,7 +39,7 @@ class TiketController extends Controller
         if($isLogin != 1) {
             return redirect()->route('login-page');
         }
-
+        
         $usreq = '';
         $categ = '';
         $prior = '';
@@ -167,7 +167,12 @@ class TiketController extends Controller
     }
 
     public function tiketList(Request $request)
-    {
+    {   
+        $isLogin = Session::get('status_login');
+        if($isLogin != 1) {
+            return redirect()->route('login-page');
+        }
+
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
 
@@ -303,7 +308,12 @@ class TiketController extends Controller
     }
 
     public function tiketFilter(Request $request)
-    {
+    {   
+        $isLogin = Session::get('status_login');
+        if($isLogin != 1) {
+            return redirect()->route('login-page');
+        }
+        
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $requestor = $request->requestor;
@@ -593,10 +603,8 @@ class TiketController extends Controller
         if ($auth){
             /* Insert Ticket */ 
             $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix, $targetdate, $system, $module, $object);
-            return $addTicket;
             /* Send Email */
             $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag);
-           
             /* End */
             return redirect()->route('tiket')->with("success", "Data insert successfully");
         } else { 
