@@ -81,11 +81,11 @@ class LoginController extends Controller
             "password"=>"required"
         ]);
         
-        // $isLogin = Session::get('status_login');
+        $useridsession = Session::get('userid');
         $datLogin = $this->repository->GETUSER($userid, $password);
         $json = json_decode($datLogin);
         $data = $json->data;
-        if($json->data->status_login == 1) {
+        if($json->data->status_login == 1 && $useridsession == $userid) {
             return redirect()->route('home');
         } else {
             /* Update status */
@@ -96,7 +96,7 @@ class LoginController extends Controller
                 /* checked status login */
                 if ($data->status_login == 1){
                     return back()->withErrors([
-                        'userid' => 'If you are already logged in, please log out first ',
+                        'userid' => 'If account already logged in, please use your account',
                     ]);
                 }
             
