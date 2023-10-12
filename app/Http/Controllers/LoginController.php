@@ -24,7 +24,13 @@ class LoginController extends Controller
     
     public function showLoginPage()
     {   
-        return view('auth.login');
+        $isLogin = Session::get('status_login');
+        if($isLogin == 1) {
+            return redirect()->route('home');
+        } else {
+            return view('auth.login');
+        }
+        
     }
 
     public function updateLogin ($userid, $password){
@@ -73,6 +79,8 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
+        Session::flush();
+        $isLogin = Session::get('status_login');
         $userid = $request->userid;
         $password = trim($request->password);
         
@@ -85,73 +93,76 @@ class LoginController extends Controller
         $datLogin = $this->repository->GETUSER($userid, $password);
         $json = json_decode($datLogin);
         $data = $json->data;
-        if($json->data->status_login == 1 && $useridsession == $userid) {
+        if($isLogin == 1) {
             return redirect()->route('home');
         } else {
-            /* Update status */
-            $update = $this->updateLogin($userid, $password);
-            $json = json_decode($update);
-        
-            if(!empty($update)){
-                /* checked status login */
-                if ($data->status_login == 1){
-                    return back()->withErrors([
-                        'userid' => 'If account already logged in, please use your account',
-                    ]);
-                }
-            
-                $userid = $data->userid;
-                $username = $data->username;
-                $password = $data->pass;
-                $departmentid = $data->departmentid;
-                $usermail = $data->usermail;
-                $status = $data->status_login;
-                $roleid = $data->roleid;
-                $plantid = $data->plantid;
-                $spvid = $data->spvid;
-                $headid = $data->headid;
-                $mgrid = $data->mgrid;
-
-                $datTicket = $this->repository->GETMYTICKET($userid, $roleid);
-                $json = json_decode($datTicket);
-                $data = $json->data->data;
-                // $request->session()->put($data);
-
-                /* Session Data */
-                $session = array(
-                    'userid' => $userid,
-                    'username' => $username,
-                    'password' => $password,
-                    'departmentid' => $departmentid,
-                    'usermail' => $usermail,
-                    'roleid' => $roleid,
-                    'plantud' => $plantid,
-                    'spvid' => $spvid,
-                    'headid' => $headid,
-                    'mgrid' => $mgrid,
-                    'status' => $status
-                );
-                /* Set User Session */
-                Session::put('login', true);
-                Session::put('userid', $userid);
-                Session::put('username', $username);
-                Session::put('password', $password);
-                Session::put('departmentid', $departmentid);
-                Session::put('usermail', $usermail);
-                Session::put('roleid', $roleid);
-                Session::put('plantid', $plantid);
-                Session::put('spvid', $spvid);
-                Session::put('headid', $headid);
-                Session::put('mgrid', $mgrid);
-                Session::put('status', $status);
-        
-                return redirect()->route('home')
-                    ->withSuccess('You have successfully logged in!');
-                         
+            if($json->data->status_login == 1 && $useridsession == $userid) {
+                return redirect()->route('home');
             } else {
-                return back()->withErrors(['error' => 'Wrong Password',]);
-            }
+                /* Update status */
+                $update = $this->updateLogin($userid, $password);
+                $json = json_decode($update);
+            
+                if(!empty($update)){
+                    /* checked status login */
+                    if ($data->status_login == 1){
+                        return back()->withErrors([
+                            'userid' => 'If account already logged in, please use your account',
+                        ]);
+                    }
+                
+                    $userid = $data->userid;
+                    $username = $data->username;
+                    $password = $data->pass;
+                    $departmentid = $data->departmentid;
+                    $usermail = $data->usermail;
+                    $status = $data->status_login;
+                    $roleid = $data->roleid;
+                    $plantid = $data->plantid;
+                    $spvid = $data->spvid;
+                    $headid = $data->headid;
+                    $mgrid = $data->mgrid;
 
+                    $datTicket = $this->repository->GETMYTICKET($userid, $roleid);
+                    $json = json_decode($datTicket);
+                    $data = $json->data->data;
+                    // $request->session()->put($data);
+
+                    /* Session Data */
+                    $session = array(
+                        'userid' => $userid,
+                        'username' => $username,
+                        'password' => $password,
+                        'departmentid' => $departmentid,
+                        'usermail' => $usermail,
+                        'roleid' => $roleid,
+                        'plantud' => $plantid,
+                        'spvid' => $spvid,
+                        'headid' => $headid,
+                        'mgrid' => $mgrid,
+                        'status' => $status
+                    );
+                    /* Set User Session */
+                    Session::put('login', true);
+                    Session::put('userid', $userid);
+                    Session::put('username', $username);
+                    Session::put('password', $password);
+                    Session::put('departmentid', $departmentid);
+                    Session::put('usermail', $usermail);
+                    Session::put('roleid', $roleid);
+                    Session::put('plantid', $plantid);
+                    Session::put('spvid', $spvid);
+                    Session::put('headid', $headid);
+                    Session::put('mgrid', $mgrid);
+                    Session::put('status', $status);
+            
+                    return redirect()->route('home')
+                        ->withSuccess('You have successfully logged in!');
+                            
+                } else {
+                    return back()->withErrors(['error' => 'Wrong Password',]);
+                }
+            }
         }
     } 
 
@@ -167,7 +178,8 @@ class LoginController extends Controller
         /* Update Status Login */
         $update = $this->updateLogout($userid, $password); 
         /* End */ 
-
+        Session::flush();
+    
         return redirect()->route('login-page');
     }  
     

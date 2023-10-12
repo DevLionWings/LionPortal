@@ -45,7 +45,7 @@ class DashboardController extends Controller
         } else {
             // $flushSessions = session()->flush();
             return redirect()->route('login')
-                ->withErrors('Wrong Password');
+                ->withErrors('please login first');
         }
         $session = array(
             'status_login' => $status_login
