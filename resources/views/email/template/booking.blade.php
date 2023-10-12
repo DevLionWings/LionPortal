@@ -31,7 +31,7 @@
 @endpush
 
 @section('title')
-Booking Room
+Room Meeting
 @endsection
 
 @section('content')

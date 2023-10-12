@@ -159,7 +159,8 @@
                                     <div class="form-group">
                                         <label class="form-check-label">Start Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="starttime" name="starttime" class="btntime select2" style="width: 100%;"  onchange="myFunction(event)">
+                                            <select  type="text" id="starttime" name="starttime" class="btntime select2" style="width: 100%;" onchange="myFunction(event)">
+                                                <option value="" selected>--:--:--</option>
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['START'] }}">{{ $tmcode['START'] }}</option>
                                                 @endforeach
@@ -173,7 +174,8 @@
                                     <div class="form-group">
                                         <label class="form-check-label">End Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="endtime" name="endtime" class="btntime select2" style="width: 100%;"  onchange="myFunction(event)">
+                                            <select  type="text" id="endtime" name="endtime" class="btntime select2" style="width: 100%;" onchange="myFunction(event)">
+                                                <option value="">--:--:--</option>
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['END'] }}">{{ $tmcode['END'] }}</option>
                                                 @endforeach
@@ -261,11 +263,21 @@
 </script>
 <script>
     $(function () {    
+        var hide1 = $("#hideroom");
+        var hide2 = $("#hideroombooked");
+        hide1.hide();
+        hide2.hide();
+
+        $('#save-btn').on('click', function() {
+            $('#form').submit();
+            $(this).attr('disabled', true);
+            $(this).text("Loading ...");
+        });
+
         //Initialize Select2 Elements
         $('.select2').select2()
-        // $('.datepicker').daterangepicker();
 
-        //disabled < timenow
+        // format datenow
         var today = new Date();
         var day = today.getDate() + "";
         var month = (today.getMonth() + 1) + "";
@@ -273,18 +285,16 @@
         var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
         var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
         var seconds = today.getSeconds() + "";
-
         if (day < 10) {
             day = '0' + day;
         }
-
         if (month < 10) {
             month = `0${month}`;
         }
-
         var time = hour + ":" + minutes + ":" + seconds;
         var date = year + "-" + month + "-" + day;
         //end
+
         //datepicker//
         var optSimple = {
             dateFormat: 'yy-mm-dd',
@@ -293,17 +303,16 @@
             changeMonth: true,
             changeYear: true,
             onSelect: function(a) {
-                // console.log(date);
+                $('.select2').select2()
                 var startdate = $('#modal-booked-user input[name="startdate"]').val();
                 var enddate = $('#modal-booked-user input[name="enddate"]').val();
-                $( '#enddate' ).datepicker( 'setDate', startdate );
-                console.log(startdate);
-                console.log(enddate);
-                console.log(date);
+                // $( '#enddate' ).datepicker( 'setDate', startdate );
+                // console.log(startdate);
+                // console.log(enddate);
+                // console.log(date);
                 $("select option").each(function() {
                     var $thisOption = $(this);
                     if(startdate == date){
-                        console.log('masuk');
                         if($thisOption.val() < time) {
                             $thisOption.attr("disabled", true);
                         }
@@ -315,14 +324,11 @@
         };
         $( '#startdate' ).datepicker( optSimple );
         $( '#enddate' ).datepicker( optSimple );
-        $( '#enddate, #startdate' ).datepicker( 'setDate', date );
+        $( '#startdate').datepicker( 'setDate', date );
         //end//
 
         var startdate = $('#modal-booked-user input[name="startdate"]').val();
         var enddate = $('#modal-booked-user input[name="enddate"]').val();
-        // console.log(startdate);
-        // console.log(enddate);
-        // console.log(date);
         $("select option").each(function() {
             var $thisOption = $(this);
             if(startdate == date){
@@ -334,11 +340,7 @@
             }
         });
         
-        $('#save-btn').on('click', function() {
-            $('#form').submit();
-            $(this).attr('disabled', true);
-            $(this).text("Loading ...");
-        });
+        $( '#enddate').datepicker( 'setDate', startdate );
 
         $(document).on('click', '.cancel', function () {
             $('#bookid').val($(this).attr("data-bookid"));
@@ -521,12 +523,22 @@
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
             if(startdate.length < 1){
                 alert('startdate required');
+                $( "#dialog" ).dialog();
                 return;
             } else if(enddate.length < 1){
                 alert('endate required');
                 return;
+            } else if(starttime.length < 1){
+                alert('starttime required');
+                return;
+            } else if(endtime.length < 1){
+                alert('endtime required');
+                return;
             } else if(endtime < starttime){
-                alert('something wrong endtime (backtime)');
+                alert('something wrong invalid time');
+                return;
+            } else if(startdate == date && starttime <= time){
+                alert('something wrong time (backtime)');
                 return;
             } else {
                 $.ajax({
@@ -573,6 +585,10 @@
 
         $(document).on('click', '.btnclose', function(e) {
             // document.getElementById("booked-user").reset();
+            $("#starttime").val('').trigger('change');
+            $("#endtime").val('').trigger('change');
+            $("#starttime1").val('').trigger('change');
+            $("#endtime1").val('').trigger('change');
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
             var hide1 = $("#hideroom");
@@ -585,9 +601,6 @@
             $('.select2').select2();
             var startdate = $('#modal-booked-user input[name="startdate"]').val();
             var enddate = $('#modal-booked-user input[name="enddate"]').val();
-            // console.log(startdate);
-            // console.log(enddate);
-            // console.log(date);
 
             $("select option").each(function() {
                 var $thisOption = $(this);
@@ -603,37 +616,22 @@
 
         $(document).on('click', '.btndate', function(e) {
             $('.select2').select2()
+            $("#starttime").val('').trigger('change');
+            $("#endtime").val('').trigger('change');
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
             hide1.hide();
             hide2.hide();
-
-            // var startdate = $('#modal-booked-user input[name="startdate"]').val();
-            // var enddate = $('#modal-booked-user input[name="enddate"]').val();
-            // console.log(startdate);
-            // console.log(date);
-
-            // $("select option").each(function() {
-            //     var $thisOption = $(this);
-            //     console.log(startdate);
-            //     if(startdate == date){
-            //         if($thisOption.val() < time) {
-            //             $thisOption.attr("disabled", true);
-            //         }
-            //     } else {
-            //         $thisOption.attr("disabled", false);
-            //     }
-            // });
         });
     });
 </script>
 <script type="text/javascript">
     function myFunction(e) {
         $('.select2').select2()
-        $("#hideroom").load(" #hideroom");
-        $("#hideroombooked").load(" #hideroombooked");
+        // $("#hideroom").load(" #hideroom");
+        // $("#hideroombooked").load(" #hideroombooked");
         var hide1 = $("#hideroom");
         var hide2 = $("#hideroombooked");
         hide1.hide();
@@ -642,6 +640,7 @@
 </script>
 <script>
     $(function() {
+        $('.select2').select2()
         var form = $("#booked-user");
         var checked = $("#range");
         var hide1 = $("#hideroom");
@@ -654,8 +653,6 @@
 
         checked.change(function() {
             if (checked.is(':checked')) {
-                var startdate = $('#modal-booked-user input[name="startdate"]').val();
-                $( '#enddate' ).datepicker( 'setDate', startdate );
                 hide3.show();
             } else {
                 hide3.hide();

@@ -127,9 +127,9 @@ class MeetingroomController extends Controller
             // data-roomid="'.$row["roomid"].'"><i class="fas fa-edit"></i></a>';
             // $availBtn = '<a href="javascript:void(0)" class="avail btn btn-success btn-sm" 
             // data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'">Available</i></a>';
-            $cancelBtn = '<a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
+            $cancelBtn = '<a href="javascript:void(0)" class="cancel btn btn-info btn-sm    " 
             data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'">Cancel</i></a>';
-            $editBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm" 
+            $editBtn = ' <a href="javascript:void(0)" class="edit btn btn-success btn-sm" 
             data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
             data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'"><i class="fas fa-edit"></i></a>';
             if($row["statusroom"] == '1'){
@@ -248,17 +248,16 @@ class MeetingroomController extends Controller
     }
 
     public function editRoom(Request $request)
-    {
-        return $request->all();
-        $update = DB::connection('pgsql')->table('master_data.m_meeting_room')->where('bookid', $request->bookid)->update([
+    {   
+        $update = DB::connection('pgsql')->table('meeting.t_booking')->where('bookid', $request->bookid)->update([
             'bookid' => $request->bookid,
-            'startdate' => $request->startdate,
-            'enddate' => $request->enddate,
-            'starttime' => $request->starttime,
-            'endtime' => $request->endtime,
-            'roomid' => $request->roomid,
+            'startdate' => $request->startdate1,
+            'enddate' => $request->enddate1,
+            'starttime' => $request->starttime1,
+            'endtime' => $request->endtime1,
+            'roomid' => $request->roomAvail1,
         ]);
-        return $update;
+    
         if($update == true){
             return redirect()->route('admin-index')->with("success", "Room update successfully");
         } else { 
