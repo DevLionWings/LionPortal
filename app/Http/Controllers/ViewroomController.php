@@ -44,6 +44,7 @@ class ViewroomController extends Controller
             'b.enddate', 'b.starttime', 'b.endtime', 'b.bookedon', 'b.bookedby')
             ->where('a.roompublic', 1)
             ->where('a.active', 1)
+            ->where('b.status', 1)
             ->where('b.startdate', $date)
             // ->where('b.enddate', '<=', $date)
             // ->where('b.starttime', '>', $time)

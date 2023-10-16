@@ -372,10 +372,17 @@ class MeetingroomController extends Controller
             $userid = Session::get('userid');
             // $bookBtn = '<a href="javascript:void(0)" class="book btn btn-danger btn-sm" 
             // data-roomid="'.$row["roomid"].'">Booking</i></a>';
-            $cancelBtn = '<a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
+           
+            $viewBtn = '<a href="javascript:void(0)" class="view btn btn-secondary btn-sm" 
+            data-roomname="'.$row["roomname"].'"  data-bookid="'.$row["bookid"].'" data-subject="'.$row["subject"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
+            data-description="'.$row["description"].'" data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+
+            $cancelBtn = ' <a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
             data-roomid="'.$row["roomid"].'"  data-bookid="'.$row["bookid"].'">Cancel</i></a>';
             if($row["statusroom"] == '1' && $row["userid"] == $userid){
-                return $cancelBtn;
+                return  $viewBtn. $cancelBtn;
+            } else {
+                return $viewBtn;
             }
 
         })
@@ -494,12 +501,12 @@ class MeetingroomController extends Controller
             'c.description', 'c.status', 'c.startdate', 'c.enddate', 'b.starttime', 'b.endtime', 'c.status')
             ->whereIn('c.status', [0, 1])
             ->where('c.startdate', '>=', $request->startdate)
-            ->where('c.enddate', '>=', $request->enddate)
+            ->where('c.enddate', '<=', $request->enddate)
             ->where('b.starttime', '>=', $request->starttime)
             ->where('b.endtime', '<=', $request->endtime)
             ->distinct('c.roomid')
             ->get();
-
+ 
         $arr_isvalid = [];
         foreach($isValidRoom as $valid){
             array_push($arr_isvalid, $valid->roomid);

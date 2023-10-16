@@ -210,6 +210,75 @@
             </div>
         </div>
     </div>
+    <div id="modal-view-booked"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">View Room Meeting</h4>
+                    <button type="button" class="close btnclose" id="btnclose" nama="btnclose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="" method="post" name='view-booked' id='view-booked'>
+                    @csrf
+                    <input id="userid" name="userid" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
+                    <div class="modal-body">
+                        <div class="form-group" id="hideroom">   
+                            <label class="form-check-label" for="roomname">Room Name :</label>
+                            <input type="text" name="roomname" id="roomname" class="form-control"> 
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="subject" disabled>Add Title :</label>
+                            <input type="text" name="subject" class="form-control" id="subject">
+                        </div>  
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label" for="startdate">Start Date:</label>
+                                        <input type="text" name="startdate" id="startdate" class="btndate form-control" value=""> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group" id="hidedate">
+                                        <label class="form-check-label" for="enddate">End Date:</label>
+                                        <input type="text" name="enddate" id="enddate" class="btndate form-control"> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label">Start Time :</label>
+                                        <input type="text" name="starttime" id="starttime" class="form-control"> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label">End Time :</label>
+                                        <input type="text" name="endtime" id="endtime" class="form-control"> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="form-group">
+                            <label class="form-check-label" for="description">Description :</label>
+                            <input type="text" name="description" class="form-control" id="description">
+                        </div> 
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default btnclose" id="btnclose" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div id="modal-cancel-room"  class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -367,6 +436,29 @@ function Initialize()
             $modal.modal('show');
         }) 
 
+        $(document).on('click', '.view', function() {
+            $('#modal-view-booked').modal({backdrop: 'static', keyboard: false})
+            var bookid = $(this).attr('data-bookid');
+            var roomname = $(this).attr('data-roomname');
+            var subject = $(this).attr('data-subject');
+            var startdate = $(this).attr('data-startdate');
+            var enddate = $(this).attr('data-enddate');
+            var starttime = $(this).attr('data-starttime');
+            var endtime = $(this).attr('data-endtime');
+            var description = $(this).attr('data-description');
+            var $modal = $('#modal-view-booked');
+            var $form = $modal.find('form[name="view-booked"]');
+            $form.find('input[name="bookid"]').val(bookid);
+            $form.find('input[name="roomname"]').val(roomname);
+            $form.find('input[name="subject"]').val(subject);
+            $form.find('input[name="startdate"]').val(startdate);
+            $form.find('input[name="enddate"]').val(enddate);
+            $form.find('input[name="starttime"]').val(starttime);
+            $form.find('input[name="endtime"]').val(endtime);
+            $form.find('input[name="description"]').val(description);
+            $modal.modal('show');
+        });
+        
         var table = $('#room_list').DataTable({
             scrollX: true,
             processing: true,
@@ -673,7 +765,14 @@ function Initialize()
             if (checked.is(':checked')) {
                 hide3.show();
             } else {
+                var startdate = $('#modal-booked-user input[name="startdate"]').val();
+                hide1.hide();
+                hide2.hide();
                 hide3.hide();
+                Initialize();
+                $("#hideroom").load(" #hideroom");
+                $("#hideroombooked").load(" #hideroombooked");
+                $('#enddate').datepicker( 'setDate', startdate );
             }
         });
     });
