@@ -34,7 +34,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="float-sm-left">
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-booked-user"><i class="fa fa-plus" aria-hidden="true"></i> Book Room</button>
+                                <button type="button" class="btnbookroom btn btn-success" id="btnbookroom"><i class="fa fa-plus" aria-hidden="true"></i> Book Room</button>
                             </div>
                             <!-- <div class="row align-items-end">
                                 <div class="col-md-3">
@@ -159,7 +159,7 @@
                                     <div class="form-group">
                                         <label class="form-check-label">Start Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="starttime" name="starttime" class="btntime select2" style="width: 100%;" onchange="myFunction(event)">
+                                            <select  type="text" id="starttime" name="starttime" class="form-control" style="width: 100%;" onchange="myFunction(event)">
                                                 <option value="" selected>--:--:--</option>
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['START'] }}">{{ $tmcode['START'] }}</option>
@@ -174,7 +174,7 @@
                                     <div class="form-group">
                                         <label class="form-check-label">End Time :</label>
                                         <div class="input-group value">
-                                            <select  type="text" id="endtime" name="endtime" class="btntime select2" style="width: 100%;" onchange="myFunction(event)">
+                                            <select  type="text" id="endtime" name="endtime" class="form-control" style="width: 100%;" onchange="myFunction(event)">
                                                 <option value="">--:--:--</option>
                                                 @foreach($tm as $tmcode)
                                                 <option value="{{ $tmcode['END'] }}">{{ $tmcode['END'] }}</option>
@@ -204,7 +204,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default btnclose" id="btnclose" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success" >Booked</button>
+                        <button type="button" id="book-btn"  class="btn btn-success" >Booked</button>
                     </div>
                 </form>
             </div>
@@ -262,6 +262,15 @@
     $('#m-userroom').parent().parent().parent().addClass('menu-is-opening menu-open');
 </script>
 <script>
+function Initialize()
+    {  
+        $('.select2').select2({
+            allowClear: true,
+            width: '100%'
+        });
+    } 
+</script>
+<script>
     $(function () {    
         var hide1 = $("#hideroom");
         var hide2 = $("#hideroombooked");
@@ -274,8 +283,17 @@
             $(this).text("Loading ...");
         });
 
+        $('#book-btn').on('click', function() {
+            $('#booked-user').submit();
+            $(this).attr('disabled', true);
+            $(this).text("Loading ...");
+        });
+
         //Initialize Select2 Elements
-        $('.select2').select2()
+      $('.select2').select2({
+            allowClear: true,
+            width: '100%'
+        });
 
         // format datenow
         var today = new Date();
@@ -306,10 +324,6 @@
                 $('.select2').select2()
                 var startdate = $('#modal-booked-user input[name="startdate"]').val();
                 var enddate = $('#modal-booked-user input[name="enddate"]').val();
-                // $( '#enddate' ).datepicker( 'setDate', startdate );
-                // console.log(startdate);
-                // console.log(enddate);
-                // console.log(date);
                 $("select option").each(function() {
                     var $thisOption = $(this);
                     if(startdate == date){
@@ -346,6 +360,12 @@
             $('#bookid').val($(this).attr("data-bookid"));
             $('#modal-cancel-room').modal('show');
         })
+
+        $(document).on('click', '.btnbookroom', function () {
+            $('#modal-booked-user').modal({backdrop: 'static', keyboard: false})
+            var $modal = $('#modal-booked-user');
+            $modal.modal('show');
+        }) 
 
         var table = $('#room_list').DataTable({
             scrollX: true,
@@ -554,7 +574,7 @@
                         'endtime' : endtime, 
                     },
                     success: function(response) {
-                        // console.log(response);
+                        console.log(response);
                         var hide1 = $("#hideroom");
                         var hide2 = $("#hideroombooked");
                         hide1.show();
@@ -574,7 +594,7 @@
                         // $('#modal-booked-user form[name="book-user"] select[name="roomBook"]').prop('disabled', true);
                         $('#modal-booked-user form[name="book-user"]').html($select_room_avail);  
                         $('#modal-booked-user form[name="book-user"]').html($select_room_book);  
-                        $('.select2').select2()
+                        Initialize();
                     },
                     error: function (error) {
                         console.error(error);
@@ -587,8 +607,6 @@
             // document.getElementById("booked-user").reset();
             $("#starttime").val('').trigger('change');
             $("#endtime").val('').trigger('change');
-            $("#starttime1").val('').trigger('change');
-            $("#endtime1").val('').trigger('change');
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
             var hide1 = $("#hideroom");
@@ -597,22 +615,22 @@
             hide2.hide();
         });
 
-        $(document).on('click', '.btntime', function(e) {
-            $('.select2').select2();
-            var startdate = $('#modal-booked-user input[name="startdate"]').val();
-            var enddate = $('#modal-booked-user input[name="enddate"]').val();
+        // $(document).on('click', '.btntime', function(e) {
+        //     $('.select2').select2();
+        //     var startdate = $('#modal-booked-user input[name="startdate"]').val();
+        //     var enddate = $('#modal-booked-user input[name="enddate"]').val();
 
-            $("select option").each(function() {
-                var $thisOption = $(this);
-                if(startdate == date){
-                    if($thisOption.val() < time) {
-                        $thisOption.attr("disabled", true);
-                    }
-                } else {
-                    $thisOption.attr("disabled", false);
-                }
-            });       
-        });
+        //     $("select option").each(function() {
+        //         var $thisOption = $(this);
+        //         if(startdate == date){
+        //             if($thisOption.val() < time) {
+        //                 $thisOption.attr("disabled", true);
+        //             }
+        //         } else {
+        //             $thisOption.attr("disabled", false);
+        //         }
+        //     });       
+        // });
 
         $(document).on('click', '.btndate', function(e) {
             $('.select2').select2()
@@ -629,9 +647,9 @@
 </script>
 <script type="text/javascript">
     function myFunction(e) {
-        $('.select2').select2()
-        // $("#hideroom").load(" #hideroom");
-        // $("#hideroombooked").load(" #hideroombooked");
+        Initialize();
+        $("#hideroom").load(" #hideroom");
+        $("#hideroombooked").load(" #hideroombooked");
         var hide1 = $("#hideroom");
         var hide2 = $("#hideroombooked");
         hide1.hide();
@@ -640,7 +658,7 @@
 </script>
 <script>
     $(function() {
-        $('.select2').select2()
+        // $('.select2').select2()
         var form = $("#booked-user");
         var checked = $("#range");
         var hide1 = $("#hideroom");

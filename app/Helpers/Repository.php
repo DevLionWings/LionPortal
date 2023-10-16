@@ -552,7 +552,7 @@ class Repository
             
             $requestor = DB::connection('pgsql')->table('master_data.m_user as a')
             ->join('master_data.m_role as b', 'a.roleid', '=', 'b.roleid')
-            ->whereIn('b.roleid', ['RD002','RD003','RD006','RD009', 'RD005'])
+            ->whereIn('b.roleid', ['RD002','RD003','RD005', 'RD006', 'RD007', 'RD008', 'RD009', 'RD010', 'RD012' ])
             ->get();
 
             $category = DB::connection('pgsql')->table('master_data.m_category')

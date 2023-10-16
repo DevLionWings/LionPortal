@@ -43,26 +43,34 @@ Room Meeting
         <td style="text-align: left;">Booking Id</td>
         <td>:&nbsp;&nbsp;{{ $mailData['bookid'] }}</td>
     </tr>
+    @if($mailData['bookid'] != 'Canceled')
     <tr>
         <td style="vertical-align:top;">Subject</td>
         <td>:&nbsp;&nbsp;{{ $mailData['subject'] }}</td>
     </tr>
+    @endif
     <tr>
         <td style="vertical-align:top;">Description</td>
         <td>:&nbsp;&nbsp;{{ $mailData['desc'] }}</td>
     </tr>
+    @if($mailData['bookid'] != 'Canceled')
     <tr>
         <td style="vertical-align:top;">Date</td>
         <td>:&nbsp;&nbsp;{{ $mailData['date'] }}</td>
     </tr>
+    @endif
+    @if($mailData['bookid'] != 'Canceled')
     <tr>
         <td style="vertical-align:top;">Start Time</td>
         <td>:&nbsp;&nbsp;{{ $mailData['starttime'] }}</td>
     </tr>
+    @endif
+    @if($mailData['bookid'] != 'Canceled')
     <tr>
         <td style="vertical-align:top;">End Time</td>
         <td>:&nbsp;&nbsp;{{ $mailData['endtime'] }}</td>
     </tr>
+    @endif
     <tr>
         <td style="text-align: left;">Booking Name</td>
         <td>:&nbsp;&nbsp;{{ $mailData['bookingname'] }}</td>

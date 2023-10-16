@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $password = trim(Session::get('password'));
         $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
         $json = json_decode($datLogin);
-       
+        
         if ($json->rc == 00){
             $data = $json->data;
             $status_login = $data->status_login;
@@ -44,8 +44,7 @@ class DashboardController extends Controller
             }
         } else {
             // $flushSessions = session()->flush();
-            return redirect()->route('login')
-                ->withErrors('please login first');
+            return redirect()->route('login');
         }
         $session = array(
             'status_login' => $status_login
