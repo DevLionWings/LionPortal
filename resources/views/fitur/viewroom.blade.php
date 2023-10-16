@@ -122,7 +122,7 @@
         </section>
         <section class="content">
             <div>
-                <h2 style="text-align:center">List Room Meeting</h2>
+                <h2 style="text-align:center">Meeting Room List</h2>
             </div>
             <div class="container-fluid">
                 <div class="row">

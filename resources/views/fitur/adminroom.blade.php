@@ -122,7 +122,7 @@
                                         <th>Capacity</th>
                                         <th>Status Room</th>
                                         <th>Subject</th>
-                                        <th>User Name</th>
+                                        <th>Booked By</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Start Time</th>
@@ -229,7 +229,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-check-label" for="subject" disabled>Add Title :</label>
+                            <label class="form-check-label" for="subject" disabled>Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject">
                         </div>
                         <input type="checkbox" class="largerCheckbox" name="range" id="range">
@@ -289,7 +289,7 @@
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50"></textarea>
                         </div> 
                         <div class="form-group">
-                            <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Pilih Room Meeting</i></button>
+                            <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
                         </div> 
                         <div class="form-group" id="hideroom">   
                             <label class="form-check-label" for="roomAvail">Room Meeting Available :</label>
@@ -303,7 +303,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default btnclose" id="btnclose" data-dismiss="modal">Close</button>
-                        <button type="button" id="book-btn" class="btn btn-success" >Booked</button>
+                        <button type="button" id="book-btn" class="btn btn-success" >Book</button>
                     </div>
                 </form>
             </div>
@@ -374,7 +374,7 @@
                             </div>
                         </div>  
                         <div class="form-group">
-                            <button type="button" id="editroom" name="editroom" class="editroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Pilih Room Meeting</i></button>
+                            <button type="button" id="editroom" name="editroom" class="editroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
                         </div> 
                         <div class="form-group" id="hideroomedit">   
                             <label class="form-check-label" for="roomAvail1">Room Meeting Available :</label>
@@ -388,7 +388,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default btnclose" id="btnclose" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success" >Booked</button>
+                        <button type="submit" class="btn btn-success" >Book</button>
                     </div>
                 </form>
             </div>
@@ -888,6 +888,9 @@
             } else if(endtime.length < 1){
                 alert('endtime required');
                 return;
+            } else if(starttime == endtime){
+                alert('something wrong invalid time');
+                return;
             } else if(endtime < starttime){
                 alert('something wrong invalid time');
                 return;
@@ -959,6 +962,9 @@
                 return;
             } else if(endtime.length < 1){
                 alert('endtime required');
+                return;
+            } else if(starttime == endtime){
+                alert('something wrong invalid time');
                 return;
             } else if(enddate < startdate){
                 alert('something wrong enddate (backdate)');

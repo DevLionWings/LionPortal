@@ -210,7 +210,7 @@
                                             <select id="system" name="system" class="form-control input--style-6" required>
                                                 <option value=""> Masukkan Pilihan :</option>
                                                 @foreach($sys as $syscode)
-                                                <option value="{{ $syscode['NAME'] }}">{{ $syscode['NAME'] }}</option>
+                                                <option value="{{ $syscode['ID'] }}">{{ $syscode['NAME'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

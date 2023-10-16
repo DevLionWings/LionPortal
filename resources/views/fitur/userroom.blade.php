@@ -130,7 +130,7 @@
                     <input id="userid" name="userid" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="form-check-label" for="subject" disabled>Add Title :</label>
+                            <label class="form-check-label" for="subject" disabled>Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject">
                         </div>
                         <input type="checkbox" class="largerCheckbox" name="range" id="range">
@@ -190,7 +190,7 @@
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50"></textarea>
                         </div> 
                         <div class="form-group">
-                            <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Pilih Room Meeting</i></button>
+                            <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
                         </div> 
                         <div class="form-group" id="hideroom">   
                             <label class="form-check-label" for="roomAvail">Room Meeting Available :</label>
@@ -204,7 +204,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default btnclose" id="btnclose" data-dismiss="modal">Close</button>
-                        <button type="button" id="book-btn"  class="btn btn-success" >Booked</button>
+                        <button type="button" id="book-btn"  class="btn btn-success" >Book</button>
                     </div>
                 </form>
             </div>
@@ -223,20 +223,20 @@
                     @csrf
                     <input id="userid" name="userid" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
                     <div class="modal-body">
-                        <div class="form-group" id="hideroom">   
+                        <div class="form-group">   
                             <label class="form-check-label" for="roomname">Room Name :</label>
                             <input type="text" name="roomname" id="roomname" class="form-control"> 
                         </div> 
                         <div class="form-group">
-                            <label class="form-check-label" for="subject" disabled>Add Title :</label>
-                            <input type="text" name="subject" class="form-control" id="subject">
+                            <label class="form-check-label" for="subject" disabled>Subject :</label>
+                            <input type="text" name="subject" class="form-control" id="subject" readonly>
                         </div>  
                         <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label class="form-check-label" for="startdate">Start Date:</label>
-                                        <input type="text" name="startdate" id="startdate" class="btndate form-control" value=""> 
+                                        <input type="text" name="startdate" id="startdate" class="btndate form-control" readonly> 
                                     </div>
                                 </div>
                             </div>
@@ -244,7 +244,7 @@
                                 <div class="mb-3">
                                     <div class="form-group" id="hidedate">
                                         <label class="form-check-label" for="enddate">End Date:</label>
-                                        <input type="text" name="enddate" id="enddate" class="btndate form-control"> 
+                                        <input type="text" name="enddate" id="enddate" class="btndate form-control" readonly> 
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +254,7 @@
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label class="form-check-label">Start Time :</label>
-                                        <input type="text" name="starttime" id="starttime" class="form-control"> 
+                                        <input type="text" name="starttime" id="starttime" class="form-control" readonly> 
                                     </div>
                                 </div>
                             </div>
@@ -262,14 +262,14 @@
                                 <div class="mb-3">
                                     <div class="form-group">
                                         <label class="form-check-label">End Time :</label>
-                                        <input type="text" name="endtime" id="endtime" class="form-control"> 
+                                        <input type="text" name="endtime" id="endtime" class="form-control" readonly> 
                                     </div>
                                 </div>
                             </div>
                         </div>  
                         <div class="form-group">
                             <label class="form-check-label" for="description">Description :</label>
-                            <input type="text" name="description" class="form-control" id="description">
+                            <input type="text" name="description" class="form-control" id="description" readonly>
                         </div> 
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -645,6 +645,9 @@ function Initialize()
                 return;
             } else if(endtime.length < 1){
                 alert('endtime required');
+                return;
+            } else if(starttime == endtime){
+                alert('something wrong invalid time');
                 return;
             } else if(endtime < starttime){
                 alert('something wrong invalid time');

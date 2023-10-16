@@ -57,4 +57,9 @@ class SendMailBooking extends Mailable
     {
         return [];
     }
+
+    public function build()
+    {
+        return $this->from('admin@lionwings.com', 'no-reply[Room Meeting]');
+    }
 }
