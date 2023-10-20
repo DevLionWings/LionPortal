@@ -61,8 +61,10 @@
                             <table id="list" class="table table-bordered table-hover display nowrap" width="100%">
                                 <thead>
                                     <tr>
+                                        <th>System Id</th>
                                         <th>Category Id</th>
                                         <th>Description</th>
+                                        <th>Aktif/Non Aktif</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -88,21 +90,38 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="form-check-label" for="categoryid">Category Id</label>
-                            <input type="text" name="categoryid" class="form-control" id="categoryid" maxlength="6">
+                            <label class="form-check-label" for="desc">Category :</label>
+                            <input type="text" name="desc" class="form-control" id="desc" oninput="this.value = this.value.toUpperCase()">
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="desc">Description</label>
-                            <input type="text" name="desc" class="form-control" id="desc">
+                        <div class="row">
+                            <div class="name">Need Approval ?</div>
+                            <div class="col-md-4"> 
+                                <input type="radio" id="approve" name="approve" value="X" checked> 
+                                <label for="">ya</label><br>
+                            </div>
+                            <div class="col-md-4"> 
+                                <input type="radio" id="approve" name="approve" value="">
+                                <label for="">Tidak</label><br>  
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <div class="name">Approval :</div>
+                        <!-- <div class="form-group">
+                            <div class="name">Need Approval ?</div>
                             <div class="input-group value">
                                 <select id="approve" name="approve" class="form-control input--style-6" required>
-                                    <option value=""> Masukkan Pilihan :</option>
                                     <option value="X">ya</option>
-                                    <option value="N">Tidak</option>
+                                    <option value=" ">Tidak</option>
                                 </select>
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="name">Assign to System :</div>
+                            <div class="col-md-4"> 
+                                <input type="checkbox" class="largerCheckbox" name="SY001" id="SY001"> 
+                                <label for="">SAP</label><br>
+                            </div>
+                            <div class="col-md-4"> 
+                                <input type="checkbox" class="largerCheckbox" name="SY002" id="SY002">
+                                <label for="">NON SAP</label><br>  
                             </div>
                         </div>
                     </div>
@@ -186,12 +205,27 @@
             order: [[ 1, "desc" ]],
             columns: [
                 {
+                    data: 'systemid',
+                    name: 'systemid'
+                },
+                {
                     data: 'categoryid',
                     name: 'categoryid'
                 },
                 {
                     data: 'description',
                     name: 'description'
+                },
+                {
+                    data: 'flagging',
+                    render: function (data){
+                        if(data == "1"){
+                            statusText = `<span class="badge badge-success">ON</span>`;
+                        } else {
+                            statusText = `<span class="badge badge-danger">OFF</span>`;
+                        }
+                        return statusText;
+                    }
                 },
                 {
                     data: 'action',

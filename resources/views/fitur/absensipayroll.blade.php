@@ -765,7 +765,7 @@
                 'shift' : shiftSelected, 
             },
             success: function(response) {
-                console.log(response['shft'])
+                // console.log(response['shft'])
                 var $select_shift = $('<select type="text" id="selectshift" name="selectshift" class="form-control input--style-6" required></select>');
                 $.each(response["shft"], function(key, data) {
                     var isSelected = (data["CODE"]===shiftSelected)?"selected":"";

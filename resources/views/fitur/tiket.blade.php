@@ -253,12 +253,12 @@
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <div class="form-group">
-                                        <div class="name">Object Type:</div>
+                                        <div class="name">Object Type(optional):</div>
                                         <div class="input-group value">
                                             <select id="objecttype" name="objecttype" class="form-control input--style-6" required>
                                                 <option value=""> Masukkan Pilihan :</option>
                                                 @foreach($obj as $objcode)
-                                                <option value="{{ $objcode['NAME'] }}">{{ $objcode['NAME'] }}</option>
+                                                <option value="{{ $objcode['ID'] }}">{{ $objcode['NAME'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -277,10 +277,10 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="form-check-label" >Target Date :</label>
                             <input type="date" name="targetdate" id="targetdate" class="form-control"> 
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label class="form-check-label" for="group">Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject" required>
@@ -473,10 +473,13 @@
                             <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
                         </div> -->
                         <div class="row">
-                            <div class="col-md-3"> 
+                            <div class="col-3"> 
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> Show Details</button>
+                                <div id="loadings">
+                                    Loading...
+                                </div>
                             </div>
-                            <div class="col-md-1" id="comment2"> 
+                            <div class="col-1" id="comment2"> 
                                 <span type="text" name="countcomment" id="countcomment" class="modal-input" readonly></span>
                             </div>
                         </div>
@@ -499,7 +502,6 @@
             </div>
         </div>
     </div>
-
     <div id="modal-comment" class="modal fade show" aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -548,104 +550,122 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{route('update-tiket')}}" method="post" name='update'>
+                <form action="{{route('edit-tiket')}}" method="post" name="update" id="update">
                     @csrf
                     <input type="hidden" id="update-ticketno" name="ticketno"/>
                     <input type="hidden" id="update-userid" name="userid"/>
                     <input type="hidden" id="update-rejectedby" name="rejectedby"/>
                     <div class="modal-body">
-                    <p>Are You Sure ? <span class="text-bold"></span></p>
-                        @if(session('roleid') == 'RD006')
-                        <div class="form-group">
-                            <div class="name">Assigned To :</div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                                    <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="requestor" disabled>User Request :</label>
+                                    <input type="text" name="requestor" class="form-control" id="requestor" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="systemid" disabled>System :</label>
+                                    <input type="text" name="systemid" class="form-control" id="systemid" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">Category :</div>
+                                        <div class="input-group value">
+                                            <select id="category" name="category" class="form-control input--style-6" required>
+                                                @foreach($categ as $categcode)
+                                                <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="priority" disabled>Priority :</label>
+                                    <input type="text" name="priority" class="form-control" id="priority" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">Object Type:</div>
+                                        <div class="input-group value">
+                                            <select id="objecttype" name="objecttype" class="form-control input--style-6" required>
+                                                <option value=""> Masukkan Pilihan :</option>
+                                                @foreach($obj as $objcode)
+                                                <option value="{{ $objcode['ID'] }}">{{ $objcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="hidemodule">
+                            <div class="name">Module :</div>
                             <div class="input-group value">
-                                <select id="assignto" name="assignto" class="form-control input--style-6" required>
+                                <select id="moduleid" name="moduleid" class="form-control input--style-6">
                                     <option value=""> Masukkan Pilihan :</option>
-                                    @foreach($assn as $assncode)
-                                    <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
+                                    @foreach($mdl as $mdlcode)
+                                    <option value="{{ $mdlcode['ID'] }}">{{ $mdlcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="input-group value">
-                                <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD002">
-                            </div>
+                            <label class="form-check-label" for="subject" disabled>Subject :</label>
+                            <input type="text" name="subject" class="form-control" id="subject" readonly>
                         </div>
                         <div class="form-group">
-                            <div class="input-group value">
-                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="IN PROGRESS">
-                            </div>
+                            <label class="form-check-label" for="detail" disabled>Detail Issue :</label>
+                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" ></textarea>
                         </div>
                         <div class="form-group">
+                            <div class="name">Assigned To :</div>
                             <div class="input-group value">
-                                <input id="approvedbyit_date" name="approvedbyit_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
+                                <select id="assignto" name="assignto" class="form-control input--style-6" required>
+                                    @foreach($assn as $assncode)
+                                    <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div>
+                        </div> 
                         <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedbyit" name="approvedbyit" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
+                            <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
+                            <input type="text" name="targetdates" class="form-control" id="targetdates">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approve" disabled>Approve Manager User :</label>
+                                    <input type="text" name="approve" class="form-control" id="approve" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approveit" disabled>Approve Manager IT:</label>
+                                    <input type="text" name="approveit" class="form-control" id="approveit" readonly>
+                                </div>
                             </div>
                         </div>
-                        @endif
-                        @if(session('roleid') == 'RD002')
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD001">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="WAITING APPROVAL IT">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedby1_date" name="approvedby1_date" class="form-control input--style-6" type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedby1" name="approvedby1" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="assignto" name="assignto" class="form-control input--style-6" type="hidden" value="101943">
-                            </div>
-                        </div>
-                        @endif
-                        @if(session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD007' || session('roleid') == 'RD008')
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="statusid" name="statusid" class="form-control input--style-6" type="hidden" value="SD002">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="status" name="status" class="form-control input--style-6" type="hidden" value="IN PROGRESS">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedbyit" name="approvedbyit" class="form-control input--style-6" type="hidden" value="{{ session('mgrid') }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="approvedby1" name="approvedby1" class="form-control input--style-6" type="hidden" value="{{ session('mgrid') }}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group value">
-                                <input id="assignto" name="assignto" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
-                            </div>
-                        </div>
-                        @endif
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Yes</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>
@@ -750,6 +770,50 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <div id="modal-transport"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Transport</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="" method="post" name="transport" id="transport">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                            <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="detail" disabled>Transport Number :</label>
+                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" ></textarea>
+                        </div>
+                        <div class="row">
+                            <!-- <div class="name">Need Approval ?</div> -->
+                            <div class="col-md-4"> 
+                                <input type="checkbox" id="lqa" name="lqa" value="lqa"> 
+                                <label for="">LQA</label><br>
+                            </div>
+                            <div class="col-md-4"> 
+                                <input type="checkbox" id="lpr" name="lpr" value="lpr">
+                                <label for="">LPR</label><br>  
+                            </div>
+                        </div>
+                        <hr/>
+                        <h5 class="modal-title">History :</h5>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Accept</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
 @endsection
 @section('extend-js')
@@ -766,7 +830,6 @@
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 <script src="{{ asset('plugins/jquery/jquery-ui.js') }}"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 
 <script>
     $('.nav-link.active').removeClass('active');
@@ -785,6 +848,42 @@
             $('#form').submit();
             $(this).attr('disabled', true);
             $(this).text("Loading ...");
+        });
+
+        $(document).on('click', '.trans', function() {
+            $('#modal-transport').modal({backdrop: 'static', keyboard: false})
+            var user_id = $(this).attr('data-id');
+            var ticketno = $(this).attr('data-ticket');
+            var requestor = $(this).attr('data-requestor');
+            var category = $(this).attr('data-category');
+            var status = $(this).attr('data-status');
+            var statusid  = $(this).attr('data-statusid');
+            var priority  = $(this).attr('data-priority');
+            var subject  = $(this).attr('data-subject');
+            var detail  = $(this).attr('data-detail');
+            var assign  = $(this).attr('data-assignto');
+            var statusid  = $(this).attr('data-statusid');
+            var roleid  = $(this).attr('data-roleid');
+            var targetdate  = $(this).attr('data-targetdate');
+            var created  = $(this).attr('data-createdname');
+            var approveId  = $(this).attr('data-approvedby_1');
+            var approveItId  = $(this).attr('data-approvedby_it');
+            var requestorId  = $(this).attr('data-requestorid');
+            var approve  = $(this).attr('data-approve1name');
+            var approveit  = $(this).attr('data-approveitname');
+            var approvedate  = $(this).attr('data-approvedby1');
+            var approveitdate  = $(this).attr('data-approvedbyit');
+            var systemid  = $(this).attr('data-systemid');
+            var systemname  = $(this).attr('data-systemname');
+            var moduleid  = $(this).attr('data-moduleid');
+            var objectid  = $(this).attr('data-objectid');
+            var upload  = $(this).attr('data-upload');
+            var createdon  = $(this).attr('data-createdon');
+            var $modal = $('#modal-transport');
+            var $form = $modal.find('form[name="transport"]');
+            $form.find('input[name="id"]').val(user_id);
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $modal.modal('show');
         });
 
         $(document).on('click', '.view', function() {
@@ -813,6 +912,7 @@
             var approvedate  = $(this).attr('data-approvedby1');
             var approveitdate  = $(this).attr('data-approvedbyit');
             var systemid  = $(this).attr('data-systemid');
+            var systemname  = $(this).attr('data-systemname');
             var moduleid  = $(this).attr('data-moduleid');
             var objectid  = $(this).attr('data-objectid');
             var upload  = $(this).attr('data-upload');
@@ -845,7 +945,7 @@
             $form.find('input[name="requestorid"]').val(user_id);
             $form.find('input[name="dateapproveit"]').val(approveitdate);
             $form.find('input[name="comment_body"]').val(comment_body);
-            $form.find('input[name="systemid"]').val(systemid);
+            $form.find('input[name="systemid"]').val(systemname);
             $form.find('input[name="moduleid"]').val(moduleid);
             $form.find('input[name="objectid"]').val(objectid);
             $form.find('input[name="upload"]').val(upload);
@@ -855,16 +955,98 @@
 
         $(document).on('click', '.update', function () {
             $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
-            $('#update-ticketno').val($(this).attr("data-ticketno"));
-            $('#update-userid').val($(this).attr("data-userid"));
-            $('#update-assignto').val($(this).attr("data-assignto"));
-            $('#update-approvedby1').val($(this).attr("data-approvedby1"));
-            $('#update-approvedbyit').val($(this).attr("data-approvedbyit"));
-            $('#update-rejectedby').val($(this).attr("data-rejectedby"));
-            $('#update-statusid').val($(this).attr("data-statusid"));
-            $('#update-approvedby1_date').val($(this).attr("data-approvedby1_date"));
-            $('#update-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
-            $('#modal-update-user').modal('show');
+            getCategoryJson($(this).attr('data-systemid'),  $(this).attr('data-categoryid'));
+            var user_id = $(this).attr('data-id');
+            var ticketno = $(this).attr('data-ticket');
+            var requestor = $(this).attr('data-requestor');
+            var category = $(this).attr('data-category');
+            var categoryid = $(this).attr('data-categoryid');
+            var status = $(this).attr('data-status');
+            var statusid  = $(this).attr('data-statusid');
+            var priority  = $(this).attr('data-priority');
+            var subject  = $(this).attr('data-subject');
+            var detail  = $(this).attr('data-detail');
+            var assign  = $(this).attr('data-assignto');
+            var assignedto  = $(this).attr('data-assignedto');
+            var statusid  = $(this).attr('data-statusid');
+            var roleid  = $(this).attr('data-roleid');
+            var targetdate  = $(this).attr('data-targetdate');
+            var created  = $(this).attr('data-createdname');
+            var approveId  = $(this).attr('data-approvedby_1');
+            var approveItId  = $(this).attr('data-approvedby_it');
+            var requestorId  = $(this).attr('data-requestorid');
+            var approve  = $(this).attr('data-approve1name');
+            var approveit  = $(this).attr('data-approveitname');
+            var approvedate  = $(this).attr('data-approvedby1');
+            var approveitdate  = $(this).attr('data-approvedbyit');
+            var systemid  = $(this).attr('data-systemid');
+            var systemname  = $(this).attr('data-systemname');
+            var moduleid  = $(this).attr('data-moduleid');
+            var objectid  = $(this).attr('data-objectid');
+            var createdon  = $(this).attr('data-createdon');
+            var $modal = $('#modal-update-user');
+            var $form = $modal.find('form[name="update"]');
+            var hide1 = $("#hidemodule");
+            hide1.show()
+            if(systemid == 'SY002'){
+                hide1.hide();
+            }
+            $form.find('input[name="userid"]').val(user_id);
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $form.find('input[name="requestor"]').val(requestor);
+            $form.find('input[name="priority"]').val(priority);
+            $form.find('input[name="subject"]').val(subject);
+            $form.find('textarea[name="detail"]').val(detail);
+            $form.find('input[name="statusid"]').val(statusid);
+            $form.find('input[name="roleid"]').val(roleid);
+            $form.find('input[name="status"]').val(status);
+            $form.find('input[name="created"]').val(created);
+            $form.find('input[name="targetdates"]').val(targetdate);
+            $form.find('input[name="approve"]').val(approve);
+            $form.find('input[name="approveit"]').val(approveit);
+            $form.find('input[name="dateapprove"]').val(approvedate);
+            $form.find('input[name="approveId"]').val(approveId);
+            $form.find('input[name="approveItId"]').val(approveItId);
+            $form.find('input[name="requestorid"]').val(user_id);
+            $form.find('input[name="dateapproveit"]').val(approveitdate);
+            $form.find('input[name="systemid"]').val(systemname);
+            $form.find('input[name="moduleid"]').val(moduleid);
+            $form.find('input[name="objectid"]').val(objectid);
+            $form.find('input[name="createdon"]').val(createdon);
+            // var category_options = $form.find('select[name="category"]').children();
+            // $.each(category_options, function(key, value) {
+            //     if($(value).val() == categoryid) {
+            //         $(value).attr('selected', true);
+            //     } else {
+            //         $(value).attr('selected', false);
+            //     }
+            // });
+            var assignedto_options = $form.find('select[name="assignto"]').children();
+            $.each(assignedto_options, function(key, value) {
+                if($(value).val() == assignedto) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            var moduleid_options = $form.find('select[name="moduleid"]').children();
+            $.each(moduleid_options, function(key, value) {
+                if($(value).val() == moduleid) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).val() == "";
+                    $(value).attr('selected', false);
+                }
+            });
+            var objectid_options = $form.find('select[name="objecttype"]').children();
+            $.each(objectid_options, function(key, value) {
+                if($(value).val() == objectid) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            $modal.modal('show');
         })
 
         $(document).on('click', '.reject', function () {
@@ -951,7 +1133,7 @@
                     {
                         data: 'ticketno',
                         render: function(data, type, row){
-                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
+                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                         }
                     },
                     {
@@ -987,6 +1169,8 @@
                                 statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
                             } else if (data == 'VPN'){
                                 statusText = `<span class="badge badge-warning">VPN</span>`;
+                            } else if (data == 'DEPLOY'){
+                                statusText = `<span class="badge badge-dark">DEPLOY</span>`;
                             }
                             
                             return statusText;
@@ -1112,7 +1296,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -1148,7 +1332,10 @@
                             statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
                         } else if (data == 'VPN'){
                             statusText = `<span class="badge badge-warning">VPN</span>`;
+                        } else if (data == 'DEPLOY'){
+                            statusText = `<span class="badge badge-dark">DEPLOY</span>`;
                         }
+                        
                             
                         
                         return statusText;
@@ -1272,6 +1459,14 @@
             })
         });
 
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loadings").show();
+            }).ajaxStop(function () {
+                $("#loadings").hide();
+            });
+        });
+
         $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user form[name="view1"] input[name="ticketno"]').val();
             var requestor = $('#modal-view-user form[name="view1"] input[name="requestorid"]').val();
@@ -1285,7 +1480,6 @@
             // var formData = new FormData(); 
             // formData.append("filecomment", file_data);
 
-            // console.log(formData);
          
             $.ajax({
                 headers: {
@@ -1304,7 +1498,7 @@
                 success: function(response){ 
                     // console.log(response);
                     var $viewComment = $('.modal-content .modal-body');
-                    var target = $viewComment.find('form-group .modal-input');
+                    // var $target = $viewComment.find('form-group .modal-input');
                     // var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
@@ -1314,7 +1508,7 @@
                         $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     document.getElementById("comment_body").value = "";
-                    $('#modal-view-user form[name="view1"] span[name="comment"]').parent().html($viewComment);
+                    $('#modal-view-user form[name="view1"] input[name="comment"]').parent().html($viewComment);
         
                 },
                 error: function (error) {
@@ -1363,10 +1557,37 @@
                 // console.log(response["disc"])
                 var $countComment = $(' <div class="form-group"></div>');
                 
-                var $count = "<span style=color:blue style=font-size:8px>(" +response["disc"]+ ")</span>";
+                var $count = "<span style=font-size:11px; color:blue; text-align: left;>(" +response["disc"]+ ")</span>";
                 $countComment.append($count);
                 
                 $('#modal-view-user form[name="view1"] span[name="countcomment"]').parent().html($countComment);  
+                
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        })
+    }
+
+    function getCategoryJson(systemid,categoryid) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "GET",
+            url: "/get/category",
+            data: {
+                'systemid' : systemid, 
+            },
+            success: function(response) {
+                // console.log(categoryid);
+                var $select_client = $('<select type="text" id="category" name="category" class="form-control input--style-6" required></select>');
+                $.each(response["disc"], function(key, data) {
+                    var isSelected = (data["CATEGORYID"]===categoryid)?"selected":"";
+                    var $options = "<option value='"+data["CATEGORYID"]+"' "+isSelected+">"+data["DESC"]+"</option>";
+                    $select_client.append($options);
+                });
+                $('#modal-update-user form[name="update"] select[name="category"]').parent().html($select_client);
                 
             },
             error: function (error) {
@@ -1410,30 +1631,33 @@
 <script>
     var today = new Date();
     var day = today.getDate() + "";
-    var month = (today.getMonth() + 1) + "";
+    var month  = (today.getMonth() + 1) + "";
     var year = today.getFullYear() + "";
 
     var date = day + "-" + month + "-" + year;
 
     var optSimple = {
-        dateFormat: 'dd-mm-yy',
+        dateFormat: 'yy-mm-dd',
         todayHighlight: true,
-        autoclose: true
+        autoclose: true,
+        changeMonth: true,
+        changeYear: true,
     };
     $( '#createdate' ).datepicker( optSimple );
+    $( '#targetdates' ).datepicker( optSimple );
     $( '#createdate' ).datepicker( 'setDate', date );
 
-    // Use datepicker on the date inputs
-    $("input[type=date]").datepicker({
-        dateFormat: 'yy-mm-dd',
-        onSelect: function(dateText, inst) {
-            $(inst).val(dateText); // Write the value in the input
-        }
-    });
+    // // Use datepicker on the date inputs
+    // $("input[type=date]").datepicker({
+    //     dateFormat: 'yy-mm-dd',
+    //     onSelect: function(dateText, inst) {
+    //         $(inst).val(dateText); // Write the value in the input
+    //     }
+    // });
     // Code below to avoid the classic date-picker
-    $("input[type=date]").on('click', function() {
-        return false;
-    });
+    // $("input[type=date]").on('click', function() {
+    //     return false;
+    // });
 
     window.setTimeout(function() {
         $(".alert-message").fadeTo(500, 0).slideUp(500, function(){

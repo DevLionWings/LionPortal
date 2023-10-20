@@ -489,6 +489,7 @@ class MeetingroomController extends Controller
 
     public function getRoom(Request $request)
     {
+        $date = date('Y-m-d');
         /* Checked Room Available */
         $isValidRoom = DB::connection('pgsql')->table('master_data.m_meeting_room as a')
             ->join('master_data.m_meeting_time as b', 'a.timeid', '=', 'b.timeid')
@@ -506,9 +507,50 @@ class MeetingroomController extends Controller
             ->where('b.endtime', '<=', $request->endtime)
             ->distinct('c.roomid')
             ->get();
- 
+
+        $minDate =  DB::connection('pgsql')->table('meeting.t_booking')
+                    ->where('status', 1)
+                    ->where('startdate', '>=', $date)
+                    ->min('startdate');
+        $maxDate =  DB::connection('pgsql')->table('meeting.t_booking')
+                    ->where('status', 1)
+                    ->where('enddate', '>=', $date)
+                    ->max('enddate');
+        
+        if(empty($minDate)){
+            $minDate = $date;
+        } else if(empty($maxDate)){
+            $maxDate = $date;
+        } else if (!empty($minDate) && !empty($maxDate)){
+            $minDate = $minDate;
+            $maxDate = $maxDate;
+        } else {
+            $minDate = $date;
+            $maxDate = $date;
+        }
+   
+        $isValidRoom2 = DB::connection('pgsql')->table('master_data.m_meeting_room as a')
+            ->join('master_data.m_meeting_time as b', 'a.timeid', '=', 'b.timeid')
+            ->join('meeting.t_booking as c', function($q){
+                $q->on('a.roomid', '=', 'c.roomid')
+                ->on( 'b.starttime', '>=', 'c.starttime' )
+                ->on('b.endtime', '<=', 'c.endtime');
+            })
+            ->select('c.userid', 'c.username', 'c.roomid', 'a.roomname', 'a.roomfloor', 'a.roomcapacity', 'a.active', 'c.subject', 
+            'c.description', 'c.status', 'c.startdate', 'c.enddate', 'b.starttime', 'b.endtime', 'c.status')
+            ->whereIn('c.status', [0, 1])
+            ->where('c.startdate', '>=', $minDate)
+            ->where('c.enddate', '<=', $maxDate)
+            ->where('b.starttime', '>=', $request->starttime)
+            ->where('b.endtime', '<=', $request->endtime)
+            ->distinct('c.roomid')
+            ->get();
+
         $arr_isvalid = [];
         foreach($isValidRoom as $valid){
+            array_push($arr_isvalid, $valid->roomid);
+        }
+        foreach($isValidRoom2 as $valid){
             array_push($arr_isvalid, $valid->roomid);
         }
         /* End */

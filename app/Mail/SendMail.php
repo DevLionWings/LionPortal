@@ -60,6 +60,6 @@ class SendMail extends Mailable
 
     public function build()
     {
-        return $this->from('admin@lionwings.com', 'no-reply[Helpdesk]');
+        return $this->from('admin@lionwings.com', 'no-reply@helpdesk');
     }
 }

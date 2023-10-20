@@ -230,6 +230,9 @@
                         <div class="row">
                             <div class="col-md-3"> 
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> Show Details</button>
+                                <div id="loadings">
+                                    Loading...
+                                </div>
                             </div>
                             <div class="col-md-1" id="comment2"> 
                                 <span type="text" name="countcomment" id="countcomment" class="modal-input" readonly></span>
@@ -609,6 +612,8 @@
                             statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
                         } else if (data == 'VPN'){
                             statusText = `<span class="badge badge-warning">VPN</span>`;
+                        } else if (data == 'DEPLOY'){
+                            statusText = `<span class="badge badge-dark">DEPLOY</span>`;
                         }
                             
                         return statusText;
@@ -732,6 +737,14 @@
             })
         });
 
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loadings").show();
+            }).ajaxStop(function () {
+                $("#loadings").hide();
+            });
+        });
+
         $(document).on('click', '.btncomment', function() {
             var ticketno = $('#modal-view-user form[name="view-user"] input[name="ticketno"]').val();
             var requestor = $('#modal-view-user form[name="view-user"] input[name="requestorid"]').val();
@@ -764,7 +777,7 @@
                 success: function(response){ 
                     // console.log(response);
                     var $viewComment = $('.modal-content .modal-body');
-                    var target = $viewComment.find('form-group .modal-input');
+                    // var target = $viewComment.find('form-group .modal-input');
                     // var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
@@ -822,7 +835,7 @@
                 // console.log(response["disc"])
                 var $countComment = $(' <div class="form-group"></div>');
                 
-                var $count = "<span style=color:blue style=font-size:8px>(" +response["disc"]+ ")</span>";
+                var $count = "<span style=font-size:11px; color:blue; text-align: left;>(" +response["disc"]+ ")</span>";
                 $countComment.append($count);
                 
                 $('#modal-view-user form[name="view-user"] span[name="countcomment"]').parent().html($countComment);  
@@ -849,7 +862,7 @@
         });
     });
     $('#document').ready(function(){
-        $('#close-btn2').on('click', function(){
+        $('#close-btn2').on('click', function(){    
             $("#comment1").load(" #comment1"); 
             $("#comment2").load(" #comment2");
         });

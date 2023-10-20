@@ -200,6 +200,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 
                     'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 
+                    'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                     ->where('a.userid', $userid)
                     ->orWhere('b.mgrid', $userid)
                     ->orWhere('a.assignedto', $userid)
@@ -231,6 +235,10 @@ class Repository
                 ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                 'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 
                 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid')
+                ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 
+                'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                 ->where('a.userid', $userid)
                 ->orWhere('b.mgrid', $userid)
                 ->orWhere('a.assignedto', $userid)
@@ -269,9 +277,10 @@ class Repository
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
                     ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date',
-                    'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid')
+                    'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                     ->count();
     
                 $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
@@ -286,9 +295,10 @@ class Repository
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
                     ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
-                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid')
+                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                     ->orderBy('a.createdby', 'DESC')
                     ->limit(10)
                     ->simplePaginate($count);
@@ -306,9 +316,10 @@ class Repository
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
                     ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid')
+                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                     ->where('a.userid', $userid)
                     ->orWhere('b.mgrid', $userid)
                     ->orWhere('a.assignedto', $userid)
@@ -328,9 +339,10 @@ class Repository
                     ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
                     ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
                     ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid')
+                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                     ->where('a.userid', $userid)
                     ->orWhere('b.mgrid', $userid)
                     ->orWhere('a.assignedto', '')
@@ -387,6 +399,9 @@ class Repository
                     ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'j.description as systemname')
                     ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
                     ->where('a.statusid', 'LIKE','%'.$status.'%') 
                     ->where('a.userid', 'LIKE','%'.$requestor.'%') 
@@ -419,6 +434,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created',
                     'a.systemid', 'a.moduleid', 'a.objectid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created',
+                    'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                     ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
                     ->where('a.statusid', 'LIKE','%'.$status.'%') 
                     ->where('a.userid', 'LIKE','%'.$requestor.'%') 
@@ -451,6 +470,9 @@ class Repository
                     ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'j.description as systemname')
                     ->where('a.userid', $userid)
                     ->where('b.mgrid', $userid)
                     ->where('a.assignedto', $userid)
@@ -487,6 +509,10 @@ class Repository
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created',
                     'a.systemid', 'a.moduleid', 'a.objectid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created',
+                    'a.systemid', 'a.moduleid', 'a.objectid', 'j.description as systemname')
                     ->where('a.userid', $userid)
                     ->where('b.mgrid', $userid)
                     ->where('a.assignedto', '')
@@ -555,7 +581,7 @@ class Repository
             ->whereIn('b.roleid', ['RD002','RD003','RD005', 'RD006', 'RD007', 'RD008', 'RD009', 'RD010', 'RD012' ])
             ->get();
 
-            $category = DB::connection('pgsql')->table('master_data.m_category')
+            $category = DB::connection('pgsql')->table('master_data.m_category')->where('flagging', 1)
             ->get();
 
             $priority = DB::connection('pgsql')->table('master_data.m_ticket_priority')

@@ -131,7 +131,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
-                            <input type="text" name="subject" class="form-control" id="subject">
+                            <input type="text" name="subject" class="form-control" id="subject" required>
                         </div>
                         <input type="checkbox" class="largerCheckbox" name="range" id="range">
                         <label for="">Range Date</label><br>    
@@ -187,10 +187,13 @@
                         </div>  
                         <div class="form-group">
                             <label class="form-check-label" for="detail" disabled>Description :</label>
-                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50"></textarea>
+                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" required></textarea>
                         </div> 
                         <div class="form-group">
                             <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
+                            <div id="loadings">
+                                Loading...
+                            </div>
                         </div> 
                         <div class="form-group" id="hideroom">   
                             <label class="form-check-label" for="roomAvail">Room Meeting Available :</label>
@@ -204,7 +207,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default btnclose" id="btnclose" data-dismiss="modal">Close</button>
-                        <button type="button" id="book-btn"  class="btn btn-success" >Book</button>
+                        <button type="button" id="book-btn" class="btn btn-success" >Book</button>
                     </div>
                 </form>
             </div>
@@ -225,7 +228,7 @@
                     <div class="modal-body">
                         <div class="form-group">   
                             <label class="form-check-label" for="roomname">Room Name :</label>
-                            <input type="text" name="roomname" id="roomname" class="form-control"> 
+                            <input type="text" name="roomname" id="roomname" class="form-control" readonly> 
                         </div> 
                         <div class="form-group">
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
@@ -343,8 +346,10 @@ function Initialize()
     $(function () {    
         var hide1 = $("#hideroom");
         var hide2 = $("#hideroombooked");
+        var hide3 = $("#loadings");
         hide1.hide();
         hide2.hide();
+        hide3.hide();
 
         $('#save-btn').on('click', function() {
             $('#form').submit();
@@ -352,6 +357,7 @@ function Initialize()
             $(this).text("Loading ...");
         });
 
+        $('#book-btn').prop('disabled', true);
         $('#book-btn').on('click', function() {
             $('#booked-user').submit();
             $(this).attr('disabled', true);
@@ -628,6 +634,14 @@ function Initialize()
 			},
         });
 
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $('#btnroom').prop('disabled', true);
+            }).ajaxStop(function () {
+                $('#btnroom').prop('disabled', false);
+            });
+        });
+
         $(document).on('click', '.btnroom', function(e) {
             var startdate = $('#modal-booked-user input[name="startdate"]').val();
             var enddate = $('#modal-booked-user input[name="enddate"]').val();
@@ -635,7 +649,6 @@ function Initialize()
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
             if(startdate.length < 1){
                 alert('startdate required');
-                $( "#dialog" ).dialog();
                 return;
             } else if(enddate.length < 1){
                 alert('endate required');
@@ -656,6 +669,7 @@ function Initialize()
                 alert('something wrong time (backtime)');
                 return;
             } else {
+                $("#btnroom").attr("disabled", true);
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -669,7 +683,7 @@ function Initialize()
                         'endtime' : endtime, 
                     },
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                         var hide1 = $("#hideroom");
                         var hide2 = $("#hideroombooked");
                         hide1.show();
@@ -688,7 +702,8 @@ function Initialize()
                         });
                         // $('#modal-booked-user form[name="book-user"] select[name="roomBook"]').prop('disabled', true);
                         $('#modal-booked-user form[name="book-user"]').html($select_room_avail);  
-                        $('#modal-booked-user form[name="book-user"]').html($select_room_book);  
+                        $('#modal-booked-user form[name="book-user"]').html($select_room_book);
+                        $('#book-btn').prop('disabled', false);  
                         Initialize();
                     },
                     error: function (error) {
@@ -699,15 +714,18 @@ function Initialize()
         });
 
         $(document).on('click', '.btnclose', function(e) {
-            // document.getElementById("booked-user").reset();
-            $("#starttime").val('').trigger('change');
-            $("#endtime").val('').trigger('change');
+            document.getElementById("booked-user").reset();
+            $('#startdate').datepicker( 'setDate', date );
+            var startdate = $('#modal-booked-user input[name="startdate"]').val();
+            $('#enddate').datepicker( 'setDate', startdate );
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
+            var hide3 = $("#hidedate");
             hide1.hide();
             hide2.hide();
+            hide3.hide();
         });
 
         // $(document).on('click', '.btntime', function(e) {
@@ -728,6 +746,8 @@ function Initialize()
         // });
 
         $(document).on('click', '.btndate', function(e) {
+            // var startdate = $('#modal-booked-user input[name="startdate"]').val();
+            // $( '#enddate').datepicker( 'setDate', startdate );
             $('.select2').select2()
             $("#starttime").val('').trigger('change');
             $("#endtime").val('').trigger('change');
@@ -766,6 +786,8 @@ function Initialize()
 
         checked.change(function() {
             if (checked.is(':checked')) {
+                var startdate = $('#modal-booked-user input[name="startdate"]').val();
+                $('#enddate').datepicker( 'setDate', startdate );
                 hide3.show();
             } else {
                 var startdate = $('#modal-booked-user input[name="startdate"]').val();

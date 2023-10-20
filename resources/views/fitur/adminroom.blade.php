@@ -290,6 +290,9 @@
                         </div> 
                         <div class="form-group">
                             <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
+                            <div id="loadings">
+                                Loading...
+                            </div>
                         </div> 
                         <div class="form-group" id="hideroom">   
                             <label class="form-check-label" for="roomAvail">Room Meeting Available :</label>
@@ -488,16 +491,19 @@
         var hide2 = $("#hideroombooked");
         var hide3 = $("#hideroomedit");
         var hide4 = $("#hideroombookededit");
+        var hide5 = $("#loadings");
         hide1.hide();
         hide2.hide();
         hide3.hide();
         hide4.hide();
+        hide5.hide();
 
         $('#save-btn').on('click', function() {
             $('#form').submit();
             $(this).attr('disabled', true);
             $(this).text("Loading ...");
         });
+        $('#book-btn').prop('disabled', true);
         $('#book-btn').on('click', function() {
             $('#booked-user').submit();
             $(this).attr('disabled', true);
@@ -864,6 +870,14 @@
             $modal.modal('show');
         });
 
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $('#btnroom').prop('disabled', true);
+            }).ajaxStop(function () {
+                $('#btnroom').prop('disabled', false);
+            });
+        });
+
         $(document).on('click', '.btnroom', function(e) {
             // Initialize();
             // $("#hideroom").load(" #hideroom");
@@ -912,6 +926,10 @@
                     },
                     success: function(response) {
                         // console.log(response);
+                        var hide1 = $("#hideroom");
+                        var hide2 = $("#hideroombooked");
+                        hide1.show();
+                        hide2.show();
                         // $("#hideroom").css("display","inline");
                         // $("#hideroombooked").css("display","inline");
                         var $select_room_avail = $('#roomAvail');
@@ -926,7 +944,8 @@
                         });
                         // $('#modal-booked-user form[name="book-user"] select[name="roomBook"]').prop('disabled', true);
                         $('#modal-booked-user form[name="book-user"]').html($select_room_avail);  
-                        $('#modal-booked-user form[name="book-user"]').html($select_room_book);  
+                        $('#modal-booked-user form[name="book-user"]').html($select_room_book);
+                        $('#book-btn').prop('disabled', false);
                         Initialize();
                     },
                     error: function (error) {
@@ -1017,9 +1036,12 @@
         });
 
         $(document).on('click', '.btnclose', function(e) {
-            // document.getElementById("booked-user").reset();
-            $("#starttime").val('').trigger('change');
-            $("#endtime").val('').trigger('change');
+            document.getElementById("booked-user").reset();
+            $('#startdate').datepicker( 'setDate', date );
+            var startdate = $('#modal-booked-user input[name="startdate"]').val();
+            $('#enddate').datepicker( 'setDate', startdate );
+            // $("#starttime").val('').trigger('change');
+            // $("#endtime").val('').trigger('change');
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
             $("#hideroomedit").load(" #hideroomedit");
@@ -1028,13 +1050,17 @@
             var hide2 = $("#hideroombooked");
             var hide3 = $("#hideroomedit");
             var hide4 = $("#hideroombookededit");
+            var hide5 = $("#hidedate");
             hide1.hide();
             hide2.hide();
             hide3.hide();
             hide4.hide();
+            hide5.hide();
         });
 
         $(document).on('click', '.btndate', function(e) {
+            // var startdate = $('#modal-booked-user input[name="startdate"]').val();
+            // $( '#enddate').datepicker( 'setDate', startdate );
             $("#starttime").val('').trigger('change');
             $("#endtime").val('').trigger('change');
             // $("#hideroom").load(" #hideroom");
@@ -1047,6 +1073,8 @@
         });
 
         $(document).on('click', '.btndate1', function(e) {
+            // var startdate1 = $('#modal-edit-room input[name="startdate1"]').val();
+            // $( '#enddat1').datepicker( 'setDate', startdate1 );
             $("#hideroomedit").load(" #hideroomedit");
             $("#hideroombookededit").load(" #hideroombookededit");
             var hide3 = $("#hideroomedit");
@@ -1108,9 +1136,13 @@
 
         checked.change(function() {
             if (checked.is(':checked')) {
+                var startdate = $('#modal-booked-user input[name="startdate"]').val();
+                $('#enddate').datepicker( 'setDate', startdate );
                 hide3.show();
             } else {
+                var startdate = $('#modal-booked-user input[name="startdate"]').val();
                 hide3.hide();
+                $('#enddate').datepicker( 'setDate', startdate );
             }
         });
     });

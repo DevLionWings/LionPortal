@@ -299,7 +299,7 @@ class AbsensipayrollController extends Controller
      
         /* Update Shift & Insert Tukar Shift */
         $queryShift = $this->repository->UPDATETUKARSHIFTBULK($nip, $kodedivisi, $kodebagian, $kodegroup, $kodeadmin, $kodeperiode, $kontrak, $start_date, $end_date, $no_kasus);
-        return $queryShift;
+        
         return redirect()->route('absensipayroll')->with("success", "successfully");
     }
 

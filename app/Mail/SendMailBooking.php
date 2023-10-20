@@ -60,6 +60,6 @@ class SendMailBooking extends Mailable
 
     public function build()
     {
-        return $this->from('admin@lionwings.com', 'no-reply[Room Meeting]');
+        return $this->from('admin@lionwings.com', 'no-reply@meetingroom');
     }
 }
