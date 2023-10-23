@@ -91,7 +91,7 @@ class MeetingroomController extends Controller
             ->whereIn('status', [0, 1, 2])
             ->where('roompublic', 1)
             ->where('active', 1)
-            ->where('b.startdate', '>=', $date)
+            ->where('b.startdate', '<=', $date)
             ->where('b.enddate', '>=', $date)
             ->get();
         $dataTrimArray = [];
@@ -338,7 +338,7 @@ class MeetingroomController extends Controller
             ->whereIn('status', [1, 2])
             ->where('roompublic', 1)
             ->where('active', 1)
-            ->where('b.startdate', '>=', $date)
+            ->where('b.startdate', '<=', $date)
             ->where('b.enddate', '>=', $date)
             ->get();
         $dataTrimArray = [];
@@ -510,25 +510,22 @@ class MeetingroomController extends Controller
 
         $minDate =  DB::connection('pgsql')->table('meeting.t_booking')
                     ->where('status', 1)
-                    ->where('startdate', '>=', $date)
+                    ->where('enddate', '>=', $date)
                     ->min('startdate');
+
         $maxDate =  DB::connection('pgsql')->table('meeting.t_booking')
                     ->where('status', 1)
                     ->where('enddate', '>=', $date)
                     ->max('enddate');
-        
-        if(empty($minDate)){
+   
+        if($minDate == null && $maxDate == null){
             $minDate = $date;
-        } else if(empty($maxDate)){
             $maxDate = $date;
-        } else if (!empty($minDate) && !empty($maxDate)){
+        } else {
             $minDate = $minDate;
             $maxDate = $maxDate;
-        } else {
-            $minDate = $date;
-            $maxDate = $date;
         }
-   
+       
         $isValidRoom2 = DB::connection('pgsql')->table('master_data.m_meeting_room as a')
             ->join('master_data.m_meeting_time as b', 'a.timeid', '=', 'b.timeid')
             ->join('meeting.t_booking as c', function($q){
@@ -539,8 +536,11 @@ class MeetingroomController extends Controller
             ->select('c.userid', 'c.username', 'c.roomid', 'a.roomname', 'a.roomfloor', 'a.roomcapacity', 'a.active', 'c.subject', 
             'c.description', 'c.status', 'c.startdate', 'c.enddate', 'b.starttime', 'b.endtime', 'c.status')
             ->whereIn('c.status', [0, 1])
-            ->where('c.startdate', '>=', $minDate)
-            ->where('c.enddate', '<=', $maxDate)
+            ->where(function ($q) use ($minDate, $maxDate){
+                $q->where('c.startdate', '>=', $minDate)
+                ->where('c.enddate', '<=', $maxDate);
+            })
+            ->where('c.enddate', '>=', $date)
             ->where('b.starttime', '>=', $request->starttime)
             ->where('b.endtime', '<=', $request->endtime)
             ->distinct('c.roomid')
