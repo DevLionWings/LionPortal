@@ -1007,9 +1007,10 @@
                 },
                 success: function(response){ 
                     // console.log(response);
-                    var $viewComment = $('.modal-content .modal-body');
+                    // var $viewComment = $('.modal-content .modal-body');
                     // var target = $viewComment.find('form-group .modal-input');
                     // var $viewComment = $(' <div class="form-group"></div>');
+                    var $viewComment = $('<div class=form-group id=comment1>'); 
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
