@@ -23,6 +23,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MeetingroomController;
 use App\Http\Controllers\ViewroomController;
+use App\Http\Controllers\TransportController;
 
 
 /*
@@ -164,3 +165,6 @@ Route::post('/book/room', [MeetingroomController::class,'bookRoom'])->name('book
 Route::get('/get/room', [MeetingroomController::class,'getRoom'])->name('get-room');
 Route::post('/cancel/room', [MeetingroomController::class,'cancelRoom'])->name('cancel-room');
 Route::post('/avail/room', [MeetingroomController::class,'availRoom'])->name('avail-room');
+
+/* Transport */
+Route::post('/send/transport', [TransportController::class,'sendTransport'])->name('send-transport');
