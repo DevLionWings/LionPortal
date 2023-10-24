@@ -1,10 +1,11 @@
 @extends('parent.master')
 @section('extend-css')
-<link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('image-upload/image-uploader.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endsection
 @section('body')
 <!-- Site wrapper -->
@@ -257,6 +258,138 @@
             </div>
         </div>
     </div>
+    <div id="modal-update-user"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Ticket</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{route('edit-tiket')}}" method="post" name="update" id="update">
+                    @csrf
+                    <input type="hidden" id="update-ticketno" name="ticketno"/>
+                    <input type="hidden" id="update-userid" name="userid"/>
+                    <input type="hidden" id="update-rejectedby" name="rejectedby"/>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                                    <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="requestor" disabled>User Request :</label>
+                                    <input type="text" name="requestor" class="form-control" id="requestor" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="systemid" disabled>System :</label>
+                                    <input type="text" name="systemid" class="form-control" id="systemid" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">Category :</div>
+                                        <div class="input-group value">
+                                            <select id="category" name="category" class="form-control input--style-6" required>
+                                                @foreach($categ as $categcode)
+                                                <option value="{{ $categcode['ID'] }}">{{ $categcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="priority" disabled>Priority :</label>
+                                    <input type="text" name="priority" class="form-control" id="priority" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <div class="name">Object Type:</div>
+                                        <div class="input-group value">
+                                            <select id="objecttype" name="objecttype" class="form-control input--style-6" required>
+                                                <option value=""> Masukkan Pilihan :</option>
+                                                @foreach($obj as $objcode)
+                                                <option value="{{ $objcode['ID'] }}">{{ $objcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="hidemodule">
+                            <div class="name">Module :</div>
+                            <div class="input-group value">
+                                <select id="moduleid" name="moduleid" class="form-control input--style-6">
+                                    <option value=""> Masukkan Pilihan :</option>
+                                    @foreach($mdl as $mdlcode)
+                                    <option value="{{ $mdlcode['ID'] }}">{{ $mdlcode['NAME'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="subject" disabled>Subject :</label>
+                            <input type="text" name="subject" class="form-control" id="subject" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="detail" disabled>Detail Issue :</label>
+                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="name">Assigned To :</div>
+                            <div class="input-group value">
+                                <select id="assignto" name="assignto" class="form-control input--style-6" required>
+                                    @foreach($assn as $assncode)
+                                    <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
+                            <input type="text" name="targetdates" class="form-control" id="targetdates">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approve" disabled>Approve Manager User :</label>
+                                    <input type="text" name="approve" class="form-control" id="approve" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="approveit" disabled>Approve Manager IT:</label>
+                                    <input type="text" name="approveit" class="form-control" id="approveit" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     <div id="modal-reject-user"  class="modal fade show"  aria-modal="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -369,6 +502,7 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
+<script src="{{ asset('plugins/jquery/jquery-ui.js') }}"></script>
 @if(session('file_url'))
     <script>
         $(document).ready(function(){
@@ -500,6 +634,102 @@
             $form.find('input[name="createdon"]').val(createdon);
             $modal.modal('show');
         });
+
+        $(document).on('click', '.update', function () {
+            $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
+            getCategoryJson($(this).attr('data-systemid'),  $(this).attr('data-categoryid'));
+            var user_id = $(this).attr('data-id');
+            var ticketno = $(this).attr('data-ticket');
+            var requestor = $(this).attr('data-requestor');
+            var category = $(this).attr('data-category');
+            var categoryid = $(this).attr('data-categoryid');
+            var status = $(this).attr('data-status');
+            var statusid  = $(this).attr('data-statusid');
+            var priority  = $(this).attr('data-priority');
+            var subject  = $(this).attr('data-subject');
+            var detail  = $(this).attr('data-detail');
+            var assign  = $(this).attr('data-assignto');
+            var assignedto  = $(this).attr('data-assignedto');
+            var statusid  = $(this).attr('data-statusid');
+            var roleid  = $(this).attr('data-roleid');
+            var targetdate  = $(this).attr('data-targetdate');
+            var created  = $(this).attr('data-createdname');
+            var approveId  = $(this).attr('data-approvedby_1');
+            var approveItId  = $(this).attr('data-approvedby_it');
+            var requestorId  = $(this).attr('data-requestorid');
+            var approve  = $(this).attr('data-approve1name');
+            var approveit  = $(this).attr('data-approveitname');
+            var approvedate  = $(this).attr('data-approvedby1');
+            var approveitdate  = $(this).attr('data-approvedbyit');
+            var systemid  = $(this).attr('data-systemid');
+            var systemname  = $(this).attr('data-systemname');
+            var moduleid  = $(this).attr('data-moduleid');
+            var objectid  = $(this).attr('data-objectid');
+            var createdon  = $(this).attr('data-createdon');
+            var $modal = $('#modal-update-user');
+            var $form = $modal.find('form[name="update"]');
+            var hide1 = $("#hidemodule");
+            hide1.show()
+            if(systemid == 'SY002'){
+                hide1.hide();
+            }
+            $form.find('input[name="userid"]').val(user_id);
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $form.find('input[name="requestor"]').val(requestor);
+            $form.find('input[name="priority"]').val(priority);
+            $form.find('input[name="subject"]').val(subject);
+            $form.find('textarea[name="detail"]').val(detail);
+            $form.find('input[name="statusid"]').val(statusid);
+            $form.find('input[name="roleid"]').val(roleid);
+            $form.find('input[name="status"]').val(status);
+            $form.find('input[name="created"]').val(created);
+            $form.find('input[name="targetdates"]').val(targetdate);
+            $form.find('input[name="approve"]').val(approve);
+            $form.find('input[name="approveit"]').val(approveit);
+            $form.find('input[name="dateapprove"]').val(approvedate);
+            $form.find('input[name="approveId"]').val(approveId);
+            $form.find('input[name="approveItId"]').val(approveItId);
+            $form.find('input[name="requestorid"]').val(user_id);
+            $form.find('input[name="dateapproveit"]').val(approveitdate);
+            $form.find('input[name="systemid"]').val(systemname);
+            $form.find('input[name="moduleid"]').val(moduleid);
+            $form.find('input[name="objectid"]').val(objectid);
+            $form.find('input[name="createdon"]').val(createdon);
+            // var category_options = $form.find('select[name="category"]').children();
+            // $.each(category_options, function(key, value) {
+            //     if($(value).val() == categoryid) {
+            //         $(value).attr('selected', true);
+            //     } else {
+            //         $(value).attr('selected', false);
+            //     }
+            // });
+            var assignedto_options = $form.find('select[name="assignto"]').children();
+            $.each(assignedto_options, function(key, value) {
+                if($(value).val() == assignedto) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            var moduleid_options = $form.find('select[name="moduleid"]').children();
+            $.each(moduleid_options, function(key, value) {
+                if($(value).val() == moduleid) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).val() == "";
+                    $(value).attr('selected', false);
+                }
+            });
+            var objectid_options = $form.find('select[name="objecttype"]').children();
+            $.each(objectid_options, function(key, value) {
+                if($(value).val() == objectid) {
+                    $(value).attr('selected', true);
+                } else {
+                    $(value).attr('selected', false);
+                }
+            });
+            $modal.modal('show');
+        })
 
         $(document).on('click', '.update', function () {
             $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
@@ -746,6 +976,7 @@
         });
 
         $(document).on('click', '.btncomment', function() {
+            $("#comment2").load(" #comment2");
             var ticketno = $('#modal-view-user form[name="view-user"] input[name="ticketno"]').val();
             var requestor = $('#modal-view-user form[name="view-user"] input[name="requestorid"]').val();
             var approve = $('#modal-view-user form[name="view-user"] input[name="approveId"]').val();
@@ -788,6 +1019,7 @@
                     });
                     document.getElementById("comment_body").value = "";
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+                    getComment(ticketno);
         
                 },
                 error: function (error) {
@@ -846,8 +1078,50 @@
             },
         })
     }
+    function getCategoryJson(systemid,categoryid) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "GET",
+            url: "/get/category",
+            data: {
+                'systemid' : systemid, 
+            },
+            success: function(response) {
+                // console.log(categoryid);
+                var $select_client = $('<select type="text" id="category" name="category" class="form-control input--style-6" required></select>');
+                $.each(response["disc"], function(key, data) {
+                    var isSelected = (data["CATEGORYID"]===categoryid)?"selected":"";
+                    var $options = "<option value='"+data["CATEGORYID"]+"' "+isSelected+">"+data["DESC"]+"</option>";
+                    $select_client.append($options);
+                });
+                $('#modal-update-user form[name="update"] select[name="category"]').parent().html($select_client);
+                
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        })
+    }
 </script>
 <script>
+    var today = new Date();
+    var day = today.getDate() + "";
+    var month  = (today.getMonth() + 1) + "";
+    var year = today.getFullYear() + "";
+
+    var date = day + "-" + month + "-" + year;
+
+    var optSimple = {
+        dateFormat: 'yy-mm-dd',
+        todayHighlight: true,
+        autoclose: true,
+        changeMonth: true,
+        changeYear: true,
+    };
+    $( '#targetdates' ).datepicker( optSimple );
+
     window.setTimeout(function() {
     $(".alert-message").fadeTo(500, 0).slideUp(500, function(){
         $(this).remove(); 
@@ -858,13 +1132,13 @@
      $('#document').ready(function(){
         $('#close-btn').on('click', function(){
             $("#comment1").load(" #comment1");
-            $("#comment2").load(" #comment2");
+            // $("#comment2").load(" #comment2");
         });
     });
     $('#document').ready(function(){
         $('#close-btn2').on('click', function(){    
             $("#comment1").load(" #comment1"); 
-            $("#comment2").load(" #comment2");
+            // $("#comment2").load(" #comment2");
         });
     });
 </script>

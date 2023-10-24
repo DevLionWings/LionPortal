@@ -779,25 +779,44 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="" method="post" name="transport" id="transport">
+                <form action="{{ route('send-transport') }}" method="post" name="transport" id="transport">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
                             <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
                         </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="detail" disabled>Transport Number :</label>
-                            <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" ></textarea>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Ticket :</label>
+                                <div class="input-group value">
+                                    <select id="ticketno" name="ticketno" class="form-control input--style-6">
+                                        <option value="transportid">Existing</option>
+                                        <option value="transnumber">New Request</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="transid">
+                            <label class="form-check-label" for="transportid">Transposrt id :</label>
+                            <div class="input-group value">
+                                <select class="select2" data-placeholder="pilih transport" multiple="multiple" id="transportid" name="data_transportid" style="width: 100%;">
+                                    <option value="TRQ001">TRQ001</option>
+                                    <option value="TRQ002">TRQ002</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="transnumb">
+                            <label class="form-check-label" for="transnumber">Transport Number :</label>
+                            <textarea type="text" name="transnumber" class="form-control" id="transnumber" rows="4" cols="50" ></textarea>
                         </div>
                         <div class="row">
-                            <!-- <div class="name">Need Approval ?</div> -->
                             <div class="col-md-4"> 
-                                <input type="checkbox" id="lqa" name="lqa" value="lqa"> 
+                                <input type="checkbox" id="lqa" name="lqa" value="1"> 
                                 <label for="">LQA</label><br>
                             </div>
                             <div class="col-md-4"> 
-                                <input type="checkbox" id="lpr" name="lpr" value="lpr">
+                                <input type="checkbox" id="lpr" name="lpr" value="1">
                                 <label for="">LPR</label><br>  
                             </div>
                         </div>
@@ -806,7 +825,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Accept</button>
+                        <button type="submit" class="btn btn-primary" id="save_value" name="save_value" value="Save">Send</button>
                     </div>
                 </form>
             </div>
@@ -1468,6 +1487,7 @@
         });
 
         $(document).on('click', '.btncomment', function() {
+            $("#comment2").load(" #comment2");
             var ticketno = $('#modal-view-user form[name="view1"] input[name="ticketno"]').val();
             var requestor = $('#modal-view-user form[name="view1"] input[name="requestorid"]').val();
             var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
@@ -1497,9 +1517,10 @@
                 },
                 success: function(response){ 
                     // console.log(response);
-                    var $viewComment = $('.modal-content .modal-body');
-                    // var $target = $viewComment.find('form-group .modal-input');
-                    // var $viewComment = $(' <div class="form-group"></div>');
+                    // var $viewComment = $('.modal-content .modal-body .<div class=form-group id=comment1');
+                    // var $viewComment = $modal.find('<div class="form-group" id="comment1">');
+                   
+                    var $viewComment = $('<div class=form-group id=comment1>'); 
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:9px>"+data["DATE"]+"<label>";
@@ -1509,6 +1530,8 @@
                     });
                     document.getElementById("comment_body").value = "";
                     $('#modal-view-user form[name="view1"] input[name="comment"]').parent().html($viewComment);
+                    getComment(ticketno);
+                    
         
                 },
                 error: function (error) {
@@ -1554,10 +1577,10 @@
                 'ticketno' : ticketno, 
             },
             success: function(response) {
-                // console.log(response["disc"])
-                var $countComment = $(' <div class="form-group"></div>');
+                console.log(response["disc"])
+                var $countComment = $(' <div class=form-group id=comment2></div>');
                 
-                var $count = "<span style=font-size:11px; color:blue; text-align: left;>(" +response["disc"]+ ")</span>";
+                var $count = "<span style=font-size:11px; color:blue; left: 0px;>(" +response["disc"]+ ")</span>";
                 $countComment.append($count);
                 
                 $('#modal-view-user form[name="view1"] span[name="countcomment"]').parent().html($countComment);  
@@ -1597,6 +1620,17 @@
     }
 </script>
 <script>
+    $(function(){
+      $('#save_value').click(function(){
+        var val = [];
+        $(':checkbox:checked').each(function(i){
+          val[i] = $(this).val();
+        })
+        console.log(val);
+      });
+    });
+</script>
+<script>
     $(function() {
         var form = $("#form");
         var select = $("#system");
@@ -1618,13 +1652,13 @@
     $('#document').ready(function(){
         $('#close-btn').on('click', function(){
             $("#comment1").load(" #comment1");
-            $("#comment2").load(" #comment2");
+            // $("#comment2").load(" #comment2");
         });
     });
     $('#document').ready(function(){
         $('#close-btn2').on('click', function(){
             $("#comment1").load(" #comment1"); 
-            $("#comment2").load(" #comment2");
+            // $("#comment2").load(" #comment2");
         });
     });
 </script>
