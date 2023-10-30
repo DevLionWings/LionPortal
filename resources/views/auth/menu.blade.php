@@ -21,6 +21,7 @@
     
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        @if(session('departmentid')  == 'DD001')
         <li class="nav-item">
           <a href="{{ url('/') }}" class="nav-link" type="submit" id="m-dashboard"><i class="nav-icon fas fa-home"></i>
             <p>
@@ -28,6 +29,7 @@
             </p>
           </a>
         </li>
+        @endif
         @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD006' || session('roleid')  == 'RD004')
         <li class="nav-item">
           <a href="#" class="nav-link" >
@@ -93,6 +95,7 @@
           </ul>
         </li>
         @endif
+        @if(session('roleid')  != 'RD011')
         <li class="nav-item">
           <a href="{{ url('absensi') }}" class="nav-link" type="submit" id="m-Attendance"><i class="nav-icon fas fa-calendar-check"></i>
             <p>
@@ -100,6 +103,7 @@
             </p>
           </a>
         </li>
+        @endif
         @if(session('roleid')  == 'RD003' || session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD009' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
         <li class="nav-item">
           <a href="#" class="nav-link" >
@@ -195,7 +199,7 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD011' || session('roleid')  == 'RD006')
+          @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD011' || session('roleid')  == 'RD012' || session('roleid')  == 'RD006')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('/admin/index') }}" class="nav-link" type="submit" id="m-adminroom"><i class="far fa-circle nav-icon"></i>
@@ -217,7 +221,7 @@
             </li>
           </ul>
           @endif
-          @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD011' || session('roleid')  == 'RD006')
+          @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD011' || session('roleid')  == 'RD012' ||  session('roleid')  == 'RD006')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('/view') }}" class="nav-link" target="_blank" type="submit" id="m-viewroom"><i class="far fa-circle nav-icon"></i>

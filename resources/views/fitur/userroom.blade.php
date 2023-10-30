@@ -718,8 +718,11 @@ function Initialize()
             $('#startdate').datepicker( 'setDate', date );
             var startdate = $('#modal-booked-user input[name="startdate"]').val();
             $('#enddate').datepicker( 'setDate', startdate );
+            $("#starttime").val('').trigger('change');
+            $("#endtime").val('').trigger('change');
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
+            $('#book-btn').prop('disabled', true);
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
             var hide3 = $("#hidedate");

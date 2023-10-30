@@ -25,6 +25,9 @@ class DashboardController extends Controller
     public function index(Request $request)
     {   
         $password = trim(Session::get('password'));
+        $roleid = trim(Session::get('roleid'));
+        $departid = trim(Session::get('departmentid'));
+
         $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
         $json = json_decode($datLogin);
         
@@ -39,8 +42,15 @@ class DashboardController extends Controller
                     'status_login' => $status_login
                 );
                 Session::put('status_login', $status_login);
-
-                return view('auth.dashboard');
+                
+                if ($roleid == 'RD011'){
+                    return redirect()->route('admin-index')
+                    ->withSuccess('You have successfully logged in!');
+                } else if ($departid != 'DD001'){
+                    return view('fitur.absensi');
+                } else {
+                    return view('auth.dashboard');
+                }
             }
         } else {
             // $flushSessions = session()->flush();
@@ -50,8 +60,15 @@ class DashboardController extends Controller
             'status_login' => $status_login
         );
         Session::put('status_login', $status_login);
-        
-        return view('auth.dashboard');
+
+        if ($roleid == 'RD011'){
+            return redirect()->route('admin-index')
+            ->withSuccess('You have successfully logged in!');
+        } else if ($departid != 'DD001'){
+            return view('fitur.absensi');
+        } else {
+            return view('auth.dashboard');
+        }
     }
     
 }

@@ -521,6 +521,9 @@ class MeetingroomController extends Controller
         if($minDate == null && $maxDate == null){
             $minDate = $date;
             $maxDate = $date;
+        } else if ($request->startdate > $minDate && $request->enddate > $maxDate){
+            $minDate = $request->startdate;
+            $maxDate = $request->enddate;
         } else {
             $minDate = $minDate;
             $maxDate = $maxDate;
