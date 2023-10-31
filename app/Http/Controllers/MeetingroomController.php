@@ -379,6 +379,7 @@ class MeetingroomController extends Controller
 
             $cancelBtn = ' <a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
             data-roomid="'.$row["roomid"].'"  data-bookid="'.$row["bookid"].'">Cancel</i></a>';
+           
             if($row["statusroom"] == '1' && $row["userid"] == $userid){
                 return  $viewBtn. $cancelBtn;
             } else {
@@ -393,13 +394,16 @@ class MeetingroomController extends Controller
 
     public function bookRoom(Request $request)
     {   
-        $userid = Session::get('userid');
+       
         $roleid = Session::get('roleid');
-
+        
         if($roleid == 'RD011'){
-            $username = $request->bookedby;
-            $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('username', $request->bookedby)->first();
+            $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $request->bookedby)->first();
+            $username = $dataEmailBookedBy->username;
+            $userid = $dataEmailBookedBy->userid;
+            $bookedby = Session::get('username');
         } else{
+            $userid = Session::get('userid');
             $username = Session::get('username');
             $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
         }
@@ -464,7 +468,7 @@ class MeetingroomController extends Controller
             'endtime' => $request->endtime,
             'status' => 1,
             'bookedon' => date('Y-m-d H:i:s'),
-            'bookedby' => $userid
+            'bookedby' => $bookedby
         ]);
 
         /* Send Notif Email Receipt Booking */

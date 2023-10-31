@@ -223,7 +223,7 @@
                                 <select id="bookedby" name="bookedby" class="btnbooked" style="width: 100%;">
                                 <option value="10"> Pilih User Request</option>
                                     @foreach($usreq as $usreqcode)
-                                    <option value="{{ $usreqcode['NAME'] }}">{{ $usreqcode['NAME'] }}</option>
+                                    <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
                             </div>

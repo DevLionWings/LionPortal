@@ -43,7 +43,7 @@ class DashboardController extends Controller
                 );
                 Session::put('status_login', $status_login);
                 
-                if ($roleid == 'RD011'){
+                if ($roleid == 'RD011' || $roleid == 'RD012'){
                     return redirect()->route('admin-index')
                     ->withSuccess('You have successfully logged in!');
                 } else if ($departid != 'DD001'){

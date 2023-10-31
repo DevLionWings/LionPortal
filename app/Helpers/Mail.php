@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail as SendtoMail;
 use App\Mail\SendMail;
 use App\Mail\SendMailComment;
 use App\Mail\SendMailBooking;
+use App\Mail\SendMailTransport;
 
 use Auth;
 
@@ -65,6 +66,7 @@ class Mail
     public static function SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy)
     {
         $emails = array($emailBook, $emailBookBy);
+        $bccEmails = array("fakhrur.rozi@lionwings.com", "bimantara.bayu@lionwings.com");
       
         $mailData = array(
             'bookid' => $newBookId,
@@ -73,9 +75,25 @@ class Mail
             'date' => $date,
             'starttime' => $starttime,
             'endtime' => $endtime,
-            'bookingname' => $assignNameBookBy
+            'bookingname' => $assignNameBook,
+            'bookingbyname' => $assignNameBookBy
         );
     
-        SendtoMail::to($emails)->send(new SendMailBooking($mailData));
+        SendtoMail::to($emails)->bcc($bccEmails)->send(new SendMailBooking($mailData));
+    }
+
+    public static function SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo)
+    {
+        $emails = array($emailSender, $emailSendTo);
+      
+        $mailData = array(
+            'ticketno' => $ticketno,
+            'transportid' => $transportId,
+            'transno' => $transno,
+            'sendername' => $emailNameSender,
+            'sendtoname' => $emailNameSendTo
+        );
+    
+        SendtoMail::to($emails)->send(new SendMailTransport($mailData));
     }
 }

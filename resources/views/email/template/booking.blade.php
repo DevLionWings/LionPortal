@@ -36,7 +36,7 @@ Room Meeting
 
 @section('content')
 
-<p>{{ $mailData['bookingname'] }} detail your booking room  : </p>
+<p>{{ $mailData['bookingbyname'] }} detail your booking room  : </p>
 
 <table style="text-align: left;">
     <tr>
