@@ -61,6 +61,7 @@
                             <table id="list" class="table table-bordered table-hover display nowrap" width="100%">
                                 <thead>
                                     <tr>
+                                        <th>Datetime</th>
                                         <th>No Kwitansi</th>
                                         <th>NIK</th>
                                         <th>Nama</th>
@@ -155,6 +156,10 @@
             ajax: "{{ route('history-list') }}",
             order: [[ 3, "desc" ]],
             columns: [
+                {
+                    data: 'datecreated',
+                    name: 'datecreated'
+                },
                 {
                     data: 'idkwitansi',
                     name: 'idkwitansi'

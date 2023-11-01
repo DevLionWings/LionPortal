@@ -175,9 +175,9 @@
                                                 <th>No Kwitansi</th>
                                                 <th>type</th>
                                                 <th>Nik</th>
-                                                <th>Nama</th>
-                                                <!-- <th>Gaji</th> -->
-                                                <th>Total</th>
+                                                <th>Name</th>
+                                                <th>Date Created</th>
+                                                <th>Count</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -435,6 +435,8 @@
                                 alert("Type Tidak Boleh Sama");
                             } else if(response == "already exist"){
                                 alert("Kwitansi sudah pernah dibuat");
+                            } else if(response == "exists"){
+                                alert("the receipt has already been exists, check to history receipt");
                             } else {
                                 document.getElementById("form1").reset();
                                 $('#datakwitansi').DataTable().ajax.reload();
@@ -577,10 +579,10 @@
                     data: 'nama',
                     name: 'nama'
                 },
-                // {
-                //     data: 'gaji',
-                //     nama: 'gaji'
-                // },
+                {
+                    data: 'datecreated',
+                    nama: 'datecreated'
+                },
                 {
                     data: 'total',
                     name: 'total'

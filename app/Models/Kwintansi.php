@@ -37,6 +37,7 @@ class Kwintansi extends Model
         'selisih',
         'ket_selisih',
         'haribaru',
-        'harilama'
+        'harilama',
+        'createdon'
     ];
 }

@@ -156,7 +156,7 @@ class KwitansiController extends Controller
         } else {
             $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee as a')
                 ->join('personalia.masterjabatan as b', 'a.Kode Jabatan', '=', 'b.Kode Jabatan')
-                ->join('personalia.masterbagian as c', 'a.Kode Bagian', '=', 'b.Kode Bagian')
+                ->join('personalia.masterbagian as c', 'a.Kode Bagian', '=', 'c.Kode Bagian')
                 ->where('a.Nip', $id)
                 ->where('a.Endda', '9998-12-31')
                 ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
@@ -282,6 +282,7 @@ class KwitansiController extends Controller
         $id = $request->idkaryawan; 
         $nama = $request->nama;  
         $category = $request->category; 
+        $datenow = date('Y-m-d H:i:s');
         /* Rapel */
 
         /* General */
@@ -303,167 +304,184 @@ class KwitansiController extends Controller
         $exp = explode(".", $subsjabatan);
         $jabatan = implode("", $exp);
 
-        $count = DB::connection('pgsql')->table('hris.t_kwitansi')->count();
-        $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
-        $firstkwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->first();
-        if($firstkwitansi == null){
-            $typedb = '';
-            $nik = '';
-        } else {
-            $typedb = trim($firstkwitansi->type);
-            $nik = trim($firstkwitansi->nik);
-        }
+        $isExist  = DB::connection('pgsql')->table('hris.t_kwitansi_backup')
+            ->where('nik', $id)
+            ->where('type', $type)
+            ->where('category', $category)
+            ->doesntExist();
 
-        $datacounter = DB::connection('pgsql')->table('master_data.m_counter')
-            ->where('counterid', 'CT003')
-            ->where('prefix', 'KWS')
-            ->select('period','start_number', 'end_number', 'last_number')
-            ->first();
-
-        $year = date('Y');
-        $month = date('m');
-        $convMonth = $this->convertion->ROMAWI($month);
-        $last = $datacounter->last_number + 1;
-        $nokwitansi = 'No.'.'000'.$last.'/LW'.'/'.$convMonth.'/'.$year;
-        $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT003')->where('period', $year)->update([
-            'last_number' => $last
-        ]);
+        if ($isExist) {
+            $count = DB::connection('pgsql')->table('hris.t_kwitansi')->count();
+            $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
         
-        if($type == 3 || $type == 1.5 || $type == 0){
-            /* Non Cuti */
-            $tglpisah = "";
-            $category ="";
-            $masakerja = "";
-            /* Cuti */      
-            $tglcuti = $request->tglcuti;
-            $lamacuti = $request->lamacuti;
-            $chh = $request->chh;
-            $uangspsi = $request->uangspsi;
-            $uangmakan = $request->uangmakan;
-            $uangkoperasi = $request->uangkoperasi;
-            $bagian = $request->bagian;
-            $untuk = $request->untuk;
-            $terbilang = $request->terbilang;
-            $datajamsostek = $request->jamsostek;
-            $subjamsostek = substr($datajamsostek, 3, 12);
-            $exp = explode(".", $subjamsostek);
-            $jamsostek = implode("", $exp);
-            $haribaru = $request->haribaru;
-            $harilama = $request->harilama;
-            $dataselisih = $request->selisih;
-            $subselisih = substr($dataselisih, 3, 12);
-            $exp = explode(".", $subselisih);
-            $selisih = implode("", $exp);
-        
-            if($type == $typedb && $id == $nik){
-                return $data = 'Duplicate';
-            } else if ($count == 4){
-                return $data = 'Max';
+            $firstkwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->first();
+            if($firstkwitansi == null){
+                $typedb = '';
+                $nik = '';
             } else {
-                $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
-                    'idkwitansi' => $nokwitansi,
-                    'type' => $type,
-                    'nik' => $id,
-                    'namakaryawan' => $nama,
-                    'bagian' => $bagian,
-                    'tanggalcuti' => $tglcuti,
-                    'tanggalmasuk' => $tglmasuk,
-                    'jumlahchh' => $chh,
-                    'gaji' => $gaji,
-                    'jabatan' => $jabatan,
-                    'jamsostek' => $jamsostek,
-                    'uangmakan' => $uangmakan,
-                    'uangspsi' => $uangspsi,
-                    'uangkoperasi' => $uangkoperasi,
-                    'lamacuti' => $lamacuti,
-                    'total' => $total,
-                    'untuk' => $untuk,
-                    'keterangan' => $keterangan,
-                    'terbilang' => $terbilang,
-                    'haribaru' => $haribaru,
-                    'harilama' => $harilama,
-                    'selisih' => $selisih,
-                ]);
-    
-                $kwn = '';
-                $dataTrim = [];
-                if($insert == true){
-                    foreach($datakwitansi as $key => $value){
-                        array_push($dataTrim, [
-                            "idkwitansi" => trim($value->idkwitansi),
-                            "type" => trim($value->type),
-                            "nik" => trim($value->nik),
-                            "nama" => trim($value->namakaryawan),
-                            "gaji" => trim($value->gaji),
-                            "total" => trim($value->total),
-                        ]);
-                    }
-        
-                    $data['kwn'] = $dataTrim;
-                    return DataTables::of($data['kwn'])
-                    ->make(true);
-                } else {
-                    $data = ['']; 
-                }
+                $typedb = trim($firstkwitansi->type);
+                $nik = trim($firstkwitansi->nik);
             }
 
-        } else {
-            /* Non Cuti */
-            $tglpisah = $request->tglpisah;
-            $masakerja = $request->masakerja;
-            /* Cuti */
-            $tglcuti = "";
-            $lamacuti = 0;
-            $chh = 0;
-            $uangspsi = 0;
-            $uangmakan = 0;
-            $uangkoperasi = 0;
-            $bagian = "";
-            $untuk = "";
-            $terbilang = "";
-            $jamsostek = 0;
+            $datacounter = DB::connection('pgsql')->table('master_data.m_counter')
+                ->where('counterid', 'CT003')
+                ->where('prefix', 'KWS')
+                ->select('period','start_number', 'end_number', 'last_number')
+                ->first();
 
-            if($type == $typedb && $id == $nik){
-                return $data = 'Duplicate';
-            } else if ($count == 4){
-                return $data = 'Max';
-            } else {
-                $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
-                    'idkwitansi' => $nokwitansi,
-                    'type' => $type,
-                    'nik' => $id,
-                    'namakaryawan' => $nama,
-                    'tanggalmasuk' => $tglmasuk,
-                    'category' => $category,
-                    'gaji' => $gaji,
-                    'jabatan' => $jabatan,
-                    'total' => $total,
-                    'keterangan' => $keterangan,
-                    'masakerja' => $masakerja,
-                    'tglpisah' => $tglpisah
-                ]);
+            $year = date('Y');
+            $month = date('m');
+            $convMonth = $this->convertion->ROMAWI($month);
+            $last = $datacounter->last_number + 1;
+            $nokwitansi = 'No.'.'000'.$last.'/LW'.'/'.$convMonth.'/'.$year;
+            $update = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT003')->where('period', $year)->update([
+                'last_number' => $last
+            ]);
             
-                if($insert == true){
-                    $dataTrim = [];
-                    foreach($datakwitansi as $key => $value){
-                        array_push($dataTrim, [
-                            "idkwitansi" => trim($value->idkwitansi),
-                            "type" => trim($value->type),
-                            "nik" => trim($value->nik),
-                            "nama" => trim($value->namakaryawan),
-                            "gaji" => trim($value->gaji),
-                            "total" => trim($value->total),
-                        ]);
-                    }
-        
-                    $data['kwn'] = $dataTrim;
-                    return DataTables::of($data['kwn'])
-                    ->make(true);
+            if($type == 3 || $type == 1.5 || $type == 0){
+                /* Non Cuti */
+                $tglpisah = "";
+                $category ="";
+                $masakerja = "";
+                /* Cuti */      
+                $tglcuti = $request->tglcuti;
+                $lamacuti = $request->lamacuti;
+                $chh = $request->chh;
+                $uangspsi = $request->uangspsi;
+                $uangmakan = $request->uangmakan;
+                $uangkoperasi = $request->uangkoperasi;
+                $bagian = $request->bagian;
+                $untuk = $request->untuk;
+                $terbilang = $request->terbilang;
+                $datajamsostek = $request->jamsostek;
+                $subjamsostek = substr($datajamsostek, 3, 12);
+                $exp = explode(".", $subjamsostek);
+                $jamsostek = implode("", $exp);
+                $haribaru = $request->haribaru;
+                $harilama = $request->harilama;
+                $dataselisih = $request->selisih;
+                $subselisih = substr($dataselisih, 3, 12);
+                $exp = explode(".", $subselisih);
+                $selisih = implode("", $exp);
+            
+                if($type == $typedb && $id == $nik){
+                    return $data = 'Duplicate';
+                } else if ($count == 4){
+                    return $data = 'Max';
                 } else {
-                    $data = ['']; 
+                    $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
+                        'idkwitansi' => $nokwitansi,
+                        'type' => $type,
+                        'nik' => $id,
+                        'namakaryawan' => $nama,
+                        'bagian' => $bagian,
+                        'tanggalcuti' => $tglcuti,
+                        'tanggalmasuk' => $tglmasuk,
+                        'jumlahchh' => $chh,
+                        'gaji' => $gaji,
+                        'jabatan' => $jabatan,
+                        'jamsostek' => $jamsostek,
+                        'uangmakan' => $uangmakan,
+                        'uangspsi' => $uangspsi,
+                        'uangkoperasi' => $uangkoperasi,
+                        'lamacuti' => $lamacuti,
+                        'total' => $total,
+                        'untuk' => $untuk,
+                        'keterangan' => $keterangan,
+                        'terbilang' => $terbilang,
+                        'haribaru' => $haribaru,
+                        'harilama' => $harilama,
+                        'selisih' => $selisih,
+                        'createdon' => $datenow
+                    ]);
+        
+                    $kwn = '';
+                    $dataTrim = [];
+                    if($insert == true){
+                        foreach($datakwitansi as $key => $value){
+                            array_push($dataTrim, [
+                                "idkwitansi" => trim($value->idkwitansi),
+                                "type" => trim($value->type),
+                                "nik" => trim($value->nik),
+                                "nama" => trim($value->namakaryawan),
+                                "gaji" => trim($value->gaji),
+                                "total" => trim($value->total),
+                                "datecreated" => trim($value->createdon)
+                            ]);
+                        }
+            
+                        $data['kwn'] = $dataTrim;
+                        return DataTables::of($data['kwn'])
+                        ->make(true);
+                    } else {
+                        $data = ['']; 
+                    }
                 }
-            }
-        }  
+
+            } else {
+                /* Non Cuti */
+                $tglpisah = $request->tglpisah;
+                $masakerja = $request->masakerja;
+                /* Cuti */
+                $tglcuti = "";
+                $lamacuti = 0;
+                $chh = 0;
+                $uangspsi = 0;
+                $uangmakan = 0;
+                $uangkoperasi = 0;
+                $bagian = $request->bagian;
+                $untuk = "";
+                $terbilang = "";
+                $jamsostek = 0;
+
+                if($type == $typedb && $id == $nik){
+                    return $data = 'Duplicate';
+                } else if ($count == 4){
+                    return $data = 'Max';
+                } else {
+                    $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
+                        'idkwitansi' => $nokwitansi,
+                        'type' => $type,
+                        'nik' => $id,
+                        'bagian' => $bagian,
+                        'namakaryawan' => $nama,
+                        'tanggalmasuk' => $tglmasuk,
+                        'category' => $category,
+                        'gaji' => $gaji,
+                        'jabatan' => $jabatan,
+                        'total' => $total,
+                        'keterangan' => $keterangan,
+                        'masakerja' => $masakerja,
+                        'tglpisah' => $tglpisah,
+                        'createdon' => $datenow
+                    ]);
+                
+                    if($insert == true){
+                        $dataTrim = [];
+                        foreach($datakwitansi as $key => $value){
+                            array_push($dataTrim, [
+                                "idkwitansi" => trim($value->idkwitansi),
+                                "type" => trim($value->type),
+                                "nik" => trim($value->nik),
+                                "nama" => trim($value->namakaryawan),
+                                "gaji" => trim($value->gaji),
+                                "total" => trim($value->total),
+                                "datecreated" => trim($value->createdon)
+                            ]);
+                        }
+            
+                        $data['kwn'] = $dataTrim;
+                        return DataTables::of($data['kwn'])
+                        ->make(true);
+                    } else {
+                        $data = ['']; 
+                    }
+                }
+            } 
+        } else {
+            $data = 'exists';
+            return $data;
+        }
     }
 
     public function getList(Request $request)
@@ -480,6 +498,8 @@ class KwitansiController extends Controller
                     "nama" => trim($value->namakaryawan),
                     "gaji" => trim($value->gaji),
                     "total" => trim($value->total),
+                    "datecreated" => trim($value->createdon)
+
                 ]);
             }
 
@@ -495,6 +515,7 @@ class KwitansiController extends Controller
     public function delete(Request $request)
     {   
         $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
+        $datenow = date('Y-m-d H:i:s');
 
         foreach($datakwitansi as $data){
             $arrayInsert = [];
@@ -521,7 +542,8 @@ class KwitansiController extends Controller
                 'haribaru' => $data->haribaru,
                 'harilama' => $data->harilama,
                 'selisih' => $data->selisih,
-                'category' => $data->category
+                'category' => $data->category,
+                'createdon' => $datenow
             ];
             $arrayInsert[] = $draw;      
             $insert_bulk = DB::connection('pgsql')->table('hris.t_kwitansi_backup')->insert($arrayInsert);

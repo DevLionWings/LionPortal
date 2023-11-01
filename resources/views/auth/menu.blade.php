@@ -210,7 +210,7 @@
             </li>
           </ul>
           @endif
-          @if(session('roleid')  == 'RD003' || session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD009' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
+          @if(session('roleid')  == 'RD003' || session('roleid')  == 'RD004' || session('roleid')  == 'RD005' || session('roleid')  == 'RD006' || session('roleid')  == 'RD007' || session('roleid')  == 'RD008' || session('roleid')  == 'RD009' || session('roleid')  == 'RD010' || session('roleid')  == 'RD002' || session('roleid')  == 'RD001')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('/user/index') }}" class="nav-link" type="submit" id="m-userroom"><i class="far fa-circle nav-icon"></i>

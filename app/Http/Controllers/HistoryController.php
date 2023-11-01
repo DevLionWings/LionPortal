@@ -59,6 +59,7 @@ class HistoryController extends Controller
                 "ket_selisih" => trim($value->ket_selisih),
                 "haribaru" => trim($value->haribaru),
                 "harilama" => trim($value->harilama),
+                "datecreated" => trim($value->createdon)
             ]);
         }
         $data['dat'] = $dataTrimArray;
