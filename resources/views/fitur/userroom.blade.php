@@ -98,7 +98,7 @@
                                         <th>Capacity</th>
                                         <th>Status Room</th>
                                         <th>Subject</th>
-                                        <th>User Name</th>
+                                        <th>User Booked</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Start Time</th>
@@ -293,6 +293,7 @@
                 </div>
                 <form action="{{route('cancel-room')}}" method="post" name='cancel'>
                     @csrf
+                    <input type="hidden" id="roomAvail" name="roomAvail"/>
                     <input type="hidden" id="bookid" name="bookid"/>
                     <input type="hidden" id="userid" name="userid" value="{{ session('userid') }}"/>
                     <input type="hidden" id="username" name="username" value="{{ session('username') }}"/>
@@ -432,8 +433,13 @@ function Initialize()
         $( '#enddate').datepicker( 'setDate', startdate );
 
         $(document).on('click', '.cancel', function () {
-            $('#bookid').val($(this).attr("data-bookid"));
-            $('#modal-cancel-room').modal('show');
+            var bookid = $(this).data('bookid');
+            var roomid = $(this).data('roomid');
+            var $modal = $('#modal-cancel-room');
+            var $form = $modal.find('form[name="cancel"]');
+            $form.find('input[name="bookid"]').val(bookid);
+            $form.find('input[name="roomAvail"]').val(roomid);
+            $modal.modal('show');
         })
 
         $(document).on('click', '.btnbookroom', function () {

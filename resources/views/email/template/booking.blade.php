@@ -43,6 +43,10 @@ Room Meeting
         <td style="text-align: left;">Booking Id</td>
         <td>:&nbsp;&nbsp;{{ $mailData['bookid'] }}</td>
     </tr>
+    <tr>
+        <td style="text-align: left;">Room Meeting</td>
+        <td>:&nbsp;&nbsp;{{ $mailData['room'] }}</td>
+    </tr>
     @if($mailData['bookid'] != 'Canceled')
     <tr>
         <td style="vertical-align:top;">Subject</td>

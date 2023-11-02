@@ -256,6 +256,9 @@ class MeetingroomController extends Controller
 
     public function editRoom(Request $request)
     {   
+        $roomid = $request->roomAvail1;
+        
+        $dataRoom = DB::connection('pgsql')->table('master_data.m_meeting_room')->where('roomid', $roomid)->first();
         $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $request->userid)->first();  
         $update = DB::connection('pgsql')->table('meeting.t_booking')->where('bookid', $request->bookid)->update([
             'bookid' => $request->bookid,
@@ -277,7 +280,8 @@ class MeetingroomController extends Controller
         $date = date('Y-m-d H:i:s');
         $starttime = $request->starttime1;
         $endtime = $request->endtime1;
-        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy);
+        $roomName = $dataRoom->roomname;
+        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName);
         /* End */
     
         if($update == true){
@@ -396,12 +400,16 @@ class MeetingroomController extends Controller
     {   
        
         $roleid = Session::get('roleid');
+        $roomid = $request->roomAvail;
         
-        if($roleid == 'RD011'){
+        $dataRoom = DB::connection('pgsql')->table('master_data.m_meeting_room')->where('roomid', $roomid)->first();
+
+        if($roleid == 'RD011' || $roleid == 'RD012'){
             $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('username', $request->bookedby)->first();
             $username = $dataEmailBookedBy->username;
             $userid = $dataEmailBookedBy->userid;
             $bookedby = Session::get('username');
+           
         } else{
             $userid = Session::get('userid');
             $username = Session::get('username');
@@ -455,7 +463,7 @@ class MeetingroomController extends Controller
                 'last_number' => $last
         ]);
         /* End */
-
+        
         $insert = DB::connection('pgsql')->table('meeting.t_booking')->insert([
             'bookid' => $newBookId,
             'userid' => $userid,
@@ -477,12 +485,13 @@ class MeetingroomController extends Controller
         $assignNameBook = Session::get('username');
         $assignNameBookBy = $dataEmailBookedBy->username;
         $emailBookBy = $dataEmailBookedBy->usermail;
-        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy);
+        $roomName = $dataRoom->roomname;
+        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName);
         /* End */
         
        
         if($insert == true){
-            if($roleid == 'RD011'){
+            if($roleid == 'RD011' || $roleid == 'RD012'){
                 return redirect()->route('admin-index')->with("success", "Room Meeting Booked");
             } else {
                 return redirect()->route('user-index')->with("success", "Room Meeting Booked");
@@ -586,13 +595,15 @@ class MeetingroomController extends Controller
     public function cancelRoom(Request $request)
     {
         $roleid = Session::get('roleid');
+        $roomid = $request->roomAvail;
+        
+        $dataRoom = DB::connection('pgsql')->table('master_data.m_meeting_room')->where('roomid', $roomid)->first();
         
         $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $request->userid)->first();  
         $update = DB::connection('pgsql')->table('meeting.t_booking')->where('bookid', $request->bookid)->update([
             'description' => $request->desc,
             'status' => 2,
-            'bookedon' => date('Y-m-d H:i:s'),
-            'bookedby' => $request->userid
+            'bookedon' => date('Y-m-d H:i:s')
         ]);
 
         /* Send Notif Email Receipt Cancel Booking */
@@ -606,11 +617,12 @@ class MeetingroomController extends Controller
         $date = '';
         $starttime = '';
         $endtime = '';
-        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy);
+        $roomName = $dataRoom->roomname;
+        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName);
         /* End */
 
         if($update == true){
-            if($roleid == 'RD011'){
+            if($roleid == 'RD011' || $roleid == 'RD012'){
                 return redirect()->route('admin-index')->with("success", "Room Meeting Canceled");
             } else {
                 return redirect()->route('user-index')->with("success", "Room Meeting Canceled");

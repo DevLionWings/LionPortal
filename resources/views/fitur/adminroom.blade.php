@@ -122,7 +122,7 @@
                                         <th>Capacity</th>
                                         <th>Status Room</th>
                                         <th>Subject</th>
-                                        <th>Booked By</th>
+                                        <th>User Booked</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
                                         <th>Start Time</th>
@@ -408,6 +408,7 @@
                 </div>
                 <form action="{{route('cancel-room')}}" method="post" name='cancel'>
                     @csrf
+                    <input type="hidden" id="roomAvail" name="roomAvail"/>
                     <input type="hidden" id="bookid" name="bookid"/>
                     <input type="hidden" id="userid" name="userid" value="{{ session('userid') }}"/>
                     <input type="hidden" id="username" name="username" value="{{ session('username') }}"/>
@@ -615,12 +616,12 @@
         $( '#enddate, #enddate1').datepicker( 'setDate', startdate );
 
         $(document).on('click', '.cancel', function () {
-            // $('#bookid').val($(this).attr("data-bookid"));
-            // $('#modal-cancel-room').modal('show');
             var bookid = $(this).data('bookid');
+            var roomid = $(this).data('roomid');
             var $modal = $('#modal-cancel-room');
             var $form = $modal.find('form[name="cancel"]');
             $form.find('input[name="bookid"]').val(bookid);
+            $form.find('input[name="roomAvail"]').val(roomid);
             $modal.modal('show');
         })
 
@@ -890,6 +891,7 @@
             var enddate = $('#modal-booked-user input[name="enddate"]').val();
             var starttime = $('#modal-booked-user select[name="starttime"]  option:selected').val();
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
+            $( '#enddate').datepicker( 'setDate', startdate );
             if(startdate.length < 1){
                 alert('startdate required');
                 return;
@@ -1073,8 +1075,8 @@
         });
 
         $(document).on('click', '.btndate1', function(e) {
-            // var startdate1 = $('#modal-edit-room input[name="startdate1"]').val();
-            // $( '#enddat1').datepicker( 'setDate', startdate1 );
+            var startdate1 = $('#modal-edit-room input[name="startdate1"]').val();
+            $( '#enddat1').datepicker( 'setDate', startdate1 );
             $("#hideroomedit").load(" #hideroomedit");
             $("#hideroombookededit").load(" #hideroombookededit");
             var hide3 = $("#hideroomedit");
