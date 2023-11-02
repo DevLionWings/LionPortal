@@ -168,3 +168,6 @@ Route::post('/avail/room', [MeetingroomController::class,'availRoom'])->name('av
 
 /* Transport */
 Route::post('/send/transport', [TransportController::class,'sendTransport'])->name('send-transport');
+Route::post('/approve/transport', [TransportController::class,'approveTransport'])->name('approve-transport');
+Route::post('/transported/transport', [TransportController::class,'transportedTransport'])->name('transported-transport');
+Route::post('/get/historytrans', [TransportController::class,'listTransport'])->name('history-transport');

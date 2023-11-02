@@ -487,6 +487,205 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <div id="modal-transport"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Transport</h4>
+                    <button type="button" class="close-btn-trans close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('send-transport') }}" method="post" name="transport" id="transport">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                            <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" >Opsi Transport :</label>
+                            <div class="input-group value">
+                                <select id="opsi" name="opsi" class="form-control input--style-6">
+                                    <option value="">Select Option</option>
+                                    <option value="exist">Existing</option>
+                                    <option value="new">New Transport</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="transid">
+                            <label class="form-check-label" for="transportid">Transposrt id :</label>
+                            <div class="input-group value">
+                                <select class="select2" data-placeholder="pilih transport" multiple="multiple" id="transportid" name="data_transportid[]" style="width: 100%;">
+                                    @foreach($trq as $trqcode)
+                                    <option value="{{ $trqcode['ID'] }}">{{ $trqcode['ID'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="transnumb">
+                            <label class="form-check-label" for="transnumber">Transport Number :</label>
+                            <textarea type="text" name="transnumber" class="form-control" id="transnumber" rows="4" cols="50" ></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"> 
+                                <input type="checkbox" id="lqa" name="lqa" value="1"> 
+                                <label for="">LQA</label><br>
+                            </div>
+                            <div class="col-md-4"> 
+                                <input type="checkbox" id="lpr" name="lpr" value="1">
+                                <label for="">LPR</label><br>  
+                            </div>
+                        </div>
+                        <hr/>
+                        <h5 class="modal-title">History :</h5>
+                        <button type="button" id="btnhistorytrans" class="btnhistorytrans btn btn-link btn-xs">Show History</button>
+                        <div id="loadings1">
+                            Loading...
+                        </div>
+                        <div class="form-group" id="history">
+                            <span type="text" name="listhistory" id="listhistory" class="modal-input" readonly></span>
+                        </div>  
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="close-btn2-trans btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" >Send</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div id="modal-transport-approve"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Approval Transport</h4>
+                    <button type="button" class="close-btn-trans close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('approve-transport') }}" method="post" name="transport-approve" id="transport-approve">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" id="sendlqa" name="sendlqa">
+                        <input type="hidden" id="sendlpr" name="sendlpr">
+                        <div class="form-group">
+                            <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                            <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="transid" disabled>Transport ID :</label>
+                            <input type="text" name="transid" class="form-control" id="transid" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="transno" disabled>Transport Number:</label>
+                            <textarea type="text" name="transno" class="form-control" id="transno" readonly></textarea>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="viewsendlqa" disabled>Status LQA :</label>
+                            <input type="text" name="viewsendlqa" class="form-control" id="viewsendlqa" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="viewsendlpr" disabled>Status LPR :</label>
+                            <input type="text" name="viewsendlpr" class="form-control" id="viewsendlpr" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="remark" disabled>Remark :</label>
+                            <input type="text" name="remark" class="form-control" id="remark">
+                        </div> 
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="rejecttrans btn btn-danger">Reject</button>
+                        <button type="submit" class="btn btn-primary" >Approve</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div id="modal-transport-mgr"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">View Transport</h4>
+                    <button type="button" class="close-btn-trans close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="" method="post" name="transport-mgr" id="transport-mgr">
+                    @csrf
+                    <div class="modal-body">
+                    <input type="hidden" id="ticketno" name="ticketno">
+                    <h5 class="modal-title">History :</h5>
+                        <button type="button" id="btnhistorytrans1" class="btnhistorytrans1 btn btn-link btn-xs">Show History</button>
+                        <div id="loadings2">
+                            Loading...
+                        </div>
+                        <div class="form-group" id="history1">
+                            <span type="text" name="listhistory" id="listhistory" class="modal-input" readonly></span>
+                        </div>  
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="close-btn2-trans btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <div id="modal-transported"  class="modal fade show"  aria-modal="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Transported</h4>
+                    <button type="button" class="close-btn-trans close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{ route('transported-transport') }}" method="post" name="transport-transported" id="transport-transported">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" id="sendlqa" name="sendlqa">
+                        <input type="hidden" id="sendlpr" name="sendlpr">
+                        <div class="form-group">
+                            <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
+                            <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="transid" disabled>Transport ID :</label>
+                            <input type="text" name="transid" class="form-control" id="transid" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="transno" disabled>Transport Number:</label>
+                            <textarea type="text" name="transno" class="form-control" id="transno" readonly></textarea>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="viewsendlqa" disabled>Status LQA :</label>
+                            <input type="text" name="viewsendlqa" class="form-control" id="viewsendlqa" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="viewsendlpr" disabled>Status LPR :</label>
+                            <input type="text" name="viewsendlpr" class="form-control" id="viewsendlpr" readonly>
+                        </div> 
+                        <div class="form-group">
+                            <label class="form-check-label" for="remark" disabled>Remark :</label>
+                            <input type="text" name="remark" class="form-control" id="remark">
+                        </div> 
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="rejecttrans btn btn-danger">Reject</button>
+                        <button type="submit" class="btn btn-primary" >Submit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
 @endsection
 @section('extend-js')
@@ -567,6 +766,126 @@
             if ($form_valid.length === 0) {
                 $('form[name="ticket"]').submit();
             }
+        });
+
+        $(document).on('click', '.trans', function() {
+            // $("#history").load(" #history"); 
+            $('#modal-transport').modal({backdrop: 'static', keyboard: false})
+            var user_id = $(this).attr('data-id');
+            var ticketno = $(this).attr('data-ticket');
+            var requestor = $(this).attr('data-requestor');
+            var category = $(this).attr('data-category');
+            var status = $(this).attr('data-status');
+            var statusid  = $(this).attr('data-statusid');
+            var priority  = $(this).attr('data-priority');
+            var subject  = $(this).attr('data-subject');
+            var detail  = $(this).attr('data-detail');
+            var assign  = $(this).attr('data-assignto');
+            var statusid  = $(this).attr('data-statusid');
+            var roleid  = $(this).attr('data-roleid');
+            var targetdate  = $(this).attr('data-targetdate');
+            var created  = $(this).attr('data-createdname');
+            var approveId  = $(this).attr('data-approvedby_1');
+            var approveItId  = $(this).attr('data-approvedby_it');
+            var requestorId  = $(this).attr('data-requestorid');
+            var approve  = $(this).attr('data-approve1name');
+            var approveit  = $(this).attr('data-approveitname');
+            var approvedate  = $(this).attr('data-approvedby1');
+            var approveitdate  = $(this).attr('data-approvedbyit');
+            var systemid  = $(this).attr('data-systemid');
+            var systemname  = $(this).attr('data-systemname');
+            var moduleid  = $(this).attr('data-moduleid');
+            var objectid  = $(this).attr('data-objectid');
+            var upload  = $(this).attr('data-upload');
+            var createdon  = $(this).attr('data-createdon');
+            var $modal = $('#modal-transport');
+            var $form = $modal.find('form[name="transport"]');
+            var hide1 = $("#transid");
+            var hide2 = $("#transnumb");
+            hide1.hide();
+            hide2.hide();
+            $form.find('input[name="id"]').val(user_id);
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $modal.modal('show');
+        });
+
+        $(document).on('click', '.approvetrans', function() {
+            $('#modal-transport-approve').modal({backdrop: 'static', keyboard: false})
+            var user_id = $(this).attr('data-id');
+            var ticketno = $(this).attr('data-ticket');
+            var transid = $(this).attr('data-transportid');
+            var transno = $(this).attr('data-transportno');
+            var sendlqa = $(this).attr('data-sendto_lqa');
+            var sendlpr = $(this).attr('data-sendto_lpr');
+            var createdon  = $(this).attr('data-createdon');
+            var $modal = $('#modal-transport-approve');
+            var $form = $modal.find('form[name="transport-approve"]');
+            if(sendlqa == '1' && sendlpr == '1'){
+                lqa = 'Requested';
+                lpr = 'Requested';
+            } else if(sendlqa == '1'){
+                lqa = 'Requested';
+                lpr = '-'
+            } else if(sendlpr == '1'){
+                lqa = '-';
+                lpr = 'requested';
+            } else {
+                lqa = '-';
+                lpr = '-';
+            }
+            $form.find('input[name="id"]').val(user_id);
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $form.find('input[name="transid"]').val(transid);
+            $form.find('textarea[name="transno"]').val(transno);
+            $form.find('input[name="viewsendlqa"]').val(lqa);
+            $form.find('input[name="viewsendlpr"]').val(lpr);
+            $form.find('input[name="sendlqa"]').val(sendlqa);
+            $form.find('input[name="sendlpr"]').val(sendlpr);
+            $modal.modal('show');
+        });
+
+        $(document).on('click', '.viewtrans', function() {
+            $('#modal-transport-mgr').modal({backdrop: 'static', keyboard: false})
+            var ticketno = $(this).attr('data-ticket');
+            var $modal = $('#modal-transport-mgr');
+            var $form = $modal.find('form[name="transport-mgr"]');
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $modal.modal('show');
+        });
+
+        $(document).on('click', '.transted', function() {
+            $('#modal-transported').modal({backdrop: 'static', keyboard: false})
+            var user_id = $(this).attr('data-id');
+            var ticketno = $(this).attr('data-ticket');
+            var transid = $(this).attr('data-transportid');
+            var transno = $(this).attr('data-transportno');
+            var status_lqa = $(this).attr('data-status_lqa');
+            var status_lpr = $(this).attr('data-status_lpr');
+            var createdon  = $(this).attr('data-createdon');
+            var $modal = $('#modal-transported');
+            var $form = $modal.find('form[name="transport-transported"]');
+            if(status_lqa == '1' && status_lpr == '1'){
+                lqa = 'Approved';
+                lpr = 'Approved';
+            } else if(status_lqa == '1'){
+                lqa = 'Approved';
+                lpr = '-'
+            } else if(status_lpr == '1'){
+                lqa = '-';
+                lpr = 'Approved';
+            } else {
+                lqa = '-';
+                lpr = '-';
+            }
+            $form.find('input[name="id"]').val(user_id);
+            $form.find('input[name="ticketno"]').val(ticketno);
+            $form.find('input[name="transid"]').val(transid);
+            $form.find('textarea[name="transno"]').val(transno);
+            $form.find('input[name="viewsendlqa"]').val(lqa);
+            $form.find('input[name="viewsendlpr"]').val(lpr);
+            $form.find('input[name="sendlqa"]').val(status_lqa);
+            $form.find('input[name="sendlpr"]').val(status_lpr);
+            $modal.modal('show');
         });
 
         $(document).on('click', '.view', function() {
@@ -776,6 +1095,411 @@
             $('#modal-closed-user').modal('show');
         })
 
+        $(document).on('click', '.viewcomment', function(e) {
+            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/comment",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                success: function(response) {
+                    // console.log(response["disc"])
+                    $("#comment").css("display","inline");
+                    // var hide = $("#hideviewcmnt");
+                    var $viewComment = $(' <div class="form-group"></div>');
+                    $.each(response["disc"], function(key, data) {
+                        var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
+                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
+                        var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
+                        $viewComment.append($nama,$date,$filecomment,$comment);
+                    });
+                    
+                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
+                    
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
+
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loadings").show();
+            }).ajaxStop(function () {
+                $("#loadings").hide();
+            });
+        });
+
+        $(document).on('click', '.btncomment', function() {
+            $("#comment2").load(" #comment2");
+            var ticketno = $('#modal-view-user form[name="view-user"] input[name="ticketno"]').val();
+            var requestor = $('#modal-view-user form[name="view-user"] input[name="requestorid"]').val();
+            var approve = $('#modal-view-user form[name="view-user"] input[name="approveId"]').val();
+            var approveit = $('#modal-view-user form[name="view-user"] input[name="approveItId"]').val();
+            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
+            var file_data = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
+            // const file_data = $('#filecomment').prop('files')[0];
+            // var filecomment = document.getElementById("filecomment").files[0].name;
+            // var file_data = $('#filecomment').prop('files')[0];  
+            // var formData = new FormData(); 
+            // formData.append("filecomment", file_data);
+
+            // console.log(formData);
+         
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "/add/comment",
+                type: 'POST',
+                data: {
+                    'ticketno' : ticketno,
+                    'requestor' : requestor,
+                    'approve' : approve,
+                    'approveit' : approveit, 
+                    'comment_body' : comment_body,
+                    'filecomment' : file_data
+                },
+                success: function(response){ 
+                    // console.log(response);
+                    // var $viewComment = $('.modal-content .modal-body');
+                    // var target = $viewComment.find('form-group .modal-input');
+                    // var $viewComment = $(' <div class="form-group"></div>');
+                    var $viewComment = $('<div class=form-group id=comment1>'); 
+                    $.each(response["disc"], function(key, data) {
+                        var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
+                        var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
+                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px readonly>"+data["COMMENT"]+"</textarea>";
+                        var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
+                        $viewComment.append($nama,$date,$filecomment,$comment);
+                    });
+                    document.getElementById("comment_body").value = "";
+                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
+                    getComment(ticketno);
+        
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            });
+        })
+
+        // $(document).on('click', '.upload', function() {
+        //     var upload = $('#modal-view-user input[name="upload"]').val();
+         
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         type: 'POST',
+        //         url: "/download/file",
+        //         data: {
+        //             'upload' : upload, 
+        //         },
+        //         success: function(response){ 
+        //             // console.log(response);
+        //             window.open(response);
+        //             // var blob = new Blob([response]);
+        //             // var link = document.createElement('a');
+        //             // link.href = window.URL.createObjectURL(blob);
+        //             // link.download = response;
+        //             // link.click();
+        //         }
+        //     });
+        // })
+
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loadings1").show();
+            }).ajaxStop(function () {
+                $("#loadings1").hide();
+            });
+        });
+
+        $(document).on('click', '.btnhistorytrans', function(e) {
+            var ticketno = $('#modal-transport input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/historytrans",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                success: function(response) {
+                    // console.log(response["trq"])
+                    var $viewHistory = $(' <div class="form-group"></div>');
+                    $.each(response["trq"], function(key, data) {
+                        if(data["LQA"] == 1 && data["LPR"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = 'LPR Requested';
+                        } else if(data["LQA"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = '';
+                        } else if (data["LPR"] == 1){
+                            lpr = 'LPR Requested';
+                            lqa = '';
+                        } else {
+                            lpr = '';
+                            lqa = '';
+                        }
+                        if(data["STATUSLQA"] == 1 && data["STATUSLPR"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = 'LPR Approved by';
+                        } else if(data["STATUSLQA"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = '';
+                        } else if (data["STATUSLPR"] == 1){
+                            applpr = 'LPR Approved by';
+                            applqa = '';
+                        } else {
+                            applpr = '';
+                            applqa = '';
+                        }
+
+                        if(data["STATUSTRANSLQA"] == 1 && data["STATUSTRANSLPR"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = 'LPR Transported by';
+                        } else if(data["STATUSTRANSLQA"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = '';
+                        } else if (data["STATUSTRANSLPR"] == 1){
+                            translpr = 'LPR Transported by';
+                            translqa = '';
+                        } else {
+                            translpr = '';
+                            translqa = '';
+                        }
+
+                        var $transid = "<br><br><label class=form-check-label style=color:black>" +data["TRANSID"]+ "</label>";
+                        var $date = "&nbsp;<label class=form-check-label style=font-size:13px>(" +data["DATE"]+")</label>";
+                        var $transno = "<b><textarea type=text class=form-control style=color:black disabled>" +data["TRANSNO"]+"</textarea></b>";
+                        if(lqa == '' && lpr == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else if(lqa == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        } else if (lpr == ''){
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else {
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        }
+                        if(applqa == '' && applpr == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else if(applqa == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        } else if (applpr == ''){
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else {
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
+                        }
+                        if(translqa == '' && translpr == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else if(translqa == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        } else if (translpr == ''){
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else {
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
+                        }
+                        $viewHistory.append($transid,$date,$transno,$sendlqa,$datelqa,$sendlpr,$datelpr,$approvelqa,$dateapprovelqa,$approvelpr,$dateapprovelpr,$transportedlqa,$datetransportedlqa,$transportedlpr,$datetransportedlpr);
+                    });
+                    
+                    $('#modal-transport form[name="transport"] span[name="listhistory"]').parent().html($viewHistory);  
+                  
+                        
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
+
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loadings2").show();
+            }).ajaxStop(function () {
+                $("#loadings2").hide();
+            });
+        });
+        
+        $(document).on('click', '.btnhistorytrans1', function(e) {
+            var ticketno = $('#modal-transport-mgr input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/historytrans",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                success: function(response) {
+                    console.log(response["trq"])
+                    var $viewHistory = $(' <div class="form-group"></div>');
+                    $.each(response["trq"], function(key, data) {
+                        if(data["LQA"] == 1 && data["LPR"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = 'LPR Requested';
+                        } else if(data["LQA"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = '';
+                        } else if (data["LPR"] == 1){
+                            lpr = 'LPR Requested';
+                            lqa = '';
+                        } else {
+                            lpr = '';
+                            lqa = '';
+                        }
+                        if(data["STATUSLQA"] == 1 && data["STATUSLPR"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = 'LPR Approved by';
+                        } else if(data["STATUSLQA"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = '';
+                        } else if (data["STATUSLPR"] == 1){
+                            applpr = 'LPR Approved by';
+                            applqa = '';
+                        } else {
+                            applpr = '';
+                            applqa = '';
+                        }
+
+                        if(data["STATUSTRANSLQA"] == 1 && data["STATUSTRANSLPR"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = 'LPR Transported by';
+                        } else if(data["STATUSTRANSLQA"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = '';
+                        } else if (data["STATUSTRANSLPR"] == 1){
+                            translpr = 'LPR Transported by';
+                            translqa = '';
+                        } else {
+                            translpr = '';
+                            translqa = '';
+                        }
+
+                        var $transid = "<br><br><label class=form-check-label style=color:black>" +data["TRANSID"]+ "</label>";
+                        var $date = "&nbsp;<label class=form-check-label style=font-size:13px>(" +data["DATE"]+")</label>";
+                        var $transno = "<b><textarea type=text class=form-control style=color:black disabled>" +data["TRANSNO"]+"</textarea></b>";
+                        if(lqa == '' && lpr == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else if(lqa == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        } else if (lpr == ''){
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else {
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        }
+                        if(applqa == '' && applpr == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else if(applqa == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
+                        } else if (applpr == ''){
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else {
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
+                        }
+                        if(translqa == '' && translpr == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else if(translqa == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
+                        } else if (translpr == ''){
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else {
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
+                        }
+                        $viewHistory.append($transid,$date,$transno,$sendlqa,$datelqa,$sendlpr,$datelpr,$approvelqa,$dateapprovelqa,$approvelpr,$dateapprovelpr,$transportedlqa,$datetransportedlqa,$transportedlpr,$datetransportedlpr);
+                    });
+                    
+                    $('#modal-transport-mgr form[name="transport-mgr"] span[name="listhistory"]').parent().html($viewHistory);
+                  
+                        
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
+
         var table = $('#tiket_list').DataTable({
             scrollX: true,
             processing: true,
@@ -933,126 +1657,28 @@
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
         });
-
-        $(document).on('click', '.viewcomment', function(e) {
-            var ticketno = $('#modal-view-user input[name="ticketno"]').val();
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: "POST",
-                url: "/get/comment",
-                data: {
-                    'ticketno' : ticketno, 
-                },
-                success: function(response) {
-                    // console.log(response["disc"])
-                    $("#comment").css("display","inline");
-                    // var hide = $("#hideviewcmnt");
-                    var $viewComment = $(' <div class="form-group"></div>');
-                    $.each(response["disc"], function(key, data) {
-                        var $nama = "<label class=form-check-label style=color:red>" +data["SENDER"]+ "</label>";
-                        var $date = "<label class=form-check-label style=font-size:11px>" +data["DATE"]+"<label>";
-                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:30px readonly>" +data["COMMENT"]+"</textarea>";
-                        var $filecomment = " <button download id=file name=file class=btn btn-link btn-sm style=font-size:13px>"+data["FILE"]+"</button>"
-                        $viewComment.append($nama,$date,$filecomment,$comment);
-                    });
-                    
-                    $('#modal-view-user form[name="view-user"] span[name="comment"]').parent().html($viewComment);  
-                    
-                },
-                error: function (error) {
-                    console.error(error);
-                },
-            })
-        });
-
-        $(document).ready(function () {
-            $(document).ajaxStart(function () {
-                $("#loadings").show();
-            }).ajaxStop(function () {
-                $("#loadings").hide();
-            });
-        });
-
-        $(document).on('click', '.btncomment', function() {
-            $("#comment2").load(" #comment2");
-            var ticketno = $('#modal-view-user form[name="view-user"] input[name="ticketno"]').val();
-            var requestor = $('#modal-view-user form[name="view-user"] input[name="requestorid"]').val();
-            var approve = $('#modal-view-user form[name="view-user"] input[name="approveId"]').val();
-            var approveit = $('#modal-view-user form[name="view-user"] input[name="approveItId"]').val();
-            var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
-            var file_data = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
-            // const file_data = $('#filecomment').prop('files')[0];
-            // var filecomment = document.getElementById("filecomment").files[0].name;
-            // var file_data = $('#filecomment').prop('files')[0];  
-            // var formData = new FormData(); 
-            // formData.append("filecomment", file_data);
-
-            // console.log(formData);
-         
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "/add/comment",
-                type: 'POST',
-                data: {
-                    'ticketno' : ticketno,
-                    'requestor' : requestor,
-                    'approve' : approve,
-                    'approveit' : approveit, 
-                    'comment_body' : comment_body,
-                    'filecomment' : file_data
-                },
-                success: function(response){ 
-                    // console.log(response);
-                    // var $viewComment = $('.modal-content .modal-body');
-                    // var target = $viewComment.find('form-group .modal-input');
-                    // var $viewComment = $(' <div class="form-group"></div>');
-                    var $viewComment = $('<div class=form-group id=comment1>'); 
-                    $.each(response["disc"], function(key, data) {
-                        var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
-                        var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
-                        var $comment = "<textarea type=text class=form-control style=font-family:'Courier New';font-size:20px readonly>"+data["COMMENT"]+"</textarea>";
-                        var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
-                        $viewComment.append($nama,$date,$filecomment,$comment);
-                    });
-                    document.getElementById("comment_body").value = "";
-                    $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
-                    getComment(ticketno);
         
-                },
-                error: function (error) {
-                    console.error(error);
-                },
-            });
-        })
-
-        $(document).on('click', '.upload', function() {
-            var upload = $('#modal-view-user input[name="upload"]').val();
-         
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: 'POST',
-                url: "/download/file",
-                data: {
-                    'upload' : upload, 
-                },
-                success: function(response){ 
-                    // console.log(response);
-                    window.open(response);
-                    // var blob = new Blob([response]);
-                    // var link = document.createElement('a');
-                    // link.href = window.URL.createObjectURL(blob);
-                    // link.download = response;
-                    // link.click();
-                }
-            });
-        })
+        /* close button reload */
+        $(document).on('click', '.close-btn2', function() {
+                    $("#comment1").load(" #comment1");
+                    $("#comment2").load(" #comment2");
+        });
+        $(document).on('click', '.close-btn', function() {
+                $("#comment1").load(" #comment1");
+                $("#comment2").load(" #comment2");
+        });
+        $(document).on('click', '.close-btn2-trans', function() {
+                $("#history").load(" #history");
+                $("#history1").load(" #history1"); 
+        });
+        $(document).on('click', '.close-btn-trans', function() {
+                $("#history").load(" #history");
+                $("#history1").load(" #history1");
+        });
+        /* end */
     });
+
+   
 
     function getComment(ticketno) {
         $.ajax({
@@ -1129,7 +1755,7 @@
     });
 }, 5000);
 </script>
-<script>
+<!-- <script>
      $('#document').ready(function(){
         $('#close-btn').on('click', function(){
             $("#comment1").load(" #comment1");
@@ -1142,7 +1768,7 @@
             // $("#comment2").load(" #comment2");
         });
     });
-</script>
+</script> -->
 <script>
     $('.toast').toast('show');
 </script>
