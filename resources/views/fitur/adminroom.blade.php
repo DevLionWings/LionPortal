@@ -215,15 +215,15 @@
                 </div>
                 <form action="{{route('book-room')}}" method="post" name='booked-user' id='booked-user'>
                     @csrf
-                    <input id="userid" name="userid" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
                     <div class="modal-body">
+                    <input id="userid" name="userid" class="form-control input--style-6" type="hidden" value="{{ session('userid') }}">
                         <div class="form-group">
                             <label class="form-check-label">Booking By :</label>
                             <div class="input-group value">
                                 <select id="bookedby" name="bookedby" class="btnbooked" style="width: 100%;">
                                 <option value="10"> Pilih User Request</option>
                                     @foreach($usreq as $usreqcode)
-                                    <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
+                                    <option value="{{ $usreqcode['NAME'] }}">{{ $usreqcode['NAME'] }}</option>
                                     @endforeach
                                 </select>
                             </div>

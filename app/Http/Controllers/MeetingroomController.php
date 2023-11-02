@@ -88,10 +88,10 @@ class MeetingroomController extends Controller
             ->join('meeting.t_booking as b', 'a.roomid', '=', 'b.roomid')
             ->select('b.userid', 'b.username', 'a.roomid', 'a.roomname', 'a.roomfloor', 'a.roomcapacity', 'a.active', 'b.subject', 'b.description', 'b.status', 'b.startdate', 
             'b.bookid', 'b.enddate', 'b.starttime', 'b.endtime', 'b.bookedon', 'b.bookedby')
-            ->whereIn('status', [0, 1, 2])
-            ->where('roompublic', 1)
-            ->where('active', 1)
-            ->where('b.startdate', '<=', $date)
+            ->whereIn('b.status', [0, 1, 2])
+            ->where('a.roompublic', 1)
+            ->where('a.active', 1)
+            ->where('b.startdate', '>=', $date)
             ->where('b.enddate', '>=', $date)
             ->get();
         $dataTrimArray = [];
@@ -398,7 +398,7 @@ class MeetingroomController extends Controller
         $roleid = Session::get('roleid');
         
         if($roleid == 'RD011'){
-            $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $request->bookedby)->first();
+            $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('username', $request->bookedby)->first();
             $username = $dataEmailBookedBy->username;
             $userid = $dataEmailBookedBy->userid;
             $bookedby = Session::get('username');
@@ -406,6 +406,7 @@ class MeetingroomController extends Controller
             $userid = Session::get('userid');
             $username = Session::get('username');
             $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
+            $bookedby = Session::get('username');
         }
         $subject = $request->subject;
         $desc = $request->detail;
