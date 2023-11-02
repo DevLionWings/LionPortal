@@ -40,7 +40,7 @@ class MeetingroomController extends Controller
 
         if($json["rc"] == "00") {
             /* Get User for User Requestor */
-            $requestor = $json['requestor'];
+            $requestor = $json['requestorall'];
             $requestorArray = [];
             foreach ($requestor as $key => $value) {
                 array_push($requestorArray, [

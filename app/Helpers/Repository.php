@@ -526,7 +526,9 @@ class Repository
     public static function GETUSERBYROLE()
     {   
         try{
-            
+            $requestorAll = DB::connection('pgsql')->table('master_data.m_user')
+            ->get();
+
             $requestor = DB::connection('pgsql')->table('master_data.m_user as a')
             ->join('master_data.m_role as b', 'a.roleid', '=', 'b.roleid')
             ->whereIn('b.roleid', ['RD002','RD003','RD005', 'RD006', 'RD007', 'RD008', 'RD009', 'RD010', 'RD012' ])
@@ -553,6 +555,7 @@ class Repository
                 'rc' => '00',
                 'msg' => 'success',
                 'requestor' => $requestor,
+                'requestorall' => $requestorAll,
                 'category' => $category,
                 'priority' => $priority,
                 'assign' => $assign,
