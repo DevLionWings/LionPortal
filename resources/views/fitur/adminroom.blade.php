@@ -232,8 +232,8 @@
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject">
                         </div>
-                        <input type="checkbox" class="largerCheckbox" name="range" id="range">
-                        <label for="">Range Date</label><br>    
+                        <input type="checkbox" class="largerCheckbox" name="range" id="range" value="1">
+                        <label >Range Date</label><br>    
                         <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
@@ -880,9 +880,6 @@
         });
 
         $(document).on('click', '.btnroom', function(e) {
-            // Initialize();
-            // $("#hideroom").load(" #hideroom");
-            // $("#hideroombooked").load(" #hideroombooked"); 
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
             hide1.show();
@@ -891,7 +888,12 @@
             var enddate = $('#modal-booked-user input[name="enddate"]').val();
             var starttime = $('#modal-booked-user select[name="starttime"]  option:selected').val();
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
-            $( '#enddate').datepicker( 'setDate', startdate );
+            var checkedValue = $('#modal-booked-user input[type=checkbox]:checked').val();
+            if (checkedValue != '1'){
+                var a = $('#enddate').datepicker( 'setDate', startdate );
+            } else {
+                var a = $('#enddate').datepicker( 'setDate', enddate );
+            }
             if(startdate.length < 1){
                 alert('startdate required');
                 return;
@@ -1061,8 +1063,6 @@
         });
 
         $(document).on('click', '.btndate', function(e) {
-            // var startdate = $('#modal-booked-user input[name="startdate"]').val();
-            // $( '#enddate').datepicker( 'setDate', startdate );
             $("#starttime").val('').trigger('change');
             $("#endtime").val('').trigger('change');
             // $("#hideroom").load(" #hideroom");
@@ -1075,8 +1075,6 @@
         });
 
         $(document).on('click', '.btndate1', function(e) {
-            var startdate1 = $('#modal-edit-room input[name="startdate1"]').val();
-            $( '#enddat1').datepicker( 'setDate', startdate1 );
             $("#hideroomedit").load(" #hideroomedit");
             $("#hideroombookededit").load(" #hideroombookededit");
             var hide3 = $("#hideroomedit");
@@ -1143,8 +1141,8 @@
                 hide3.show();
             } else {
                 var startdate = $('#modal-booked-user input[name="startdate"]').val();
-                hide3.hide();
                 $('#enddate').datepicker( 'setDate', startdate );
+                hide3.hide();
             }
         });
     });

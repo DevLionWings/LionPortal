@@ -653,6 +653,12 @@ function Initialize()
             var enddate = $('#modal-booked-user input[name="enddate"]').val();
             var starttime = $('#modal-booked-user select[name="starttime"]  option:selected').val();
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
+            var checkedValue = $('#modal-booked-user input[type=checkbox]:checked').val();
+            if (checkedValue != '1'){
+                var a = $('#enddate').datepicker( 'setDate', startdate );
+            } else {
+                var a = $('#enddate').datepicker( 'setDate', enddate );
+            }
             if(startdate.length < 1){
                 alert('startdate required');
                 return;
@@ -737,26 +743,7 @@ function Initialize()
             hide3.hide();
         });
 
-        // $(document).on('click', '.btntime', function(e) {
-        //     $('.select2').select2();
-        //     var startdate = $('#modal-booked-user input[name="startdate"]').val();
-        //     var enddate = $('#modal-booked-user input[name="enddate"]').val();
-
-        //     $("select option").each(function() {
-        //         var $thisOption = $(this);
-        //         if(startdate == date){
-        //             if($thisOption.val() < time) {
-        //                 $thisOption.attr("disabled", true);
-        //             }
-        //         } else {
-        //             $thisOption.attr("disabled", false);
-        //         }
-        //     });       
-        // });
-
         $(document).on('click', '.btndate', function(e) {
-            // var startdate = $('#modal-booked-user input[name="startdate"]').val();
-            // $( '#enddate').datepicker( 'setDate', startdate );
             $('.select2').select2()
             $("#starttime").val('').trigger('change');
             $("#endtime").val('').trigger('change');

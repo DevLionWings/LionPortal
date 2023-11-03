@@ -93,6 +93,7 @@ class MeetingroomController extends Controller
             ->where('a.active', 1)
             ->where('b.startdate', '>=', $date)
             ->where('b.enddate', '>=', $date)
+            ->orderBy('a.roomname', 'ASC')
             ->get();
         $dataTrimArray = [];
 
@@ -342,8 +343,9 @@ class MeetingroomController extends Controller
             ->whereIn('status', [1, 2])
             ->where('roompublic', 1)
             ->where('active', 1)
-            ->where('b.startdate', '<=', $date)
+            ->where('b.startdate', '>=', $date)
             ->where('b.enddate', '>=', $date)
+            ->orderBy('a.roomname', 'ASC')
             ->get();
         $dataTrimArray = [];
 
@@ -519,7 +521,7 @@ class MeetingroomController extends Controller
             ->where('c.enddate', '<=', $request->enddate)
             ->where('b.starttime', '>=', $request->starttime)
             ->where('b.endtime', '<=', $request->endtime)
-            ->distinct('c.roomid')
+            ->distinct('c.roomid', 'a.roomname')
             ->get();
 
         $minDate =  DB::connection('pgsql')->table('meeting.t_booking')
@@ -560,7 +562,7 @@ class MeetingroomController extends Controller
             ->where('c.enddate', '>=', $date)
             ->where('b.starttime', '>=', $request->starttime)
             ->where('b.endtime', '<=', $request->endtime)
-            ->distinct('c.roomid')
+            ->distinct('c.roomid', 'a.roomname')
             ->get();
 
         $arr_isvalid = [];
@@ -575,12 +577,12 @@ class MeetingroomController extends Controller
         $dataRoomBook = DB::connection('pgsql')->table('master_data.m_meeting_room')
             ->whereIn('roomid', $arr_isvalid)
             ->where('roompublic', 1)
-            ->orderBy('roomid','desc')
+            ->orderBy('roomname','asc')
             ->get();
         $dataRoomAvail = DB::connection('pgsql')->table('master_data.m_meeting_room')
             ->whereNotIn('roomid', $arr_isvalid)
             ->where('roompublic', 1)
-            ->orderBy('roomid','desc')
+            ->orderBy('roomname','asc')
             ->get();
         /* End */
 
