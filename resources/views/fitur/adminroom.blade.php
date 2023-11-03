@@ -890,9 +890,19 @@
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
             var checkedValue = $('#modal-booked-user input[type=checkbox]:checked').val();
             if (checkedValue != '1'){
-                var a = $('#enddate').datepicker( 'setDate', startdate );
+                $('#enddate').datepicker( 'setDate', startdate );
             } else {
-                var a = $('#enddate').datepicker( 'setDate', enddate );
+                $('#enddate').datepicker( 'setDate', enddate );
+
+                if(enddate < startdate){
+                    alert('something wrong date (backdate)');
+                    return;
+                }
+            }
+            if (enddate < startdate){
+                var enddate = $('#modal-booked-user input[name="startdate"]').val();
+            } else {
+                var enddate = $('#modal-booked-user input[name="enddate"]').val();
             }
             if(startdate.length < 1){
                 alert('startdate required');

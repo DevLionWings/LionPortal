@@ -133,7 +133,7 @@
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject" required>
                         </div>
-                        <input type="checkbox" class="largerCheckbox" name="range" id="range">
+                        <input type="checkbox" class="largerCheckbox" name="range" id="range" value="1">
                         <label for="">Range Date</label><br>    
                         <div class="row">
                             <div class="col-md-6"> 
@@ -655,9 +655,19 @@ function Initialize()
             var endtime = $('#modal-booked-user select[name="endtime"]  option:selected').val();
             var checkedValue = $('#modal-booked-user input[type=checkbox]:checked').val();
             if (checkedValue != '1'){
-                var a = $('#enddate').datepicker( 'setDate', startdate );
+                $('#enddate').datepicker( 'setDate', startdate );
             } else {
-                var a = $('#enddate').datepicker( 'setDate', enddate );
+                $('#enddate').datepicker( 'setDate', enddate );
+
+                if(enddate < startdate){
+                    alert('something wrong date (backdate)');
+                    return;
+                }
+            }
+            if (enddate < startdate){
+                var enddate = $('#modal-booked-user input[name="startdate"]').val();
+            } else {
+                var enddate = $('#modal-booked-user input[name="enddate"]').val();
             }
             if(startdate.length < 1){
                 alert('startdate required');
@@ -679,6 +689,9 @@ function Initialize()
                 return;
             } else if(startdate == date && starttime <= time){
                 alert('something wrong time (backtime)');
+                return;
+            } else if(enddate < startdate){
+                alert('something wrong time (backdate)');
                 return;
             } else {
                 $("#btnroom").attr("disabled", true);
