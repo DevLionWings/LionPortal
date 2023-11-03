@@ -690,9 +690,6 @@ function Initialize()
             } else if(startdate == date && starttime <= time){
                 alert('something wrong time (backtime)');
                 return;
-            } else if(enddate < startdate){
-                alert('something wrong time (backdate)');
-                return;
             } else {
                 $("#btnroom").attr("disabled", true);
                 $.ajax({
