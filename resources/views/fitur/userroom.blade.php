@@ -687,9 +687,6 @@ function Initialize()
             } else if(endtime < starttime){
                 alert('something wrong invalid time');
                 return;
-            } else if(startdate == date && starttime <= time){
-                alert('something wrong time (backtime)');
-                return;
             } else {
                 $("#btnroom").attr("disabled", true);
                 $.ajax({
@@ -719,7 +716,7 @@ function Initialize()
                             $select_room_avail.append($options1);
                         });
                         $.each(response["dataBook"], function(key, data) {
-                            var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   ",</p></label>";
+                            var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   "| Capacity: "+data["roomcapacity"]+",</p></label>";
                             $select_room_book.append($options2);
                         });
                         // $('#modal-booked-user form[name="book-user"] select[name="roomBook"]').prop('disabled', true);

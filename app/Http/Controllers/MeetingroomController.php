@@ -258,19 +258,35 @@ class MeetingroomController extends Controller
     public function editRoom(Request $request)
     {   
         $roomid = $request->roomAvail1;
-        
-        $dataRoom = DB::connection('pgsql')->table('master_data.m_meeting_room')->where('roomid', $roomid)->first();
+        if($roomid == null){
+            $roomName = '';
+        } else {
+            $roomid = $request->roomAvail1;
+            $dataRoom = DB::connection('pgsql')->table('master_data.m_meeting_room')->where('roomid', $roomid)->first();
+            $roomName = $dataRoom->roomname;
+        }
+    
         $dataEmailBookedBy = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $request->userid)->first();  
-        $update = DB::connection('pgsql')->table('meeting.t_booking')->where('bookid', $request->bookid)->update([
-            'bookid' => $request->bookid,
-            'startdate' => $request->startdate1,
-            'enddate' => $request->enddate1,
-            'starttime' => $request->starttime1,
-            'endtime' => $request->endtime1,
-            'roomid' => $request->roomAvail1,
-        ]);
-
-        /* Send Notif Email Receipt Cancel Booking */
+        if($roomid == null){
+            $update = DB::connection('pgsql')->table('meeting.t_booking')->where('bookid', $request->bookid)->update([
+                'bookid' => $request->bookid,
+                'startdate' => $request->startdate1,
+                'enddate' => $request->enddate1,
+                'starttime' => $request->starttime1,
+                'endtime' => $request->endtime1
+            ]);
+        } else {
+            $update = DB::connection('pgsql')->table('meeting.t_booking')->where('bookid', $request->bookid)->update([
+                'bookid' => $request->bookid,
+                'startdate' => $request->startdate1,
+                'enddate' => $request->enddate1,
+                'starttime' => $request->starttime1,
+                'endtime' => $request->endtime1,
+                'roomid' => $request->roomAvail1,
+            ]);
+        }
+    
+        /* Send Notif Email Receipt Edit Booking */
         $emailBook = Session::get('usermail');
         $assignNameBook = Session::get('username');
         $assignNameBookBy = $dataEmailBookedBy->username;
@@ -281,7 +297,7 @@ class MeetingroomController extends Controller
         $date = date('Y-m-d H:i:s');
         $starttime = $request->starttime1;
         $endtime = $request->endtime1;
-        $roomName = $dataRoom->roomname;
+       
         $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName);
         /* End */
     

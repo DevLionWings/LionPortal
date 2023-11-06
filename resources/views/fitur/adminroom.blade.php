@@ -853,7 +853,6 @@
             });
             var starttime_options = $form.find('select[name="starttime1"]').children();
             $.each(starttime_options, function(key, value) {
-                console.log(value);
                 if($(value).val() === starttime) {
                     $(value).attr('selected', true);
                 } else {
@@ -922,9 +921,6 @@
             } else if(endtime < starttime){
                 alert('something wrong invalid time');
                 return;
-            } else if(startdate == date && starttime <= time){
-                alert('something wrong time (backtime)');
-                return;
             } else {
                 $.ajax({
                     headers: {
@@ -953,7 +949,7 @@
                             $select_room_avail.append($options1);
                         });
                         $.each(response["dataBook"], function(key, data) {
-                            var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   ",</p></label>";
+                            var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   "| Capacity: "+data["roomcapacity"]+",</p></label>";
                             $select_room_book.append($options2);
                         });
                         // $('#modal-booked-user form[name="book-user"] select[name="roomBook"]').prop('disabled', true);
@@ -1005,9 +1001,6 @@
             } else if(endtime < starttime){
                 alert('something wrong endtime (backtime)');
                 return;
-            } else if(startdate == date && starttime <= time){
-                alert('something wrong time (backtime)');
-                return;
             } else {
                 $.ajax({
                     headers: {
@@ -1034,7 +1027,7 @@
                             $select_room_avail.append($options1);
                         });
                         $.each(response["dataBook"], function(key, data) {
-                            var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   ",</p></label>";
+                            var $options2 = "<label class=form-check-label style=color:red value='"+data["roomid"]+"'><p>" +data["roomname"]+   " | Capacity: "+data["roomcapacity"]+",</p></label>";
                             $select_room_book.append($options2);
                         });
                         // $('#modal-edit-room form[name="edit-room"] select[name="roomBook1"]').prop('disabled', true);
