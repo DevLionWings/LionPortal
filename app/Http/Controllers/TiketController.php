@@ -233,7 +233,8 @@ class TiketController extends Controller
 
             $data = $dataTrimArray;
         } else {
-            $data = ['']; 
+            $data = []; 
+            $json = ["total" => 0];
         } 
         $resp = json_encode($data);
         return DataTables::of($data)
@@ -537,6 +538,7 @@ class TiketController extends Controller
 
         } else {
             $data = [];
+            $json = ["total" => 0];
         }   
         $resp = json_encode($data);
 

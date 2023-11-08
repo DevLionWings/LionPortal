@@ -273,10 +273,10 @@
         });
 
         var $table = $('#dataabsen').DataTable({
+            scrollX: true,
             processing: true,
             serverSide: true,
             responsive: false,
-            scrollX: true,
             searching: true,
             pageLength: 30,
             dom: 'Blfrtip',
@@ -288,22 +288,17 @@
                 "data": function (d) {
                     d.daterange = $('input[name="data_date_range"]').val();
                 },
-                "dataSrc": function (settings) {
-                    $btn_submit.text("Submit");
-                    $btn_submit.prop('disabled', false);
-                    return settings.data;
-                },
             },
             columns: [
                 {
-                    data: 'id',
-                    render: function(data){
-                        if(data != null){
-                            return '';
-                        } else {
-                            return '';
-                        }
-                    }
+                    // data: 'id',
+                    // render: function(data){
+                    //     if(data != null){
+                    //         return '';
+                    //     } else {
+                    //         return '';
+                    //     }
+                    // }
                 },
                 {
                     data: 'id',
