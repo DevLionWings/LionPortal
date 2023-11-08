@@ -83,7 +83,7 @@ class Mail
         SendtoMail::to($emails)->bcc($bccEmails)->send(new SendMailBooking($mailData));
     }
 
-    public static function SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo)
+    public static function SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark)
     {
         $emails = array($emailSender, $emailSendTo);
       
@@ -92,7 +92,9 @@ class Mail
             'transportid' => $transportId,
             'transno' => $transno,
             'sendername' => $emailNameSender,
-            'sendtoname' => $emailNameSendTo
+            'sendtoname' => $emailNameSendTo,
+            'status' => $status,
+            'remark' => $remark
         );
     
         SendtoMail::to($emails)->send(new SendMailTransport($mailData));

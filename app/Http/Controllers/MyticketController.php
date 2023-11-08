@@ -381,7 +381,7 @@ class MyticketController extends Controller
                 if($roleid == 'RD005' ){
                     return $infBtn;
                 }
-                if($roleid == 'RD007' || $roleid == 'RD008'){
+                if($roleid == 'RD007'){
                     return $sapBtn;
                 }
                 if($roleid == 'RD004' || $roleid == 'RD008'){

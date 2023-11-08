@@ -25,6 +25,14 @@ Helpdesk Ticket
         <td style="text-align: left; vertical-align:top;">Sender</td>
         <td>:&nbsp;&nbsp;{{ $mailData['sendername'] }}</td>
     </tr>
+    <tr>
+        <td style="text-align: left; vertical-align:top;">Status</td>
+        <td>:&nbsp;&nbsp;{{ $mailData['status'] }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left; vertical-align:top;">Remark</td>
+        <td>:&nbsp;&nbsp;{{ $mailData['remark'] }}</td>
+    </tr>
 </table>
 
 <hr>

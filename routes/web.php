@@ -169,5 +169,9 @@ Route::post('/avail/room', [MeetingroomController::class,'availRoom'])->name('av
 /* Transport */
 Route::post('/send/transport', [TransportController::class,'sendTransport'])->name('send-transport');
 Route::post('/approve/transport', [TransportController::class,'approveTransport'])->name('approve-transport');
+Route::post('/reject/transport', [TransportController::class,'rejectTransport'])->name('reject-transport');
 Route::post('/transported/transport', [TransportController::class,'transportedTransport'])->name('transported-transport');
 Route::post('/get/historytrans', [TransportController::class,'listTransport'])->name('history-transport');
+Route::get('/get/transportid/approve', [TransportController::class,'approveOption'])->name('approve-transportid');
+Route::get('/get/transportid/transported', [TransportController::class,'transportOption'])->name('transported-transportid');
+Route::get('/get/transportid/create', [TransportController::class,'transportOptionCreate'])->name('create-transportid');

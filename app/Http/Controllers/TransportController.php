@@ -46,7 +46,7 @@ class TransportController extends Controller
             $transid = $request->data_transportid;
             /* IF Existing Get data transport id */
             $existing = DB::connection('pgsql')->table('helpdesk.t_transport')
-                ->whereIn('transportid', $transid)
+                ->where('transportid', $transid)
                 ->get();
 
             $trim_transno = [];
@@ -63,18 +63,15 @@ class TransportController extends Controller
         /* End */
 
         /* Checked Opsi Transport */
-        if(empty($request->lpr)){
-            $lqa = '1';
-            $date_lqa = date('Y-m-d H:i:s');
-            $lpr = '0';
-            $date_lpr = date('Y-m-d H:i:s');
+        if(empty($request->lqa) && empty($request->lpr)){
+            return redirect()->back()->with("error", "please checked checkbox");
         } else if (empty($request->lqa)) {
             $lqa = '0';
             $date_lqa = date('Y-m-d H:i:s');
             $lpr = '1';
             $date_lpr = date('Y-m-d H:i:s');
-        } else if (empty($request->lpr) && empty($request->lqa)){
-            $lqa = '0';
+        } else if (empty($request->lpr)){
+            $lqa = '1';
             $date_lqa = date('Y-m-d H:i:s');
             $lpr = '0';
             $date_lpr = date('Y-m-d H:i:s');
@@ -134,7 +131,7 @@ class TransportController extends Controller
         $emailSendTo = 'it@lionwings.com';
         $emailNameSendTo = 'IT-Lion Wings';
         $ticketno = $request->ticketno;
-        $transportId = $request->transid;
+        $datatrq = $request->data_transportid;
         $transno = $request->transno;
       
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
@@ -158,28 +155,115 @@ class TransportController extends Controller
             $usernamelqa = '';
             $usernamelpr = '';
         }
-  
+        
         /* Approve Transport */
-        $approve = DB::connection('pgsql')->table('helpdesk.t_transport')->update([
-            'approveby_lqa_date' => $datelqa,
-            'approveby_lpr_date' => $datelpr,
-            'approveby_lqa' => $usernamelqa,
-            'approveby_lpr' => $usernamelpr,
-            'status_lqa' => $request->sendlqa,
-            'status_lpr' => $request->sendlpr,
-            'status_lqa_date' => $datelqa,
-            'status_lpr_date' => $datelpr,
-            'remark' => $request->remark
-        ]);
+        for ($a=0; $a < count($datatrq) ; $a++){
+            $approve = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                'approveby_lqa_date' => $datelqa,
+                'approveby_lpr_date' => $datelpr,
+                'approveby_lqa' => $usernamelqa,
+                'approveby_lpr' => $usernamelpr,
+                'status_lqa' => $request->sendlqa,
+                'status_lpr' => $request->sendlpr,
+                'status_lqa_date' => $datelqa,
+                'status_lpr_date' => $datelpr,
+                'remark' => $request->remark
+            ]);
+        }
         /* End */
-        /* Send Email */
-        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo);
+
+        /* Send Email */ 
+        $transportId = implode(",", $datatrq);
+        $status = "APPROVE";
+        $remark = $request->remark;
+        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
         if($approve == true){
             return redirect()->route('tiket')->with("success", "transport approved successfully");
         } else { 
             return redirect()->back()->with("error", "error");
+        }
+    }
+
+    public function rejectTransport(Request $request)
+    {
+        $userid = Session::get('userid');
+        $username = Session::get('username');
+        $emailNameSender = Session::get('username');
+        $emailSender = Session::get('usermail');
+        $emailSendTo = 'it@lionwings.com';
+        $emailNameSendTo = 'IT - Lion Wings';
+        $ticketno = $request->ticketno;
+        $datatrq = $request->data_transportid;
+        $transno = $request->transno;
+        $date = date('Y-m-d H:i:s');
+        
+        if($request->sendlqa == '1' && $request->sendlpr == '1'){
+            $lqa = 0;
+            $lpr = 0;
+        } else if($request->sendlqa == '1'){
+            $lqa = 0;
+            $lpr = 0;
+        } else if($request->sendlpr == '1'){
+            $lqa = 1;
+            $lpr = 0;
+        } else {
+            $lqa = 0;
+            $lpr = 0;
+        }
+        
+        if($request->status == 'APPROVE'){
+            /* Approve Transport */
+            for ($a=0; $a < count($datatrq) ; $a++){
+                $approve = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                    'approveby_lqa_date' => $date,
+                    'approveby_lpr_date' => $date,
+                    'approveby_lqa' => $username,
+                    'approveby_lpr' => $username,
+                    'status_lqa' => $lqa,
+                    'status_lpr' => $lpr,
+                    'status_lqa_date' => $date,
+                    'status_lpr_date' => $date,
+                    'remark' => $request->remark
+                ]);
+            }
+            /* End */
+        } else {
+            /* Transported Transport */
+            for ($a=0; $a < count($datatrq) ; $a++){
+                $approve = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                    'date_trans_lqa' => $date,
+                    'date_trans_lpr' => $date,
+                    'transportby_lqa' => $username,
+                    'transportby_lpr' => $username,
+                    'status_trans_lqa' => $lqa,
+                    'status_trans_lpr' => $lpr,
+                    'remark' => $request->remark
+                ]);
+            }
+            /* End */
+        }
+        
+        /* Send Email */ 
+        $transportId = implode(",", $datatrq);
+        $status = "REJECT";
+        $remark = $request->remark;
+        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
+        /* End */
+
+        if($approve == true){
+            return response()->json([
+                'url'=>url('/tiket'),
+                'message'=>'transport rejected successfully'
+            ]);
+            // return redirect()->route('tiket')->with("success", "transport approved successfully");
+        } else { 
+            return response()->json([
+                'url'=>route('/tiket'),
+                'message'=>'eror reject'
+        ]);
+            // return redirect()->back()->with("error", "error");
         }
     }
 
@@ -192,7 +276,7 @@ class TransportController extends Controller
         $emailSendTo = 'it@lionwings.com';
         $emailNameSendTo = 'IT-Lion Wings';
         $ticketno = $request->ticketno;
-        $transportId = $request->transid;
+        $datatrq = $request->data_transportid;
         $transno = $request->transno;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
@@ -218,18 +302,24 @@ class TransportController extends Controller
         }
        
         /* Trasnported Transport */
-        $transported = DB::connection('pgsql')->table('helpdesk.t_transport')->update([
-            'date_trans_lqa' => $datelqa,
-            'date_trans_lpr' => $datelpr,
-            'transportby_lqa' => $usernamelqa,
-            'transportby_lpr' => $usernamelpr,
-            'status_trans_lqa' => $request->sendlqa,
-            'status_trans_lpr' => $request->sendlpr,
-            'remark' => $request->remark
-        ]);
+        for ($a=0; $a < count($datatrq) ; $a++){
+            $transported = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                'date_trans_lqa' => $datelqa,
+                'date_trans_lpr' => $datelpr,
+                'transportby_lqa' => $usernamelqa,
+                'transportby_lpr' => $usernamelpr,
+                'status_trans_lqa' => $request->sendlqa,
+                'status_trans_lpr' => $request->sendlpr,
+                'remark' => $request->remark
+            ]);
+        }
         /* End */
+
         /* Send Email */
-        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo);
+        $transportId = implode(",", $datatrq);
+        $status = "TRANSPORTED";
+        $remark = $request->remark;
+        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
         if($transported == true){
@@ -284,5 +374,86 @@ class TransportController extends Controller
 
         return $data;
     }
+
+    public function approveOption(Request $request)
+    {
+        $dataTransport =  DB::connection('pgsql')->table('helpdesk.t_transport')
+            ->where('ticketid', $request->ticketno)
+            ->where(function($q){
+                $q->where('sendto_lqa', 1)->where('status_lqa', 0)
+                ->orWhere('sendto_lpr', 1)->where('status_lpr', 0);
+                
+            })
+            ->get();
+
+        $jsonTransportid = json_decode($dataTransport, true);
+
+        /* Get Transportid */
+        $transport = $jsonTransportid;
+        $transportArray = [];
+        foreach ($transport as $key => $value) {
+            array_push($transportArray, [
+                "TRANSPORTID" => trim($value['transportid'])
+                // "TRANSPORTNO" => trim($value['transportno']),
+            ]);
+        }
+
+        $data['disc'] = $transportArray; 
+        
+        return $transportArray;
+    }
+
+    public function transportOption(Request $request)
+    {
+        $dataTransport =  DB::connection('pgsql')->table('helpdesk.t_transport')
+            ->where('ticketid', $request->ticketno)
+            ->where(function($q){
+                $q->where('status_lqa', 1)->where('status_trans_lqa', 0)
+                ->orWhere('status_lpr', 1)->where('status_trans_lpr', 0);
+                
+            })
+            ->get();
+
+        $jsonTransportid = json_decode($dataTransport, true);
+
+        /* Get Transportid */
+        $transport = $jsonTransportid;
+        $transportArray = [];
+        foreach ($transport as $key => $value) {
+            array_push($transportArray, [
+                "TRANSPORTID" => trim($value['transportid'])
+                // "TRANSPORTNO" => trim($value['transportno']),
+            ]);
+        }
+
+        $data['disc'] = $transportArray; 
+        
+        return $transportArray;
+    }
+
+    public function transportOptionCreate(Request $request)
+    {
+        $dataTransport =  DB::connection('pgsql')->table('helpdesk.t_transport')
+        ->where('ticketid', $request->ticketno)
+        ->get();
+
+        $jsonTransportid = json_decode($dataTransport, true);
+
+        /* Get Transportid */
+        $transport = $jsonTransportid;
+        $transportArray = [];
+        foreach ($transport as $key => $value) {
+            array_push($transportArray, [
+                "TRANSPORTID" => trim($value['transportid'])
+                // "TRANSPORTNO" => trim($value['transportno']),
+            ]);
+        }
+
+        $data['disc'] = $transportArray; 
+        
+        return $transportArray;
+    }
+
+    
 
 }
