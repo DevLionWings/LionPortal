@@ -996,7 +996,7 @@
                         <button type="button" class="close-btn-transported btn btn-default" data-dismiss="modal">Close</button>
                         <div class="justify-content-between">
                             <button type="button" id ="transported-reject-btn" name ="transported-reject-btn" class="rejectBtnTransported btn btn-danger">Reject</button>
-                            <button type="button" id ="transported-btn" name ="transported-btn" class="btn btn-primary" >Transported</button>
+                            <button type="button" id ="transported-btn" name ="transported-btn" class="btn btn-success" >Transported</button>
                         </div>
                     </div>
                 </form>
@@ -1148,7 +1148,7 @@
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="transid"]').val(transid);
-            $form.find('textarea[name="transno"]').val(transno);
+            $form.find('input[name="transno"]').val(transno);
             $form.find('input[name="viewsendlqa"]').val(lqa);
             $form.find('input[name="viewsendlpr"]').val(lpr);
             $form.find('input[name="sendlqa"]').val(sendlqa);
@@ -1193,7 +1193,7 @@
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="transid"]').val(transid);
-            $form.find('textarea[name="transno"]').val(transno);
+            $form.find('input[name="transno"]').val(transno);
             $form.find('input[name="viewsendlqa"]').val(lqa);
             $form.find('input[name="viewsendlpr"]').val(lpr);
             $form.find('input[name="sendlqa"]').val(status_lqa);

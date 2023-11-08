@@ -361,30 +361,44 @@ class TiketController extends Controller
                     data-sendto_lqa="'.$value['sendto_lqa'].'" data-sendto_lpr="'.$value['sendto_lpr'].'"><i class="fa fa-truck" aria-hidden="true"></i></button>';
 
                     if( $value['sendto_lqa'] == '1' || $value['sendto_lpr'] == '1'){
-                        if($value['status_lqa'] == '0' || $value['status_lpr'] == '0' || $value['status_lqa'] == '1' || $value['status_lpr'] == '1' ){
+                        if($value['status_lqa'] == '1' || $value['status_lpr'] == '1' ){
                             if($value['status_trans_lqa'] == '0' || $value['status_trans_lpr'] == '0'){
                                 $managerBtn = $download_btn;
                                 $itBtn = $download_btn;
                                 $infBtn = $transportedBtn. $download_btn;
                                 $sapBtn = $transportBtn. $download_btn;
-                                $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
+                                $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                                 $headBtn = $updateBtn.$download_btn;
-                            } 
-                        }
-                    }
-
-                    if( $value['sendto_lqa'] != '1' || $value['sendto_lpr'] != '1'){
-                        if($value['status_lqa'] != '0' || $value['status_lpr'] != '0' || $value['status_lqa'] != '1' || $value['status_lpr'] != '1' ){
-                            if($value['status_trans_lqa'] != '0' || $value['status_trans_lpr'] != '0'){
+                            } else {
                                 $managerBtn = $download_btn;
                                 $itBtn = $download_btn;
                                 $infBtn = $viewTransBtn. $download_btn;
                                 $sapBtn = $transportBtn. $download_btn;
                                 $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                                 $headBtn = $updateBtn.$download_btn;
-                            } 
+                            }
+                        } else {
+                            $managerBtn = $download_btn;
+                            $itBtn = $download_btn;
+                            $infBtn = $transportedBtn. $download_btn;
+                            $sapBtn = $transportBtn. $download_btn;
+                            $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
+                            $headBtn = $updateBtn.$download_btn;
                         }
                     }
+
+                    // if( $value['sendto_lqa'] != '1' || $value['sendto_lpr'] != '1'){
+                    //     if($value['status_lqa'] != '0' || $value['status_lpr'] != '0' || $value['status_lqa'] != '1' || $value['status_lpr'] != '1' ){
+                    //         if($value['status_trans_lqa'] != '0' || $value['status_trans_lpr'] != '0'){
+                    //             $managerBtn = $download_btn;
+                    //             $itBtn = $download_btn;
+                    //             $infBtn = $viewTransBtn. $download_btn;
+                    //             $sapBtn = $transportBtn. $download_btn;
+                    //             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                    //             $headBtn = $updateBtn.$download_btn;
+                    //         } 
+                    //     }
+                    // }
                 }
                 /* End */ 
 
@@ -552,7 +566,7 @@ class TiketController extends Controller
                         "createdTrans" => trim($value1->createdon),
                     ]);
                 }
-            
+         
                 $userid = Session::get('userid');
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
@@ -577,7 +591,7 @@ class TiketController extends Controller
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
                 data-objectid="'.$row["objectid"].'"  data-createdon="'.$row["createdon"].'"><i class="fa fa-truck" aria-hidden="true"></i></a>';
-
+    
                 $viewTransBtn = ' <button href="javascript:void(0)" class="viewtrans btn btn-outline-dark btn-xs" data-ticket="'.$row["ticketno"].'" ><i class="fa fa-truck" aria-hidden="true"></i></button>';
 
                 $download_btn = '<a  download="'.explode(";",$row["attachment"])[0].'" href="'.Storage::url(explode(";",$document_name)[0]).'" target="_blank" class="btn btn-outline-primary btn-xs" 
@@ -641,42 +655,44 @@ class TiketController extends Controller
                     $managerItBtn = $viewTransBtn. $updateBtn. $download_btn;
                     $headBtn = $updateBtn. $download_btn;
                 }
-
-                /* button transport */
+                
+                /* button transport & approve */
                 foreach ($dataTransArray as $key => $value) {
+                    $transportedBtn = ' <button href="javascript:void(0)" class="transted btn btn-outline-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-transportid="'.$value['transportid'].'" data-transportno="'.$value['transportno'].'" 
+                    data-status_lqa="'.$value['status_lqa'].'" data-status_lpr="'.$value['status_lpr'].'"><i class="fa fa-truck" aria-hidden="true"></i></button>';
+
                     $approveTransBtn = ' <button href="javascript:void(0)" class="approvetrans btn btn-outline-primary btn-xs" data-ticket="'.$row["ticketno"].'" data-transportid="'.$value['transportid'].'" data-transportno="'.$value['transportno'].'" 
                     data-sendto_lqa="'.$value['sendto_lqa'].'" data-sendto_lpr="'.$value['sendto_lpr'].'"><i class="fa fa-truck" aria-hidden="true"></i></button>';
 
-                    $transportedBtn = ' <button href="javascript:void(0)" class="transted btn btn-outline-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-transportid="'.$value['transportid'].'" data-transportno="'.$value['transportno'].'" 
-                    data-status_lqa="'.$value['status_lqa'].'" data-status_lpr="'.$value['status_lpr'].'"><i class="fa fa-truck" aria-hidden="true"></i></button>';
-                    
-                    if($value['status_lqa'] == '0' && $value['sendto_lqa'] == '1' || $value['status_lpr'] == '0' && $value['sendto_lpr'] == '1'){
-                        $managerBtn = $download_btn;
-                        $itBtn = $download_btn;
-                        $infBtn = $download_btn;
-                        $sapBtn = $transportBtn. $download_btn;
-                        $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        $headBtn = $updateBtn.$download_btn;
-                    } else if($value['status_lqa']  == '1' && $value['status_trans_lqa'] == '0'|| $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '0'){
-                        $managerBtn = $download_btn;
-                        $itBtn = $download_btn;
-                        $sapBtn = $transportBtn. $download_btn;
-                        $infBtn = $transportedBtn. $download_btn;
-                        $managerItBtn =  $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        $headBtn = $updateBtn.$download_btn;
-                    } else {
-                        $managerBtn = $download_btn;
-                        $itBtn = $download_btn;
-                        $infBtn =  $viewTransBtn. $download_btn;
-                        $sapBtn = $transportBtn. $download_btn;
-                        $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        $headBtn = $updateBtn.$download_btn;
+                    if( $value['sendto_lqa'] == '1' || $value['sendto_lpr'] == '1'){
+                        if($value['status_lqa'] == '1' || $value['status_lpr'] == '1' ){
+                            if($value['status_trans_lqa'] == '0' || $value['status_trans_lpr'] == '0'){
+                                $managerBtn = $download_btn;
+                                $itBtn = $download_btn;
+                                $infBtn = $transportedBtn. $download_btn;
+                                $sapBtn = $transportBtn. $download_btn;
+                                $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                                $headBtn = $updateBtn.$download_btn;
+                            } else {
+                                $managerBtn = $download_btn;
+                                $itBtn = $download_btn;
+                                $infBtn = $viewTransBtn. $download_btn;
+                                $sapBtn = $transportBtn. $download_btn;
+                                $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                                $headBtn = $updateBtn.$download_btn;
+                            }
+                        } else {
+                            $managerBtn = $download_btn;
+                            $itBtn = $download_btn;
+                            $infBtn = $transportedBtn. $download_btn;
+                            $sapBtn = $transportBtn. $download_btn;
+                            $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
+                            $headBtn = $updateBtn.$download_btn;
+                        }
                     }
-
                 }
-                /* End */ 
-            
-                if($roleid == 'RD005'){
+              
+                if($roleid == 'RD005' || $roleid == 'RD008'){
                     return $infBtn;
                 }
                 if($roleid == 'RD007'){
@@ -686,7 +702,7 @@ class TiketController extends Controller
                     return $itBtn;
                 }
                 if($roleid == 'RD009'){
-                    return $headBtn.$transportBtn;
+                    return $transportBtn.$headBtn;
                 }
                 if($roleid == 'RD002'){ 
                     return $managerBtn;

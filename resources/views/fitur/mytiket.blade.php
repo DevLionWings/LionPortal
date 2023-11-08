@@ -514,13 +514,13 @@
                             </div>
                         </div>
                         <div class="form-group" id="transid">
-                            <label class="form-check-label" for="transportid">Transposrt id :</label>
-                            <div class="input-group value">
-                                <select class="select2" data-placeholder="pilih transport" multiple="multiple" id="transportid" name="data_transportid[]" style="width: 100%;">
-                                    @foreach($trq as $trqcode)
-                                    <option value="{{ $trqcode['ID'] }}">{{ $trqcode['ID'] }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="form-group">
+                                <div class="name">Transposrt id :</div>
+                                <div class="input-group value">
+                                    <select id="transportid" name="transportid" class="form-control input--style-6">
+                                                            
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group" id="transnumb">
@@ -529,17 +529,18 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4"> 
-                                <input type="checkbox" id="lqa" name="lqa" value="1"> 
+                                <input type="checkbox" id="lqa" name="lqa" value="true"> 
                                 <label for="">LQA</label><br>
                             </div>
                             <div class="col-md-4"> 
-                                <input type="checkbox" id="lpr" name="lpr" value="1">
+                                <input type="checkbox" id="lpr" name="lpr" value="true">
                                 <label for="">LPR</label><br>  
                             </div>
                         </div>
                         <hr/>
                         <h5 class="modal-title">History :</h5>
                         <button type="button" id="btnhistorytrans" class="btnhistorytrans btn btn-link btn-xs">Show History</button>
+                        <button type="button" id="btnhidetrans" class="btnhidetrans btn btn-link btn-xs">Hide History</button>
                         <div id="loadings1">
                             Loading...
                         </div>
@@ -571,34 +572,39 @@
                     <div class="modal-body">
                         <input type="hidden" id="sendlqa" name="sendlqa">
                         <input type="hidden" id="sendlpr" name="sendlpr">
+                        <input type="hidden" id="transno" name="transno">
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
                             <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
                         </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="transid" disabled>Transport ID :</label>
-                            <input type="text" name="transid" class="form-control" id="transid" readonly>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="transno" disabled>Transport Number:</label>
-                            <textarea type="text" name="transno" class="form-control" id="transno" readonly></textarea>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="viewsendlqa" disabled>Status LQA :</label>
-                            <input type="text" name="viewsendlqa" class="form-control" id="viewsendlqa" readonly>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="viewsendlpr" disabled>Status LPR :</label>
-                            <input type="text" name="viewsendlpr" class="form-control" id="viewsendlpr" readonly>
-                        </div> 
+                        <div class="form-group" id="transid">
+                            <label class="form-check-label" for="transportid">Transposrt id :</label>
+                            <div class="input-group value">
+                                <select class="approve-select2 form-control" id="data_transportid[]" multiple="multiple" name="data_transportid[]" style="width: 100%;">
+                
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="form-check-label" for="remark" disabled>Remark :</label>
                             <input type="text" name="remark" class="form-control" id="remark">
                         </div> 
+                        <h5 class="modal-title">History :</h5>
+                        <button type="button" id="btnhistoryapprove" class="btnhistoryapprove btn btn-link btn-xs">Show History</button>
+                        <button type="button" id="btnhideapprove" class="btnhideapprove btn btn-link btn-xs">Hide History</button>
+                        <div id="loadings3">
+                            Loading...
+                        </div>
+                        <div class="form-group" id="history3">
+                            <span type="text" name="listhistoryapprove" id="listhistoryapprove" class="modal-input" readonly></span>
+                        </div>  
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="rejecttrans btn btn-danger">Reject</button>
-                        <button type="submit" class="btn btn-primary" >Approve</button>
+                        <button type="button" class="close-btn-approve btn btn-default" data-dismiss="modal">Close</button>
+                        <div class="justify-content-between">
+                            <button type="button" id ="reject-btn" name ="reject-btn" class="rejectBtn btn btn-danger">Reject</button>
+                            <button type="button" id ="approve-btn" name ="approve-btn" class="btn btn-primary" >Approve</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -655,30 +661,34 @@
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
                             <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
                         </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="transid" disabled>Transport ID :</label>
-                            <input type="text" name="transid" class="form-control" id="transid" readonly>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="transno" disabled>Transport Number:</label>
-                            <textarea type="text" name="transno" class="form-control" id="transno" readonly></textarea>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="viewsendlqa" disabled>Status LQA :</label>
-                            <input type="text" name="viewsendlqa" class="form-control" id="viewsendlqa" readonly>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="viewsendlpr" disabled>Status LPR :</label>
-                            <input type="text" name="viewsendlpr" class="form-control" id="viewsendlpr" readonly>
-                        </div> 
+                        <div class="form-group" id="transid">
+                            <label class="form-check-label" for="transportid">Transposrt id :</label>
+                            <div class="input-group value">
+                                <select class="transport-select2 form-control" id="data_transportid[]" multiple="multiple" name="data_transportid[]" style="width: 100%;">
+                
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="form-check-label" for="remark" disabled>Remark :</label>
                             <input type="text" name="remark" class="form-control" id="remark">
                         </div> 
+                        <h5 class="modal-title">History :</h5>
+                        <button type="button" id="btnhistorytransported" class="btnhistorytransported btn btn-link btn-xs">Show History</button>
+                        <button type="button" id="btnhidetransported" class="btnhidetransported btn btn-link btn-xs">Hide History</button>
+                        <div id="loadings4">
+                            Loading...
+                        </div>
+                        <div class="form-group" id="history4">
+                            <span type="text" name="listhistorytransported" id="listhistorytransported" class="modal-input" readonly></span>
+                        </div>  
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="rejecttrans btn btn-danger">Reject</button>
-                        <button type="submit" class="btn btn-primary" >Submit</button>
+                        <button type="button" class="close-btn-transported btn btn-default" data-dismiss="modal">Close</button>
+                        <div class="justify-content-between">
+                            <button type="button" id ="transported-reject-btn" name ="transported-reject-btn" class="rejectBtnTransported btn btn-danger">Reject</button>
+                            <button type="button" id ="transported-btn" name ="transported-btn" class="btn btn-primary" >Transported</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -716,61 +726,89 @@
 </script>
 <script>
     $(function () {    
-        var today = new Date();
-        var day = today.getDate() + "";
-        var month = (today.getMonth() + 1) + "";
-        var year = today.getFullYear() + "";
-        var hour = today.getHours() + "";
-        var minutes = today.getMinutes() + "";
-        var seconds = today.getSeconds() + "";
-
-        day = day;
-        month = month;
-        year = year;
-        hour = hour;
-        minutes = minutes;
-        seconds = seconds;
-
-        var date_range = year + "-" + month + "-" + day;
         var $btn_submit = $("button#btn-sumbit-ticket");
+
+        var showBtn = $("#btnhistorytrans");
+        var hideBtn = $("#btnhidetrans");
+        showBtn.show();
+        hideBtn.hide();
+
+        var showBtn = $("#btnhistorytrans1");
+        var hideBtn = $("#btnhidetrans1");
+        showBtn.show();
+        hideBtn.hide();
+
+        var showBtn = $("#btnhistoryapprove");
+        var hideBtn = $("#btnhideapprove");
+        showBtn.show();
+        hideBtn.hide();
+
+        var showBtn = $("#btnhistorytransported");
+        var hideBtn = $("#btnhidetransported");
+        showBtn.show();
+        hideBtn.hide();
 
         //Initialize Select2 Elements
         $('.select2').select2()
         $('.datepicker').daterangepicker();
 
-        $('#save-btn').on('click', function () {
-            // console.log("clicked");
-            var $inputs = $('modal-add-ticket form[name="ticket"] :input');
-            $inputs.each(function () {
-                if ($(this).attr('type') !== "button" && $(this).attr('type') !== undefined) {
-                    if ($(this).val() === "") {
-                        if ($(this).attr('name') === "category") {
-                            $(this).parent().parent().parent().append(
-                                '<span class="text-danger">Invalid input</span>');
-                        } else {
-                            $(this).parent().append(
-                                '<span class="text-danger">Invalid input</span>');
-                        }
-                        $(this).addClass('is-invalid');
-                    } else {
-                        $(this).removeClass('is-invalid');
-                        if ($(this).attr('name') === "subject") {
-                            $(this).parent().parent().parent().children("span").remove();
-                        } else {
-                            $(this).parent().children("span").remove();
-                        }
-                    }
-                }
-            });
-            var $form_valid = $('form[name="ticket"] :input.is-invalid');
-            if ($form_valid.length === 0) {
-                $('form[name="ticket"]').submit();
-            }
+        $('#save-btn').on('click', function() {
+            $('#form').submit();
+            $(this).attr('disabled', true);
+            $(this).text("Loading ...");
         });
+
+        $('#approve-btn').prop('disabled', true);
+        $('#approve-btn').on('click', function() {
+            $('#transport-approve').submit();
+            $(this).attr('disabled', true);
+            $(this).text("Loading ...");
+        });
+
+        $('#transported-btn').prop('disabled', true);
+        $('#transported-btn').on('click', function() {
+            $('#transport-transported').submit();
+            $(this).attr('disabled', true);
+            $(this).text("Loading ...");
+        });
+
+        $('#reject-btn').prop('disabled', true);
+        $('#transported-reject-btn').prop('disabled', true);
+
+        // $('#save-btn').on('click', function () {
+        //     // console.log("clicked");
+        //     var $inputs = $('modal-add-ticket form[name="ticket"] :input');
+        //     $inputs.each(function () {
+        //         if ($(this).attr('type') !== "button" && $(this).attr('type') !== undefined) {
+        //             if ($(this).val() === "") {
+        //                 if ($(this).attr('name') === "category") {
+        //                     $(this).parent().parent().parent().append(
+        //                         '<span class="text-danger">Invalid input</span>');
+        //                 } else {
+        //                     $(this).parent().append(
+        //                         '<span class="text-danger">Invalid input</span>');
+        //                 }
+        //                 $(this).addClass('is-invalid');
+        //             } else {
+        //                 $(this).removeClass('is-invalid');
+        //                 if ($(this).attr('name') === "subject") {
+        //                     $(this).parent().parent().parent().children("span").remove();
+        //                 } else {
+        //                     $(this).parent().children("span").remove();
+        //                 }
+        //             }
+        //         }
+        //     });
+        //     var $form_valid = $('form[name="ticket"] :input.is-invalid');
+        //     if ($form_valid.length === 0) {
+        //         $('form[name="ticket"]').submit();
+        //     }
+        // });
 
         $(document).on('click', '.trans', function() {
             // $("#history").load(" #history"); 
             $('#modal-transport').modal({backdrop: 'static', keyboard: false})
+            getTrqCreate($(this).attr('data-ticket'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -811,6 +849,7 @@
 
         $(document).on('click', '.approvetrans', function() {
             $('#modal-transport-approve').modal({backdrop: 'static', keyboard: false})
+            getTrqJson($(this).attr('data-ticket'), $(this).attr('data-sendto_lqa'), $(this).attr('data-sendto_lpr'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var transid = $(this).attr('data-transportid');
@@ -836,7 +875,7 @@
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="transid"]').val(transid);
-            $form.find('textarea[name="transno"]').val(transno);
+            $form.find('input[name="transno"]').val(transno);
             $form.find('input[name="viewsendlqa"]').val(lqa);
             $form.find('input[name="viewsendlpr"]').val(lpr);
             $form.find('input[name="sendlqa"]').val(sendlqa);
@@ -855,6 +894,7 @@
 
         $(document).on('click', '.transted', function() {
             $('#modal-transported').modal({backdrop: 'static', keyboard: false})
+            getTrqTransportedJson($(this).attr('data-ticket'), $(this).attr('data-status_lqa'), $(this).attr('data-status_lpr'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var transid = $(this).attr('data-transportid');
@@ -880,7 +920,7 @@
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="transid"]').val(transid);
-            $form.find('textarea[name="transno"]').val(transno);
+            $form.find('input[name="transno"]').val(transno);
             $form.find('input[name="viewsendlqa"]').val(lqa);
             $form.find('input[name="viewsendlpr"]').val(lpr);
             $form.find('input[name="sendlqa"]').val(status_lqa);
@@ -1128,6 +1168,60 @@
             })
         });
 
+        $(document).on('click', '.rejectBtn', function() {
+            var ticketno = $('#modal-transport-approve form[name="transport-approve"] input[name="ticketno"]').val();
+            var remark = $('#modal-transport-approve form[name="transport-approve"] input[name="remark"]').val();
+            var transportid = $('#modal-transport-approve form[name="transport-approve"] select[name="data_transportid[]"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "/reject/transport",
+                data: {
+                    'ticketno' : ticketno, 
+                    'data_transportid' : transportid,
+                    'remark' : remark,
+                    'status' : 'APPROVE'
+                },
+                success: function(response){ 
+                    // console.log(response);
+                    window.location=response.url;
+                    $(this).attr('disabled', true);
+                    $(this).text("Loading ...");
+                    alert(response.message);
+             
+                }
+            });
+        })
+
+        $(document).on('click', '.rejectBtnTransported', function() {
+            var ticketno = $('#modal-transported form[name="transport-transported"] input[name="ticketno"]').val();
+            var remark = $('#modal-transported form[name="transport-transported"] input[name="remark"]').val();
+            var transportid = $('#modal-transported form[name="transport-transported"] select[name="data_transportid[]"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "/reject/transport",
+                data: {
+                    'ticketno' : ticketno, 
+                    'data_transportid' : transportid,
+                    'remark' : remark,
+                    'status' : 'TRANSPORTED'
+                },
+                success: function(response){ 
+                    console.log(response);
+                    window.location=response.url;
+                    $(this).attr('disabled', true);
+                    $(this).text("Loading ...");
+                    alert(response.message);
+             
+                }
+            });
+        })
+
         $(document).ready(function () {
             $(document).ajaxStart(function () {
                 $("#loadings").show();
@@ -1189,30 +1283,6 @@
                 },
             });
         })
-
-        // $(document).on('click', '.upload', function() {
-        //     var upload = $('#modal-view-user input[name="upload"]').val();
-         
-        //     $.ajax({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         type: 'POST',
-        //         url: "/download/file",
-        //         data: {
-        //             'upload' : upload, 
-        //         },
-        //         success: function(response){ 
-        //             // console.log(response);
-        //             window.open(response);
-        //             // var blob = new Blob([response]);
-        //             // var link = document.createElement('a');
-        //             // link.href = window.URL.createObjectURL(blob);
-        //             // link.download = response;
-        //             // link.click();
-        //         }
-        //     });
-        // })
 
         $(document).ready(function () {
             $(document).ajaxStart(function () {
@@ -1500,6 +1570,300 @@
             })
         });
 
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loadings3").show();
+            }).ajaxStop(function () {
+                $("#loadings3").hide();
+            });
+        });
+        
+        $(document).on('click', '.btnhistoryapprove', function(e) {
+            var ticketno = $('#modal-transport-approve input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/historytrans",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                success: function(response) {
+                    // console.log(response["trq"])
+                    var showBtn = $("#btnhistoryapprove");
+                    var hideBtn = $("#btnhideapprove");
+                    showBtn.hide();
+                    hideBtn.show();
+                    var $viewHistory = $(' <div class="form-group"></div>');
+                    $.each(response["trq"], function(key, data) {
+                        if(data["LQA"] == 1 && data["LPR"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = 'LPR Requested';
+                        } else if(data["LQA"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = '';
+                        } else if (data["LPR"] == 1){
+                            lpr = 'LPR Requested';
+                            lqa = '';
+                        } else {
+                            lpr = '';
+                            lqa = '';
+                        }
+                        if(data["STATUSLQA"] == 1 && data["STATUSLPR"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = 'LPR Approved by';
+                        } else if(data["STATUSLQA"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = '';
+                        } else if (data["STATUSLPR"] == 1){
+                            applpr = 'LPR Approved by';
+                            applqa = '';
+                        } else {
+                            applpr = '';
+                            applqa = '';
+                        }
+
+                        if(data["STATUSTRANSLQA"] == 1 && data["STATUSTRANSLPR"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = 'LPR Transported by';
+                        } else if(data["STATUSTRANSLQA"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = '';
+                        } else if (data["STATUSTRANSLPR"] == 1){
+                            translpr = 'LPR Transported by';
+                            translqa = '';
+                        } else {
+                            translpr = '';
+                            translqa = '';
+                        }
+
+                        var $transid = "<br><br><label class=form-check-label style=color:black>" +data["TRANSID"]+ "</label>";
+                        var $date = "&nbsp;<label class=form-check-label style=font-size:13px>(" +data["DATE"]+")</label>";
+                        var $transno = "<b><textarea type=text class=form-control style=color:black disabled>" +data["TRANSNO"]+"</textarea></b>";
+                        if(lqa == '' && lpr == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else if(lqa == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        } else if (lpr == ''){
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else {
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        }
+                        if(applqa == '' && applpr == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else if(applqa == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
+                        } else if (applpr == ''){
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else {
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
+                        }
+                        if(translqa == '' && translpr == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else if(translqa == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
+                        } else if (translpr == ''){
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else {
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
+                        }
+                        $viewHistory.append($transid,$date,$transno,$sendlqa,$datelqa,$sendlpr,$datelpr,$approvelqa,$dateapprovelqa,$approvelpr,$dateapprovelpr,$transportedlqa,$datetransportedlqa,$transportedlpr,$datetransportedlpr);
+                    });
+                    
+                    $('#modal-transport-approve form[name="transport-approve"] span[name="listhistoryapprove"]').parent().html($viewHistory);
+                  
+                        
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
+
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $("#loadings4").show();
+            }).ajaxStop(function () {
+                $("#loadings4").hide();
+            });
+        });
+        
+        $(document).on('click', '.btnhistorytransported', function(e) {
+            var ticketno = $('#modal-transported input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "POST",
+                url: "/get/historytrans",
+                data: {
+                    'ticketno' : ticketno, 
+                },
+                success: function(response) {
+                    console.log(response["trq"])
+                    var showBtn = $("#btnhistorytransported");
+                    var hideBtn = $("#btnhidetransported");
+                    showBtn.hide();
+                    hideBtn.show();
+                    var $viewHistory = $(' <div class="form-group"></div>');
+                    $.each(response["trq"], function(key, data) {
+                        if(data["LQA"] == 1 && data["LPR"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = 'LPR Requested';
+                        } else if(data["LQA"] == 1){
+                            lqa = 'LQA Requested';
+                            lpr = '';
+                        } else if (data["LPR"] == 1){
+                            lpr = 'LPR Requested';
+                            lqa = '';
+                        } else {
+                            lpr = '';
+                            lqa = '';
+                        }
+                        if(data["STATUSLQA"] == 1 && data["STATUSLPR"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = 'LPR Approved by';
+                        } else if(data["STATUSLQA"] == 1){
+                            applqa = 'LQA Approved by';
+                            applpr = '';
+                        } else if (data["STATUSLPR"] == 1){
+                            applpr = 'LPR Approved by';
+                            applqa = '';
+                        } else {
+                            applpr = '';
+                            applqa = '';
+                        }
+
+                        if(data["STATUSTRANSLQA"] == 1 && data["STATUSTRANSLPR"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = 'LPR Transported by';
+                        } else if(data["STATUSTRANSLQA"] == 1){
+                            translqa = 'LQA Transported by';
+                            translpr = '';
+                        } else if (data["STATUSTRANSLPR"] == 1){
+                            translpr = 'LPR Transported by';
+                            translqa = '';
+                        } else {
+                            translpr = '';
+                            translqa = '';
+                        }
+
+                        var $transid = "<br><br><label class=form-check-label style=color:black>" +data["TRANSID"]+ "</label>";
+                        var $date = "&nbsp;<label class=form-check-label style=font-size:13px>(" +data["DATE"]+")</label>";
+                        var $transno = "<b><textarea type=text class=form-control style=color:black disabled>" +data["TRANSNO"]+"</textarea></b>";
+                        if(lqa == '' && lpr == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else if(lqa == ''){
+                            var $sendlqa = '';
+                            var $datelqa = '';
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        } else if (lpr == ''){
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = '';
+                            var $datelpr = '';
+                        } else {
+                            var $sendlqa = "<label class=form-check-label style=color:red>"+lqa+"</label>";
+                            var $datelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $sendlpr = "<br><label class=form-check-label style=color:red>"+lpr+"</label>";
+                            var $datelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                        }
+                        if(applqa == '' && applpr == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else if(applqa == ''){
+                            var $approvelqa = '';
+                            var $dateapprovelqa = '';
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
+                        } else if (applpr == ''){
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
+                            var $approvelpr = '';
+                            var $dateapprovelpr = '';
+                        } else {
+                            var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
+                            var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
+                        }
+                        if(translqa == '' && translpr == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else if(translqa == ''){
+                            var $transportedlqa = '';
+                            var $datetransportedlqa = '';
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
+                        } else if (translpr == ''){
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
+                            var $transportedlpr = '';
+                            var $datetransportedlpr = '';
+                        } else {
+                            var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
+                            var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
+                        }
+                        $viewHistory.append($transid,$date,$transno,$sendlqa,$datelqa,$sendlpr,$datelpr,$approvelqa,$dateapprovelqa,$approvelpr,$dateapprovelpr,$transportedlqa,$datetransportedlqa,$transportedlpr,$datetransportedlpr);
+                    });
+                    
+                    $('#modal-transported form[name="transport-transported"] span[name="listhistorytransported"]').parent().html($viewHistory);
+                  
+                        
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            })
+        });
+
         var table = $('#tiket_list').DataTable({
             scrollX: true,
             processing: true,
@@ -1658,22 +2022,88 @@
 			},
         });
         
-        /* close button reload */
+         /* hide button */
+         $(document).on('click', '.btnhidetrans', function() {
+            $("#history").load(" #history");
+            var showBtn = $("#btnhistorytrans");
+            var hideBtn = $("#btnhidetrans");
+            showBtn.show();
+            hideBtn.hide();
+        });
+
+        $(document).on('click', '.btnhidetrans1', function() {
+            $("#history1").load(" #history1");
+            var showBtn = $("#btnhistorytrans1");
+            var hideBtn = $("#btnhidetrans1");
+            showBtn.show();
+            hideBtn.hide();
+        });
+
+        $(document).on('click', '.btnhideapprove', function() {
+            $("#history3").load(" #history3");
+            var showBtn = $("#btnhistoryapprove");
+            var hideBtn = $("#btnhideapprove");
+            showBtn.show();
+            hideBtn.hide();
+        });
+
+        $(document).on('click', '.btnhidetransported', function() {
+            $("#history4").load(" #history4");
+            var showBtn = $("#btnhistorytransported");
+            var hideBtn = $("#btnhidetransported");
+            showBtn.show();
+            hideBtn.hide();
+        });
+        
+        /* End */
+
+         /* close button reload */
         $(document).on('click', '.close-btn2', function() {
-                    $("#comment1").load(" #comment1");
-                    $("#comment2").load(" #comment2");
+                $("#comment1").load(" #comment1");
+                $("#comment2").load(" #comment2");
         });
         $(document).on('click', '.close-btn', function() {
                 $("#comment1").load(" #comment1");
                 $("#comment2").load(" #comment2");
+                $('#approve-btn').prop('disabled', true);
         });
         $(document).on('click', '.close-btn2-trans', function() {
                 $("#history").load(" #history");
                 $("#history1").load(" #history1"); 
+                var showBtn = $("#btnhistorytrans1");
+                var hideBtn = $("#btnhidetrans1");
+                showBtn.show();
+                hideBtn.hide();
         });
         $(document).on('click', '.close-btn-trans', function() {
+            document.getElementById("transport").reset();
                 $("#history").load(" #history");
                 $("#history1").load(" #history1");
+                $('#approve-btn').prop('disabled', true);
+                var showBtn = $("#btnhistorytrans1");
+                var hideBtn = $("#btnhidetrans1");
+                showBtn.show();
+                hideBtn.hide();
+        });
+        $(document).on('click', '.close-btn-approve', function() {
+                $('#approve-btn').prop('disabled', true);
+                $('#reject-btn').prop('disabled', true);
+                document.getElementById("transport-approve").reset();
+                $("#history3").load(" #history3"); 
+                var showBtn = $("#btnhistoryapprove");
+                var hideBtn = $("#btnhideapprove");
+                showBtn.show();
+                hideBtn.hide();
+        });
+        $(document).on('click', '.close-btn-transported', function() {
+                $('#transported-btn').prop('disabled', true);
+                $('#transported-reject-btn').prop('disabled', true);
+                document.getElementById("transport-transported").reset();
+                $("#history4").load(" #history4"); 
+                var showBtn = $("#btnhistorytransported");
+                var hideBtn = $("#btnhidetransported");
+                showBtn.show();
+                hideBtn.hide();
         });
         /* end */
     });
@@ -1731,6 +2161,161 @@
             },
         })
     }
+
+    function getTrqCreate(ticketno) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "GET",
+            url: "/get/transportid/create",
+            data: {
+                'ticketno' : ticketno, 
+            },
+            success: function(response) {
+                console.log(response);
+                var $select_transportid = $('<select type="text" id="transportid" name="transportid" class="form-control input--style-6"></select>');
+                $.each(response, function(key, data) {
+                    var $options = "<option value='"+data["TRANSPORTID"]+"'>"+data["TRANSPORTID"]+"</option>";
+                    $select_transportid.append($options);
+                });
+                $('#modal-transport form[name="transport"] select[name="transportid"]').parent().html($select_transportid);
+                
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        })
+    }
+
+    function getTrqJson(ticketno,sendlqa,sendlpr) {
+        $(".approve-select2").select2({
+            placeholder: "Chose Transportid",
+            allowClear: true,
+            ajax: {
+                type:'GET',
+                url: '/get/transportid/approve',
+                delay: 250,
+                data: {
+                    'ticketno' : ticketno, 
+                    'sendlqa' : sendlqa,
+                    'sendlpr' : sendlpr
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    $('#approve-btn').prop('disabled', false);
+                    $('#reject-btn').prop('disabled', false);
+                    return {
+                        results:  $.map(data, function (item) {
+                            return {
+                                text: item.TRANSPORTID,
+                                id: item.TRANSPORTID,
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+    }
+
+    function getTrqTransportedJson(ticketno,sendlqa,sendlpr) {
+        $(".transport-select2").select2({
+            placeholder: "Chose Transportid",
+            allowClear: true,
+            ajax: {
+                type:'GET',
+                url: '/get/transportid/transported',
+                delay: 250,
+                data: {
+                    'ticketno' : ticketno, 
+                    'sendlqa' : sendlqa,
+                    'sendlpr' : sendlpr
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    $('#transported-btn').prop('disabled', false);
+                    $('#transported-reject-btn').prop('disabled', false);
+                    return {
+                        results:  $.map(data, function (item) {
+                            return {
+                                text: item.TRANSPORTID,
+                                id: item.TRANSPORTID,
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+    }
+</script>
+<script>
+    $(function() {
+        var form = $("#form");
+        var select = $("#system");
+        var hide1 = $("#module");
+        
+        hide1.hide();
+
+        select.change(function() {
+            value = $(this).find(":selected").val()
+            if (value == 'SAP') {
+                hide1.show();
+            } else {
+                hide1.hide();
+            }
+        });
+    });
+</script>
+<script>
+    $(function() {
+        var form = $("#transport");
+        var select = $("#opsi");
+        var hide1 = $("#transid");
+        var hide2 = $("#transnumb");
+
+        hide1.hide();
+        hide2.hide();
+
+        select.change(function() {
+            value = $(this).find(":selected").val()
+            if (value == 'exist') {
+                hide1.show();
+                hide2.hide();
+            } else if (value == 'new'){
+                hide1.hide();
+                hide2.show();
+            } else {
+                hide1.hide();
+                hide2.hide();
+            }
+        });
+    });
+</script>
+<script>
+    $(function() {
+        var form = $("#transport");
+        var checkedlqa = $("#lqa");
+        var checkedlpr = $("#lpr");
+
+
+        checkedlqa.change(function() {
+            if (checkedlqa.is(':checked')) {
+                $(this).attr("value", "true");
+            } else {
+                $(this).attr("value", "false");
+            }
+        });
+
+        checkedlpr.change(function() {
+            if (checkedlpr.is(':checked')) {
+                $(this).attr("value", "true");
+            } else {
+                $(this).attr("value", "false");
+            }
+        });
+    });
 </script>
 <script>
     var today = new Date();
@@ -1755,20 +2340,6 @@
     });
 }, 5000);
 </script>
-<!-- <script>
-     $('#document').ready(function(){
-        $('#close-btn').on('click', function(){
-            $("#comment1").load(" #comment1");
-            // $("#comment2").load(" #comment2");
-        });
-    });
-    $('#document').ready(function(){
-        $('#close-btn2').on('click', function(){    
-            $("#comment1").load(" #comment1"); 
-            // $("#comment2").load(" #comment2");
-        });
-    });
-</script> -->
 <script>
     $('.toast').toast('show');
 </script>
