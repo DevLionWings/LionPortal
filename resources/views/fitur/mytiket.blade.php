@@ -657,6 +657,7 @@
                     <div class="modal-body">
                         <input type="hidden" id="sendlqa" name="sendlqa">
                         <input type="hidden" id="sendlpr" name="sendlpr">
+                        <input type="hidden" id="transno" name="transno">
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
                             <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>

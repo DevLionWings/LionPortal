@@ -40,10 +40,10 @@ class TransportController extends Controller
         }
         $emailSendTo = $dataUser->usermail;
         $emailNameSendTo = $dataUser->username;
-
+      
         /* Checked Transport Number*/
         if($request->opsi == "exist"){
-            $transid = $request->data_transportid;
+            $transid = $request->transportid;
             /* IF Existing Get data transport id */
             $existing = DB::connection('pgsql')->table('helpdesk.t_transport')
                 ->where('transportid', $transid)
@@ -61,7 +61,7 @@ class TransportController extends Controller
             $transno = "";
         }
         /* End */
-
+        
         /* Checked Opsi Transport */
         if(empty($request->lqa) && empty($request->lpr)){
             return redirect()->back()->with("error", "please checked checkbox");
@@ -98,7 +98,7 @@ class TransportController extends Controller
                 'last_number' => $last
         ]);
         /* End */
-
+       
         /* Insert Transport to DB */
         $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
             'transportid' => $transportId,
@@ -112,7 +112,7 @@ class TransportController extends Controller
         ]);
         /* End */
         /* Send Email */
-        $transportId = implode(",", $datatrq);
+        // $transportId = implode(",", $datatrq);
         $status = "REQUEST";
         $remark = 'Request Transport';
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
