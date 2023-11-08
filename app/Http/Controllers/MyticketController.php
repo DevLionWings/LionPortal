@@ -225,6 +225,7 @@ class MyticketController extends Controller
 
         } else {
             $data = []; 
+            $json = ["total" => 0];
         }   
         $resp = json_encode($data);
         
