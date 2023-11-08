@@ -59,7 +59,6 @@ class AbsensiController extends Controller
         }
         
         return DataTables::of($data)
-            ->addIndexColumn()
             ->setTotalRecords($json["total"])
             ->setFilteredRecords($json["total"])
             ->make(true);

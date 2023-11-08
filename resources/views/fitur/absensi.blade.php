@@ -290,16 +290,16 @@
                 },
             },
             columns: [
-                {
-                    // data: 'id',
-                    // render: function(data){
-                    //     if(data != null){
-                    //         return '';
-                    //     } else {
-                    //         return '';
-                    //     }
-                    // }
-                },
+                // {
+                //     data: 'id',
+                //     render: function(data){
+                //         if(data != null){
+                //             return '';
+                //         } else {
+                //             return '';
+                //         }
+                //     }
+                // },
                 {
                     data: 'id',
                     name: 'id'
