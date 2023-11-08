@@ -112,7 +112,10 @@ class TransportController extends Controller
         ]);
         /* End */
         /* Send Email */
-        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo);
+        $transportId = implode(",", $datatrq);
+        $status = "REQUEST";
+        $remark = 'Request Transport';
+        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
         if($insert == true){

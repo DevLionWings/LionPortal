@@ -68,7 +68,6 @@
                                             <table id="dataabsen" class="table table-bordered table-hover display nowrap" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th></th>
                                                         <th>ID</th>
                                                         <th>Name</th>
                                                         <th>Date</th>
