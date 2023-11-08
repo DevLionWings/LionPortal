@@ -71,7 +71,6 @@ class Repository
         // $start_date = "2023-06-01";
         // $end_date = "2023-06-19";
         $datenow = date('Y-m-d');
-
         $datauser = DB::connection('pgsql')->table('master_data.m_user')
                     ->where('mgrid', $userid)
                     ->orWhere('userid', $userid)
@@ -85,18 +84,15 @@ class Repository
         if ($roleid == 'RD006' || $roleid == 'RD002'){
             $arr_user = array();
             foreach($dat_arr as $key => $value){
-                array_push($arr_user, [
-                    substr($value->userid, 2),
-                ]);
+                array_push($arr_user, $value->userid);
             };
         } else {
             $arr_user = array(
-                $id
+                $userid
             );
         }
         
-        
-        if(DB::connection('pgsql')->table('absensi.kartuabsensi')->where('id', $id)->exists()){
+        if(DB::connection('pgsql')->table('absensi.kartuabsensi')->where('id', $userid)->exists()){
             if ($start_date == $datenow && $end_date == $datenow){
                 $count = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
@@ -112,7 +108,7 @@ class Repository
                     ->orderBy('tgl', 'desc')
                     ->limit(10)
                     ->simplePaginate($count);
-              
+                
                 if($data->isNotEmpty()){
                     $response = array(
                         'rc' => '00',
@@ -163,7 +159,7 @@ class Repository
         } else {
             $response = array(
                 'rc' => '01',
-                'msg' => 'failed',
+                'msg' => 'failed1',
                 'data' => [],
                 'total' => []
             );
