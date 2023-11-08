@@ -576,8 +576,8 @@ class MeetingroomController extends Controller
                 ->where('c.enddate', '<=', $maxDate);
             })
             ->where('c.enddate', '>=', $date)
-            ->where('b.starttime', '>=', $request->starttime)
-            ->where('b.endtime', '<=', $request->endtime)
+            ->where('c.starttime', '>=', $request->starttime)
+            ->where('c.endtime', '<=', $request->endtime)
             ->distinct('c.roomid', 'a.roomname')
             ->get();
 
