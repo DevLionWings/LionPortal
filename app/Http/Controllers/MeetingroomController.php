@@ -539,7 +539,7 @@ class MeetingroomController extends Controller
             ->where('b.endtime', '<=', $request->endtime)
             ->distinct('c.roomid', 'a.roomname')
             ->get();
-
+        
         $minDate =  DB::connection('pgsql')->table('meeting.t_booking')
                     ->where('status', 1)
                     ->where('enddate', '>=', $date)
@@ -553,6 +553,12 @@ class MeetingroomController extends Controller
         if($minDate == null && $maxDate == null){
             $minDate = $date;
             $maxDate = $date;
+        } else if ($request->startdate < $minDate && $request->enddate < $maxDate){
+            $minDate = $request->startdate;
+            $maxDate = $request->enddate;
+        } else if ($request->startdate > $minDate && $request->enddate > $minDate){
+            $minDate = $request->startdate;
+            $maxDate = $request->enddate;
         } else if ($request->startdate > $minDate && $request->enddate > $maxDate){
             $minDate = $request->startdate;
             $maxDate = $request->enddate;
@@ -560,7 +566,7 @@ class MeetingroomController extends Controller
             $minDate = $minDate;
             $maxDate = $maxDate;
         }
-       
+     
         $isValidRoom2 = DB::connection('pgsql')->table('master_data.m_meeting_room as a')
             ->join('master_data.m_meeting_time as b', 'a.timeid', '=', 'b.timeid')
             ->join('meeting.t_booking as c', function($q){
@@ -575,12 +581,11 @@ class MeetingroomController extends Controller
                 $q->where('c.startdate', '>=', $minDate)
                 ->where('c.enddate', '<=', $maxDate);
             })
-            ->where('c.enddate', '>=', $date)
             ->where('c.starttime', '>=', $request->starttime)
             ->where('c.endtime', '<=', $request->endtime)
             ->distinct('c.roomid', 'a.roomname')
             ->get();
-
+     
         $arr_isvalid = [];
         foreach($isValidRoom as $valid){
             array_push($arr_isvalid, $valid->roomid);

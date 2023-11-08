@@ -190,7 +190,7 @@
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" required></textarea>
                         </div> 
                         <div class="form-group">
-                            <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
+                            <button type="button" id="btn-room" name="btn-room" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
                             <div id="loadings">
                                 Loading...
                             </div>
@@ -723,6 +723,7 @@ function Initialize()
                         $('#modal-booked-user form[name="book-user"]').html($select_room_avail);  
                         $('#modal-booked-user form[name="book-user"]').html($select_room_book);
                         $('#book-btn').prop('disabled', false);  
+                        $('#btn-room').prop('disabled', true);
                         Initialize();
                     },
                     error: function (error) {
@@ -742,6 +743,7 @@ function Initialize()
             $("#hideroom").load(" #hideroom");
             $("#hideroombooked").load(" #hideroombooked");
             $('#book-btn').prop('disabled', true);
+            $('#btn-room').prop('disabled', false);
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
             var hide3 = $("#hidedate");
@@ -755,6 +757,8 @@ function Initialize()
             $("#starttime").val('').trigger('change');
             $("#endtime").val('').trigger('change');
             $("#hideroom").load(" #hideroom");
+            $('#btn-room').prop('disabled', false);
+            $('#book-btn').prop('disabled', true); 
             $("#hideroombooked").load(" #hideroombooked");
             var hide1 = $("#hideroom");
             var hide2 = $("#hideroombooked");
@@ -766,6 +770,8 @@ function Initialize()
 <script type="text/javascript">
     function myFunction(e) {
         Initialize();
+        $('#book-btn').prop('disabled', true); 
+        $('#btn-room').prop('disabled', false);
         $("#hideroom").load(" #hideroom");
         $("#hideroombooked").load(" #hideroombooked");
         var hide1 = $("#hideroom");

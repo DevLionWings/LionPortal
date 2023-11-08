@@ -289,7 +289,7 @@
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50"></textarea>
                         </div> 
                         <div class="form-group">
-                            <button type="button" id="btnroom" name="btnroom" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
+                            <button type="button" id="btn-room" name="btn-room" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
                             <div id="loadings">
                                 Loading...
                             </div>
@@ -956,6 +956,7 @@
                         $('#modal-booked-user form[name="book-user"]').html($select_room_avail);  
                         $('#modal-booked-user form[name="book-user"]').html($select_room_book);
                         $('#book-btn').prop('disabled', false);
+                        $('#btn-room').prop('disabled', true);
                         Initialize();
                     },
                     error: function (error) {
@@ -1044,6 +1045,7 @@
 
         $(document).on('click', '.btnclose', function(e) {
             document.getElementById("booked-user").reset();
+            $('#btnroom').prop('disabled', false);
             $('#startdate').datepicker( 'setDate', date );
             var startdate = $('#modal-booked-user input[name="startdate"]').val();
             $('#enddate').datepicker( 'setDate', startdate );
@@ -1068,6 +1070,7 @@
         $(document).on('click', '.btndate', function(e) {
             $("#starttime").val('').trigger('change');
             $("#endtime").val('').trigger('change');
+            $('#btn-room').prop('disabled', false);
             // $("#hideroom").load(" #hideroom");
             // $("#hideroombooked").load(" #hideroombooked"); 
             var hide1 = $("#hideroom");
@@ -1107,6 +1110,7 @@
 <script>
     function myFunction(e) {
         Initialize();
+        $('#btn-room').prop('disabled', false);
         $("#hideroom").load(" #hideroom");
         $("#hideroombooked").load(" #hideroombooked");
         var hide1 = $("#hideroom");
@@ -1117,6 +1121,7 @@
 
     function myFunction1(e) {
         Initialize();
+        $('#btn-room').prop('disabled', false);
         $("#hideroomedit").load(" #hideroomedit");
         $("#hideroombookededit").load(" #hideroombookededit");
         var hide3 = $("#hideroomedit");
