@@ -687,7 +687,7 @@
                         <button type="button" class="close-btn-transported btn btn-default" data-dismiss="modal">Close</button>
                         <div class="justify-content-between">
                             <button type="button" id ="transported-reject-btn" name ="transported-reject-btn" class="rejectBtnTransported btn btn-danger">Reject</button>
-                            <button type="button" id ="transported-btn" name ="transported-btn" class="btn btn-primary" >Transported</button>
+                            <button type="button" id ="transported-btn" name ="transported-btn" class="btn btn-success" >Transported</button>
                         </div>
                     </div>
                 </form>
