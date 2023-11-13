@@ -82,7 +82,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">View Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" id=close-btn aria-label="Close">
+                    <button type="button" class="close-btn close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -120,28 +120,28 @@
                             </div>
                             <div class="col-md-6"> 
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="objectid" disabled>Object Type :</label>
-                                    <input type="text" name="objectid" class="form-control" id="objectid" readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-check-label" for="moduleid" disabled>Module :</label>
-                            <input type="text" name="moduleid" class="form-control" id="moduleid" readonly>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6"> 
-                                <div class="mb-3">
                                     <label class="form-check-label" for="category" disabled>Category :</label>
                                     <input type="text" name="category" class="form-control" id="category" readonly>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <label class="form-check-label" for="priority" disabled>Priority :</label>
                                     <input type="text" name="priority" class="form-control" id="priority" readonly>
                                 </div>
                             </div>
+                            <div class="col-md-6"> 
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="objectid" disabled>Object Type :</label>
+                                    <input type="text" name="objectid" class="form-control" id="objectid" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="modulehide">
+                            <label class="form-check-label" for="moduleid" disabled>Module :</label>
+                            <input type="text" name="moduleid" class="form-control" id="moduleid" readonly>
                         </div>
                         <div class="form-group">
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
@@ -220,35 +220,43 @@
                         </div>
                         <hr />
                         <!-- <label class="form-check-label">Display Comment :</label> -->
+                        
                         <h4 class="modal-title">Activity :</h4>
                         <div class="form-group" id="hidecmnt">
+                            <!-- <label class="form-check-label" for="comment_body" disabled></label> -->
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body" placeholder="Write a comment..."></textarea>
                             <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs">Save</button>
                         </div>
                         <!-- <div class="form-group">
                             <input type="file" name="filecomment" id="filecomment" class="form-control">
                         </div> -->
+                        <!-- <div class="form-group" >
+                            <input type="text" name="countcomment" id="countcomment" class="modal-input" readonly>
+                        </div>
+                        <div class="form-group" >
+                            <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
+                        </div> -->
                         <div class="row">
-                            <div class="col-md-3"> 
+                            <div class="col-3"> 
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> Show Details</button>
                                 <div id="loadings">
                                     Loading...
                                 </div>
                             </div>
-                            <div class="col-md-1" id="comment2"> 
+                            <div class="col-1" id="comment2"> 
                                 <span type="text" name="countcomment" id="countcomment" class="modal-input" readonly></span>
                             </div>
                         </div>
                         <div class="form-group" id="comment1">
                             <span type="text" name="comment" id="comment" class="modal-input" readonly></span>
                         </div>   
-                    </div>   
-                    <hr /> 
+                    </div>
+                    <hr />
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <button type="button" id=close-btn2 class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="close-btn2 btn btn-default" data-dismiss="modal">Close</button>
                         </div>
-                    </div>  
+                    </div>   
                 </form>
                 <!-- <div class="modal-body">
                     <div class="form-group">
@@ -776,36 +784,6 @@
         $('#reject-btn').prop('disabled', true);
         $('#transported-reject-btn').prop('disabled', true);
 
-        // $('#save-btn').on('click', function () {
-        //     // console.log("clicked");
-        //     var $inputs = $('modal-add-ticket form[name="ticket"] :input');
-        //     $inputs.each(function () {
-        //         if ($(this).attr('type') !== "button" && $(this).attr('type') !== undefined) {
-        //             if ($(this).val() === "") {
-        //                 if ($(this).attr('name') === "category") {
-        //                     $(this).parent().parent().parent().append(
-        //                         '<span class="text-danger">Invalid input</span>');
-        //                 } else {
-        //                     $(this).parent().append(
-        //                         '<span class="text-danger">Invalid input</span>');
-        //                 }
-        //                 $(this).addClass('is-invalid');
-        //             } else {
-        //                 $(this).removeClass('is-invalid');
-        //                 if ($(this).attr('name') === "subject") {
-        //                     $(this).parent().parent().parent().children("span").remove();
-        //                 } else {
-        //                     $(this).parent().children("span").remove();
-        //                 }
-        //             }
-        //         }
-        //     });
-        //     var $form_valid = $('form[name="ticket"] :input.is-invalid');
-        //     if ($form_valid.length === 0) {
-        //         $('form[name="ticket"]').submit();
-        //     }
-        // });
-
         $(document).on('click', '.trans', function() {
             // $("#history").load(" #history"); 
             $('#modal-transport').modal({backdrop: 'static', keyboard: false})
@@ -955,8 +933,10 @@
             var approvedate  = $(this).attr('data-approvedby1');
             var approveitdate  = $(this).attr('data-approvedbyit');
             var systemid  = $(this).attr('data-systemid');
+            var systemname  = $(this).attr('data-systemname');
             var moduleid  = $(this).attr('data-moduleid');
             var objectid  = $(this).attr('data-objectid');
+            var objectname  = $(this).attr('data-objectname');
             var upload  = $(this).attr('data-upload');
             var createdon  = $(this).attr('data-createdon');
             var $modal = $('#modal-view-user');
@@ -965,6 +945,12 @@
             hide.show();
             if(statusid == 'SD003'){
                 hide.hide();
+            }
+          
+            var modulehide = $("#modulehide");
+            modulehide.show();
+            if(moduleid == ''){
+                modulehide.hide();
             }
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
@@ -989,7 +975,7 @@
             $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="systemid"]').val(systemid);
             $form.find('input[name="moduleid"]').val(moduleid);
-            $form.find('input[name="objectid"]').val(objectid);
+            $form.find('input[name="objectid"]').val(objectname);
             $form.find('input[name="upload"]').val(upload);
             $form.find('input[name="createdon"]').val(createdon);
             $modal.modal('show');
@@ -1895,7 +1881,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -2324,7 +2310,7 @@
     var month  = (today.getMonth() + 1) + "";
     var year = today.getFullYear() + "";
 
-    var date = day + "-" + month + "-" + year;
+    var date = year + "-" + month + "-" + day;
 
     var optSimple = {
         dateFormat: 'yy-mm-dd',

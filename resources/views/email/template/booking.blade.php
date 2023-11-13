@@ -36,7 +36,7 @@ Room Meeting
 
 @section('content')
 
-<p>{{ $mailData['bookingbyname'] }} detail your booking room  : </p>
+<p>Hi, {{ $mailData['bookingbyname'] }} detail your booking room  : </p>
 
 <table style="text-align: left;">
     <tr>
@@ -47,37 +47,33 @@ Room Meeting
         <td style="text-align: left;">Room Meeting</td>
         <td>:&nbsp;&nbsp;{{ $mailData['room'] }}</td>
     </tr>
-    @if($mailData['bookid'] != 'Canceled')
     <tr>
         <td style="vertical-align:top;">Subject</td>
         <td>:&nbsp;&nbsp;{{ $mailData['subject'] }}</td>
     </tr>
-    @endif
     <tr>
         <td style="vertical-align:top;">Description</td>
         <td>:&nbsp;&nbsp;{{ $mailData['desc'] }}</td>
     </tr>
-    @if($mailData['bookid'] != 'Canceled')
     <tr>
         <td style="vertical-align:top;">Date</td>
-        <td>:&nbsp;&nbsp;{{ $mailData['date'] }}</td>
+        <td>:&nbsp;&nbsp;{{ $mailData['startdate'] }} - {{ $mailData['enddate'] }}</td>
     </tr>
-    @endif
-    @if($mailData['bookid'] != 'Canceled')
     <tr>
-        <td style="vertical-align:top;">Start Time</td>
-        <td>:&nbsp;&nbsp;{{ $mailData['starttime'] }}</td>
+        <td style="vertical-align:top;">Time</td>
+        <td>:&nbsp;&nbsp;{{ $mailData['starttime'] }} - {{ $mailData['endtime'] }}</td>
     </tr>
-    @endif
-    @if($mailData['bookid'] != 'Canceled')
-    <tr>
-        <td style="vertical-align:top;">End Time</td>
-        <td>:&nbsp;&nbsp;{{ $mailData['endtime'] }}</td>
-    </tr>
-    @endif
     <tr>
         <td style="text-align: left;">Booking Name</td>
         <td>:&nbsp;&nbsp;{{ $mailData['bookingname'] }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Repeat</td>
+        <td>:&nbsp;&nbsp;{{ $mailData['repeat'] }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Status</td>
+        <td>:&nbsp;&nbsp;{{ $mailData['status'] }}</td>
     </tr>
 </table>
 

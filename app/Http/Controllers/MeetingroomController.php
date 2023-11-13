@@ -13,6 +13,7 @@ use App\Models\Meetingroom;
 use App\Models\Bookroom;
 use App\Models\Meetingtime;
 use App\Models\Counter;
+use Carbon\Carbon;
 use DataTables;
 
 class MeetingroomController extends Controller
@@ -124,16 +125,14 @@ class MeetingroomController extends Controller
         ->addColumn('action', function($row){
             $datenow = date('Y-m-d');
             $datetime = date('H:i:s');
-            // $editBtn = '<a href="javascript:void(0)" class="edit btn btn-warning btn-sm" 
-            // data-roomid="'.$row["roomid"].'"><i class="fas fa-edit"></i></a>';
-            // $availBtn = '<a href="javascript:void(0)" class="avail btn btn-success btn-sm" 
-            // data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'">Available</i></a>';
+
             $cancelBtn = '<a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
-            data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'">Cancel</a>';
+            data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'" data-subject="'.$row["subject"].'" data-description="'.$row["description"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
+            data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'">Cancel</a>';
 
             $editBtn = ' <a href="javascript:void(0)" class="edit btn btn-success btn-sm" 
             data-roomid="'.$row["roomid"].'" data-userid="'.$row["userid"].'" data-bookid="'.$row["bookid"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
-            data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'"><i class="fas fa-edit"></i></a>';
+            data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'" data-subject="'.$row["subject"].'" data-description="'.$row["description"].'"><i class="fas fa-edit"></i></a>';
             if($row["statusroom"] == '1'){
                 return $cancelBtn. $editBtn;
             }
@@ -291,14 +290,17 @@ class MeetingroomController extends Controller
         $assignNameBook = Session::get('username');
         $assignNameBookBy = $dataEmailBookedBy->username;
         $emailBookBy = $dataEmailBookedBy->usermail;
-        $newBookId = $request->bookid.'[Change Room]';
-        $subject = '';
-        $desc = 'Range Date : '.$request->startdate1. '-'. $request->enddate1;
-        $date = date('Y-m-d H:i:s');
+        $newBookId = $request->bookid;
+        $subject = $request->subject;
+        $desc = $request->description;
+        $startdate = $request->startdate1;
+        $enddate = $request->enddate1;
         $starttime = $request->starttime1;
         $endtime = $request->endtime1;
+        $repeat = '-';
+        $status = 'Changes';
        
-        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName);
+        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $startdate, $enddate, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName, $repeat, $status);
         /* End */
     
         if($update == true){
@@ -392,15 +394,14 @@ class MeetingroomController extends Controller
         ->addColumn('action', function($row){
             $datenow = date('Y-m-d');
             $userid = Session::get('userid');
-            // $bookBtn = '<a href="javascript:void(0)" class="book btn btn-danger btn-sm" 
-            // data-roomid="'.$row["roomid"].'">Booking</i></a>';
            
             $viewBtn = '<a href="javascript:void(0)" class="view btn btn-secondary btn-sm" 
             data-roomname="'.$row["roomname"].'"  data-bookid="'.$row["bookid"].'" data-subject="'.$row["subject"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
             data-description="'.$row["description"].'" data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-
-            $cancelBtn = ' <a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
-            data-roomid="'.$row["roomid"].'"  data-bookid="'.$row["bookid"].'">Cancel</i></a>';
+            
+            $cancelBtn = '<a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
+            data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'" data-subject="'.$row["subject"].'" data-description="'.$row["description"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
+            data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'">Cancel</a>';
            
             if($row["statusroom"] == '1' && $row["userid"] == $userid){
                 return  $viewBtn. $cancelBtn;
@@ -436,7 +437,8 @@ class MeetingroomController extends Controller
         }
         $subject = $request->subject;
         $desc = $request->detail;
-        $date = $request->startdate;
+        $startdate = $request->startdate;
+        $enddate = $request->enddate;
         $starttime = $request->starttime;
         $endtime = $request->endtime;
 
@@ -465,46 +467,176 @@ class MeetingroomController extends Controller
         $newRoomId = $subs1.$newInt;
         /* End */
 
-        /* Generate Bookid Id */
-        $year = date("Y");
-        $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT004')->where('period', $year)->first();
+        if($request->repeat == 'daily'){
+            $repeat = 'Daily';
+            $monthdayenddate = date('m-d', strtotime($request->enddate));
+            $trimdate = '9999'.'-'.$monthdayenddate;
+            $enddate = date('Y-m-d', strtotime($trimdate));
+            /* Generate Bookid Id */
+            $year = date("Y");
+            $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT004')->where('period', $year)->first();
 
-        $subs1 = 'BM';
-        $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
-        $newBookId = $subs1.$subs2;
+            $subs1 = 'BM';
+            $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
+            $newBookId = $subs1.$subs2;
 
-        $last = $dataPrefix->last_number + 1;
-        $update = DB::connection('pgsql')->table('master_data.m_counter')
-            ->where('counterid', 'CT004')
-            ->where('period', $year)
-            ->update([
-                'last_number' => $last
-        ]);
-        /* End */
-        
-        $insert = DB::connection('pgsql')->table('meeting.t_booking')->insert([
-            'bookid' => $newBookId,
-            'userid' => $userid,
-            'username' => $username,
-            'roomid' => $dataRoom->roomid,
-            'subject' => $request->subject,
-            'description' => $request->detail,
-            'startdate' => $request->startdate,
-            'enddate' => $request->enddate,
-            'starttime' => $request->starttime,
-            'endtime' => $request->endtime,
-            'status' => 1,
-            'bookedon' => date('Y-m-d H:i:s'),
-            'bookedby' => $bookedby
-        ]);
+            $last = $dataPrefix->last_number + 1;
+            $update = DB::connection('pgsql')->table('master_data.m_counter')
+                ->where('counterid', 'CT004')
+                ->where('period', $year)
+                ->update([
+                    'last_number' => $last
+            ]);
+            /* End */
+            
+            $insert = DB::connection('pgsql')->table('meeting.t_booking')->insert([
+                'bookid' => $newBookId,
+                'userid' => $userid,
+                'username' => $username,
+                'roomid' => $dataRoom->roomid,
+                'subject' => $request->subject,
+                'description' => $request->detail,
+                'startdate' => $request->startdate,
+                'enddate' => $enddate,
+                'starttime' => $request->starttime,
+                'endtime' => $request->endtime,
+                'status' => 1,
+                'bookedon' => date('Y-m-d H:i:s'),
+                'bookedby' => $bookedby
+            ]);
+        } else if($request->repeat == 'weekly'){
+            $repeat = 'Weekly';
+            $year =  date('Y');
+            $nextYear = date('Y', strtotime($request->startdate));
+            $startdateWeek =  $request->startdate;
+            $enddateWeek = $request->enddate;
+            while ($nextYear == $year){           
+                /* Generate Bookid Id */
+                $year = date("Y");
+                $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT004')->where('period', $year)->first();
 
+                $subs1 = 'BM';
+                $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
+                $newBookId = $subs1.$subs2;
+
+                $last = $dataPrefix->last_number + 1;
+                $update = DB::connection('pgsql')->table('master_data.m_counter')
+                    ->where('counterid', 'CT004')
+                    ->where('period', $year)
+                    ->update([
+                        'last_number' => $last
+                ]);
+                /* End */
+
+                $insert = DB::connection('pgsql')->table('meeting.t_booking')->insert([
+                    'bookid' => $newBookId,
+                    'userid' => $userid,
+                    'username' => $username,
+                    'roomid' => $dataRoom->roomid,
+                    'subject' => $request->subject,
+                    'description' => $request->detail,
+                    'startdate' => $startdateWeek,
+                    'enddate' => $enddateWeek,
+                    'starttime' => $request->starttime,
+                    'endtime' => $request->endtime,
+                    'status' => 1,
+                    'bookedon' => date('Y-m-d H:i:s'),
+                    'bookedby' => $bookedby
+                ]);
+
+                $startdateWeek = date('Y-m-d', strtotime("+1 week", strtotime($startdateWeek)));
+                $enddateWeek = date('Y-m-d', strtotime("+1 week", strtotime($enddateWeek)));
+                $nextYear = date('Y', strtotime($startdateWeek));
+            }
+           
+        } else if($request->repeat == 'monthly'){
+            $repeat = 'Monthly';
+            $year =  date('Y');
+            $nextYear = date('Y', strtotime($request->startdate));
+            $startdateMonth =  $request->startdate;
+            $enddateMonth = $request->enddate;
+            while ($nextYear == $year){ 
+                /* Generate Bookid Id */
+                $year = date("Y");
+                $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT004')->where('period', $year)->first();
+
+                $subs1 = 'BM';
+                $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
+                $newBookId = $subs1.$subs2;
+
+                $last = $dataPrefix->last_number + 1;
+                $update = DB::connection('pgsql')->table('master_data.m_counter')
+                    ->where('counterid', 'CT004')
+                    ->where('period', $year)
+                    ->update([
+                        'last_number' => $last
+                ]);
+                /* End */
+
+                $insert = DB::connection('pgsql')->table('meeting.t_booking')->insert([
+                    'bookid' => $newBookId,
+                    'userid' => $userid,
+                    'username' => $username,
+                    'roomid' => $dataRoom->roomid,
+                    'subject' => $request->subject,
+                    'description' => $request->detail,
+                    'startdate' => $startdateMonth,
+                    'enddate' => $enddateMonth,
+                    'starttime' => $request->starttime,
+                    'endtime' => $request->endtime,
+                    'status' => 1,
+                    'bookedon' => date('Y-m-d H:i:s'),
+                    'bookedby' => $bookedby
+                ]);
+
+                $startdateMonth = date('Y-m-d', strtotime("+1 month", strtotime($startdateMonth)));
+                $enddateMonth = date('Y-m-d', strtotime("+1 month", strtotime($enddateMonth)));
+                $nextYear = date('Y', strtotime($startdateMonth));
+            }
+        } else {
+            $repeat = 'No';
+            /* Generate Bookid Id */
+            $year = date("Y");
+            $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT004')->where('period', $year)->first();
+
+            $subs1 = 'BM';
+            $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
+            $newBookId = $subs1.$subs2;
+
+            $last = $dataPrefix->last_number + 1;
+            $update = DB::connection('pgsql')->table('master_data.m_counter')
+                ->where('counterid', 'CT004')
+                ->where('period', $year)
+                ->update([
+                    'last_number' => $last
+            ]);
+            /* End */
+
+            $insert = DB::connection('pgsql')->table('meeting.t_booking')->insert([
+                'bookid' => $newBookId,
+                'userid' => $userid,
+                'username' => $username,
+                'roomid' => $dataRoom->roomid,
+                'subject' => $request->subject,
+                'description' => $request->detail,
+                'startdate' => $request->startdate,
+                'enddate' => $request->enddate,
+                'starttime' => $request->starttime,
+                'endtime' => $request->endtime,
+                'status' => 1,
+                'bookedon' => date('Y-m-d H:i:s'),
+                'bookedby' => $bookedby
+            ]);
+        }
+    
         /* Send Notif Email Receipt Booking */
         $emailBook = Session::get('usermail');
         $assignNameBook = Session::get('username');
         $assignNameBookBy = $dataEmailBookedBy->username;
         $emailBookBy = $dataEmailBookedBy->usermail;
         $roomName = $dataRoom->roomname;
-        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName);
+        $status = 'Booked';
+        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $startdate, $enddate, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName, $repeat, $status);
         /* End */
         
        
@@ -634,14 +766,17 @@ class MeetingroomController extends Controller
         $assignNameBook = Session::get('username');
         $assignNameBookBy = $dataEmailBookedBy->username;
         $emailBookBy = $dataEmailBookedBy->usermail;
-        $newBookId = 'Canceled';
-        $subject = '';
+        $newBookId = $request->bookid;
+        $subject = $request->subject;
         $desc = $request->desc.' ('.date('Y-m-d H:i:s').')';
-        $date = '';
-        $starttime = '';
-        $endtime = '';
+        $startdate = $request->startdate;
+        $enddate = $request->enddate;
+        $starttime = $request->starttime;
+        $endtime = $request->endtime;
         $roomName = $dataRoom->roomname;
-        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName);
+        $repeat = '-';
+        $status = 'Canceled';
+        $SendMail = $this->mail->SENDMAILBOOKROOM($newBookId, $subject, $desc, $startdate, $enddate, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName, $repeat, $status);
         /* End */
 
         if($update == true){

@@ -218,6 +218,7 @@ class MyticketController extends Controller
                     "systemid" => trim($value['systemid']),
                     "moduleid" => trim($value['moduleid']),
                     "objectid" => trim($value['objectid']),
+                    "objectname" => trim($value['objectname']),
                     "systemname" => trim($value['systemname']),
                 ]);
             }
@@ -265,7 +266,7 @@ class MyticketController extends Controller
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
-                data-objectid="'.$row["objectid"].'"  data-createdon="'.$row["createdon"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                data-objectid="'.$row["objectid"].'"  data-objectname="'.$row["objectname"].'" data-createdon="'.$row["createdon"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $updateBtn = ' <a href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-categoryid="'.$row["categoryid"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 

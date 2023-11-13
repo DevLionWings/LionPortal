@@ -186,6 +186,18 @@
                             </div>
                         </div>  
                         <div class="form-group">
+                            <!-- <label class="form-check-label">Pilihan Repeat :</label> -->
+                            <div class="input-group value">
+                                <select id="repeat" name="repeat" class="form-control" style="width: 100%;">
+                                    <option value="not">Not Repeat</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="anuallly">Anually</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="form-check-label" for="detail" disabled>Description :</label>
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" required></textarea>
                         </div> 
@@ -295,6 +307,12 @@
                     @csrf
                     <input type="hidden" id="roomAvail" name="roomAvail"/>
                     <input type="hidden" id="bookid" name="bookid"/>
+                    <input type="hidden" id="startdate" name="startdate"/>
+                    <input type="hidden" id="enddate" name="enddate"/>
+                    <input type="hidden" id="starttime" name="starttime"/>
+                    <input type="hidden" id="endtime" name="endtime"/>
+                    <input type="hidden" id="description" name="description"/>
+                    <input type="hidden" id="subject" name="subject"/>
                     <input type="hidden" id="userid" name="userid" value="{{ session('userid') }}"/>
                     <input type="hidden" id="username" name="username" value="{{ session('username') }}"/>
                     <div class="modal-body">
@@ -435,10 +453,22 @@ function Initialize()
         $(document).on('click', '.cancel', function () {
             var bookid = $(this).data('bookid');
             var roomid = $(this).data('roomid');
+            var subject = $(this).attr('data-subject');
+            var description = $(this).attr('data-description');
+            var startdate = $(this).data('startdate');
+            var enddate = $(this).data('enddate');
+            var starttime = $(this).data('starttime');
+            var endtime = $(this).data('endtime');
             var $modal = $('#modal-cancel-room');
             var $form = $modal.find('form[name="cancel"]');
             $form.find('input[name="bookid"]').val(bookid);
             $form.find('input[name="roomAvail"]').val(roomid);
+            $form.find('input[name="startdate"]').val(startdate);
+            $form.find('input[name="enddate"]').val(enddate);
+            $form.find('input[name="starttime"]').val(starttime);
+            $form.find('input[name="endtime"]').val(endtime);
+            $form.find('input[name="description"]').val(description);
+            $form.find('input[name="subject"]').val(subject);
             $modal.modal('show');
         })
 

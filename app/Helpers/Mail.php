@@ -63,7 +63,7 @@ class Mail
         SendtoMail::to($emails)->send(new SendMailComment($mailData));
     }
 
-    public static function SENDMAILBOOKROOM($newBookId, $subject, $desc, $date, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName)
+    public static function SENDMAILBOOKROOM($newBookId, $subject, $desc, $startdate, $enddate, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName, $repeat, $status)
     {
         $emails = array($emailBook, $emailBookBy);
         $bccEmails = array("fakhrur.rozi@lionwings.com", "bimantara.bayu@lionwings.com");
@@ -72,12 +72,15 @@ class Mail
             'bookid' => $newBookId,
             'subject' => $subject,
             'desc' => $desc,
-            'date' => $date,
+            'startdate' => $startdate,
+            'enddate' => $enddate,
             'starttime' => $starttime,
             'endtime' => $endtime,
             'room' => $roomName,
             'bookingname' => $assignNameBook,
-            'bookingbyname' => $assignNameBookBy
+            'bookingbyname' => $assignNameBookBy,
+            'repeat' => $repeat,
+            'status' => $status
         );
     
         SendtoMail::to($emails)->bcc($bccEmails)->send(new SendMailBooking($mailData));

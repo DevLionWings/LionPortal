@@ -32,7 +32,7 @@ class SendMailTransport extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Lion Wings - Transport: '.  $this->mailData['transportid'],
+            subject: 'Lion Wings - Helpdesk Ticket: '.  $this->mailData['ticketno'],
         );
     }
 

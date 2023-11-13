@@ -277,10 +277,6 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="form-group">
-                            <label class="form-check-label" >Target Date :</label>
-                            <input type="date" name="targetdate" id="targetdate" class="form-control"> 
-                        </div> -->
                         <div class="form-group">
                             <label class="form-check-label" for="group">Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject" required>
@@ -1230,6 +1226,7 @@
             var systemname  = $(this).attr('data-systemname');
             var moduleid  = $(this).attr('data-moduleid');
             var objectid  = $(this).attr('data-objectid');
+            var objectname  = $(this).attr('data-objectname');
             var upload  = $(this).attr('data-upload');
             var createdon  = $(this).attr('data-createdon');
             var $modal = $('#modal-view-user');
@@ -1239,7 +1236,7 @@
             if(statusid == 'SD003'){
                 hide.hide();
             }
-            console.log(modulehide);
+          
             var modulehide = $("#modulehide");
             modulehide.show();
             if(moduleid == ''){
@@ -1268,7 +1265,7 @@
             $form.find('input[name="comment_body"]').val(comment_body);
             $form.find('input[name="systemid"]').val(systemname);
             $form.find('input[name="moduleid"]').val(moduleid);
-            $form.find('input[name="objectid"]').val(objectid);
+            $form.find('input[name="objectid"]').val(objectname);
             $form.find('input[name="upload"]').val(upload);
             $form.find('input[name="createdon"]').val(createdon);
             $modal.modal('show');
@@ -1454,7 +1451,7 @@
                     {
                         data: 'ticketno',
                         render: function(data, type, row){
-                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                         }
                     },
                     {
@@ -2354,7 +2351,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -2451,7 +2448,6 @@
                 {
                     data: 'targetdate',
                     render: function(data) {
-                        // console.log(data);
                         if(data == ''){
                             var date = "";
                         } else {
@@ -2622,6 +2618,32 @@
         })
     }
 
+    function getCategoryAddJson(systemid) {
+        console.log(value)
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "GET",
+            url: "/get/category",
+            data: {
+                'systemid' : systemid, 
+            },
+            success: function(response) {
+                var $select_client = $('<select type="text" id="category" name="category" class="form-control input--style-6" required></select>');
+                $.each(response["disc"], function(key, data) {
+                    var $options = "<option value='"+data["CATEGORYID"]+"'>"+data["DESC"]+"</option>";
+                    $select_client.append($options);
+                });
+                $('#modal-add-ticket form[name="form"] select[name="category"]').parent().html($select_client);
+                
+            },
+            error: function (error) {
+                console.error(error);
+            },
+        })
+    }
+
     function getTrqCreate(ticketno) {
         $.ajax({
             headers: {
@@ -2720,9 +2742,11 @@
 
         select.change(function() {
             value = $(this).find(":selected").val()
-            if (value == 'SAP') {
+            if (value == 'SY001') {
+                getCategoryAddJson(value);
                 hide1.show();
             } else {
+                getCategoryAddJson(value);
                 hide1.hide();
             }
         });
@@ -2783,7 +2807,7 @@
     var month  = (today.getMonth() + 1) + "";
     var year = today.getFullYear() + "";
 
-    var date = day + "-" + month + "-" + year;
+    var date = year + "-" + month + "-" + day;
 
     var optSimple = {
         dateFormat: 'yy-mm-dd',

@@ -285,11 +285,23 @@
                             </div>
                         </div>  
                         <div class="form-group">
+                            <!-- <label class="form-check-label">Pilihan Repeat :</label> -->
+                            <div class="input-group value">
+                                <select id="repeat" name="repeat" class="form-control" style="width: 100%;">
+                                    <option value="not">Not Repeat</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="anuallly">Anually</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="form-check-label" for="detail" disabled>Description :</label>
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50"></textarea>
                         </div> 
                         <div class="form-group">
-                            <button type="button" id="btn-room" name="btn-room" class="btnroom btn btn-link"><i class="fas fa-sync fa" aria-hidden="true"> Chose Room Meeting</i></button>
+                            <button type="button" id="btn-room" name="btn-room" class="btnroom btn btn-link"><i class="fas fa-sync fa"> Chose Room Meeting</i></button>
                             <div id="loadings">
                                 Loading...
                             </div>
@@ -326,6 +338,8 @@
                     <div class="modal-body">
                     <input type="hidden" id="bookid" name="bookid">
                     <input type="hidden" id="userid" name="userid"/>
+                    <input type="hidden" id="description" name="description"/>
+                    <input type="hidden" id="subject" name="subject"/>
                         <div class="row">
                             <div class="col-md-6"> 
                                 <div class="mb-3">
@@ -410,6 +424,12 @@
                     @csrf
                     <input type="hidden" id="roomAvail" name="roomAvail"/>
                     <input type="hidden" id="bookid" name="bookid"/>
+                    <input type="hidden" id="startdate" name="startdate"/>
+                    <input type="hidden" id="enddate" name="enddate"/>
+                    <input type="hidden" id="starttime" name="starttime"/>
+                    <input type="hidden" id="endtime" name="endtime"/>
+                    <input type="hidden" id="description" name="description"/>
+                    <input type="hidden" id="subject" name="subject"/>
                     <input type="hidden" id="userid" name="userid" value="{{ session('userid') }}"/>
                     <input type="hidden" id="username" name="username" value="{{ session('username') }}"/>
                     <div class="modal-body">
@@ -618,10 +638,22 @@
         $(document).on('click', '.cancel', function () {
             var bookid = $(this).data('bookid');
             var roomid = $(this).data('roomid');
+            var subject = $(this).attr('data-subject');
+            var description = $(this).attr('data-description');
+            var startdate = $(this).data('startdate');
+            var enddate = $(this).data('enddate');
+            var starttime = $(this).data('starttime');
+            var endtime = $(this).data('endtime');
             var $modal = $('#modal-cancel-room');
             var $form = $modal.find('form[name="cancel"]');
             $form.find('input[name="bookid"]').val(bookid);
             $form.find('input[name="roomAvail"]').val(roomid);
+            $form.find('input[name="startdate"]').val(startdate);
+            $form.find('input[name="enddate"]').val(enddate);
+            $form.find('input[name="starttime"]').val(starttime);
+            $form.find('input[name="endtime"]').val(endtime);
+            $form.find('input[name="description"]').val(description);
+            $form.find('input[name="subject"]').val(subject);
             $modal.modal('show');
         })
 
@@ -638,7 +670,7 @@
             searching: true,
             lengthChange: false,
             ajax: "{{ route('room-list') }}",
-            order: [[ 3, "desc" ]],
+            order: [[ 8, "asc" ]],
             dom: 'Blfrtip',
                 buttons: [
                     'excel'
@@ -821,12 +853,16 @@
             var roomid = $(this).data('roomid');
             var bookid = $(this).data('bookid');
             var userid = $(this).data('userid');
+            var subject = $(this).attr('data-subject');
+            var description = $(this).attr('data-description');
             var $modal = $('#modal-edit-room');
             var $form = $modal.find('form[name="edit-room"]');
             $form.find('input[name="startdate1"]').val(startdate);
             $form.find('input[name="enddate1"]').val(enddate);
             $form.find('input[name="bookid"]').val(bookid)
             $form.find('input[name="userid"]').val(userid)
+            $form.find('input[name="description"]').val(description);
+            $form.find('input[name="subject"]').val(subject);
             var room_options = $form.find('select[name="roomAvail1"]').children();
             $.each(room_options, function(key, value) {
                 if($(value).val() === roomid) {
@@ -976,6 +1012,8 @@
             hide2.show();
             var bookid = $('#modal-edit-room input[name="bookid"]').val();
             var roomid = $('#modal-edit-room input[name="roomAvail1"]').val();
+            var description = $('#modal-edit-room input[name="description"]').val();
+            var subject = $('#modal-edit-room input[name="subject"]').val();
             var startdate = $('#modal-edit-room input[name="startdate1"]').val();
             var enddate = $('#modal-edit-room input[name="enddate1"]').val();
             var starttime = $('#modal-edit-room select[name="starttime1"]  option:selected').val();
@@ -1015,10 +1053,12 @@
                         'starttime' : starttime, 
                         'endtime' : endtime, 
                         'bookid' : bookid,
-                        'roomid' : roomid
+                        'roomid' : roomid,
+                        'description' : description,
+                        'subject' : subject,
                     },
                     success: function(response) {
-                        // console.log(response);
+                        console.log(response);
                         // $("#hideroomedit").css("display","inline");
                         // $("#hideroombookededit").css("display","inline");
                         var $select_room_avail = $('#roomAvail1');
