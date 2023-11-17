@@ -43,8 +43,15 @@
 				</td>
 			</tr>
 		</table>
-			@if($data->counter == '1' || $data->counter == '2' || $data->counter == '3')
+			@if($data->counter == '1' || $data->counter == '3')
 			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+			</table>
+			@endif
+			@if($data->counter == '2')
+			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>
@@ -91,8 +98,15 @@
 				</td>
 			</tr>
 		</table>
-			@if($data->counter == '1' || $data->counter == '2' || $data->counter == '3')
+			@if($data->counter == '1' || $data->counter == '3')
 			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+			</table>
+			@endif
+			@if($data->counter == '2')
+			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>
@@ -141,8 +155,15 @@
 				</td>
 			</tr>
 		</table>
-			@if($data->counter == '1' || $data->counter == '2' || $data->counter == '3')
+			@if($data->counter == '1' || $data->counter == '3')
 			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+			</table>
+			@endif
+			@if($data->counter == '2')
+			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>
@@ -190,11 +211,18 @@
 				</td>
 			</tr>
 		</table>
-			@if($data->counter == '1' || $data->counter == '2' || $data->counter == '3')
-				<table width=720px>
-					<tr><td>&nbsp;</td></tr>
-					<tr><td>&nbsp;</td></tr>
-				</table>
+			@if($data->counter == '1' || $data->counter == '3')
+			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+			</table>
+			@endif
+			@if($data->counter == '2')
+			<table width=720px>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+			</table>
 			@endif
 		@endif
 	@endforeach

@@ -44,7 +44,7 @@ class TransportController extends Controller
         /* Checked Transport Number*/
         if($request->opsi == "exist"){
             $transid = $request->transportid;
-            /* IF Existing Get data transport id */
+            /* If Existing Get data transport id */
             $existing = DB::connection('pgsql')->table('helpdesk.t_transport')
                 ->where('transportid', $transid)
                 ->get();
@@ -61,7 +61,12 @@ class TransportController extends Controller
             if($request->lqa == true){
                 $checkboxLqa = 1;
                 if($checkboxLqa == $sendtolqa){
-                    return redirect()->back()->with("alert", "I've already made an LQA request");
+                    return redirect()->back()->with("error", "I've already made an LQA request");
+                } 
+            } else if($request->lpr == true){
+                $checkboxLpr = 1;
+                if($checkboxLpr == $sendtolpr){
+                    return redirect()->back()->with("error", "I've already made an LPR request");
                 } 
             }
             /* End */
