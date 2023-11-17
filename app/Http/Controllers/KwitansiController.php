@@ -242,7 +242,7 @@ class KwitansiController extends Controller
                             "nominal" => number_format($value->total,0,',','.').',-',
                             "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
                             "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
-                            "keterangan" => $value->keterangan,
+                            "keterangan" => $value->untuk.PHP_EOL.$value->keterangan,
                             "lamakerja" => trim($value->masakerja),
                             "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
                             "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim(date($value->tanggalmasuk)))->subDays(1)->translatedFormat('d F Y')
@@ -366,8 +366,8 @@ class KwitansiController extends Controller
             
                 if($type == $typedb && $id == $nik){
                     return $data = 'Duplicate';
-                } else if ($count == 4){
-                    return $data = 'Max';
+                // } else if ($count == 4){
+                //     return $data = 'Max';
                 } else {
                     $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
                         'idkwitansi' => $nokwitansi,
@@ -436,8 +436,8 @@ class KwitansiController extends Controller
 
                 if($type == $typedb && $id == $nik){
                     return $data = 'Duplicate';
-                } else if ($count == 4){
-                    return $data = 'Max';
+                // } else if ($count == 4){
+                //     return $data = 'Max';
                 } else {
                     $insert = DB::connection('pgsql')->table('hris.t_kwitansi')->insert([
                         'idkwitansi' => $nokwitansi,

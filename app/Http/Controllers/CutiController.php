@@ -350,9 +350,9 @@ class CutiController extends Controller
                 $hitung3 = $chh; 
                 $hitung4 = 3 * $spsi;
                 $hitung5 = 3 * $koperasi;
-                $hitung6 = 3 * ($gaji * 2/100);
+                $hitung6 = round(3 * ($gaji * 2/100));
                 $untuk = "Uang Pengganti Cuti Hamil a/n ".$nama.' bagian: '.$bagian.' id: '.$id;
-                $keterangan = "3x(GP + UM) - 3x(JHT) - (Cuti Haid) - 3x(SPSI) - 3x(Koperasi) - 3x(Bpjs + Pensiun)". PHP_EOL .$hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
+                $keterangan = "3x(GP + UM) - 3x(JHT) - 3x(SPSI) - 3x(Koperasi) - 3x(Bpjs + Pensiun) - ".$jmlhchh."x(Cuti Haid)". PHP_EOL .$hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
                 $ket = $untuk.PHP_EOL.$keterangan;
                 
                 /* Count Months */
@@ -414,9 +414,9 @@ class CutiController extends Controller
                 $hitung3 = $chh; 
                 $hitung4 = 2 * $spsi;
                 $hitung5 = 2 * $koperasi;
-                $hitung6 = 2 * ($gaji * 2/100);
+                $hitung6 = round(2 * ($gaji * 2/100));
                 $untuk = "Uang Pengganti Cuti Keguguran a/n ".$nama.' bagian: '.$bagian.' id: '.$id;
-                $keterangan = "1.5x(GP + UM) - 2x(JHT) - (Cuti Haid) - 2x(SPSI) - 2x(Koperasi) - 2x(Bpjs + Pensiun)". PHP_EOL . $hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
+                $keterangan = "1.5x(GP + UM) - 2x(JHT) - (Cuti Haid) - 2x(SPSI) - 2x(Koperasi) - 2x(Bpjs + Pensiun) - ".$jmlhchh."x(Cuti Haid)". PHP_EOL . $hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
                 $ket = $untuk.PHP_EOL.$keterangan;
                 
                 /* Count Months */
@@ -426,7 +426,7 @@ class CutiController extends Controller
                 $tglmasuk = $date->format('Y-m-d');
                 $subs1 = substr($tglmasuk, 0, 4);
                 $subs2 = substr($tglcuti, 0, 4);
-
+ 
                 if($subs1 == $subs2){
                     $diffInDays = "0";
                     $diffInMonths = "0";
@@ -556,7 +556,7 @@ class CutiController extends Controller
                             "nominal" => number_format($value->total,0,',','.').',-',
                             "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
                             "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
-                            "keterangan" => $value->keterangan,
+                            "keterangan" => $value->untuk.PHP_EOL.$value->keterangan,
                             "lamakerja" => trim($value->masakerja),
                             "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
                             "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim(date($value->tanggalmasuk)))->subDays(1)->translatedFormat('d F Y')

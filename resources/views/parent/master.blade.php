@@ -177,20 +177,24 @@
 
         function timerIncrement($userid) {
             idleTime = idleTime + 1;
-            if (idleTime > 5 && !isIdle) { // 5 minutes
-                isIdle = true;
-                // alert("Session timeout");
-                var url = "{{ route('login') }}";
-                $.ajax({
-                    type: "POST",
-                    url:  "{{ route('logout') }}",
-                    data: { 
-                        '_token': "{{csrf_token()}}",
-                    },
-                    success: function(response) {
-                        document.location.href=url;
-                    }
-                });
+            var userid = {{ Session::get('userid') }};
+            // console.log("This is javascript session" + userid);
+            if( userid != '111111'){
+                if (idleTime > 1 && !isIdle) { // 1 minutes
+                    isIdle = true;
+                    alert("Session timeout");
+                    var url = "{{ route('login') }}";
+                    $.ajax({
+                        type: "POST",
+                        url:  "{{ route('logout') }}",
+                        data: { 
+                            '_token': "{{csrf_token()}}",
+                        },
+                        success: function(response) {
+                            document.location.href=url;
+                        }
+                    });
+                }
             }
         }
     </script>
