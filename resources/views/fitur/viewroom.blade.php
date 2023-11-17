@@ -307,7 +307,7 @@
 
                 if(data['enddate'] < datenow && data['endtime'] < datetime){
                     $(row).find('td:eq(1)').html( '<span class="badge badge-dark">Check out</span>' );
-                } else if (data['startdate'] < datenow && data['starttime'] < datetime) {
+                } else if (data['startdate'] <= datenow && data['starttime'] <= datetime) {
                     $(row).find('td:eq(1)').html( '<span class="badge badge-success">Check in</span>' );
                 }   
             },
@@ -318,6 +318,6 @@
 <script>
 setTimeout(function(){
    window.location.reload(1);
-}, 300000);
+}, 10000);
 </script>
 

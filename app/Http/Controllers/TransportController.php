@@ -54,6 +54,16 @@ class TransportController extends Controller
                 array_push($trim_transno, trim(preg_replace('/\s+/', ',', $value->transportno)));
             }
             $transno = implode(",", $trim_transno);
+
+            $sendtolqa = $existing[0]->sendto_lqa;
+            $sendtolpr = $existing[0]->sendto_lpr;
+
+            if($request->lqa == true){
+                $checkboxLqa = 1;
+                if($checkboxLqa == $sendtolqa){
+                    return redirect()->back()->with("alert", "I've already made an LQA request");
+                } 
+            }
             /* End */
         } else if($request->opsi == "new"){
             $transno = $request->transnumber;

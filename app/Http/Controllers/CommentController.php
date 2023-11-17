@@ -103,27 +103,49 @@ class CommentController extends Controller
                     'last_number' => $last
             ]);
             DB::commit();
-            
-            /* Send Email */
-            $getTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')->where('ticketno', $ticketno)->first();
-            $assignto = $getTicket->assignedto;
-            $detail = $getTicket->detail;
-            $dataAssign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
-            $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
-            $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
-            $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
+         
+            if($request->status == 'WAITING FOR USER'){
+                /* Send Email */
+                $getTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')->where('ticketno', $ticketno)->first();
+                $assignto = $getTicket->assignedto;
+                $detail = $getTicket->detail;
+                $dataAssign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
+                $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
+                $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
+                $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
 
-            $emailFrom = $useremail;
-            $assignNameSign = $dataAssign->username;
-            $emailSign =  $dataAssign->usermail;
-            $emailMgrIt =  $dataMgrIt->usermail;
-            $emailMgrUser =  $dataMgrUser->usermail;
-            $emailRequestor = $dataReq->usermail;
+                $emailFrom = $useremail;
+                $assignNameSign = $dataAssign->username;
+                $emailSign =  $dataAssign->usermail;
+                $emailMgrIt =  $dataMgrIt->usermail;
+                $emailMgrUser =  $dataMgrUser->usermail;
+                $emailRequestor = $dataReq->usermail;
 
-            $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor);
-    
-            /* End Send Email */
+                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor);
+        
+                /* End Send Email */
+            } else {
+                /* Send Email */
+                $getTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')->where('ticketno', $ticketno)->first();
+                $assignto = $getTicket->assignedto;
+                $detail = $getTicket->detail;
+                $dataAssign = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
+                $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
+                $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
+                $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
 
+                $emailFrom = $useremail;
+                $assignNameSign = $dataAssign->username;
+                $emailSign =  $dataAssign->usermail;
+                $emailMgrIt =  $dataMgrIt->usermail;
+                $emailMgrUser =  'blank@lionwings.com';
+                $emailRequestor = 'blank@lionwings.com';
+
+                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor);
+        
+                /* End Send Email */
+            }
+        
             $disc = ''; 
             $dataCommnt = DB::connection('pgsql')->table('helpdesk.t_discussion as a')
                 ->join('master_data.m_user as b', 'a.senderid', '=', 'b.userid')

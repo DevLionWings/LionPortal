@@ -399,7 +399,7 @@ class MeetingroomController extends Controller
             data-roomname="'.$row["roomname"].'"  data-bookid="'.$row["bookid"].'" data-subject="'.$row["subject"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
             data-description="'.$row["description"].'" data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
             
-            $cancelBtn = '<a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
+            $cancelBtn = ' <a href="javascript:void(0)" class="cancel btn btn-info btn-sm" 
             data-roomid="'.$row["roomid"].'" data-bookid="'.$row["bookid"].'" data-subject="'.$row["subject"].'" data-description="'.$row["description"].'" data-startdate="'.$row["startdate"].'" data-enddate="'.$row["enddate"].'" 
             data-starttime="'.$row["starttime"].'" data-endtime="'.$row["endtime"].'">Cancel</a>';
            

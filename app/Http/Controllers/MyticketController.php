@@ -217,6 +217,7 @@ class MyticketController extends Controller
                     "createdname" => trim($value['created']),
                     "systemid" => trim($value['systemid']),
                     "moduleid" => trim($value['moduleid']),
+                    "modulename" => trim($value['modulename']),
                     "objectid" => trim($value['objectid']),
                     "objectname" => trim($value['objectname']),
                     "systemname" => trim($value['systemname']),
@@ -262,14 +263,14 @@ class MyticketController extends Controller
                 $mgrid = Session::get('mgrid');
                 $document_name = str_replace("storage/", "", $row["attachment"]);
                 $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
-                data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
+                data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
                 data-objectid="'.$row["objectid"].'"  data-objectname="'.$row["objectname"].'" data-createdon="'.$row["createdon"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $updateBtn = ' <a href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
-                data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-categoryid="'.$row["categoryid"].'" data-priority="'.$row["priority"].'" data-subject="'.$row["subject"].'" 
+                data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-categoryid="'.$row["categoryid"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'"  data-assignedto="'.$row["assignedto"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
@@ -304,43 +305,43 @@ class MyticketController extends Controller
                 
                 if($row["categoryid"] == 'CD001' && $row["statusid"] == 'SD006' && $row["assignedto"] == '' ){
                     $itBtn = $download_btn. $pickedBtn;
-                    $sapBtn = $transportBtn. $download_btn. $pickedBtn;
+                    $sapBtn = $download_btn. $pickedBtn;
                     $infBtn = $download_btn. $pickedBtn;
                     $headBtn = $updateBtn. $download_btn. $pickedBtn;
                     $managerBtn = $viewTransBtn. $download_btn;
                     $managerItBtn = $updateBtn. $download_btn. $approveBtn. $rejectBtn;
                 } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $download_btn. $closedBtn;
-                    $sapBtn = $transportBtn. $download_btn. $closedBtn;
-                    $infBtn = $download_btn. $closedBtn;
-                    $headBtn = $updateBtn. $download_btn;
+                    $itBtn = $download_btn. $updateBtn. $closedBtn;
+                    $sapBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
+                    $infBtn = $download_btn. $updateBtn. $closedBtn;
+                    $headBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
                     $managerBtn = $viewTransBtn. $download_btn; 
                     $managerItBtn = $updateBtn. $download_btn. $closedBtn;
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
                     $managerBtn = $download_btn. $approveMgrBtn. $rejectBtn;
                     $itBtn = $download_btn;
                     $infBtn = $download_btn;
-                    $sapBtn = $transportBtn. $download_btn;
+                    $sapBtn = $download_btn;
                     $managerItBtn = $viewTransBtn. $updateBtn. $download_btn;
-                    $headBtn = $updateBtn. $transportBtn. $download_btn;
+                    $headBtn = $updateBtn. $download_btn;
                 } else if($row["approvedby_1"] != null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"] ){
-                    $managerItBtn = $updateBtn. $download_btn.$approveBtn. $rejectBtn;
+                    $managerItBtn = $updateBtn. $download_btn. $approveBtn. $rejectBtn;
                     $itBtn = $download_btn;
                     $infBtn = $download_btn;
-                    $sapBtn = $transportBtn. $download_btn;
+                    $sapBtn = $download_btn;
                     $managerBtn = $viewTransBtn. $download_btn;
                     $headBtn = $updateBtn. $download_btn;
                 } else if ($row["statusid"] == 'SD002'){
                     $itBtn = $download_btn;
                     $infBtn = $download_btn;
-                    $sapBtn = $transportBtn. $download_btn;
+                    $sapBtn = $download_btn;
                     $managerBtn = $download_btn;
                     $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                    $headBtn = $updateBtn.$download_btn;
+                    $headBtn = $updateBtn. $download_btn;
                 } else {
                     $itBtn = $download_btn;
                     $infBtn = $download_btn;
-                    $sapBtn = $transportBtn. $download_btn;
+                    $sapBtn = $download_btn;
                     $managerBtn = $download_btn;
                     $managerItBtn = $viewTransBtn. $updateBtn. $download_btn;
                     $headBtn = $updateBtn. $download_btn;
@@ -353,46 +354,53 @@ class MyticketController extends Controller
 
                     $approveTransBtn = ' <button href="javascript:void(0)" class="approvetrans btn btn-outline-primary btn-xs" data-ticket="'.$row["ticketno"].'" data-transportid="'.$value['transportid'].'" data-transportno="'.$value['transportno'].'" 
                     data-sendto_lqa="'.$value['sendto_lqa'].'" data-sendto_lpr="'.$value['sendto_lpr'].'"><i class="fa fa-truck" aria-hidden="true"></i></button>';
-
-                    if( $value['sendto_lqa'] == '1' || $value['sendto_lpr'] == '1'){
-                        if($value['status_lqa'] == '1' || $value['status_lpr'] == '1' ){
-                            if($value['status_trans_lqa'] == '0' || $value['status_trans_lpr'] == '0'){
-                                $managerBtn = $download_btn;
-                                $itBtn = $download_btn;
-                                $infBtn = $transportedBtn. $download_btn;
-                                $sapBtn = $transportBtn. $download_btn;
-                                $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                                $headBtn = $updateBtn.$download_btn;
-                            } else {
-                                $managerBtn = $download_btn;
-                                $itBtn = $download_btn;
-                                $infBtn = $viewTransBtn. $download_btn;
-                                $sapBtn = $transportBtn. $download_btn;
-                                $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                                $headBtn = $updateBtn.$download_btn;
-                            }
-                        } else {
-                            $managerBtn = $download_btn;
-                            $itBtn = $download_btn;
-                            $infBtn = $transportedBtn. $download_btn;
-                            $sapBtn = $transportBtn. $download_btn;
+              
+                    if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
+                        if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0' ){
+                            $infBtn = $viewTransBtn. $download_btn. $closedBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                            $headBtn = $updateBtn.$download_btn;
+                        } else if( $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0' ){
+                            $infBtn = $viewTransBtn. $download_btn. $closedBtn;
+                            $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        } else if($value['status_lqa'] == '1' && $value['status_trans_lqa'] == '0' ){
+                            $infBtn = $transportedBtn. $download_btn. $closedBtn;
+                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        } else if($value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
+                            $infBtn = $transportedBtn. $download_btn. $closedBtn;
+                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        } else {
+                            $infBtn = $viewTransBtn. $download_btn. $closedBtn;
+                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         }
-                    }
+                    } else if ($value['status_lqa'] == '1' && $value['status_trans_lqa'] == '0') {
+                        if ($value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
+                            $infBtn = $transportedBtn. $download_btn;
+                            $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        } else {
+                            $infBtn = $viewTransBtn. $download_btn;
+                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        }
+                    } else if ($value['status_trans_lqa'] == '1' || $value['status_trans_lpr'] == '1'){
+                        $infBtn = $viewTransBtn. $download_btn;
+                        $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                    } else {
+                        $infBtn = $viewTransBtn. $download_btn;
+                        $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                    } 
                 }
-    
+                /* End */
+              
                 if($roleid == 'RD005' || $roleid == 'RD008'){
                     return $infBtn;
                 }
-                if($roleid == 'RD007'){
+                if($roleid == 'RD007' ){
                     return $sapBtn;
                 }
                 if($roleid == 'RD004' || $roleid == 'RD008'){
                     return $itBtn;
                 }
                 if($roleid == 'RD009'){
-                    return $transportBtn.$headBtn;
+                    return $headBtn;
                 }
                 if($roleid == 'RD002'){ 
                     return $managerBtn;
@@ -403,6 +411,7 @@ class MyticketController extends Controller
                 if($roleid == 'RD003'){
                     return $parentBtn. $download_btn;
                 }
+
 
             })
             ->rawColumns(['action'])
