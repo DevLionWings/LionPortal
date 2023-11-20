@@ -1214,7 +1214,7 @@
                     'status' : 'TRANSPORTED'
                 },
                 success: function(response){ 
-                    console.log(response);
+                    // console.log(response);
                     window.location=response.url;
                     $(this).attr('disabled', true);
                     $(this).text("Loading ...");
@@ -1991,7 +1991,7 @@
                 {
                     data: 'targetdate',
                     render: function(data) {
-                        console.log(data);
+                        // console.log(data);
                         if(data == ''){
                             var date = "";
                         } else {

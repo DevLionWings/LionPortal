@@ -462,8 +462,9 @@ class TransportController extends Controller
         $transportArray = [];
         foreach ($transport as $key => $value) {
             array_push($transportArray, [
-                "TRANSPORTID" => trim($value['transportid'])
-                // "TRANSPORTNO" => trim($value['transportno']),
+                "TRANSPORTID" => trim($value['transportid']),
+                "LQA" => trim($value['sendto_lqa']),
+                "LPR" => trim($value['sendto_lpr']),
             ]);
         }
 

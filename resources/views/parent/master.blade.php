@@ -182,7 +182,7 @@
             if( userid != '111111'){
                 if (idleTime > 1 && !isIdle) { // 1 minutes
                     isIdle = true;
-                    alert("Session timeout");
+                    // alert("Session timeout");
                     var url = "{{ route('login') }}";
                     $.ajax({
                         type: "POST",

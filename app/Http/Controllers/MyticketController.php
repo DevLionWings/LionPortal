@@ -372,28 +372,31 @@ class MyticketController extends Controller
                             $infBtn = $viewTransBtn. $download_btn. $closedBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         }
-                    } else if ($value['status_lqa'] == '1' && $value['status_trans_lqa'] == '0') {
-                        if ($value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
-                            $infBtn = $transportedBtn. $download_btn;
+                    } else {
+                         if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0' ){
+                            $infBtn = $viewTransBtn. $download_btn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        } else if( $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0' ){
+                            $infBtn = $viewTransBtn. $download_btn;
+                            $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        } else if($value['status_lqa'] == '1' && $value['status_trans_lqa'] == '0' ){
+                            $infBtn = $transportedBtn. $download_btn;
+                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                        } else if($value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
+                            $infBtn = $transportedBtn. $download_btn;
+                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else {
                             $infBtn = $viewTransBtn. $download_btn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         }
-                    } else if ($value['status_trans_lqa'] == '1' || $value['status_trans_lpr'] == '1'){
-                        $infBtn = $viewTransBtn. $download_btn;
-                        $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                    } else {
-                        $infBtn = $viewTransBtn. $download_btn;
-                        $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                    } 
+                    }
                 }
                 /* End */
               
-                if($roleid == 'RD005' || $roleid == 'RD008'){
+                if($roleid == 'RD005'){
                     return $infBtn;
                 }
-                if($roleid == 'RD007' ){
+                if($roleid == 'RD007'){
                     return $sapBtn;
                 }
                 if($roleid == 'RD004' || $roleid == 'RD008'){

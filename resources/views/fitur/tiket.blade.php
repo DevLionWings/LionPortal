@@ -1319,7 +1319,7 @@
 
         $(document).on('click', '.update', function () {
             $('#modal-update-user').modal({backdrop: 'static', keyboard: false})  
-            getCategoryJson($(this).attr('data-systemid'));
+            getCategoryJson($(this).attr('data-systemid'), $(this).attr('data-categoryid'));
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -2711,7 +2711,7 @@
                 'ticketno' : ticketno, 
             },
             success: function(response) {
-                console.log(response);
+                // console.log(response);
                 var $select_transportid = $('<select type="text" id="transportid" name="transportid" class="form-control input--style-6"></select>');
                 $.each(response, function(key, data) {
                     var $options = "<option value='"+data["TRANSPORTID"]+"'>"+data["TRANSPORTID"]+"</option>";
