@@ -317,13 +317,6 @@ class TiketController extends Controller
                     $headBtn = $updateBtn. $download_btn. $pickedBtn;
                     $managerBtn = $viewTransBtn. $download_btn;
                     $managerItBtn = $updateBtn. $download_btn. $approveBtn. $rejectBtn;
-                } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $download_btn. $updateBtn. $closedBtn;
-                    $sapBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
-                    $infBtn = $download_btn. $updateBtn. $closedBtn;
-                    $headBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
-                    $managerBtn = $viewTransBtn. $download_btn; 
-                    $managerItBtn = $updateBtn. $download_btn. $closedBtn;
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
                     $managerBtn = $download_btn. $approveMgrBtn. $rejectBtn;
                     $itBtn = $download_btn;
@@ -338,20 +331,27 @@ class TiketController extends Controller
                     $sapBtn = $download_btn;
                     $managerBtn = $viewTransBtn. $download_btn;
                     $headBtn = $updateBtn. $download_btn;
-                } else if ($row["statusid"] == 'SD002'){
+                } else  if( $row["statusid"] == 'SD003'){
                     $itBtn = $download_btn;
+                    $sapBtn = $transportBtn. $download_btn;
                     $infBtn = $download_btn;
-                    $sapBtn = $download_btn;
-                    $managerBtn = $download_btn;
-                    $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                    $headBtn = $updateBtn. $download_btn;
+                    $headBtn = $transportBtn. $download_btn;
+                    $managerBtn = $viewTransBtn. $download_btn; 
+                    $managerItBtn = $download_btn;
+                } else  if( $userid == $row["assignedto"]){
+                    $itBtn = $download_btn. $updateBtn. $closedBtn;
+                    $sapBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
+                    $infBtn = $download_btn. $updateBtn. $closedBtn;
+                    $headBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
+                    $managerBtn = $viewTransBtn. $download_btn; 
+                    $managerItBtn = $updateBtn. $download_btn. $closedBtn;
                 } else {
                     $itBtn = $download_btn;
                     $infBtn = $download_btn;
                     $sapBtn = $download_btn;
                     $managerBtn = $download_btn;
-                    $managerItBtn = $viewTransBtn. $updateBtn. $download_btn;
-                    $headBtn = $updateBtn. $download_btn;
+                    $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                    $headBtn = $updateBtn. $download_btn. $closedBtn;
                 }
                 
                 /* button transport & approve */
@@ -584,13 +584,6 @@ class TiketController extends Controller
                     $headBtn = $updateBtn. $download_btn. $pickedBtn;
                     $managerBtn = $viewTransBtn. $download_btn;
                     $managerItBtn = $updateBtn. $download_btn. $approveBtn. $rejectBtn;
-                } else  if($row["statusid"] == 'SD002' && $userid == $row["assignedto"]){
-                    $itBtn = $download_btn. $updateBtn. $closedBtn;
-                    $sapBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
-                    $infBtn = $download_btn. $updateBtn. $closedBtn;
-                    $headBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
-                    $managerBtn = $viewTransBtn. $download_btn; 
-                    $managerItBtn = $updateBtn. $download_btn. $closedBtn;
                 } else if($row["approvedby_1"] == null && $row["statusid"] == 'SD001' && $userid == $row["assignedto"]){
                     $managerBtn = $download_btn. $approveMgrBtn. $rejectBtn;
                     $itBtn = $download_btn;
@@ -605,20 +598,27 @@ class TiketController extends Controller
                     $sapBtn = $download_btn;
                     $managerBtn = $viewTransBtn. $download_btn;
                     $headBtn = $updateBtn. $download_btn;
-                } else if ($row["statusid"] == 'SD002'){
+                } else  if( $row["statusid"] == 'SD003'){
                     $itBtn = $download_btn;
+                    $sapBtn = $transportBtn. $download_btn;
                     $infBtn = $download_btn;
-                    $sapBtn = $download_btn;
-                    $managerBtn = $download_btn;
-                    $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
-                    $headBtn = $updateBtn. $download_btn;
+                    $headBtn = $transportBtn. $download_btn;
+                    $managerBtn = $viewTransBtn. $download_btn; 
+                    $managerItBtn = $download_btn;
+                } else  if( $userid == $row["assignedto"]){
+                    $itBtn = $download_btn. $updateBtn. $closedBtn;
+                    $sapBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
+                    $infBtn = $download_btn. $updateBtn. $closedBtn;
+                    $headBtn = $transportBtn. $updateBtn. $download_btn. $closedBtn;
+                    $managerBtn = $viewTransBtn. $download_btn; 
+                    $managerItBtn = $updateBtn. $download_btn. $closedBtn;
                 } else {
                     $itBtn = $download_btn;
                     $infBtn = $download_btn;
                     $sapBtn = $download_btn;
                     $managerBtn = $download_btn;
-                    $managerItBtn = $viewTransBtn. $updateBtn. $download_btn;
-                    $headBtn = $updateBtn. $download_btn;
+                    $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                    $headBtn = $updateBtn. $download_btn. $closedBtn;
                 }
                 
                 /* button transport & approve */
@@ -1057,11 +1057,13 @@ class TiketController extends Controller
         ->where('ticketno',  $request->ticketno)
         ->update([
             'categoryid' => $request->category,
+            'priorid' => $request->priority,
             'objectid' => $request->objecttype,
             'moduleid' => $request->moduleid,
             'detail' => $request->detail,
             'assignedto' => $request->assignto,
-            'target_date' => $request->targetdates
+            'target_date' => $request->targetdates,
+            'statusid' => $request->status
         ]);
 
         /* Get Data Ticket */
@@ -1088,7 +1090,7 @@ class TiketController extends Controller
         $emailADD = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
         $emailSign = $emailADD['emailSign'];
         $emailReq = $emailADD['emailReq'];
-        $assignNameSign = $emailADD['assignNameSign'];
+        $assignNameSign =  Session::get('username');
         $emailApprove1 = $emailADD['emailApprove1'];
         $emailApproveit =  $emailADD['emailApproveit'];
         /* End */

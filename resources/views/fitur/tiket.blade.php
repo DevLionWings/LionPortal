@@ -487,8 +487,8 @@
                             <!-- <label class="form-check-label" for="comment_body" disabled></label> -->
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body" placeholder="Write a comment..."></textarea>
                             <div class="form-group">
-                                <label class="form-check-label" for="files"></label>
-                                <input type="file" name="files" id="files" class="form-control">
+                                <label class="form-check-label" for="filecomment"></label>
+                                <input type="file" name="filecomment" id="filecomment" class="form-control">
                             </div>
                             <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs">Save</button>
                             <!-- <button type="submit" class="btn btn-primary btn-xs">Save</button> -->
@@ -1771,15 +1771,16 @@
 
         $(document).on('click', '.btncomment', function() {
             $("#comment2").load(" #comment2");
+            $("#comment1").load(" #comment1");
             var ticketno = $('#modal-view-user form[name="view1"] input[name="ticketno"]').val();
             var status = $('#modal-view-user form[name="view1"] input[name="status"]').val();
             var requestor = $('#modal-view-user form[name="view1"] input[name="requestorid"]').val();
             var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
             var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
             var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
-            // var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
+            var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
-            var file_data = document.getElementById("files").files[0].name;
+            // var file_data = document.getElementById("files").files[0].name;
             console.log(file_data);
             // var file_data = $('#filecomment').prop('files')[0];  
             // var formData = new FormData(); 
@@ -1814,7 +1815,7 @@
                         $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     document.getElementById("comment_body").value = "";
-                    document.getElementById("filecomment").value = "";
+                    document.getElementById("files").value = "";
                     $('#modal-view-user form[name="view1"] input[name="comment"]').parent().html($viewComment);
                     getComment(ticketno);
                     

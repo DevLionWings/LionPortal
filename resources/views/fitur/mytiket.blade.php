@@ -1237,6 +1237,7 @@
 
         $(document).on('click', '.btncomment', function() {
             $("#comment2").load(" #comment2");
+            $("#comment1").load(" #comment1");
             var ticketno = $('#modal-view-user form[name="view-user"] input[name="ticketno"]').val();
             var requestor = $('#modal-view-user form[name="view-user"] input[name="requestorid"]').val();
             var approve = $('#modal-view-user form[name="view-user"] input[name="approveId"]').val();
@@ -1279,6 +1280,7 @@
                         $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     document.getElementById("comment_body").value = "";
+                    document.getElementById("filecomment").value = "";
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
                     getComment(ticketno);
         
