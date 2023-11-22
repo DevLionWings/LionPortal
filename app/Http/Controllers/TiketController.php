@@ -437,8 +437,8 @@ class TiketController extends Controller
         $assignto = $request->assignto;
         $status = $request->status;
         $ticketno = $request->ticketno;
-        $system = $request->systemfilter;
-        $module = $request->modulefilter;
+        $system = $request->system;
+        $module = $request->module;
         $date_arr = $request->get('daterange');
         $start = explode(' - ',$date_arr)[0];
         $start_date = date("Y-m-d", strtotime($start));

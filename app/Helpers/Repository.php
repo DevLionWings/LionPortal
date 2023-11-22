@@ -247,7 +247,7 @@ class Repository
                 ->orWhere('b.mgrid', $userid)
                 ->orWhere('a.assignedto', $userid)
                 ->orWhere('a.assignedto', '')
-                ->orderBy('a.createdby', 'desc')
+                ->orderBy('a.ticketno', 'desc')
                 ->limit(10)
                 ->simplePaginate($count);
             
@@ -306,6 +306,7 @@ class Repository
                     'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
                     'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
                     ->limit(10)
+                    ->orderBy('a.ticketno', 'desc')
                     ->simplePaginate($count);
 
             } else {
@@ -329,7 +330,7 @@ class Repository
                     ->orWhere('b.mgrid', $userid)
                     ->orWhere('a.assignedto', $userid)
                     ->orWhere('a.assignedto', '')
-                    ->orderBy('a.createdby', 'desc')
+                    ->orderBy('a.ticketno', 'desc')
                     ->count();
     
                 $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
@@ -353,7 +354,7 @@ class Repository
                     ->where('a.userid', $userid)
                     ->orWhere('b.mgrid', $userid)
                     ->orWhere('a.assignedto', '')
-                    ->orderBy('a.createdby', 'desc')
+                    ->orderBy('a.ticketno', 'desc')
                     ->limit(10)
                     ->simplePaginate($count);
 
@@ -435,6 +436,7 @@ class Repository
                     ->where('a.systemid', 'LIKE','%'.$system.'%')
                     ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                     ->limit(10)
+                    ->orderBy('a.ticketno', 'desc')
                     ->simplePaginate($count);
                 // return $data;
             } else {
@@ -497,7 +499,7 @@ class Repository
                     ->where('a.moduleid', 'LIKE','%'.$module.'%')
                     ->where('a.systemid', 'LIKE','%'.$system.'%')
                     ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
-                    ->orderBy('a.ticketno', 'DESC')
+                    ->orderBy('a.ticketno', 'desc')
                     ->limit(10)
                     ->simplePaginate($count);
 

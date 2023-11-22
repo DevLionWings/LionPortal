@@ -1498,7 +1498,7 @@
                         return settings.data;
                     },
                 },
-                order: [[ 7, "desc" ]],
+                order: [[ 10, "desc" ]],
                 columns: [
                     // {
                     //     data: 'ticketno',
@@ -2425,7 +2425,7 @@
                 'excel'
             ],
             ajax: "{{ route('get-tiket') }}",
-            order: [[ 7, "desc" ]],
+            order: [[ 10, "desc" ]],
             columns: [
                 // {
                 //     data: 'ticketno',

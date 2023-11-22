@@ -1876,7 +1876,7 @@
             responsive: false,
             searching: true,
             ajax: "{{ route('my-tiket') }}",
-            order: [[ 7, "desc" ]],
+            order: [[ 10, "desc" ]],
             dom: 'Blfrtip',
                 buttons: [
                     'excel'
