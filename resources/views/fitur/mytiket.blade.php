@@ -63,6 +63,9 @@
                                         <th>Subject</th>
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
+                                        <th>System</th>
+                                        <th>Module</th>
+                                        <th>Object Type</th>
                                         <th>Created On</th>
                                         <th>Target Date</th>
                                     </tr>
@@ -1965,6 +1968,18 @@
                 {
                     data: 'assigned_to',
                     name: 'assigned_to'
+                },
+                {
+                    data: 'systemname',
+                    name: 'systemname'
+                },
+                {
+                    data: 'modulename',
+                    name: 'modulename'
+                },
+                {
+                    data: 'objectname',
+                    name: 'objectname'
                 },
                 {
                     data: 'createdon',

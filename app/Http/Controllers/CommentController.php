@@ -30,24 +30,22 @@ class CommentController extends Controller
         $mgrid = Session::get('mgrid');
         $roleid = Session::get('roleid');
         $comment_body = $request->input('comment_body');
-        // $comment_body = $request->comment_body;
         $ticketno = $request->ticketno;
-        $file = $request->filecomment;
+        $file = $request->file('files');
         $requestor = $request->requestor;
         $mgrUser = $request->approve;
         $mgrIt = $request->approveit;
-        $strfile = str_replace( "\\", '/', $file);
-        $basefile = basename($strfile);
-      
+        // $strfile = str_replace( "\\", '/', $file);
+        // $basefile = basename($strfile);
+        
         $validate = $request->validate([
             'comment_body' => 'required'
         ]);
 
         if($validate){
-            
             $upload = array();
-            if (!empty($request->file('filecomment'))){
-                $doc = $request->file('filecomment');
+            if (!empty($request->file('files'))){
+                $doc = $request->file('files');
                 $path = Storage::putFileAs("public/comment/".$userid."/".$ticketno, new File($doc), $ticketno."_".date('Y-m-d').".".$doc->getClientOriginalExtension());
                 $path = explode("/", $path);
                 $path[0] = "storage";
@@ -55,6 +53,7 @@ class CommentController extends Controller
             } else {
                 $upload = [''];
             }
+            $strUpload = $upload[0];
 
             /* Generate Ticket Number */ 
             $year = date("Y");
@@ -90,7 +89,7 @@ class CommentController extends Controller
                 'counterno' => $counterno,
                 'senderid' => $userid,
                 'comment' => $request->comment_body,
-                'attachment' => $basefile,
+                'attachment' => $strUpload,
                 'createdon' =>  date('Y-m-d H:i:s'),
             ]);
 
@@ -165,9 +164,8 @@ class CommentController extends Controller
             ]);
 
             $data['disc'] = $commentArray; 
-
             return $data;
-
+            // return redirect()->route('tiket')->with("success", "Comment Save Successfully");
         } else {
             return redirect()->route('tiket')->with("error", "required");
         }

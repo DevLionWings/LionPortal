@@ -274,7 +274,7 @@ class TiketController extends Controller
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
-                data-objectid="'.$row["objectid"].'"  data-objectname="'.$row["objectname"].'" data-createdon="'.$row["createdon"].'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                data-objectid="'.$row["objectid"].'"  data-objectname="'.$row["objectname"].'" data-createdon="'.$row["createdon"].'" data-download="'.$document_name.'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 $updateBtn = ' <a href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-categoryid="'.$row["categoryid"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
@@ -437,17 +437,17 @@ class TiketController extends Controller
         $assignto = $request->assignto;
         $status = $request->status;
         $ticketno = $request->ticketno;
-        $system = $request->system;
+        $system = $request->systemfilter;
         $module = $request->modulefilter;
         $date_arr = $request->get('daterange');
         $start = explode(' - ',$date_arr)[0];
         $start_date = date("Y-m-d", strtotime($start));
         $end = explode(' - ',$date_arr)[1];
         $end_date = date("Y-m-d", strtotime($end));
-
+        
         /* Get Filter Ticket */
         $dataFilter = $this->repository->GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module);
-        
+    
         $json = json_decode($dataFilter, true);
         
         $dat = '';
@@ -717,6 +717,11 @@ class TiketController extends Controller
         $targetdate = $request->targetdate;
         $system = $request->system;
         $module = $request->module;
+        if(empty($module) || $module == null){
+            $module = 'MD00';
+        } else {
+            $module = $request->module;
+        }
         $object = $request->objecttype;
 
         $validated = $request->validate([

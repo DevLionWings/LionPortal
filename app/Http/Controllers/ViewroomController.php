@@ -54,14 +54,14 @@ class ViewroomController extends Controller
 
         foreach ($dataRoom as $key => $value) {
             array_push($dataTrimArray, [
-                "userid" => trim($value->userid),
-                "username" => trim($value->username),
+                "userid" => trim(strtoupper($value->userid)),
+                "username" => trim(strtoupper($value->username)),
                 "roomid" => trim($value->roomid),
                 "roomname" => trim($value->roomname),
                 "roomfloor" => trim($value->roomfloor),
                 "roomcapacity" => trim($value->roomcapacity),
                 "active" => trim($value->active),
-                "subject" => trim($value->subject),
+                "subject" => trim(strtoupper($value->subject)),
                 "description" => trim($value->description),
                 "statusroom" => trim($value->status),  
                 "startdate" => trim($value->startdate), 
@@ -69,11 +69,11 @@ class ViewroomController extends Controller
                 "starttime" => trim($value->starttime),
                 "endtime" => trim($value->endtime),
                 "bookedon" => trim($value->bookedon),
-                "bookedby" => trim($value->bookedby),
+                "bookedby" => trim(strtoupper($value->bookedby)),
             ]);
         }
         $data['dat'] = $dataTrimArray;
-       
+      
         return DataTables::of($data['dat'])
         ->make(true);
     }

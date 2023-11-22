@@ -56,7 +56,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label>Ticket :</label>
                                         <div class="input-group value">
@@ -95,7 +95,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label>Module :</label>
                                         <div class="input-group value">
@@ -108,11 +108,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label>System :</label>
                                         <div class="input-group value">
-                                            <select id="system" name="system" class="form-control input--style-6">
+                                            <select id="systemfilter" name="systemfilter" class="form-control input--style-6">
                                                 <option value="SY00"> all</option>
                                                 @foreach($sys as $syscode)
                                                 <option value="{{ $syscode['ID'] }}">{{ $syscode['NAME'] }}</option>
@@ -121,7 +121,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Date Range:</label>
                                         <div class="input-group">
@@ -172,6 +172,9 @@
                                         <th>Subject</th>
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
+                                        <th>System</th>
+                                        <th>Module</th>
+                                        <th>Object Type</th>
                                         <th>Created On</th>
                                         <th>Target Date</th>
                                     </tr>
@@ -344,7 +347,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="" name="view1" id="view1">
+                <form action="" method="post" enctype="multipart/form-data" name="view1" id="view1">
                     @csrf
                     <div class="modal-body">
                     <input type="hidden" id="approveId" name="approveId">
@@ -483,7 +486,12 @@
                         <div class="form-group" id="hidecmnt">
                             <!-- <label class="form-check-label" for="comment_body" disabled></label> -->
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body" placeholder="Write a comment..."></textarea>
+                            <div class="form-group">
+                                <label class="form-check-label" for="files"></label>
+                                <input type="file" name="files" id="files" class="form-control">
+                            </div>
                             <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs">Save</button>
+                            <!-- <button type="submit" class="btn btn-primary btn-xs">Save</button> -->
                         </div>
                         <!-- <div class="form-group">
                             <input type="file" name="filecomment" id="filecomment" class="form-control">
@@ -1458,6 +1466,8 @@
             var assignto = $('select[name="assignto"] option:selected').val();
             var status = $('select[name="status"] option:selected').val();
             var ticketno = $('select[name="ticketno"] option:selected').val();
+            var module = $('select[name="modulefilter"] option:selected').val();
+            var system = $('select[name="systemfilter"] option:selected').val();
            
             $('#tiket_list').DataTable().clear().destroy();
             var $dataticket = $('#tiket_list').DataTable({
@@ -1479,6 +1489,8 @@
                         d.assignto = $('select[name="assignto"] option:selected').val();
                         d.status = $('select[name="status"] option:selected').val();
                         d.ticketno = $('select[name="ticketno"] option:selected').val();
+                        d.module = $('select[name="modulefilter"] option:selected').val();
+                        d.system = $('select[name="systemfilter"] option:selected').val();
                     },
                     "dataSrc": function (settings) {
                         $btn_submit.text("Submit");
@@ -1574,6 +1586,18 @@
                     {
                         data: 'assigned_to',
                         name: 'assigned_to'
+                    },
+                    {
+                        data: 'systemname',
+                        name: 'systemname'
+                    },
+                    {
+                        data: 'modulename',
+                        name: 'modulename'
+                    },
+                    {
+                        data: 'objectname',
+                        name: 'objectname'
                     },
                     {
                         data: 'createdon',
@@ -1741,9 +1765,10 @@
             var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
             var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
             var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
-            var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
+            // var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
-            // var filecomment = document.getElementById("filecomment").files[0].name;
+            var file_data = document.getElementById("files").files[0].name;
+            console.log(file_data);
             // var file_data = $('#filecomment').prop('files')[0];  
             // var formData = new FormData(); 
             // formData.append("filecomment", file_data);
@@ -1777,6 +1802,7 @@
                         $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     document.getElementById("comment_body").value = "";
+                    document.getElementById("filecomment").value = "";
                     $('#modal-view-user form[name="view1"] input[name="comment"]').parent().html($viewComment);
                     getComment(ticketno);
                     
@@ -2479,6 +2505,18 @@
                     name: 'assigned_to'
                 },
                 {
+                    data: 'systemname',
+                    name: 'systemname'
+                },
+                {
+                    data: 'modulename',
+                    name: 'modulename'
+                },
+                {
+                    data: 'objectname',
+                    name: 'objectname'
+                },
+                {
                     data: 'createdon',
                     render: function(data) {
                         var today = new Date(data);
@@ -2567,8 +2605,8 @@
             showBtn.show();
             hideBtn.hide();
         });
-        
         /* End */
+
         /* close button reload */
         $(document).on('click', '.close-btn2', function() {
                 $("#comment1").load(" #comment1");
