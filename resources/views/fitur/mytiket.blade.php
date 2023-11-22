@@ -1950,7 +1950,19 @@
                         } else if(data == "IN PROGRESS"){
                             statusText = `<span class="badge badge-success">In Progress</span>`;
                         } else if(data == "WAITING FOR APPROVAL"){
-                            statusText = `<span class="badge badge-warning">Waiting Approval</span>`;
+                            statusText = `<span class="badge badge-warning">Waiting For Approval</span>`;
+                        } else if(data == "NOT STARTED"){
+                            statusText = `<span class="badge badge-dark">Not Started</span>`;
+                        } else if(data == "HOLD"){
+                            statusText = `<span class="badge badge-warning">Hold</span>`;
+                        } else if(data == "WAITING FOR USER"){
+                            statusText = `<span class="badge badge-success">Waiting For User</span>`;
+                        } else if(data == "MONITORING"){
+                            statusText = `<span class="badge badge-primary">Monitoring</span>`;
+                        } else if(data == "REQUEST TRANSPORT"){
+                            statusText = `<span class="badge badge-warning">Request Transport</span>`;
+                        } else if(data == "DONE TRANSPORT"){
+                            statusText = `<span class="badge badge-success">Done Transport</span>`;
                         } else {
                             statusText = `<span class="badge badge-primary">Open</span>`;
                         }
