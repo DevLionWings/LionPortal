@@ -546,7 +546,7 @@
                         </div>
                         <div class="form-group" id="transid">
                             <div class="form-group">
-                                <div class="name">Transposrt id :</div>
+                                <div class="name">Transport id :</div>
                                 <div class="input-group value">
                                     <select id="transportid" name="transportid" class="form-control input--style-6">
                                                             
@@ -559,11 +559,11 @@
                             <textarea type="text" name="transnumber" class="form-control" id="transnumber" rows="4" cols="50" ></textarea>
                         </div>
                         <div class="row">
-                            <div class="col-md-4"> 
+                            <div class="col-md-4" id="checklqa"> 
                                 <input type="checkbox" id="lqa" name="lqa" value="true"> 
                                 <label for="">LQA</label><br>
                             </div>
-                            <div class="col-md-4"> 
+                            <div class="col-md-4" id="checklpr"> 
                                 <input type="checkbox" id="lpr" name="lpr" value="true">
                                 <label for="">LPR</label><br>  
                             </div>
@@ -1267,11 +1267,9 @@
                     'filecomment' : file_data
                 },
                 success: function(response){ 
-                    // console.log(response);
                     // var $viewComment = $('.modal-content .modal-body');
                     // var target = $viewComment.find('form-group .modal-input');
-                    // var $viewComment = $(' <div class="form-group"></div>');
-                    var $viewComment = $('<div class=form-group id=comment1>'); 
+                    var $viewComment = $(' <div class="form-group"></div>');
                     $.each(response["disc"], function(key, data) {
                         var $nama = "<label class=form-check-label style=color:red>"+data["SENDER"]+"</label>";
                         var $date = "<label class=form-check-label style=font-size:11px>"+data["DATE"]+"<label>";
@@ -1279,8 +1277,9 @@
                         var $filecomment = "<a type=submit id=file name=file class=btn btn-link btn-sm style=font-size:15px readonly>"+data["FILE"]+"</a>"
                         $viewComment.append($nama,$date,$filecomment,$comment);
                     });
+                    
                     document.getElementById("comment_body").value = "";
-                    document.getElementById("filecomment").value = "";
+                    // document.getElementById("files").value = "";
                     $('#modal-view-user form[name="view-user"] input[name="comment"]').parent().html($viewComment);
                     getComment(ticketno);
         
@@ -1901,7 +1900,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -2107,7 +2106,7 @@
                 hideBtn.hide();
         });
         $(document).on('click', '.close-btn-trans', function() {
-            document.getElementById("transport").reset();
+                document.getElementById("transport").reset();
                 $("#history").load(" #history");
                 $("#history1").load(" #history1");
                 $('#approve-btn').prop('disabled', true);
@@ -2205,12 +2204,36 @@
             },
             success: function(response) {
                 // console.log(response);
-                var $select_transportid = $('<select type="text" id="transportid" name="transportid" class="form-control input--style-6"></select>');
+                var form = $("#transport");
+                var hide1 = $("#checklqa");
+                var hide2 = $("#checklpr");
+
+                var $select_transportid = $('<select type="text" id="transportid" name="transportid" class="form-control input--style-6"><option value="">Select Option</option></select>');
                 $.each(response, function(key, data) {
                     var $options = "<option value='"+data["TRANSPORTID"]+"'>"+data["TRANSPORTID"]+"</option>";
                     $select_transportid.append($options);
                 });
                 $('#modal-transport form[name="transport"] select[name="transportid"]').parent().html($select_transportid);
+
+                var select = $("#transportid");
+               
+                $.each(response, function(key, data) {
+                    select.change(function() {
+                    value = $(this).find(":selected").val()
+                        if(value == data["TRANSPORTID"]){
+                            if (data["LQA"] == 0 && data["TRANSPORTEDLQA"] == 0) {
+                                hide1.show();
+                                hide2.hide();
+                            } else if (data["LQA"] == 1 && data["LPR"] == 0 && data["TRANSPORTEDLQA"] == 1 && data["TRANSPORTEDLPR"] == 0){
+                                hide1.hide();
+                                hide2.show();
+                            } else if (data["LQA"] == 1 && data["LPR"] == 1 && data["TRANSPORTEDLQA"] == 1 && data["TRANSPORTEDLPR"] == 1){
+                                hide1.hide();
+                                hide2.hide();
+                            }
+                        }
+                    });
+                });
                 
             },
             error: function (error) {
@@ -2305,21 +2328,31 @@
         var select = $("#opsi");
         var hide1 = $("#transid");
         var hide2 = $("#transnumb");
+        var hide3 = $("#checklqa");
+        var hide4 = $("#checklpr");
 
         hide1.hide();
         hide2.hide();
+        hide3.hide();
+        hide4.hide();
 
         select.change(function() {
             value = $(this).find(":selected").val()
             if (value == 'exist') {
                 hide1.show();
                 hide2.hide();
+                hide3.hide();
+                hide4.hide();
             } else if (value == 'new'){
                 hide1.hide();
                 hide2.show();
+                hide3.show();
+                hide4.hide();
             } else {
                 hide1.hide();
                 hide2.hide();
+                hide3.hide();
+                hide4.hide();
             }
         });
     });

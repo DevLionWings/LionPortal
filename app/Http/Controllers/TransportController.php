@@ -40,7 +40,25 @@ class TransportController extends Controller
         }
         $emailSendTo = $dataUser->usermail;
         $emailNameSendTo = $dataUser->username;
-      
+        
+        /* Checked Opsi Transport */
+        if(empty($request->lqa) || empty($request->lpr)){
+            return redirect()->back()->with("error", "please checked checkbox");
+        } else if (empty($request->lqa)) {
+            $lqa = '1';
+            $date_lqa = date('Y-m-d H:i:s');
+            $lpr = '1';
+            $date_lpr = date('Y-m-d H:i:s');
+            $status = 'Request To LPR';
+        } else if (empty($request->lpr)){
+            $lqa = '1';
+            $date_lqa = date('Y-m-d H:i:s');
+            $lpr = '0';
+            $date_lpr = date('Y-m-d H:i:s');
+            $status = 'Request To LQA';
+        } 
+        /* end checked */
+
         /* Checked Transport Number*/
         if($request->opsi == "exist"){
             $transid = $request->transportid;
@@ -51,84 +69,78 @@ class TransportController extends Controller
 
             $trim_transno = [];
             foreach ($existing as $key => $value) {
-                array_push($trim_transno, trim(preg_replace('/\s+/', ',', $value->transportno)));
+                array_push($trim_transno, $value->transportno);
+                // array_push($trim_transno, trim(preg_replace('/\s+/', ',', $value->transportno)));
             }
-            $transno = implode(",", $trim_transno);
-
+            $transno = implode(" ", $trim_transno);
+      
+            $transportId = $existing[0]->transportid;
             $sendtolqa = $existing[0]->sendto_lqa;
             $sendtolpr = $existing[0]->sendto_lpr;
 
-            if($request->lqa == true){
-                $checkboxLqa = 1;
-                if($checkboxLqa == $sendtolqa){
-                    return redirect()->back()->with("error", "I've already made an LQA request");
-                } 
-            } else if($request->lpr == true){
-                $checkboxLpr = 1;
-                if($checkboxLpr == $sendtolpr){
-                    return redirect()->back()->with("error", "I've already made an LPR request");
-                } 
-            }
+            /* Update Transport to DB */
+            $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
+            ->where('transportid', $transid)
+            ->update([
+                'transportno' => $transno,
+                'sendto_lqa' => $lqa,
+                'createdon_lqa' => $date_lqa,
+                'sendto_lpr' => $lpr,
+                'createdon_lpr' => $date_lpr,
+                'createdon' => date('Y-m-d H:i:s'),
+            ]);
+
+            // if($request->lqa == true){
+            //     $checkboxLqa = 1;
+            //     if($checkboxLqa == $sendtolqa){
+            //         return redirect()->back()->with("error", "I've already made an LQA request");
+            //     } 
+            // } else if($request->lpr == true){
+            //     $checkboxLpr = 1;
+            //     if($checkboxLpr == $sendtolpr){
+            //         return redirect()->back()->with("error", "I've already made an LPR request");
+            //     } 
+            // } 
             /* End */
         } else if($request->opsi == "new"){
             $transno = $request->transnumber;
+
+            /* Generate Transport Id */
+            $year = date("Y");
+            $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT007')->where('period', $year)->first();
+
+            $subs1 = $dataPrefix->prefix;
+            $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
+            $transportId = $subs1.$subs2;
+            $last = $dataPrefix->last_number + 1;
+            $update = DB::connection('pgsql')->table('master_data.m_counter')
+                ->where('counterid', 'CT007')
+                ->where('period', $year)
+                ->update([
+                    'last_number' => $last
+            ]);
+            /* End */
+
+            /* Insert Transport to DB */
+            $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
+                'transportid' => $transportId,
+                'ticketid' => $request->ticketno,
+                'transportno' => $transno,
+                'sendto_lqa' => $lqa,
+                'createdon_lqa' => $date_lqa,
+                'sendto_lpr' => $lpr,
+                'createdon_lpr' => $date_lpr,
+                'createdon' => date('Y-m-d H:i:s'),
+            ]);
+            /* End */
         } else {
             $transno = "";
         }
         /* End */
-        
-        /* Checked Opsi Transport */
-        if(empty($request->lqa) && empty($request->lpr)){
-            return redirect()->back()->with("error", "please checked checkbox");
-        } else if (empty($request->lqa)) {
-            $lqa = '0';
-            $date_lqa = date('Y-m-d H:i:s');
-            $lpr = '1';
-            $date_lpr = date('Y-m-d H:i:s');
-        } else if (empty($request->lpr)){
-            $lqa = '1';
-            $date_lqa = date('Y-m-d H:i:s');
-            $lpr = '0';
-            $date_lpr = date('Y-m-d H:i:s');
-        } else {
-            $lqa = '1';
-            $date_lqa = date('Y-m-d H:i:s');
-            $lpr = '1';
-            $date_lpr = date('Y-m-d H:i:s');
-        }
-        /* end checked */
-        
-        /* Generate Transport Id */
-        $year = date("Y");
-        $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT007')->where('period', $year)->first();
 
-        $subs1 = $dataPrefix->prefix;
-        $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
-        $transportId = $subs1.$subs2;
-        $last = $dataPrefix->last_number + 1;
-        $update = DB::connection('pgsql')->table('master_data.m_counter')
-            ->where('counterid', 'CT007')
-            ->where('period', $year)
-            ->update([
-                'last_number' => $last
-        ]);
-        /* End */
-       
-        /* Insert Transport to DB */
-        $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
-            'transportid' => $transportId,
-            'ticketid' => $request->ticketno,
-            'transportno' => $transno,
-            'sendto_lqa' => $lqa,
-            'createdon_lqa' => $date_lqa,
-            'sendto_lpr' => $lpr,
-            'createdon_lpr' => $date_lpr,
-            'createdon' => date('Y-m-d H:i:s'),
-        ]);
-        /* End */
         /* Send Email */
         // $transportId = implode(",", $datatrq);
-        $status = "REQUEST";
+        // $status = "REQUEST";
         $remark = 'Request Transport';
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
@@ -156,22 +168,20 @@ class TransportController extends Controller
             $datelqa = date('Y-m-d H:i:s');
             $datelpr = date('Y-m-d H:i:s');
             $usernamelqa = Session::get('username');
-            $usernamelpr = Session::get('username');
+            $usernamelpr =  Session::get('username');
+            $status = "APPROVE TO LPR";
         } else if($request->sendlqa == '1'){
             $datelqa = date('Y-m-d H:i:s');
             $datelpr = date('Y-m-d H:i:s');
             $usernamelqa = Session::get('username');
             $usernamelpr = '';
-        } else if($request->sendlpr == '1'){
-            $datelqa = date('Y-m-d H:i:s');
-            $datelpr = date('Y-m-d H:i:s');
-            $usernamelqa = '';
-            $usernamelpr = Session::get('username');
+            $status = "APPROVE TO LQA";
         } else {
             $datelqa = date('Y-m-d H:i:s');
             $datelpr = date('Y-m-d H:i:s');
             $usernamelqa = '';
             $usernamelpr = '';
+            $status = "";
         }
         
         /* Approve Transport */
@@ -192,7 +202,7 @@ class TransportController extends Controller
 
         /* Send Email */ 
         $transportId = implode(",", $datatrq);
-        $status = "APPROVE";
+        // $status = "APPROVE";
         $remark = $request->remark;
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
@@ -302,16 +312,13 @@ class TransportController extends Controller
             $datelpr = date('Y-m-d H:i:s');
             $usernamelqa = Session::get('username');
             $usernamelpr = Session::get('username');
+            $status = "TRANSPORTED TO LPR";
         } else if($request->sendlqa == '1'){
             $datelqa = date('Y-m-d H:i:s');
             $datelpr =  date('Y-m-d H:i:s');
             $usernamelqa = Session::get('username');
             $usernamelpr = '';
-        } else if($request->sendlpr == '1'){
-            $datelqa =  date('Y-m-d H:i:s');
-            $datelpr = date('Y-m-d H:i:s');
-            $usernamelqa = '';
-            $usernamelpr = Session::get('username');
+            $status = "TRANSPORTED TO LQA";
         } else {
             $datelqa = date('Y-m-d H:i:s');
             $datelpr =  date('Y-m-d H:i:s');
@@ -335,7 +342,7 @@ class TransportController extends Controller
 
         /* Send Email */
         $transportId = implode(",", $datatrq);
-        $status = "TRANSPORTED";
+        // $status = "TRANSPORTED";
         $remark = $request->remark;
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
@@ -465,6 +472,8 @@ class TransportController extends Controller
                 "TRANSPORTID" => trim($value['transportid']),
                 "LQA" => trim($value['sendto_lqa']),
                 "LPR" => trim($value['sendto_lpr']),
+                "TRANSPORTEDLQA" => trim($value['status_trans_lqa']),
+                "TRANSPORTEDLPR" => trim($value['status_trans_lpr']),
             ]);
         }
 

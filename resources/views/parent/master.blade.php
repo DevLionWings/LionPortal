@@ -180,7 +180,7 @@
             var userid = {{ Session::get('userid') }};
             // console.log("This is javascript session" + userid);
             if( userid != '111111'){
-                if (idleTime > 1 && !isIdle) { // 1 minutes
+                if (idleTime > 10 && !isIdle) { // 10 minutes
                     isIdle = true;
                     // alert("Session timeout");
                     var url = "{{ route('login') }}";

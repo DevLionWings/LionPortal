@@ -851,7 +851,7 @@
                                 <div class="name">Transposrt id :</div>
                                 <div class="input-group value">
                                     <select id="transportid" name="transportid" class="form-control input--style-6">
-                                                            
+                                                          
                                     </select>
                                 </div>
                             </div>
@@ -861,11 +861,11 @@
                             <textarea type="text" name="transnumber" class="form-control" id="transnumber" rows="4" cols="50" ></textarea>
                         </div>
                         <div class="row">
-                            <div class="col-md-4"> 
+                            <div class="col-md-4" id="checklqa"> 
                                 <input type="checkbox" id="lqa" name="lqa" value="true"> 
                                 <label for="lqa">LQA</label><br>
                             </div>
-                            <div class="col-md-4"> 
+                            <div class="col-md-4" id="checklpr"> 
                                 <input type="checkbox" id="lpr" name="lpr" value="true">
                                 <label for="lpr">LPR</label><br>  
                             </div>
@@ -911,7 +911,7 @@
                             <input type="text" name="ticketno" class="form-control" id="ticketno" readonly>
                         </div> 
                         <div class="form-group" id="transid">
-                            <label class="form-check-label" for="transportid">Transposrt id :</label>
+                            <label class="form-check-label" for="transportid">Transport id :</label>
                             <div class="input-group value">
                                 <select class="approve-select2 form-control" id="data_transportid[]" multiple="multiple" name="data_transportid[]" style="width: 100%;">
                 
@@ -2775,13 +2775,37 @@
             },
             success: function(response) {
                 // console.log(response);
-                var $select_transportid = $('<select type="text" id="transportid" name="transportid" class="form-control input--style-6"></select>');
+                var form = $("#transport");
+                var hide1 = $("#checklqa");
+                var hide2 = $("#checklpr");
+
+                var $select_transportid = $('<select type="text" id="transportid" name="transportid" class="form-control input--style-6"><option value="">Select Option</option></select>');
                 $.each(response, function(key, data) {
                     var $options = "<option value='"+data["TRANSPORTID"]+"'>"+data["TRANSPORTID"]+"</option>";
                     $select_transportid.append($options);
                 });
                 $('#modal-transport form[name="transport"] select[name="transportid"]').parent().html($select_transportid);
-                
+
+                var select = $("#transportid");
+               
+                $.each(response, function(key, data) {
+                    select.change(function() {
+                    value = $(this).find(":selected").val()
+                        if(value == data["TRANSPORTID"]){
+                            if (data["LQA"] == 0 && data["TRANSPORTEDLQA"] == 0) {
+                                hide1.show();
+                                hide2.hide();
+                            } else if (data["LQA"] == 1 && data["LPR"] == 0 && data["TRANSPORTEDLQA"] == 1 && data["TRANSPORTEDLPR"] == 0){
+                                hide1.hide();
+                                hide2.show();
+                            } else if (data["LQA"] == 1 && data["LPR"] == 1 && data["TRANSPORTEDLQA"] == 1 && data["TRANSPORTEDLPR"] == 1){
+                                hide1.hide();
+                                hide2.hide();
+                            }
+                        }
+                    });
+                });
+                        
             },
             error: function (error) {
                 console.error(error);
@@ -2877,24 +2901,31 @@
         var select = $("#opsi");
         var hide1 = $("#transid");
         var hide2 = $("#transnumb");
+        var hide3 = $("#checklqa");
+        var hide4 = $("#checklpr");
 
         hide1.hide();
         hide2.hide();
+        hide3.hide();
+        hide4.hide();
 
         select.change(function() {
             value = $(this).find(":selected").val()
             if (value == 'exist') {
                 hide1.show();
                 hide2.hide();
-                $("#lpr").attr("disabled", false);
+                hide3.hide();
+                hide4.hide();
             } else if (value == 'new'){
                 hide1.hide();
                 hide2.show();
-                $("#lpr").attr("disabled", true);
+                hide3.show();
+                hide4.hide();
             } else {
                 hide1.hide();
                 hide2.hide();
-                $("#lpr").attr("disabled", false);
+                hide3.hide();
+                hide4.hide();
             }
         });
     });

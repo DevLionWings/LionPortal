@@ -10,23 +10,23 @@ Helpdesk Ticket
 
 <table style="text-align: left;">
     <tr>
-        <td style="text-align: left; vertical-align:top;">Ticket No</td>
+        <td style="text-align: left; vertical-align:top;">Ticket No &nbsp;&nbsp;</td>
         <td>:&nbsp;&nbsp;{{ $mailData['ticketno'] }}</td>
     </tr>
     <tr>
-        <td style="text-align: left; vertical-align:top;">Transport Id</td>
+        <td style="text-align: left; vertical-align:top;">TransportId</td>
         <td>:&nbsp;&nbsp;{{ $mailData['transportid'] }}</td>
     </tr>
     <tr>
-        <td style="text-align: left; vertical-align:top;">Transport No</td>
+        <td style="text-align: left; vertical-align:top;">TransportNo</td>
         <td>:&nbsp;&nbsp;{{ $mailData['transno'] }}</td>
     </tr>
     <tr>
-        <td style="text-align: left; vertical-align:top;">Sender</td>
+        <td style="text-align: left; vertical-align:top;">Sender &nbsp;&nbsp;</td>
         <td>:&nbsp;&nbsp;{{ $mailData['sendername'] }}</td>
     </tr>
     <tr>
-        <td style="text-align: left; vertical-align:top;">Status</td>
+        <td style="text-align: left; vertical-align:top;">Status &nbsp;&nbsp;</td>
         <td>:&nbsp;&nbsp;{{ $mailData['status'] }}</td>
     </tr>
     <tr>
