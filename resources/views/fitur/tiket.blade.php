@@ -177,6 +177,7 @@
                                         <th>Object Type</th>
                                         <th>Created On</th>
                                         <th>Target Date</th>
+                                        <th>Last Update</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -480,28 +481,15 @@
                             <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
                         </div>
                         <hr />
-                        <!-- <label class="form-check-label">Display Comment :</label> -->
-                        
                         <h4 class="modal-title">Activity :</h4>
                         <div class="form-group" id="hidecmnt">
-                            <!-- <label class="form-check-label" for="comment_body" disabled></label> -->
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body" placeholder="Write a comment..."></textarea>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="form-check-label" for="filecomment"></label>
                                 <input type="file" name="filecomment" id="filecomment" class="form-control">
-                            </div>
+                            </div> -->
                             <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs">Save</button>
-                            <!-- <button type="submit" class="btn btn-primary btn-xs">Save</button> -->
                         </div>
-                        <!-- <div class="form-group">
-                            <input type="file" name="filecomment" id="filecomment" class="form-control">
-                        </div> -->
-                        <!-- <div class="form-group" >
-                            <input type="text" name="countcomment" id="countcomment" class="modal-input" readonly>
-                        </div>
-                        <div class="form-group" >
-                            <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
-                        </div> -->
                         <div class="row">
                             <div class="col-3"> 
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> Show Details</button>
@@ -576,7 +564,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Update Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close-btn-update close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -658,7 +646,7 @@
                             <div class="name">Module :</div>
                             <div class="input-group value">
                                 <select id="moduleid" name="moduleid" class="form-control input--style-6">
-                                    <option value=""> Masukkan Pilihan :</option>
+                                    <option value="MD00"> Masukkan Pilihan :</option>
                                     @foreach($mdl as $mdlcode)
                                     <option value="{{ $mdlcode['ID'] }}">{{ $mdlcode['NAME'] }}</option>
                                     @endforeach
@@ -714,7 +702,7 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="close-btn-update btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
@@ -1634,7 +1622,7 @@
                         }
                     },
                     {
-                    data: 'targetdate',
+                        data: 'targetdate',
                         render: function(data) {
                             // console.log(data);
                             if(data == ''){
@@ -1660,6 +1648,32 @@
                             return date;   
                         }
                     },
+                    {
+                        data: 'last_update',
+                        render: function(data) {
+                            if(data == ''){
+                                var date = "";
+                            } else {
+                                var today = new Date(data);
+                                var day = today.getDate() + "";
+                                var month = (today.getMonth() + 1) + "";
+                                var year = today.getFullYear() + "";
+                                var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                                var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                                var seconds = today.getSeconds() + "";
+
+                                day = day;
+                                month = month;
+                                year = year;
+                                hour = hour;
+                                minutes = minutes;
+                                seconds = seconds;
+                                // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                                var date = day + "/" + month + "/" + year + "," + hour + ":" + minutes + ":" + seconds;
+                            }
+                            return date;   
+                        }
+                    },    
                 ],
                 oLanguage: {
                     "sLengthMenu": "Tampilkan _MENU_ data",
@@ -2589,6 +2603,32 @@
                         return date;   
                     }
                 },
+                {
+                    data: 'last_update',
+                    render: function(data) {
+                        if(data == ''){
+                            var date = "";
+                        } else {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year + "," + hour + ":" + minutes + ":" + seconds;
+                        }
+                        return date;   
+                    }
+                },
             ],
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
@@ -2679,6 +2719,9 @@
                 var hideBtn = $("#btnhidetransported");
                 showBtn.show();
                 hideBtn.hide();
+        });
+        $(document).on('click', '.close-btn-update', function() {
+                $("#update").load(" #update"); 
         });
         /* end */
 

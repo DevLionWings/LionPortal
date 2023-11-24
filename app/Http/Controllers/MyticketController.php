@@ -221,6 +221,7 @@ class MyticketController extends Controller
                     "objectid" => trim($value['objectid']),
                     "objectname" => trim($value['objectname']),
                     "systemname" => trim($value['systemname']),
+                    "last_update" => trim($value['last_update']),
                 ]);
             }
             $data['dat'] = $dataTrimArray;

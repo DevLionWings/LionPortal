@@ -68,6 +68,7 @@
                                         <th>Object Type</th>
                                         <th>Created On</th>
                                         <th>Target Date</th>
+                                        <th>Last Update</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -274,7 +275,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Update Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close-btn-update close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -412,7 +413,7 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="close-btn-update btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
@@ -997,7 +998,7 @@
             $form.find('input[name="requestorid"]').val(user_id);
             $form.find('input[name="dateapproveit"]').val(approveitdate);
             $form.find('input[name="comment_body"]').val(comment_body);
-            $form.find('input[name="systemid"]').val(systemid);
+            $form.find('input[name="systemid"]').val(systemname);
             $form.find('input[name="moduleid"]').val(modulename);
             $form.find('input[name="objectid"]').val(objectname);
             $form.find('input[name="upload"]').val(upload);
@@ -2043,6 +2044,33 @@
                         return date;   
                     }
                 },
+                {
+                    data: 'last_update',
+                    render: function(data) {
+                        // console.log(data);
+                        if(data == ''){
+                            var date = "";
+                        } else {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year + "," + hour + ":" + minutes + ":" + seconds;
+                        }
+                        return date;   
+                    }
+                },
             ],
             oLanguage: {
 				"sLengthMenu": "Tampilkan _MENU_ data",
@@ -2134,6 +2162,10 @@
                 var hideBtn = $("#btnhidetransported");
                 showBtn.show();
                 hideBtn.hide();
+        });
+
+        $(document).on('click', '.close-btn-update', function() {
+                $("#update").load(" #update"); 
         });
         /* end */
     });

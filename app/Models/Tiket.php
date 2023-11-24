@@ -34,6 +34,11 @@ class Tiket extends Model
         'approvedby2_date',
         'approvedby3_date',
         'approvedbyit_date',
-        'createdby'
+        'createdby',
+        'target_date',
+        'systemid',
+        'objectid',
+        'moduleid',
+        'last_update'
     ];
 }

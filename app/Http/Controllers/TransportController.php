@@ -482,6 +482,4 @@ class TransportController extends Controller
         return $transportArray;
     }
 
-    
-
 }

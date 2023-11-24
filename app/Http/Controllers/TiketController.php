@@ -227,7 +227,8 @@ class TiketController extends Controller
                     "modulename" => trim($value['modulename']),
                     "objectid" => trim($value['objectid']),
                     "objectname" => trim($value['objectname']),
-                    "systemname" => trim($value['systemname'])
+                    "systemname" => trim($value['systemname']),
+                    "last_update" => trim($value['last_update'])
             
                 ]); 
             }
@@ -516,6 +517,7 @@ class TiketController extends Controller
                     "objectid" => trim($value['objectid']),
                     "objectname" => trim($value['objectname']),
                     "systemname" => trim($value['systemname']),
+                    "last_update" => trim($value['last_update'])
                 ]);
             }
             $data['dat'] = $dataTrimArray;
@@ -1095,6 +1097,14 @@ class TiketController extends Controller
         $assignName = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
         $assign = $request->assignto;
         $category = $request->category;
+        $module = $request->module;
+        if(empty($module) || $module == null){
+            $module = 'MD00';
+        } else if ($module == 'MD00'){
+            $module = 'MD00';
+        } else {
+            $module = $request->moduleid;
+        }
 
         $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
         ->where('ticketno',  $request->ticketno)
@@ -1102,11 +1112,12 @@ class TiketController extends Controller
             'categoryid' => $request->category,
             'priorid' => $request->priority,
             'objectid' => $request->objecttype,
-            'moduleid' => $request->moduleid,
+            'moduleid' => $module,
             'detail' => $request->detail,
             'assignedto' => $request->assignto,
             'target_date' => $request->targetdates,
-            'statusid' => $request->status
+            'statusid' => $request->status,
+            'last_update' => date('Y-m-d H:i:s')
         ]);
 
         /* Get Data Ticket */
@@ -1131,7 +1142,7 @@ class TiketController extends Controller
 
         /* Get User Email */ 
         $emailADD = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
-        $emailSign = $emailADD['emailSign'];
+        $emailSign = $assignName->usermail;
         $emailReq = $emailADD['emailReq'];
         $assignNameSign =  $assignName->username;
         $emailApprove1 = $emailADD['emailApprove1'];
