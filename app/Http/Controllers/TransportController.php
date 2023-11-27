@@ -42,9 +42,7 @@ class TransportController extends Controller
         $emailNameSendTo = $dataUser->username;
         
         /* Checked Opsi Transport */
-        if(empty($request->lqa) || empty($request->lpr)){
-            return redirect()->back()->with("error", "please checked checkbox");
-        } else if (empty($request->lqa)) {
+        if (empty($request->lqa)) {
             $lqa = '1';
             $date_lqa = date('Y-m-d H:i:s');
             $lpr = '1';

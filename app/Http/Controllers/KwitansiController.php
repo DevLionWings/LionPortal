@@ -303,14 +303,14 @@ class KwitansiController extends Controller
         $subsjabatan = substr($datajabatan, 3, 12);
         $exp = explode(".", $subsjabatan);
         $jabatan = implode("", $exp);
-
+    
         $isExist  = DB::connection('pgsql')->table('hris.t_kwitansi_backup')
             ->where('nik', $id)
             ->where('type', $type)
             ->where('category', $category)
-            ->doesntExist();
+            ->exists();
 
-        if ($isExist) {
+        if (!$isExist) {
             $count = DB::connection('pgsql')->table('hris.t_kwitansi')->count();
             $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
         
@@ -521,7 +521,6 @@ class KwitansiController extends Controller
             $arrayInsert = [];
             $draw = [
                 'idkwitansi' => $data->idkwitansi,
-                'type' => $data->type,
                 'nik' => $data->nik,
                 'namakaryawan' => $data->namakaryawan,
                 'bagian' => $data->bagian,
@@ -539,10 +538,13 @@ class KwitansiController extends Controller
                 'untuk' => $data->untuk,
                 'keterangan' => $data->keterangan,
                 'terbilang' => $data->terbilang,
+                'masakerja' => $data->masakerja,
+                'type' => $data->type,
+                'category' => $data->category,
+                'selisih' => $data->selisih,
+                'ket_selisih' => $data->ket_selisih,
                 'haribaru' => $data->haribaru,
                 'harilama' => $data->harilama,
-                'selisih' => $data->selisih,
-                'category' => $data->category,
                 'createdon' => $datenow
             ];
             $arrayInsert[] = $draw;      

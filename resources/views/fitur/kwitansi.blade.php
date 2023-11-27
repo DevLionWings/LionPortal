@@ -389,6 +389,8 @@
                                 alert("Type Tidak Boleh Sama");
                             } else if(response == "already exist"){
                                 alert("Kwitansi sudah pernah dibuat");
+                            } else if(response == "exists"){
+                                alert("the receipt has already been exists, check to history receipt");
                             } else {
                                 document.getElementById("form1").reset();
                                 $('#datakwitansi').DataTable().ajax.reload();
@@ -428,7 +430,7 @@
                             'tglpisah' : tglpisah
                         },
                         success: function(response){ 
-                            console.log(response);
+                            // console.log(response);
                             if(response == "Max"){
                                 alert("Maximum Input 4 Kwitansi");
                             } else if(response == "Duplicate"){
@@ -480,6 +482,8 @@
                                 alert("Type Tidak Boleh Sama");
                             } else if(response == "already exist"){
                                 alert("Kwitansi sudah pernah dibuat");
+                            } else if(response == "exists"){
+                                alert("the receipt has already been exists, check to history receipt");
                             } else {
                                 document.getElementById("form1").reset();
                                 $('#datakwitansi').DataTable().ajax.reload();
@@ -518,7 +522,9 @@
                         } else if(response == "Duplicate"){
                             alert("Type Tidak Boleh Sama");
                         } else if(response == "already exist"){
-                                alert("Kwitansi sudah pernah dibuat");
+                            alert("Kwitansi sudah pernah dibuat");
+                        } else if(response == "exists"){
+                            alert("the receipt has already been exists, check to history receipt");
                         } else {
                             document.getElementById("form1").reset();
                             $('#datakwitansi').DataTable().ajax.reload();

@@ -431,7 +431,7 @@
                             'bpjs' : bpjs
                         },
                         success: function(response) {
-                            // console.log(response[0]);
+                            // console.log(response);
                             $('#nama').val(response[0]['NAME']);
                             $('#bagian').val(response[0]['BAGIAN']);
                             $('#gaji').val(response[0]['GAJI']);
@@ -499,7 +499,10 @@
                             'bpjs' : bpjs
                         },
                         success: function(response) {
-                            // console.log(response[0]);
+                            // console.log(response);
+                            if(response == "notfound"){
+                                alert("Karyawan Not Found Please Add Karyawan in 'List Karyawan'");
+                            }  
                             $('#nama').val(response[0]['NAME']);
                             $('#bagian').val(response[0]['BAGIAN']);
                             $('#gaji').val(response[0]['GAJI']);

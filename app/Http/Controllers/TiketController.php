@@ -1097,7 +1097,8 @@ class TiketController extends Controller
         $assignName = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
         $assign = $request->assignto;
         $category = $request->category;
-        $module = $request->module;
+        $module = $request->moduleid;
+    
         if(empty($module) || $module == null){
             $module = 'MD00';
         } else if ($module == 'MD00'){

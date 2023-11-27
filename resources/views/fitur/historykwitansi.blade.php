@@ -69,6 +69,7 @@
                                         <th>Type</th>
                                         <th>Category</th>
                                         <th>Gaji</th>
+                                        <th>Nominal</th>
                                         <th>Untuk</th>
                                         <th>Keterangan</th>
                                         <th>Action</th>
@@ -110,6 +111,32 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <div class="modal fade show" id="modal-reprint" aria-modal="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Re-Print Kwitansi</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="{{route('history-reprint')}}" method="post">
+                    @csrf
+                    <input type="hidden" id="nik" name="nik"/>
+                    <input type="hidden" id="idkwitansi" name="idkwitansi"/>
+                    <div class="modal-body">
+                        <p>Yakin ingin Re-print <span class="text-bold"></span></p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
 @endsection
 @section('extend-js')
@@ -141,6 +168,12 @@
             $('#delete-history-id').val($(this).attr("data-nik"));
             $('#delete-history-idkwitansi').val($(this).attr("data-idkwitansi"));
             $('#modal-delete-user').modal('show');;
+        })
+
+        $(document).on('click', '.reprint', function () {
+            $('#nik').val($(this).attr("data-nik"));
+            $('#idkwitansi').val($(this).attr("data-idkwitansi"));
+            $('#modal-reprint').modal('show');;
         })
 
         var table = $('#list').DataTable({
@@ -186,7 +219,21 @@
                 },
                 {
                     data: 'gaji',
-                    name: 'gaji'
+                    render: function(data){
+                        var idr = "Rp. "
+                        var convertRupiah = $.fn.dataTable.render.number('.', ',', 2, idr).display(data); 
+                        
+                        return convertRupiah;
+                    }
+                },
+                {
+                    data: 'total',
+                    render: function(data){
+                        var idr = "Rp. "
+                        var convertRupiah = $.fn.dataTable.render.number('.', ',', 2, idr).display(data); 
+                        
+                        return convertRupiah;
+                    }
                 },
                 {
                     data: 'untuk',

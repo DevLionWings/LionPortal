@@ -1935,10 +1935,8 @@
                             statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
                         } else if (data == 'SOFTWARE'){
                             statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
-                        } else if (data == 'VPN'){
+                        } else {
                             statusText = `<span class="badge badge-warning">VPN</span>`;
-                        } else if (data == 'DEPLOY'){
-                            statusText = `<span class="badge badge-dark">DEPLOY</span>`;
                         }
                             
                         return statusText;

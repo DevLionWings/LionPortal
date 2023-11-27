@@ -64,6 +64,10 @@ class CutiController extends Controller
                             ->first();
             
             $datakaryawan2 = DB::connection('pgsql')->table('hris.t_karyawan')->where('idsmu', $id)->first();
+            if($datakaryawan2 == null){
+                $data = 'notfound';
+                return $data;
+            }
 
             if(DB::connection('pgsql')->table('hris.t_kwitansi_backup')->where('nik', $id)->exists()){
                 $datahistory = DB::connection('pgsql')->table('hris.t_kwitansi_backup')->where('nik', $id)->first();

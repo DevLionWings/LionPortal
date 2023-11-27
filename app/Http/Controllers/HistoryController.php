@@ -7,14 +7,19 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\Response;
 use App\Helpers\Repository;
+use App\Helpers\Convertion;
+use Carbon\Carbon;
 use DataTables;
+use DateTime;
+use PDF;
 
 class HistoryController extends Controller
 {
-    public function __construct(Repository $repository, Response $response)
+    public function __construct(Repository $repository, Response $response, Convertion $convertion)
     {
         $this->repository = $repository;
         $this->response = $response;
+        $this->convertion = $convertion;
     }
 
     public function index(Request $request)
@@ -67,7 +72,9 @@ class HistoryController extends Controller
         return DataTables::of($data['dat'])
         ->addColumn('action', function($row){
             $deleteBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-nik="'.$row["nik"].'" data-idkwitansi="'.$row["idkwitansi"].'"><i class="fa fa-trash" aria-hidden="true"></i></a>';
-            return $deleteBtn;
+
+            $reprintBtn = ' <a href="javascript:void(0)" class="reprint btn btn-success btn-sm" data-nik="'.$row["nik"].'" data-idkwitansi="'.$row["idkwitansi"].'"><i class="fa fa-print" aria-hidden="true"></i></a>';
+            return $reprintBtn. $deleteBtn;
             
         })
         ->rawColumns(['action'])
@@ -83,5 +90,80 @@ class HistoryController extends Controller
             return redirect()->back()->with("error", "Failed");
         }
         
+    }
+
+    public function reprint(Request $request)
+    {   
+        $idkwitansi = $request->idkwitansi;
+        $nik = $request->nik;
+
+        $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi_backup')->where('nik', $nik)->where('idkwitansi', $idkwitansi)->get();
+     
+        $datajson =  array(
+                        "data" => array()
+                    );
+        if($datakwitansi == true){
+            $counter = 0;
+            foreach($datakwitansi as $key => $value){
+                ++$counter;
+                if($value->type == 3 ||  $value->type == 1.5 || $value->type == 0){
+                    if($value->lamacuti == 0 ){
+                        array_push($datajson["data"], [
+                            "counter" => $counter,
+                            "type" => trim($value->type),
+                            "nokwitansi" => trim($value->idkwitansi),
+                            "nama" => trim($value->namakaryawan),
+                            "terimadari" => 'PT.LION WINGS, JAKARTA',
+                            "nominal" => number_format($value->total,0,',','.').',-',
+                            "terbilang" => $this->convertion->TERBILANG($value->selisih).' '.'RUPIAH',
+                            "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                            "keterangan" => "Selisih"." ".$value->untuk.PHP_EOL.$value->keterangan,
+                            "lamakerja" => trim($value->masakerja),
+                            "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
+                            "selisih" => number_format($value->selisih,0,',','.').',-',
+                            "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim(date($value->tanggalmasuk)))->subDays(1)->translatedFormat('d F Y')
+                        ]);
+                    } else {
+                        array_push($datajson["data"], [
+                            "counter" => $counter,
+                            "type" => trim($value->type),
+                            "nokwitansi" => trim($value->idkwitansi),
+                            "nama" => trim($value->namakaryawan),
+                            "terimadari" => 'PT.LION WINGS, JAKARTA',
+                            "nominal" => number_format($value->total,0,',','.').',-',
+                            "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
+                            "tanggal" =>  "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                            "keterangan" => $value->untuk.PHP_EOL.$value->keterangan,
+                            "lamakerja" => trim($value->masakerja),
+                            "tglmasuk" => Carbon::parse(trim($value->tanggalmasuk))->translatedFormat('d F Y'),
+                            "periode" => "Periode Cuti : ".Carbon::parse(trim($value->tanggalcuti))->translatedFormat('d F Y').' - '.Carbon::parse(trim(date($value->tanggalmasuk)))->subDays(1)->translatedFormat('d F Y')
+                        ]);
+                    }
+                } else {
+                    array_push($datajson["data"], [
+                            "counter" => $counter,
+                            "rapel" => "",
+                            "type" => trim($value->type),
+                            "nokwitansi" => trim($value->idkwitansi),
+                            "nama" => trim($value->namakaryawan),
+                            "terimadari" => 'PT.LION WINGS, JAKARTA',
+                            "nominal" => number_format($value->total,0,',','.').',-',
+                            "terbilang" => $this->convertion->TERBILANG($value->total).' '.'RUPIAH',
+                            "tanggal" => "Jakarta".", ".\Carbon\Carbon::today()->translatedFormat('d F Y'),
+                            "keterangan" => trim($value->keterangan),
+                            "lamakerja" => trim($value->masakerja),
+                            "tglpisah" => Carbon::parse(trim($value->tglpisah))->translatedFormat('d F Y')
+                    ]);  
+                }
+            }
+            $datajson = json_decode(json_encode($datajson));
+            $data['alldata'] = $datajson->data;
+        } else {
+            $data = ['']; 
+            
+        }
+
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('receipt.templatekwitansi', $data)->setPaper('f4', 'portrait');
+        return $pdf->stream('Print_Kwitansi' . date('dmYHis') . '.pdf');
     }
 }

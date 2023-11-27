@@ -133,14 +133,13 @@
                                 <table id="room_list" class="table table-bordered table-hover" width="100%">
                                     <thead>
                                         <tr>
-                                            <b><th style="font-size:20px;">Room</th></b>
-                                            <b><th style="font-size:20px;">Status</th></b>
-                                            <b><th style="font-size:20px;">Subject</th></b>
-                                            <b><th style="font-size:20px;">Booked By</th></b>
-                                            <b><th style="font-size:20px;">Date</th></b>
-                                            <!-- <b><th style="font-size:20px;">End Date</th></b> -->
-                                            <b><th style="font-size:20px;">Start Time</th></b>
-                                            <b><th style="font-size:20px;">End Time</th></b>
+                                            <b><th style="font-size:20px;">ROOM</th></b>
+                                            <b><th style="font-size:20px;">STATUS</th></b>
+                                            <b><th style="font-size:20px;">SUBJECT</th></b>
+                                            <b><th style="font-size:20px;">BOOKED BY</th></b>
+                                            <b><th style="font-size:20px;">DATE</th></b>
+                                            <b><th style="font-size:20px;">START TIME</th></b>
+                                            <b><th style="font-size:20px;">END TIME</th></b>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -173,14 +172,8 @@
 <script type="text/javascript">
     $(function () {    
         var table = $('#room_list').DataTable({
-            scrollX: false,
             processing: true,
             serverSide: true,
-            responsive: false,
-            searching: false,
-            lengthChange: false,
-            paging: false,
-            info: false, 
             ajax: "{{ route('list-room') }}",
             order: [[ 3, "desc" ]],
             columns: [
@@ -243,33 +236,6 @@
                         return statusText + ' ' + data;  
                     }
                 },
-                // {
-                //     data: 'enddate',
-                //     render: function(data){
-                //         var today = new Date(data);
-                //         var day = today.getDate() + "";
-                //         var month = (today.getMonth() + 1) + "";
-                //         var year = today.getFullYear() + "";
-                //         var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
-                //         var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
-                //         var seconds = today.getSeconds() + "";
-                //         if (day < 10) {
-                //             day = '0' + day;
-                //         }
-
-                //         if (month < 10) {
-                //             month = `0${month}`;
-                //         }
-                //         year = year;
-                //         hour = hour;
-                //         minutes = minutes;
-                //         seconds = seconds;
-                //         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                //         var date = day + "-" + month + "-" + year;
-                //         statusText = `<i class="far fa-calendar-alt"></i>`;
-                //         return statusText + ' ' + date;  
-                //     }
-                // },
                 {
                     data: 'starttime',
                     render: function(data){
@@ -286,7 +252,6 @@
                 },
             ],
             rowCallback: function(row, data, index){
-                // console.log(data['starttime']);
                 var today = new Date();
                 var day = today.getDate() + "";
                 var month = (today.getMonth() + 1) + "";

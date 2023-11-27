@@ -111,6 +111,7 @@ Route::post('/karyawan/update', [KaryawanController::class,'update'])->name('kar
 Route::get('/history', [HistoryController::class,'index'])->name('history');
 Route::get('/history/list', [HistoryController::class,'dataList'])->name('history-list');
 Route::post('/history/delete', [HistoryController::class,'delete'])->name('history-delete');
+Route::post('/history/reprint', [HistoryController::class,'reprint'])->name('history-reprint');
 
 /* Master Data */
 // Master Counter //
