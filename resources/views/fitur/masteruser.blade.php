@@ -378,7 +378,7 @@
             var status  = $(this).attr('data-status');
             var usermail  = $(this).attr('data-usermail');
             var $modal = $('#modal-update-user');
-            var $form = $modal.find('form[name="update-user"]');
+            var $form_update = $modal.find('form[name="update-user"]');
             $form.find('input[name="userid"]').val(userid);
             $form.find('input[name="username"]').val(username);
             $form.find('input[name="pass"]').val(pass);
@@ -428,7 +428,7 @@
             var $form = $modal.find('form[name="updatelogin-user"]');
             $form.find('input[name="userid"]').val(userid);
             $form.find('input[name="username"]').val(username);
-            var status_options = $form_update.find("select[name='status'").children();
+            var status_options = $form.find("select[name='status'").children();
             $.each(status_options, function(key, value) {
                 if($(value).val() === status[0]) {
                     $(value).attr('selected', true);
