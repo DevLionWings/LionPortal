@@ -44,7 +44,7 @@ class TransportController extends Controller
         /* Checked Opsi Transport */
         if (empty($request->lqa)) {
             $lqa = '1';
-            $date_lqa = date('Y-m-d H:i:s');
+            $date_lqa = '';
             $lpr = '1';
             $date_lpr = date('Y-m-d H:i:s');
             $status = 'Request To LPR';
@@ -52,7 +52,7 @@ class TransportController extends Controller
             $lqa = '1';
             $date_lqa = date('Y-m-d H:i:s');
             $lpr = '0';
-            $date_lpr = date('Y-m-d H:i:s');
+            $date_lpr = '';
             $status = 'Request To LQA';
         } 
         /* end checked */
@@ -77,29 +77,27 @@ class TransportController extends Controller
             $sendtolpr = $existing[0]->sendto_lpr;
 
             /* Update Transport to DB */
-            $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
-            ->where('transportid', $transid)
-            ->update([
-                'transportno' => $transno,
-                'sendto_lqa' => $lqa,
-                'createdon_lqa' => $date_lqa,
-                'sendto_lpr' => $lpr,
-                'createdon_lpr' => $date_lpr,
-                'createdon' => date('Y-m-d H:i:s'),
-            ]);
-
-            // if($request->lqa == true){
-            //     $checkboxLqa = 1;
-            //     if($checkboxLqa == $sendtolqa){
-            //         return redirect()->back()->with("error", "I've already made an LQA request");
-            //     } 
-            // } else if($request->lpr == true){
-            //     $checkboxLpr = 1;
-            //     if($checkboxLpr == $sendtolpr){
-            //         return redirect()->back()->with("error", "I've already made an LPR request");
-            //     } 
-            // } 
+            if($date_lqa == ''){
+                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
+                ->where('transportid', $transid)
+                ->update([
+                    'transportno' => $transno,
+                    'sendto_lqa' => $lqa,
+                    'sendto_lpr' => $lpr,
+                    'createdon_lpr' => $date_lpr
+                ]);
+            } else {
+                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
+                ->where('transportid', $transid)
+                ->update([
+                    'transportno' => $transno,
+                    'sendto_lqa' => $lqa,
+                    'createdon_lqa' => $date_lqa,
+                    'sendto_lpr' => $lpr
+                ]);
+            } 
             /* End */
+
         } else if($request->opsi == "new"){
             $transno = $request->transnumber;
 
@@ -122,7 +120,7 @@ class TransportController extends Controller
             /* Insert Transport to DB */
             $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
                 'transportid' => $transportId,
-                'ticketid' => $request->ticketno,
+                'ticketno' => $request->ticketno,
                 'transportno' => $transno,
                 'sendto_lqa' => $lqa,
                 'createdon_lqa' => $date_lqa,
@@ -358,7 +356,7 @@ class TransportController extends Controller
         $ticketno = $request->ticketno;
 
         $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')
-                ->where('ticketid', $ticketno)
+                ->where('ticketno', $ticketno)
                 ->orderBy('createdon', 'desc')
                 ->get();
       
@@ -401,7 +399,7 @@ class TransportController extends Controller
     public function approveOption(Request $request)
     {
         $dataTransport =  DB::connection('pgsql')->table('helpdesk.t_transport')
-            ->where('ticketid', $request->ticketno)
+            ->where('ticketno', $request->ticketno)
             ->where(function($q){
                 $q->where('sendto_lqa', 1)->where('status_lqa', 0)
                 ->orWhere('sendto_lpr', 1)->where('status_lpr', 0);
@@ -429,7 +427,7 @@ class TransportController extends Controller
     public function transportOption(Request $request)
     {
         $dataTransport =  DB::connection('pgsql')->table('helpdesk.t_transport')
-            ->where('ticketid', $request->ticketno)
+            ->where('ticketno', $request->ticketno)
             ->where(function($q){
                 $q->where('status_lqa', 1)->where('status_trans_lqa', 0)
                 ->orWhere('status_lpr', 1)->where('status_trans_lpr', 0);
@@ -457,7 +455,7 @@ class TransportController extends Controller
     public function transportOptionCreate(Request $request)
     {
         $dataTransport =  DB::connection('pgsql')->table('helpdesk.t_transport')
-        ->where('ticketid', $request->ticketno)
+        ->where('ticketno', $request->ticketno)
         ->get();
 
         $jsonTransportid = json_decode($dataTransport, true);

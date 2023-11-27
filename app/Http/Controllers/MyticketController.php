@@ -234,7 +234,7 @@ class MyticketController extends Controller
         
         return DataTables::of($data['dat'])
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketid', $row["ticketno"])->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {

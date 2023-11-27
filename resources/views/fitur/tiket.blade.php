@@ -87,7 +87,7 @@
                                         <label>Status :</label>
                                         <div class="input-group value">
                                             <select id="status" name="status" class="form-control input--style-6">
-                                                <option value="SD00"> all</option>
+                                                <option value="SD"> all</option>
                                                 @foreach($stat as $statcode)
                                                 <option value="{{ $statcode['ID'] }}">{{ $statcode['NAME'] }}</option>
                                                 @endforeach
@@ -100,7 +100,7 @@
                                         <label>Module :</label>
                                         <div class="input-group value">
                                             <select id="modulefilter" name="modulefilter" class="form-control input--style-6">
-                                                <option value="MD00"> all</option>
+                                                <option value="MD"> all</option>
                                                 @foreach($mdl as $mdlcode)
                                                 <option value="{{ $mdlcode['ID'] }}">{{ $mdlcode['NAME'] }}</option>
                                                 @endforeach
@@ -113,7 +113,7 @@
                                         <label>System :</label>
                                         <div class="input-group value">
                                             <select id="systemfilter" name="systemfilter" class="form-control input--style-6">
-                                                <option value="SY00"> all</option>
+                                                <option value="SY"> all</option>
                                                 @foreach($sys as $syscode)
                                                 <option value="{{ $syscode['ID'] }}">{{ $syscode['NAME'] }}</option>
                                                 @endforeach
@@ -1879,6 +1879,7 @@
                             lpr = '';
                             lqa = '';
                         }
+
                         if(data["STATUSLQA"] == 1 && data["STATUSLPR"] == 1){
                             applqa = 'LQA Approved by';
                             applpr = 'LPR Approved by';
@@ -1940,10 +1941,10 @@
                             var $approvelqa = '';
                             var $dateapprovelqa = '';
                             var $approvelpr = "<br><label class=form-check-label style=color:blue>"+applpr+" " +data["APPROVEBYLPR"]+"</label>";
-                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                            var $dateapprovelpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLPR"]+"</label>";
                         } else if (applpr == ''){
                             var $approvelqa = "<br><label class=form-check-label style=color:blue>"+applqa+" " +data["APPROVEBYLQA"]+"</label>";
-                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $dateapprovelqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATEAPPROVEBYLQA"]+"</label>";
                             var $approvelpr = '';
                             var $dateapprovelpr = '';
                         } else {
@@ -1961,10 +1962,10 @@
                             var $transportedlqa = '';
                             var $datetransportedlqa = '';
                             var $transportedlpr = "<br><label class=form-check-label style=color:green>"+translpr+" " +data["TRANSBYLPR"]+"</label>";
-                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELPR"]+"</label>";
+                            var $datetransportedlpr = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLQA"]+"</label>";
                         } else if (translpr == ''){
                             var $transportedlqa = "<br><label class=form-check-label style=color:green>"+translqa+" " +data["TRANSBYLQA"]+"</label>";
-                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATELQA"]+"</label>";
+                            var $datetransportedlqa = "&nbsp;<label class=form-check-label style=font-size:13px>" +data["DATETRANSBYLPR"]+"</label>";
                             var $transportedlpr = '';
                             var $datetransportedlpr = '';
                         } else {

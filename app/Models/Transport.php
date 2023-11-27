@@ -13,7 +13,7 @@ class Transport extends Model
 
     protected $fillable = [
         'transportid',
-        'ticketid',
+        'ticketno',
         'transportno',
         'sendto_lqa',
         'approveby_lqa_date',

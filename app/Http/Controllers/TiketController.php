@@ -241,7 +241,7 @@ class TiketController extends Controller
         $resp = json_encode($data);
         return DataTables::of($data)
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketid', $row["ticketno"])->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
@@ -530,7 +530,7 @@ class TiketController extends Controller
 
         return DataTables::of($data['dat'])
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketid', $row["ticketno"])->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
