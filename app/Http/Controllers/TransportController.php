@@ -194,41 +194,44 @@ class TransportController extends Controller
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
         $transno = $request->transno;
-      
+
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
-            $datelqa = date('Y-m-d H:i:s');
+            $datelqa = '';
             $datelpr = date('Y-m-d H:i:s');
-            $usernamelqa = Session::get('username');
+            $usernamelqa = '';
             $usernamelpr =  Session::get('username');
             $status = "APPROVE TO LPR";
         } else if($request->sendlqa == '1'){
             $datelqa = date('Y-m-d H:i:s');
-            $datelpr = date('Y-m-d H:i:s');
+            $datelpr = '';
             $usernamelqa = Session::get('username');
             $usernamelpr = '';
             $status = "APPROVE TO LQA";
-        } else {
-            $datelqa = date('Y-m-d H:i:s');
-            $datelpr = date('Y-m-d H:i:s');
-            $usernamelqa = '';
-            $usernamelpr = '';
-            $status = "";
-        }
+        } 
         
         /* Approve Transport */
-        for ($a=0; $a < count($datatrq) ; $a++){
-            $approve = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
-                'approveby_lqa_date' => $datelqa,
-                'approveby_lpr_date' => $datelpr,
-                'approveby_lqa' => $usernamelqa,
-                'approveby_lpr' => $usernamelpr,
-                'status_lqa' => $request->sendlqa,
-                'status_lpr' => $request->sendlpr,
-                'status_lqa_date' => $datelqa,
-                'status_lpr_date' => $datelpr,
-                'remark' => $request->remark
-            ]);
+        if($datelqa == ''){
+            for ($a=0; $a < count($datatrq) ; $a++){
+                $approve = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                    'approveby_lpr_date' => $datelpr,
+                    'approveby_lpr' => $usernamelpr,
+                    'status_lpr' => $request->sendlpr,
+                    'status_lpr_date' => $datelpr,
+                    'remark' => $request->remark
+                ]);
+            }
+        } else {
+            for ($a=0; $a < count($datatrq) ; $a++){
+                $approve = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                    'approveby_lqa_date' => $datelqa,
+                    'approveby_lqa' => $usernamelqa,
+                    'status_lqa' => $request->sendlqa,
+                    'status_lqa_date' => $datelqa,
+                    'remark' => $request->remark
+                ]);
+            }
         }
+       
         /* End */
 
         /* Send Email */ 
@@ -339,37 +342,40 @@ class TransportController extends Controller
         $transno = $request->transno;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
-            $datelqa = date('Y-m-d H:i:s');
+            $datelqa = '';
             $datelpr = date('Y-m-d H:i:s');
-            $usernamelqa = Session::get('username');
+            $usernamelqa = '';
             $usernamelpr = Session::get('username');
             $status = "TRANSPORTED TO LPR";
         } else if($request->sendlqa == '1'){
             $datelqa = date('Y-m-d H:i:s');
-            $datelpr =  date('Y-m-d H:i:s');
+            $datelpr =  '';
             $usernamelqa = Session::get('username');
             $usernamelpr = '';
             $status = "TRANSPORTED TO LQA";
-        } else {
-            $datelqa = date('Y-m-d H:i:s');
-            $datelpr =  date('Y-m-d H:i:s');
-            $usernamelqa = '';
-            $usernamelpr = '';
-        }
+        } 
        
         /* Trasnported Transport */
-        for ($a=0; $a < count($datatrq) ; $a++){
-            $transported = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
-                'date_trans_lqa' => $datelqa,
-                'date_trans_lpr' => $datelpr,
-                'transportby_lqa' => $usernamelqa,
-                'transportby_lpr' => $usernamelpr,
-                'status_trans_lqa' => $request->sendlqa,
-                'status_trans_lpr' => $request->sendlpr,
-                'remark' => $request->remark
-            ]);
+        if($datelqa == ''){
+            for ($a=0; $a < count($datatrq) ; $a++){
+                $transported = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                    'date_trans_lpr' => $datelpr,
+                    'transportby_lpr' => $usernamelpr,
+                    'status_trans_lpr' => $request->sendlpr,
+                    'remark' => $request->remark
+                ]);
+            }
+        } else {    
+            for ($a=0; $a < count($datatrq) ; $a++){
+                $transported = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq[$a])->update([
+                    'date_trans_lqa' => $datelqa,
+                    'transportby_lqa' => $usernamelqa,
+                    'status_trans_lqa' => $request->sendlqa,
+                    'remark' => $request->remark
+                ]);
+            }
         }
-
+        
         $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
         ->where('ticketno', $ticketno)
         ->update([
