@@ -117,17 +117,29 @@ class TransportController extends Controller
             ]);
             /* End */
 
-            /* Insert Transport to DB */
-            $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
-                'transportid' => $transportId,
-                'ticketno' => $request->ticketno,
-                'transportno' => $transno,
-                'sendto_lqa' => $lqa,
-                'createdon_lqa' => $date_lqa,
-                'sendto_lpr' => $lpr,
-                'createdon_lpr' => $date_lpr,
-                'createdon' => date('Y-m-d H:i:s'),
-            ]);
+             /* Insert Transport to DB */
+            if($date_lqa == ''){
+                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
+                    'transportid' => $transportId,
+                    'ticketno' => $request->ticketno,
+                    'transportno' => $transno,
+                    'sendto_lqa' => $lqa,
+                    'sendto_lpr' => $lpr,
+                    'createdon_lpr' => $date_lpr,
+                    'createdon' => date('Y-m-d H:i:s'),
+                ]);
+            } else {
+                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
+                    'transportid' => $transportId,
+                    'ticketno' => $request->ticketno,
+                    'transportno' => $transno,
+                    'sendto_lqa' => $lqa,
+                    'createdon_lqa' => $date_lqa,
+                    'sendto_lpr' => $lpr,
+                    'createdon' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
             /* End */
         } else {
             $transno = "";

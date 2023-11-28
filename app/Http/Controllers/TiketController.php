@@ -373,10 +373,10 @@ class TiketController extends Controller
                         } else if( $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0' ){
                             $infBtn = $viewTransBtn. $download_btn. $closedBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0'){
+                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1'){
                             $infBtn = $viewTransBtn. $download_btn. $closedBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1'){
                             $infBtn = $transportedBtn. $download_btn. $closedBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
@@ -402,10 +402,10 @@ class TiketController extends Controller
                         } else if( $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0' ){
                             $infBtn = $viewTransBtn. $download_btn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0'){
+                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1'){
                             $infBtn = $viewTransBtn. $download_btn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1'){
                             $infBtn = $transportedBtn. $download_btn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
@@ -662,10 +662,10 @@ class TiketController extends Controller
                         } else if( $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0' ){
                             $infBtn = $viewTransBtn. $download_btn. $closedBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0'){
+                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1'){
                             $infBtn = $viewTransBtn. $download_btn. $closedBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1'){
                             $infBtn = $transportedBtn. $download_btn. $closedBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
@@ -691,10 +691,10 @@ class TiketController extends Controller
                         } else if( $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0' ){
                             $infBtn = $viewTransBtn. $download_btn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0'){
+                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lqa'] == '1'){
                             $infBtn = $viewTransBtn. $download_btn;
                             $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
-                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lqa'] == '1'){
                             $infBtn = $transportedBtn. $download_btn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){

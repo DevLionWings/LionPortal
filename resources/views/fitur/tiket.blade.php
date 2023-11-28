@@ -1539,6 +1539,8 @@
                                 statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
                             } else if (data == 'SOFTWARE'){
                                 statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
+                            } else if(data == 'TRAINING'){
+                                statusText = `<span class="badge badge-info">TRAINING</span>`;
                             } else {
                                 statusText = `<span class="badge badge-warning">VPN</span>`;
                             }
@@ -2492,6 +2494,8 @@
                             statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
                         } else if (data == 'SOFTWARE'){
                             statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
+                        } else if(data == 'TRAINING'){
+                            statusText = `<span class="badge badge-info">TRAINING</span>`;
                         } else {
                             statusText = `<span class="badge badge-warning">VPN</span>`;
                         }
@@ -2522,6 +2526,8 @@
                             statusText = `<span class="badge badge-warning">Request Transport</span>`;
                         } else if(data == "DONE TRANSPORT"){
                             statusText = `<span class="badge badge-success">Done Transport</span>`;
+                        } else if(data == "TRAINING"){
+                            statusText = `<span class="badge badge-dark">TRAINING</span>`;
                         } else {
                             statusText = `<span class="badge badge-primary">Open</span>`;
                         }
