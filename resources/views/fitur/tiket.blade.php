@@ -1796,7 +1796,6 @@
             var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
             // var file_data = document.getElementById("files").files[0].name;
-            console.log(createdby);
             // var file_data = $('#filecomment').prop('files')[0];  
             // var formData = new FormData(); 
             // formData.append("filecomment", file_data);
