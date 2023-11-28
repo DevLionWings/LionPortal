@@ -1791,11 +1791,12 @@
             var requestor = $('#modal-view-user form[name="view1"] input[name="requestorid"]').val();
             var approve = $('#modal-view-user form[name="view1"] input[name="approveId"]').val();
             var approveit = $('#modal-view-user form[name="view1"] input[name="approveItId"]').val();
-            var comment_body = $('#modal-view-user  form[name="view1"] textarea[name="comment_body"]').val();
+            var createdby = $('#modal-view-user form[name="view1"] input[name="created"]').val();
+            var comment_body = $('#modal-view-user form[name="view1"] textarea[name="comment_body"]').val();
             var file_data = $('#modal-view-user  form[name="view1"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
             // var file_data = document.getElementById("files").files[0].name;
-            console.log(file_data);
+            console.log(createdby);
             // var file_data = $('#filecomment').prop('files')[0];  
             // var formData = new FormData(); 
             // formData.append("filecomment", file_data);
@@ -1812,6 +1813,7 @@
                     'requestor' : requestor,
                     'approve' : approve,
                     'approveit' : approveit, 
+                    'createdby' : createdby,
                     'comment_body' : comment_body,
                     'filecomment' : file_data
                 },

@@ -22,7 +22,6 @@ class CommentController extends Controller
         $this->mail = $mail;
     }
 
-
     public function addComment(Request $request)
     {   
         $userid = Session::get('userid');
@@ -35,6 +34,7 @@ class CommentController extends Controller
         $requestor = $request->requestor;
         $mgrUser = $request->approve;
         $mgrIt = $request->approveit;
+        $createdby = $request->createdby;
         // $strfile = str_replace( "\\", '/', $file);
         // $basefile = basename($strfile);
         
@@ -43,17 +43,17 @@ class CommentController extends Controller
         ]);
 
         if($validate){
-            $upload = array();
-            if (!empty($request->file('files'))){
-                $doc = $request->file('files');
-                $path = Storage::putFileAs("public/comment/".$userid."/".$ticketno, new File($doc), $ticketno."_".date('Y-m-d').".".$doc->getClientOriginalExtension());
-                $path = explode("/", $path);
-                $path[0] = "storage";
-                array_push($upload, join("/",$path));
-            } else {
-                $upload = [''];
-            }
-            $strUpload = $upload[0];
+            // $upload = array();
+            // if (!empty($request->file('files'))){
+            //     $doc = $request->file('files');
+            //     $path = Storage::putFileAs("public/comment/".$userid."/".$ticketno, new File($doc), $ticketno."_".date('Y-m-d').".".$doc->getClientOriginalExtension());
+            //     $path = explode("/", $path);
+            //     $path[0] = "storage";
+            //     array_push($upload, join("/",$path));
+            // } else {
+            //     $upload = [''];
+            // }
+            // $strUpload = $upload[0];
 
             $userid = Session::get('userid');
             
@@ -62,7 +62,6 @@ class CommentController extends Controller
                 'ticketno' => $request->ticketno,
                 'senderid' => $userid,
                 'comment' => $request->comment_body,
-                'attachment' => $strUpload,
                 'createdon' =>  date('Y-m-d H:i:s'),
             ]);
 
@@ -77,6 +76,7 @@ class CommentController extends Controller
                 $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
                 $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
                 $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
+                $dataCreated = DB::connection('pgsql')->table('master_data.m_user')->where('username', $createdby)->first();
 
                 $emailFrom = $useremail;
                 $assignNameSign = $dataAssign->username;
@@ -84,8 +84,9 @@ class CommentController extends Controller
                 $emailMgrIt =  $dataMgrIt->usermail;
                 $emailMgrUser =  $dataMgrUser->usermail;
                 $emailRequestor = $dataReq->usermail;
+                $emailCreated = $dataCreated->usermail;
 
-                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor);
+                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated);
                 /* End Send Email */
             } else {
                 /* Send Email */
@@ -96,6 +97,7 @@ class CommentController extends Controller
                 $dataMgrIt = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrIt)->first();
                 $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
                 $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
+                $dataCreated = DB::connection('pgsql')->table('master_data.m_user')->where('username', $createdby)->first();
 
                 $emailFrom = $useremail;
                 $assignNameSign = $dataAssign->username;
@@ -103,8 +105,9 @@ class CommentController extends Controller
                 $emailMgrIt =  $dataMgrIt->usermail;
                 $emailMgrUser =  'blank@lionwings.com';
                 $emailRequestor = 'blank@lionwings.com';
+                $emailCreated = $dataCreated->usermail;
 
-                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor);
+                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated);
                 /* End Send Email */
             }
         

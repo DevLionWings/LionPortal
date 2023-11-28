@@ -49,9 +49,9 @@ class Mail
         SendtoMail::to($emails)->send(new SendMail($mailData));
     }
 
-    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor)
+    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated)
     {
-        $emails = array($emailSign, $emailFrom, $emailMgrIt, $emailMgrUser, $emailRequestor);
+        $emails = array($emailSign, $emailFrom, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated);
       
         $mailData = array(
             'comment' => $comment_body,

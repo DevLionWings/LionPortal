@@ -86,6 +86,12 @@ class TransportController extends Controller
                     'sendto_lpr' => $lpr,
                     'createdon_lpr' => $date_lpr
                 ]);
+
+                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'statusid' => 'SD010',
+                ]);
             } else {
                 $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
                 ->where('transportid', $transid)
@@ -94,6 +100,12 @@ class TransportController extends Controller
                     'sendto_lqa' => $lqa,
                     'createdon_lqa' => $date_lqa,
                     'sendto_lpr' => $lpr
+                ]);
+
+                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'statusid' => 'SD010',
                 ]);
             } 
             /* End */
@@ -128,6 +140,12 @@ class TransportController extends Controller
                     'createdon_lpr' => $date_lpr,
                     'createdon' => date('Y-m-d H:i:s'),
                 ]);
+
+                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'statusid' => 'SD010',
+                ]);
             } else {
                 $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
                     'transportid' => $transportId,
@@ -138,8 +156,13 @@ class TransportController extends Controller
                     'sendto_lpr' => $lpr,
                     'createdon' => date('Y-m-d H:i:s'),
                 ]);
-            }
 
+                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                ->where('ticketno', $ticketno)
+                ->update([
+                    'statusid' => 'SD010',
+                ]);
+            }
             /* End */
         } else {
             $transno = "";
@@ -346,6 +369,12 @@ class TransportController extends Controller
                 'remark' => $request->remark
             ]);
         }
+
+        $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+        ->where('ticketno', $ticketno)
+        ->update([
+            'statusid' => 'SD011',
+        ]);
         /* End */
 
         /* Send Email */
