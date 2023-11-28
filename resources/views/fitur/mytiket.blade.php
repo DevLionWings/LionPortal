@@ -1243,6 +1243,7 @@
             var requestor = $('#modal-view-user form[name="view-user"] input[name="requestorid"]').val();
             var approve = $('#modal-view-user form[name="view-user"] input[name="approveId"]').val();
             var approveit = $('#modal-view-user form[name="view-user"] input[name="approveItId"]').val();
+            var createdby = $('#modal-view-user form[name="view1"] input[name="created"]').val();
             var comment_body = $('#modal-view-user  form[name="view-user"] textarea[name="comment_body"]').val();
             var file_data = $('#modal-view-user  form[name="view-user"] input[name="filecomment"]').val();
             // const file_data = $('#filecomment').prop('files')[0];
@@ -1263,7 +1264,8 @@
                     'ticketno' : ticketno,
                     'requestor' : requestor,
                     'approve' : approve,
-                    'approveit' : approveit, 
+                    'approveit' : approveit,
+                    'createdby' : createdby, 
                     'comment_body' : comment_body,
                     'filecomment' : file_data
                 },
