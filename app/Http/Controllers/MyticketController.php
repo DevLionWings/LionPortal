@@ -368,7 +368,7 @@ class MyticketController extends Controller
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn. $download_btn. $closedBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                            $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else {
                             $infBtn = $viewTransBtn. $download_btn. $closedBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
@@ -388,7 +388,7 @@ class MyticketController extends Controller
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn. $download_btn;
-                            $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
+                            $managerItBtn = $approveTransBtn. $updateBtn. $download_btn. $closedBtn;
                         } else {
                             $infBtn = $viewTransBtn. $download_btn;
                             $managerItBtn = $viewTransBtn. $updateBtn. $download_btn. $closedBtn;
