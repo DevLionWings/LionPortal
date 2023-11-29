@@ -284,6 +284,7 @@
                     <input type="hidden" id="update-ticketno" name="ticketno"/>
                     <input type="hidden" id="update-userid" name="userid"/>
                     <input type="hidden" id="update-rejectedby" name="rejectedby"/>
+                    <input type="hidden"  id="created" name="created">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6"> 
@@ -394,8 +395,12 @@
                             </div>
                         </div> 
                         <div class="form-group">
-                            <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
+                            <label class="form-check-label" for="targetdate" disabled>Target Date :</label>
                             <input type="text" name="targetdates" class="form-control" id="targetdates">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="comment_body" disabled>Activity Comment :</label>
+                            <textarea type="text" name="comment_body" class="form-control" id="comment_body" rows="4" cols="50" placeholder="Write a comment..."></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6">  
@@ -406,11 +411,15 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-check-label" for="approveit" disabled>Approve Manager IT:</label>
+                                    <label class="form-check-label" for="approveit" disabled>Approve Manager IT :</label>
                                     <input type="text" name="approveit" class="form-control" id="approveit" readonly>
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="created" disabled>Created Ticket :</label>
+                            <input type="text" name="created" class="form-control" id="created" readonly>
+                        </div> 
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="close-btn-update btn btn-default" data-dismiss="modal">Close</button>
@@ -1966,7 +1975,15 @@
                         } else if(data == "REQUEST TRANSPORT"){
                             statusText = `<span class="badge badge-warning">Request Transport</span>`;
                         } else if(data == "DONE TRANSPORT"){
-                            statusText = `<span class="badge badge-success">Done Transport</span>`;
+                            statusText = `<span class="badge badge-info">Done Transport</span>`;
+                        } else if(data == "TRAINING"){
+                            statusText = `<span class="badge badge-dark">TRAINING</span>`;
+                        } else if(data == "WAITING FOR VENDOR"){
+                            statusText = `<span class="badge badge-success">WAITING FOR VENDOR</span>`;
+                        } else if(data == "WAITING FOR PURCHASING"){
+                            statusText = `<span class="badge badge-success">WAITING FOR PURCHASING</span>`;
+                        } else if(data == "WAITING FOR ENGINEERING"){
+                            statusText = `<span class="badge badge-success">WAITING FOR ENGINEERING</span>`;
                         } else {
                             statusText = `<span class="badge badge-primary">Open</span>`;
                         }

@@ -1050,6 +1050,7 @@ class TiketController extends Controller
         $assign = $request->assignto;
         $category = $request->category;
         $module = $request->moduleid;
+        $comment_body = $request->comment_body;
     
         if(empty($module) || $module == null){
             $module = 'MD00';
@@ -1058,7 +1059,7 @@ class TiketController extends Controller
         } else {
             $module = $request->moduleid;
         }
-
+        /* Update Ticket */
         $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
         ->where('ticketno',  $request->ticketno)
         ->update([
@@ -1072,6 +1073,18 @@ class TiketController extends Controller
             'statusid' => $request->status,
             'last_update' => date('Y-m-d H:i:s')
         ]);
+        /* End */
+
+        /* Insert Comment */
+        $insert = DB::connection('pgsql')->table('helpdesk.t_discussion')->insert([
+            'ticketno' =>  $ticketno,
+            'senderid' => $userid,
+            'comment' => $request->comment_body,
+            'createdon' =>  date('Y-m-d H:i:s'),
+        ]);
+
+        DB::commit();
+        /* End */
 
         /* Get Data Ticket */
         $dataTicketapprove = $this->repository->GETTICKETAPPROVE($userid, $ticketno, $roleid);
@@ -1080,6 +1093,7 @@ class TiketController extends Controller
         $userreq = $json['data'][0]['userid'];
         $mgrUser = $json['data'][0]['approvedby_1'];
         $mgrIt = $json['data'][0]['approvedby_it'];
+        $createdby = $json['data'][0]['createdby'];
         $category = $json['data'][0]['categoryid'];
         $cateName= $json['data'][0]['category'];
         $priority = $json['data'][0]['priorid'];
@@ -1090,19 +1104,23 @@ class TiketController extends Controller
         $remark = $json['data'][0]['detail'];
         // $mgrApp = $json['data'][0]['mgrid'];
         $flag = 'UPD';
-        $note = '';
+        $note = 'Update Ticket';
         /* End */
 
         /* Get User Email */ 
         $emailADD = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
+        $emailCreated = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $createdby)->first();
+       
         $emailSign = $assignName->usermail;
         $emailReq = $emailADD['emailReq'];
         $assignNameSign =  $assignName->username;
         $emailApprove1 = $emailADD['emailApprove1'];
         $emailApproveit =  $emailADD['emailApproveit'];
+        $emailCreatedName = $emailCreated->username;
+        $emailCreated = $emailCreated->usermail;
         /* End */
         
-        $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag); 
+        $SendMail = $this->mail->SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName); 
 
         if($update == true){
             return redirect()->back()->with("success", "Ticket Update successfully");

@@ -64,6 +64,7 @@ class CommentController extends Controller
                 'comment' => $request->comment_body,
                 'createdon' =>  date('Y-m-d H:i:s'),
             ]);
+            /* End */
 
             DB::commit();
          
