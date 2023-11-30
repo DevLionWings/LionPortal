@@ -701,6 +701,7 @@ class TiketController extends Controller
         $mgrUser = Session::get('mgrid');
         $departmentid = Session::get('departmentid');
         $createdby = Session::get('userid');
+        $data = $request->hasFile('images');
 
         $createdon = date('Y-m-d');
         $userreq = $request->user;
@@ -760,15 +761,19 @@ class TiketController extends Controller
 
         /* Get File Upload */
         $upload = array();
-        if (!empty($request->file('files'))){
-            $doc = $request->file('files');
-            $path = Storage::putFileAs("public/uploads/".$userid."/".$ticketno, new File($doc), $ticketno."_".date('Y-m-d').".".$doc->getClientOriginalExtension());
-            $path = explode("/", $path);
-            $path[0] = "storage";
-            array_push($upload, join("/",$path));
+        if ($data){
+            $i = 1;
+            foreach($request->file('images') as $doc) {
+                $path = Storage::putFileAs("public/uploads/".$userid."/".$ticketno, new File($doc), $ticketno."_".date('Y-m-d').".".$doc->getClientOriginalExtension());
+                $path = explode("/", $path);
+                $path[0] = "storage";
+                array_push($upload, join("/",$path));
+                $i++;
+            }
         } else {
             $upload = [''];
         }
+
         /* End */
 
         /* Validasi Approve manager by user login */

@@ -315,14 +315,16 @@
                             <label class="form-check-label" for="detail">Detail Issue :</label>
                             <textarea type="text" name="detail" class="form-control" id="detail" required></textarea>
                         </div>
-                        <div class="mb-3">
+                        <!-- <div class="form-group">
                             <label class="form-check-label" for="files">File :</label>
                             <input type="file" name="files" id="files" class="form-control">
-                        </div>
-                        <!-- <div class="input-field">
-                            <label class="active">Upload Photos<small>(max size: 1mb)</small></label>
-                            <div class="input-images" style="padding-top: .5rem;"></div>
                         </div> -->
+                        <div class="form-group">
+                            <div class="input-field">
+                                <label class="form-check-label" >Upload :</label>
+                                <div class="input-document" style="padding-top: .5rem;"></div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="form-check-label" >Created Date :</label>
                             <div class="input-group value">
@@ -1066,8 +1068,8 @@
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
-<script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 <script src="{{ asset('plugins/jquery/jquery-ui.js') }}"></script>
+<script src="{{ asset('image-upload/image-uploader.js') }}"></script>
 
 <script>
     $('.nav-link.active').removeClass('active');
@@ -1124,6 +1126,8 @@
 
         $('#reject-btn').prop('disabled', true);
         $('#transported-reject-btn').prop('disabled', true);
+
+        $('.input-document').imageUploader();
 
         $(document).on('click', '.trans', function() {
             // $("#history").load(" #history"); 
@@ -1474,6 +1478,7 @@
                 serverSide: true,
                 responsive: false,
                 searching: true,
+                pageLength: 30,
                 dom: 'Blfrtip',
                 buttons: [
                     'excel'
@@ -2454,6 +2459,7 @@
             serverSide: true,
             responsive: false,
             searching: true,
+            pageLength: 30,
             dom: 'Blfrtip',
             buttons: [
                 'excel'
