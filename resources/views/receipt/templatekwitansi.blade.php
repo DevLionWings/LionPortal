@@ -59,12 +59,11 @@
 			@if($data->counter % 4 == '1' || $data->counter % 4 == '3')
 			<table width=720px>
 				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
 			</table>
 			@endif
 			@if($data->counter % 4 == '2')
 			<table width=720px>
-				<tr><td>&nbsp;</td></tr>
-				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>
@@ -114,12 +113,11 @@
 			@if($data->counter % 4 == '1' || $data->counter % 4 == '3')
 			<table width=720px>
 				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
 			</table>
 			@endif
 			@if($data->counter % 4 == '2')
 			<table width=720px>
-				<tr><td>&nbsp;</td></tr>
-				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>
@@ -171,12 +169,11 @@
 			@if($data->counter % 4 == '1' || $data->counter % 4 == '3')
 			<table width=720px>
 				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
 			</table>
 			@endif
 			@if($data->counter % 4 == '2')
 			<table width=720px>
-				<tr><td>&nbsp;</td></tr>
-				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>
@@ -227,12 +224,11 @@
 			@if($data->counter % 4 == '1' || $data->counter % 4 == '3')
 			<table width=720px>
 				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
 			</table>
 			@endif
 			@if($data->counter % 4 == '2')
 			<table width=720px>
-				<tr><td>&nbsp;</td></tr>
-				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr><td>&nbsp;</td></tr>
 			</table>

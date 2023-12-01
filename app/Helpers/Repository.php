@@ -856,7 +856,7 @@ class Repository
                 'userid' => $value['userid'],
                 'subject' => $value['subject'],
                 'detail' => $value['detail'],
-                'attachment' => $value['attachment'],
+                'attachment' => $value['attachment'][0],
                 'assignedto' => $value['assignedto'],
                 'statusid' => $value['statusid'],
                 'createdon' => $value['createdon'],

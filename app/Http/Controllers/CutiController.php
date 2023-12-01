@@ -54,14 +54,19 @@ class CutiController extends Controller
         $bulangajilama = $request->bulangajilama;
         $bulangajibaru = $request->bulangajibaru;
      
-        if(DB::connection('mysql2')->table('personalia.masteremployee')->where('Nip', $id)->exists()){
-            $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee as a')
-                            ->join('personalia.masterjabatan as b', 'a.Kode Jabatan', '=', 'b.Kode Jabatan')
-                            ->join('personalia.masterbagian as c', 'c.Kode Bagian', '=', 'a.Kode Bagian')
-                            ->where('a.Nip', $id)
-                            ->where('a.Endda', '9998-12-31')
-                            ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
-                            ->first();
+        if(DB::connection('pgsql')->table('hris.t_karyawan')->where('idsmu', $id)->exists()){
+            // $datakaryawan = DB::connection('mysql2')->table('personalia.masteremployee as a')
+            //                 ->join('personalia.masterjabatan as b', 'a.Kode Jabatan', '=', 'b.Kode Jabatan')
+            //                 ->join('personalia.masterbagian as c', 'c.Kode Bagian', '=', 'a.Kode Bagian')
+            //                 ->where('a.Nip', $id)
+            //                 ->where('a.Endda', '9998-12-31')
+            //                 ->select('a.Nip','a.Nama', 'a.Tgl Masuk as tglmasuk', 'a.Gaji per Bulan as gaji', 'b.Tunjangan', 'c.Nama Bagian as bagian')
+            //                 ->first();
+
+            $datakaryawan = DB::connection('pgsql')->table('hris.t_karyawan')
+                ->where('idsmu', $id)
+                ->select('idsmu','nama', 'tgl_in', 'gaji', 'jabatan', 'bagian')
+                ->first();
             
             $datakaryawan2 = DB::connection('pgsql')->table('hris.t_karyawan')->where('idsmu', $id)->first();
             if($datakaryawan2 == null){
@@ -81,20 +86,20 @@ class CutiController extends Controller
             $uangmakan = '20000';
             $spsi = $datakaryawan2->spsi; 
             $koperasi = $datakaryawan2->koperasi;
-        
-            $nip = $datakaryawan->Nip;
-            $nama = trim($datakaryawan->Nama);
-            $tglmasuk = $datakaryawan->tglmasuk;
-            $gaji = $datakaryawan->gaji; 
+
+            $nip = $datakaryawan->idsmu;
+            $nama = trim($datakaryawan->nama);
+            $tglmasuk = $datakaryawan->tgl_in;
+            $gaji = $datakaryawan->gaji * 30;  
             $gajisehari = $datakaryawan->gaji / 30;
             $gajiUm = $gajisehari - $uangmakan;
             $gajiUmHist = $gajiSehariHist - $uangmakan;
             $formatGaji = 'Rp.'.number_format($gaji,0,',','.');
-            $tunjangan = $datakaryawan->Tunjangan;
+            $tunjangan = $datakaryawan->jabatan * 30;
             $formatTj = 'Rp.'.number_format($tunjangan,0,',','.');
             $jamsostek = round($gaji * 2/100);
             $formatJamsostek = 'Rp.'.number_format($jamsostek,0,',','.');
-            $bagian = $datakaryawan->bagian;
+            $bagian = trim($datakaryawan->bagian);
             $item = ($gajiUm + $uangmakan) * 30;
             $itemHistory = ($gajiUmHist + $uangmakan) * 30;
 

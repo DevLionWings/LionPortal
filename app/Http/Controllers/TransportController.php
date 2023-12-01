@@ -29,6 +29,7 @@ class TransportController extends Controller
         $emailSender = Session::get('usermail');
         $mgrid = Session::get('mgrid');
         $ticketno = $request->ticketno;
+        $page = $request->page;
         if($mgrid == null){
             $dataUser = DB::connection('pgsql')->table('master_data.m_user')
             ->where('userid', $userid)
@@ -177,7 +178,11 @@ class TransportController extends Controller
         /* End */
 
         if($insert == true){
-            return redirect()->route('tiket')->with("success", "transport send successfully");
+            if($page == 'mytiket'){
+                return redirect()->route('mytiket')->with("success", "transport send successfully");
+            } else {
+                return redirect()->route('tiket')->with("success", "transport send successfully");
+            }
         } else { 
             return redirect()->back()->with("error", "error");
         }
@@ -241,8 +246,12 @@ class TransportController extends Controller
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
-        if($approve == true){
-            return redirect()->route('tiket')->with("success", "transport approved successfully");
+        if($insert == true){
+            if($page == 'mytiket'){
+                return redirect()->route('mytiket')->with("success", "transport send successfully");
+            } else {
+                return redirect()->route('tiket')->with("success", "transport send successfully");
+            }
         } else { 
             return redirect()->back()->with("error", "error");
         }
@@ -390,8 +399,12 @@ class TransportController extends Controller
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
-        if($transported == true){
-            return redirect()->route('tiket')->with("success", "transported submit successfully");
+        if($insert == true){
+            if($page == 'mytiket'){
+                return redirect()->route('mytiket')->with("success", "transport send successfully");
+            } else {
+                return redirect()->route('tiket')->with("success", "transport send successfully");
+            }
         } else { 
             return redirect()->back()->with("error", "error");
         }

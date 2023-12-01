@@ -281,6 +281,7 @@
                 </div>
                 <form action="{{route('edit-tiket')}}" method="post" name="update" id="update">
                     @csrf
+                    <input type="hidden" id="page" name="page" value='mytiket'/>
                     <input type="hidden" id="update-ticketno" name="ticketno"/>
                     <input type="hidden" id="update-userid" name="userid"/>
                     <input type="hidden" id="update-rejectedby" name="rejectedby"/>
@@ -539,6 +540,7 @@
                 </div>
                 <form action="{{ route('send-transport') }}" method="post" name="transport" id="transport">
                     @csrf
+                    <input type="hidden" id="page" name="page" value='mytiket'/>
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
@@ -611,6 +613,7 @@
                 <form action="{{ route('approve-transport') }}" method="post" name="transport-approve" id="transport-approve">
                     @csrf
                     <div class="modal-body">
+                        <input type="hidden" id="page" name="page" value='mytiket'/>
                         <input type="hidden" id="sendlqa" name="sendlqa">
                         <input type="hidden" id="sendlpr" name="sendlpr">
                         <input type="hidden" id="transno" name="transno">
@@ -696,6 +699,7 @@
                 <form action="{{ route('transported-transport') }}" method="post" name="transport-transported" id="transport-transported">
                     @csrf
                     <div class="modal-body">
+                    <input type="hidden" id="page" name="page" value='mytiket'/>
                         <input type="hidden" id="sendlqa" name="sendlqa">
                         <input type="hidden" id="sendlpr" name="sendlpr">
                         <input type="hidden" id="transno" name="transno">
