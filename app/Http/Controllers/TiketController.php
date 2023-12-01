@@ -1131,6 +1131,7 @@ class TiketController extends Controller
         $category = $request->category;
         $module = $request->moduleid;
         $comment_body = $request->comment_body;
+        $page = $request->page;
     
         if(empty($module) || $module == null){
             $module = 'MD00';

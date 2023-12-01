@@ -199,6 +199,7 @@ class TransportController extends Controller
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
         $transno = $request->transno;
+        $page = $request->page;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
             $datelqa = '';
@@ -269,6 +270,7 @@ class TransportController extends Controller
         $datatrq = $request->data_transportid;
         $transno = $request->transno;
         $date = date('Y-m-d H:i:s');
+        $page = $request->page;
         
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
             $lqa = 0;
@@ -349,6 +351,7 @@ class TransportController extends Controller
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
         $transno = $request->transno;
+        $page = $request->page;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
             $datelqa = '';
