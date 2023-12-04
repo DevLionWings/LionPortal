@@ -338,7 +338,7 @@ class TiketController extends Controller
                     $sapBtn = '';
                     $headBtn = '';
                     $managerBtn =  ''; 
-                    $managerItBtn = $viewTransBtn;
+                    $managerItBtn = '';
                 } else  if( $userid == $row["assignedto"]){
                     $itBtn = $updateBtn;
                     $sapBtn = $transportBtn. $updateBtn;
@@ -351,7 +351,7 @@ class TiketController extends Controller
                     $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = '';
+                    $managerItBtn = $updateBtn;
                     $headBtn = '';
                 }
                 
@@ -630,7 +630,7 @@ class TiketController extends Controller
                     $sapBtn = '';
                     $headBtn = '';
                     $managerBtn =  ''; 
-                    $managerItBtn = $viewTransBtn;
+                    $managerItBtn = '';
                 } else  if( $userid == $row["assignedto"]){
                     $itBtn = $updateBtn;
                     $sapBtn = $transportBtn. $updateBtn;
@@ -643,7 +643,7 @@ class TiketController extends Controller
                     $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = '';
+                    $managerItBtn = $updateBtn;
                     $headBtn = '';
                 }
                 
@@ -1136,17 +1136,19 @@ class TiketController extends Controller
             'statusid' => $request->status,
             'last_update' => date('Y-m-d H:i:s')
         ]);
+        DB::commit();
         /* End */
 
         /* Insert Comment */
-        $insert = DB::connection('pgsql')->table('helpdesk.t_discussion')->insert([
-            'ticketno' =>  $ticketno,
-            'senderid' => $userid,
-            'comment' => $request->comment_body,
-            'createdon' =>  date('Y-m-d H:i:s'),
-        ]);
-
-        DB::commit();
+        if($comment_body != null){
+            $insert = DB::connection('pgsql')->table('helpdesk.t_discussion')->insert([
+                'ticketno' =>  $ticketno,
+                'senderid' => $userid,
+                'comment' => $comment_body,
+                'createdon' =>  date('Y-m-d H:i:s'),
+            ]);
+            DB::commit();
+        } 
         /* End */
 
         /* Get Data Ticket */
@@ -1185,7 +1187,7 @@ class TiketController extends Controller
         
         $SendMail = $this->mail->SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName); 
 
-        if($insert == true){
+        if($update == true){
             if($page == 'mytiket'){
                 return redirect()->route('mytiket')->with("success", "transport send successfully");
             } else {

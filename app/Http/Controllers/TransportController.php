@@ -179,9 +179,9 @@ class TransportController extends Controller
 
         if($insert == true){
             if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "transport send successfully");
+                return redirect()->route('mytiket')->with("success", "request transport send successfully");
             } else {
-                return redirect()->route('tiket')->with("success", "transport send successfully");
+                return redirect()->route('tiket')->with("success", "request transport send successfully");
             }
         } else { 
             return redirect()->back()->with("error", "error");
@@ -249,9 +249,9 @@ class TransportController extends Controller
 
         if($approve == true){
             if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "transport send successfully");
+                return redirect()->route('mytiket')->with("success", "approved send successfully");
             } else {
-                return redirect()->route('tiket')->with("success", "transport send successfully");
+                return redirect()->route('tiket')->with("success", "approved send successfully");
             }
         } else { 
             return redirect()->back()->with("error", "error");

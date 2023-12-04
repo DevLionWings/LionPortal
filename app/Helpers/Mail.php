@@ -25,7 +25,8 @@ class Mail
                     $useremail => 'blank@lionwings.com',
                     $emailSign => 'blank@lionwings.com',
                     $emailReq => 'blank@lionwings.com',
-                    $emailApprove1 => 'blank@lionwings.com'
+                    $emailApprove1 => 'blank@lionwings.com',
+                    $emailHead => 'blank@lionwings.com'
                 );
         } else {
             $emails = array($useremail, $emailSign, $emailReq, $emailApprove1, $emailHead);

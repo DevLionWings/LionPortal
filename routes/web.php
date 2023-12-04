@@ -62,6 +62,7 @@ Route::post('/closetiket', [TiketController::class,'closedTiket'])->name('close-
 
 Route::get('/mytiket', [MyticketController::class,'myTiket'])->name('mytiket');
 Route::get('/mytiket/get', [MyticketController::class,'myTiketList'])->name('my-tiket');
+Route::get('/mytiket/filter/get', [MyticketController::class,'myTiketFilter'])->name('my-filter-tiket');
 Route::post('/closemytiket', [MyticketController::class,'closedTiket'])->name('close-mytiket');
 
 // Route::get('/get/comment', [CommentController::class,'displayComment'])->name('comment-get');

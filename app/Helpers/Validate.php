@@ -17,9 +17,10 @@ class Validate
      
         if($chekedHead->headid != null){
             $headid = $chekedHead->headid;
-            $dataEmailHead = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $headid)->first();
+            $getdata = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $headid)->first();
+            $dataEmailHead = $getdata->usermail;
         } else {
-            $dataEmailHead = 'NOT';
+            $dataEmailHead = 'blank@lionwings.com';
         }
         
 
@@ -104,7 +105,7 @@ class Validate
                 $dataADD = [
                     'emailSign' => $dataEmailSign->usermail,
                     'assignNameSign' => $dataEmailSign->username,
-                    'emailHead' => 'blank@lionwings.com',
+                    'emailHead' => $dataEmailHead,
                     'emailReq' =>  'blank@lionwings.com',
                     'emailApprove1' => 'blank@lionwings.com',
                     'emailApproveit' => 'blank@lionwings.com'
@@ -113,7 +114,7 @@ class Validate
                 $dataADD = [
                     'emailSign' => $dataEmailSign->usermail,
                     'assignNameSign' => $dataEmailSign->username,
-                    'emailHead' => $dataEmailHead->usermail,
+                    'emailHead' => $dataEmailHead,
                     'emailReq' =>  $dataEmail->usermail,
                     'emailApprove1' => 'blank@lionwings.com',
                     'emailApproveit' => 'blank@lionwings.com'
