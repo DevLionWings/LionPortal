@@ -247,7 +247,7 @@ class TransportController extends Controller
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
-        if($insert == true){
+        if($approve == true){
             if($page == 'mytiket'){
                 return redirect()->route('mytiket')->with("success", "transport send successfully");
             } else {
@@ -402,7 +402,7 @@ class TransportController extends Controller
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
-        if($insert == true){
+        if($transported == true){
             if($page == 'mytiket'){
                 return redirect()->route('mytiket')->with("success", "transport send successfully");
             } else {

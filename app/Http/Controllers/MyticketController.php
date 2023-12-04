@@ -323,7 +323,7 @@ class MyticketController extends Controller
                     $itBtn = '';
                     $infBtn = '';
                     $sapBtn = '';
-                    $managerBtn = $viewTransBtn;
+                    $managerBtn = '';
                     $headBtn = $updateBtn;
                 } else  if( $row["statusid"] == 'SD003'){
                     $itBtn = '';
@@ -334,18 +334,18 @@ class MyticketController extends Controller
                     $managerItBtn = $viewTransBtn;
                 } else  if( $userid == $row["assignedto"]){
                     $itBtn = $updateBtn;
-                    $sapBtn = $updateBtn;
+                    $sapBtn = $transportBtn. $updateBtn;
                     $infBtn = $updateBtn;
                     $headBtn = $transportBtn. $updateBtn;
                     $managerBtn = ''; 
                     $managerItBtn = $updateBtn;
                 } else {
                     $itBtn = '';
-                    $infBtn = $viewTransBtn;
+                    $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = $viewTransBtn. $updateBtn;
-                    $headBtn = $updateBtn;
+                    $managerItBtn = '';
+                    $headBtn = '';
                 }
                 
                 /* button transport & approve */
@@ -359,28 +359,18 @@ class MyticketController extends Controller
                     if($row["statusid"] != 'SD003' && $userid == $row["assignedto"]){
                         if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
                             $infBtn = $transportedBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } 
                     } else if($row["statusid"] == 'SD003'){

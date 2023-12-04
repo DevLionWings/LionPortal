@@ -13,6 +13,16 @@ class Validate
 
    public static function GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $cateId, $roleid)
     {
+        $chekedHead = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->first();
+     
+        if($chekedHead->headid != null){
+            $headid = $chekedHead->headid;
+            $dataEmailHead = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $headid)->first();
+        } else {
+            $dataEmailHead = 'NOT';
+        }
+        
+
         /* Get User Email */
         if($flag == 'ADD'){
             if($cateId == "CD001"){
@@ -94,6 +104,7 @@ class Validate
                 $dataADD = [
                     'emailSign' => $dataEmailSign->usermail,
                     'assignNameSign' => $dataEmailSign->username,
+                    'emailHead' => 'blank@lionwings.com',
                     'emailReq' =>  'blank@lionwings.com',
                     'emailApprove1' => 'blank@lionwings.com',
                     'emailApproveit' => 'blank@lionwings.com'
@@ -102,6 +113,7 @@ class Validate
                 $dataADD = [
                     'emailSign' => $dataEmailSign->usermail,
                     'assignNameSign' => $dataEmailSign->username,
+                    'emailHead' => $dataEmailHead->usermail,
                     'emailReq' =>  $dataEmail->usermail,
                     'emailApprove1' => 'blank@lionwings.com',
                     'emailApproveit' => 'blank@lionwings.com'

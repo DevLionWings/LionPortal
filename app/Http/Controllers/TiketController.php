@@ -277,7 +277,7 @@ class TiketController extends Controller
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
                 data-objectid="'.$row["objectid"].'"  data-objectname="'.$row["objectname"].'" data-createdon="'.$row["createdon"].'" data-download="'.$document_name.'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
-                $updateBtn = ' <a href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                $updateBtn = ' <a href="javascript:void(0)" class="update btn btn-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-categoryid="'.$row["categoryid"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'"  data-assignedto="'.$row["assignedto"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
@@ -330,7 +330,7 @@ class TiketController extends Controller
                     $itBtn = '';
                     $infBtn = '';
                     $sapBtn = '';
-                    $managerBtn = $viewTransBtn;
+                    $managerBtn = '';
                     $headBtn = $updateBtn;
                 } else  if( $row["statusid"] == 'SD003'){
                     $itBtn = '';
@@ -341,18 +341,18 @@ class TiketController extends Controller
                     $managerItBtn = $viewTransBtn;
                 } else  if( $userid == $row["assignedto"]){
                     $itBtn = $updateBtn;
-                    $sapBtn = $updateBtn;
+                    $sapBtn = $transportBtn. $updateBtn;
                     $infBtn = $updateBtn;
                     $headBtn = $transportBtn. $updateBtn;
                     $managerBtn = ''; 
                     $managerItBtn = $updateBtn;
                 } else {
                     $itBtn = '';
-                    $infBtn = $viewTransBtn;
+                    $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = $viewTransBtn. $updateBtn;
-                    $headBtn = $updateBtn;
+                    $managerItBtn = '';
+                    $headBtn = '';
                 }
                 
                 /* button transport & approve */
@@ -366,28 +366,18 @@ class TiketController extends Controller
                     if($row["statusid"] != 'SD003' && $userid == $row["assignedto"]){
                         if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
                             $infBtn = $transportedBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } 
                     } else if($row["statusid"] == 'SD003'){
@@ -643,18 +633,18 @@ class TiketController extends Controller
                     $managerItBtn = $viewTransBtn;
                 } else  if( $userid == $row["assignedto"]){
                     $itBtn = $updateBtn;
-                    $sapBtn = $updateBtn;
+                    $sapBtn = $transportBtn. $updateBtn;
                     $infBtn = $updateBtn;
                     $headBtn = $transportBtn. $updateBtn;
                     $managerBtn = ''; 
                     $managerItBtn = $updateBtn;
                 } else {
                     $itBtn = '';
-                    $infBtn = $viewTransBtn;
+                    $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = $viewTransBtn. $updateBtn;
-                    $headBtn = $updateBtn;
+                    $managerItBtn = '';
+                    $headBtn = '';
                 }
                 
                 /* button transport & approve */
@@ -668,28 +658,18 @@ class TiketController extends Controller
                     if($row["statusid"] != 'SD003' && $userid == $row["assignedto"]){
                         if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
                             $infBtn = $transportedBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
                         } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $sapBtn = $transportBtn;
-                            $headBtn = $transportBtn;
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } 
                     } else if($row["statusid"] == 'SD003'){
@@ -930,13 +910,15 @@ class TiketController extends Controller
         $assignNameSign = $emailADD['assignNameSign'];
         $emailApprove1 = $emailADD['emailApprove1'];
         $emailApproveit =  $emailADD['emailApproveit'];
+        $emailHead =  $emailADD['emailHead'];
         /* End */
+       
         
         if ($auth){
             /* Insert Ticket */ 
             $addTicket = $this->repository->ADDTIKET($ticketno, $userreq, $category, $userid, $subject, $assign, $statusid, $createdon, $approvedby_1, $approvedby_it, $priority, $remark, $createdby, $departmentid, $upload, $roleid, $last, $counterid, $prefix, $targetdate, $system, $module, $object);
             /* Send Email */
-            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $flag);
+            $SendMail = $this->mail->SENDMAIL($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailHead);
             /* End */
             return redirect()->route('tiket')->with("success", "Data insert successfully");
         } else { 

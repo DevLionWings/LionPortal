@@ -31,9 +31,16 @@ class SendMailTransport extends Mailable
      */
     public function envelope()
     {
-        return new Envelope(
-            subject: 'Lion Wings - Helpdesk Ticket: '.  $this->mailData['ticketno'],
-        );
+        $server = env('DB_DATABASE_PGSQL');
+        if($server == 'PRD'){
+            return new Envelope(
+                subject: 'Lion Wings - Helpdesk Ticket : '.  $this->mailData['ticketno'],
+            );
+        } else {
+            return new Envelope(
+                subject: 'STAGING - Lion Wings - Helpdesk Ticket : '.  $this->mailData['ticketno'],
+            );
+        }
     }
 
     /**
