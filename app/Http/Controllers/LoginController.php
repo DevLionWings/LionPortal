@@ -112,6 +112,7 @@ class LoginController extends Controller
                 $username = $data->username;
                 $password = $data->pass;
                 $departmentid = $data->departmentid;
+                $divisionid = $data->divisionid;
                 $usermail = $data->usermail;
                 $status = $data->status_login;
                 $roleid = $data->roleid;
@@ -126,6 +127,7 @@ class LoginController extends Controller
                     'username' => $username,
                     'password' => $password,
                     'departmentid' => $departmentid,
+                    'divisionid' => $divisionid,
                     'usermail' => $usermail,
                     'roleid' => $roleid,
                     'plantud' => $plantid,
@@ -140,6 +142,7 @@ class LoginController extends Controller
                 Session::put('username', $username);
                 Session::put('password', $password);
                 Session::put('departmentid', $departmentid);
+                Session::put('divisionid', $divisionid);
                 Session::put('usermail', $usermail);
                 Session::put('roleid', $roleid);
                 Session::put('plantid', $plantid);
@@ -170,9 +173,11 @@ class LoginController extends Controller
         /* Update Status Login */
         $update = $this->updateLogout($userid, $password); 
         /* End */ 
+        
         Session::flush();
+        Session::regenerate();
     
-        return redirect()->route('login-page');
+        return redirect()->route('login-page')->with('info','You have been logged out.');;
     }  
     
 }

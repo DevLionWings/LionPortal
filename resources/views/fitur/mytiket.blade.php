@@ -34,6 +34,96 @@
                 <div class="col-12">
                     <!-- Default box -->
                     <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-end">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Requestor :</label>
+                                        <div class="input-group value">
+                                            <select id="requestor" name="requestor" class="requestor" style="width: 100%;">
+                                            <option value="10"> -</option>
+                                                @foreach($usreq as $usreqcode)
+                                                <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Ticket :</label>
+                                        <div class="input-group value">
+                                            <select id="ticketno" name="ticketno" class="noticket" style="width: 100%;">
+                                            <option value="HLP"> -</option>
+                                                @foreach($tick as $tickcode)
+                                                <option value="{{ $tickcode['ID'] }}">{{ $tickcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if(session('roleid') == 'RD009')
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Assigned To :</label>
+                                        <div class="input-group value">
+                                            <select id="myteam" name="myteam" class="form-control input--style-6">
+                                                <option value="10">-</option>
+                                                @foreach($team as $teamcode)
+                                                <option value="{{ $teamcode['ID'] }}">{{ $teamcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Status :</label>
+                                        <div class="input-group value">
+                                            <select id="status" name="status" class="form-control input--style-6">
+                                                <option value="SD"> -</option>
+                                                @foreach($stat as $statcode)
+                                                <option value="{{ $statcode['ID'] }}">{{ $statcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Module :</label>
+                                        <div class="input-group value">
+                                            <select id="modulefilter" name="modulefilter" class="form-control input--style-6">
+                                                <option value="MD"> -</option>
+                                                @foreach($mdl as $mdlcode)
+                                                <option value="{{ $mdlcode['ID'] }}">{{ $mdlcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Date Range:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" class="form-control float-right datepicker"
+                                                name="data_date_range">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" ><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-body">
                             @if(session('success'))
                                 <div class="alert alert-success alert-dismissible alert-message" >
@@ -795,7 +885,12 @@
         hideBtn.hide();
 
         //Initialize Select2 Elements
-        $('.select2').select2()
+        $('.requestor').select2({
+            width: '100%'
+        });
+        $('.noticket').select2({
+            width: '100%'
+        });
         $('.datepicker').daterangepicker();
 
         $('#save-btn').on('click', function() {
@@ -1153,6 +1248,253 @@
             $('#closed-approvedbyit_date').val($(this).attr("data-approvedbyit_date"));
             $('#modal-closed-user').modal('show');
         })
+
+        $(document).on('click', '.ticket', function submit() {
+            var daterange = $('input[name="data_date_range"]').val();
+            var requestor = $('select[name="requestor"]  option:selected').val();
+            var status = $('select[name="status"] option:selected').val();
+            var ticketno = $('select[name="ticketno"] option:selected').val();
+            var module = $('select[name="modulefilter"] option:selected').val();
+            var myteam = $('select[name="myteam"] option:selected').val();
+            
+            $('#tiket_list').DataTable().clear().destroy();
+            var $dataticket = $('#tiket_list').DataTable({
+                destroy: true,
+                scrollX: true,
+                processing: true,
+                serverSide: true,
+                responsive: false,
+                searching: true,
+                pageLength: 30,
+                dom: 'Blfrtip',
+                buttons: [
+                    'excel'
+                ],
+                ajax: {
+                    url: "{{ route('my-filter-tiket') }}",
+                    "data": function (d) {
+                        d.daterange = $('input[name="data_date_range"]').val();
+                        d.requestor = $('select[name="requestor"] option:selected').val();
+                        d.status = $('select[name="status"] option:selected').val();
+                        d.ticketno = $('select[name="ticketno"] option:selected').val();
+                        d.module = $('select[name="modulefilter"] option:selected').val();
+                        d.myteam = $('select[name="myteam"] option:selected').val();
+                    },
+                    "dataSrc": function (settings) {
+                        $btn_submit.text("Submit");
+                        $btn_submit.prop('disabled', false);
+                        return settings.data;
+                    },
+                },
+                order: [[ 10, "desc" ]],
+                columns: [
+                    // {
+                    //     data: 'ticketno',
+                    //     render: function(data){
+                    //         if(data != null){
+                    //             return '';
+                    //         } else {
+                    //             return '';
+                    //         }
+                    //     }
+                    // },
+                    {
+                        data: 'action',
+                        name: 'action',
+                    },
+                    {
+                        data: 'ticketno',
+                        render: function(data, type, row){
+                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                        }
+                    },
+                    {
+                        data: 'category',
+                        render: function(data) {
+                            if(data == 'INCIDENT'){
+                            statusText = `<span class="badge badge-danger">INCIDENT</span>`;
+                            } else if (data == 'CHANGE REQUEST'){
+                                statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
+                            } else if (data == 'HARDWARE'){
+                                statusText = `<span class="badge badge-info">HARDWARE</span>`;
+                            } else if (data == 'USER REQUEST'){
+                                statusText = `<span class="badge badge-warning">USER REQUEST</span>`;
+                            } else if (data == 'AUTHORIZATION'){
+                                statusText = `<span class="badge badge-dark">AUTHORIZATION</span>`;
+                            } else if (data == 'INTERNET ACCESS'){
+                                statusText = `<span class="badge badge-primary">INTERNET ACCESS</span>`;
+                            } else if (data == 'EMAIL'){
+                                statusText = `<span class="badge badge-dark">EMAIL ACCESS</span>`;
+                            } else if (data == 'INTERNET'){
+                                statusText = `<span class="badge badge-primary">INTERNET</span>`;
+                            } else if (data == 'DATA'){
+                                statusText = `<span class="badge badge-info">DATA</span>`;
+                            } else if (data == 'OTHER'){
+                                statusText = `<span class="badge badge-warning">OTHER</span>`;
+                            } else if (data == 'IMPROVEMENT'){
+                                statusText = `<span class="badge badge-primary">IMPROVEMENT</span>`;
+                            } else if (data == 'PROCEDURE'){
+                                statusText = `<span class="badge badge-info">PROCEDURE</span>`;
+                            } else if (data == 'INFRASTRUCTURE'){
+                                statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
+                            } else if (data == 'SOFTWARE'){
+                                statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
+                            } else if(data == 'TRAINING'){
+                                statusText = `<span class="badge badge-info">TRAINING</span>`;
+                            } else {
+                                statusText = `<span class="badge badge-warning">VPN</span>`;
+                            }
+                            
+                            return statusText;
+                        }
+                    },
+                    {
+                        data: 'status',
+                        render: function (data){
+                            if(data == "CLOSED"){
+                            statusText = `<span class="badge badge-danger">Closed</span>`;
+                            } else if(data == "IN PROGRESS"){
+                                statusText = `<span class="badge badge-success">In Progress</span>`;
+                            } else if(data == "WAITING FOR APPROVAL"){
+                                statusText = `<span class="badge badge-warning">Waiting For Approval</span>`;
+                            } else if(data == "NOT STARTED"){
+                                statusText = `<span class="badge badge-dark">Not Started</span>`;
+                            } else if(data == "HOLD"){
+                                statusText = `<span class="badge badge-warning">Hold</span>`;
+                            } else if(data == "WAITING FOR USER"){
+                                statusText = `<span class="badge badge-success">Waiting For User</span>`;
+                            } else if(data == "MONITORING"){
+                                statusText = `<span class="badge badge-primary">Monitoring</span>`;
+                            } else if(data == "REQUEST TRANSPORT"){
+                                statusText = `<span class="badge badge-warning">Request Transport</span>`;
+                            } else if(data == "DONE TRANSPORT"){
+                                statusText = `<span class="badge badge-info">Done Transport</span>`;
+                            } else if(data == "TRAINING"){
+                                statusText = `<span class="badge badge-dark">TRAINING</span>`;
+                            } else if(data == "WAITING FOR VENDOR"){
+                                statusText = `<span class="badge badge-success">WAITING FOR VENDOR</span>`;
+                            } else if(data == "WAITING FOR PURCHASING"){
+                                statusText = `<span class="badge badge-success">WAITING FOR PURCHASING</span>`;
+                            } else if(data == "WAITING FOR ENGINEERING"){
+                                statusText = `<span class="badge badge-success">WAITING FOR ENGINEERING</span>`;
+                            } else {
+                                statusText = `<span class="badge badge-primary">Open</span>`;
+                            }
+                            return statusText;
+                        }
+                    },
+                    {
+                        data: 'subject',
+                        name: 'subject'
+                    },
+                    {
+                        data: 'requestor',
+                        name: 'requestor'
+                    },
+                    {
+                        data: 'assigned_to',
+                        name: 'assigned_to'
+                    },
+                    {
+                        data: 'systemname',
+                        name: 'systemname'
+                    },
+                    {
+                        data: 'modulename',
+                        name: 'modulename'
+                    },
+                    {
+                        data: 'objectname',
+                        name: 'objectname'
+                    },
+                    {
+                        data: 'createdon',
+                        render: function(data) {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year;
+                            return date;   
+                        }
+                    },
+                    {
+                        data: 'targetdate',
+                        render: function(data) {
+                            // console.log(data);
+                            if(data == ''){
+                                var date = "";
+                            } else {
+                                var today = new Date(data);
+                                var day = today.getDate() + "";
+                                var month = (today.getMonth() + 1) + "";
+                                var year = today.getFullYear() + "";
+                                var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                                var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                                var seconds = today.getSeconds() + "";
+
+                                day = day;
+                                month = month;
+                                year = year;
+                                hour = hour;
+                                minutes = minutes;
+                                seconds = seconds;
+                                // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                                var date = day + "/" + month + "/" + year;
+                            }
+                            return date;   
+                        }
+                    },
+                    {
+                        data: 'last_update',
+                        render: function(data) {
+                            if(data == ''){
+                                var date = "";
+                            } else {
+                                var today = new Date(data);
+                                var day = today.getDate() + "";
+                                var month = (today.getMonth() + 1) + "";
+                                var year = today.getFullYear() + "";
+                                var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                                var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                                var seconds = today.getSeconds() + "";
+
+                                day = day;
+                                month = month;
+                                year = year;
+                                hour = hour;
+                                minutes = minutes;
+                                seconds = seconds;
+                                // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                                var date = day + "/" + month + "/" + year + "," + hour + ":" + minutes + ":" + seconds;
+                            }
+                            return date;   
+                        }
+                    },    
+                ],
+                oLanguage: {
+                    "sLengthMenu": "Tampilkan _MENU_ data",
+                    "sProcessing": "Loading...",
+                    "sSearch": "Keyword:",
+                    "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
+                },
+                drawCallback: function() {
+                    $btn_submit.text("Sumbit");
+                    $btn_submit.prop('disabled', false);
+                }
+            });
+        });
 
         $(document).on('click', '.viewcomment', function(e) {
             var ticketno = $('#modal-view-user input[name="ticketno"]').val();

@@ -179,6 +179,7 @@ class TiketController extends Controller
     {   
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
+        $divisionid = Session::get('divisionid');
         $dat = '';
 
         /* Get Data Ticket */
@@ -269,6 +270,7 @@ class TiketController extends Controller
                 $userid = Session::get('userid');
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
+                $divisionid = Session::get('divisionid');
                 $document_name = str_replace("storage/", "", $row["attachment"]);
                 $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
@@ -343,7 +345,7 @@ class TiketController extends Controller
                     $itBtn = $updateBtn;
                     $sapBtn = $transportBtn. $updateBtn;
                     $infBtn = $updateBtn;
-                    $headBtn = $transportBtn. $updateBtn;
+                    $headBtn = $transportBtn;
                     $managerBtn = ''; 
                     $managerItBtn = $updateBtn;
                 } else {
@@ -435,7 +437,21 @@ class TiketController extends Controller
                     return $itBtn;
                 }
                 if($roleid == 'RD009'){
-                    return $headBtn;
+                    if($divisionid == 'DV002'){ // SAP
+                        if($userid == $row["assignedto"] || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
+                            return $headBtn. $updateBtn;
+                        } 
+                    } else if ($divisionid == 'DV003'){ // APP
+                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
+                            return $headBtn. $updateBtn;
+                        }
+                    } else if ($divisionid == 'DV001'){ // INFRA
+                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                            return $headBtn. $updateBtn;
+                        }
+                    } else {
+                        return $headBtn;
+                    }  
                 }
                 if($roleid == 'RD002'){ 
                     return $managerBtn;
@@ -561,6 +577,7 @@ class TiketController extends Controller
                 $userid = Session::get('userid');
                 $roleid = Session::get('roleid');
                 $mgrid = Session::get('mgrid');
+                $divisionid = Session::get('divisionid');
                 $document_name = str_replace("storage/", "", $row["attachment"]);
                 $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
@@ -569,7 +586,7 @@ class TiketController extends Controller
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
                 data-objectid="'.$row["objectid"].'"  data-objectname="'.$row["objectname"].'" data-createdon="'.$row["createdon"].'" data-download="'.$document_name.'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
-                $updateBtn = ' <a href="javascript:void(0)" class="update btn btn-outline-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                $updateBtn = ' <a href="javascript:void(0)" class="update btn btn-success btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-categoryid="'.$row["categoryid"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'"  data-assignedto="'.$row["assignedto"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
@@ -635,7 +652,7 @@ class TiketController extends Controller
                     $itBtn = $updateBtn;
                     $sapBtn = $transportBtn. $updateBtn;
                     $infBtn = $updateBtn;
-                    $headBtn = $transportBtn. $updateBtn;
+                    $headBtn = $transportBtn;
                     $managerBtn = ''; 
                     $managerItBtn = $updateBtn;
                 } else {
@@ -727,7 +744,21 @@ class TiketController extends Controller
                     return $itBtn;
                 }
                 if($roleid == 'RD009'){
-                    return $headBtn;
+                    if($divisionid == 'DV002'){ // SAP
+                        if($userid == $row["assignedto"] || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
+                            return $headBtn. $updateBtn;
+                        } 
+                    } else if ($divisionid == 'DV003'){ // APP
+                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
+                            return $headBtn. $updateBtn;
+                        }
+                    } else if ($divisionid == 'DV001'){ // INFRA
+                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                            return $headBtn. $updateBtn;
+                        }
+                    } else {
+                        return $headBtn;
+                    }  
                 }
                 if($roleid == 'RD002'){ 
                     return $managerBtn;

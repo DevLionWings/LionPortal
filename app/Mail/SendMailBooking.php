@@ -34,11 +34,11 @@ class SendMailBooking extends Mailable
         $server = env('DB_DATABASE_PGSQL');
         if($server == 'PRD'){
             return new Envelope(
-                subject: 'Lion Wings - Room Meeting : '.  $this->mailData['ticketno'],
+                subject: 'Lion Wings - Room Meeting : '.  $this->mailData['bookid'],
             );
         } else {
             return new Envelope(
-                subject: 'STAGING - Lion Wings - Room Meeting : '.  $this->mailData['ticketno'],
+                subject: '[STAGING] Lion Wings - Room Meeting : '.  $this->mailData['bookid'],
             );
         }
     }
