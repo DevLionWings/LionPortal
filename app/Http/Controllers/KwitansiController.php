@@ -10,6 +10,7 @@ use App\Helpers\Repository;
 use App\Helpers\Convertion;
 use App\Models\Masteremployee;
 use App\Models\Mastertunjangan;
+use App\Models\Masterkaryawan;
 use App\Models\Kwintansi;
 use App\Models\Kwintansibackup;
 use Carbon\Carbon;
@@ -489,7 +490,10 @@ class KwitansiController extends Controller
     public function getList(Request $request)
     {
         $kwn = '';
-        $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi')->get();
+        $datakwitansi = DB::connection('pgsql')->table('hris.t_kwitansi as a')
+                        ->join('hris.t_karyawan as b', 'a.nik', '=', 'b.idsmu')
+                        ->get();
+       
         $dataTrim = [];
         if($datakwitansi == true){
             foreach($datakwitansi as $key => $value){
@@ -500,8 +504,8 @@ class KwitansiController extends Controller
                     "nama" => trim($value->namakaryawan),
                     "gaji" => trim($value->gaji),
                     "total" => trim($value->total),
-                    "datecreated" => trim($value->createdon)
-
+                    "datecreated" => trim($value->createdon),
+                    "tgl_masuk" => trim($value->tgl_in),
                 ]);
             }
 
@@ -509,7 +513,7 @@ class KwitansiController extends Controller
         } else {
             $data = ['']; 
         }
-       
+      
         return DataTables::of($data['kwn'])
             ->make(true);
     }

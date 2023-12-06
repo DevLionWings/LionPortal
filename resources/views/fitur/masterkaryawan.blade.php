@@ -126,11 +126,11 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-check-label" for="bagian">Department:</label>
-                            <input type="text" name="bagian" id="bagian" class="form-control" maxlength="6">
+                            <input type="text" name="bagian" id="bagian" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label class="form-check-label" for="tgl_lahir">Tanggal Lahir:</label>
-                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control" maxlength="6">
+                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label class="form-check-label" for="gaji">Gaji:</label>
@@ -199,11 +199,11 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-check-label" for="bagian">Department:</label>
-                            <input type="text" name="bagian" id="bagian" class="form-control" maxlength="6">
+                            <input type="text" name="bagian" id="bagian" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label class="form-check-label" for="tgl_lahir">Tanggal Lahir:</label>
-                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control" maxlength="6">
+                            <input type="date" name="tgl_lahir" id="tgl_lahir" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label class="form-check-label" for="gaji">Gaji:</label>
@@ -334,7 +334,7 @@
                 'excel'
             ],
             ajax: "{{ route('karyawan-list') }}",
-            order: [[ 3, "desc" ]],
+            order: [[ 2, "desc" ]],
             columns: [
                 {
                     data: 'idsmu',

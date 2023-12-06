@@ -177,6 +177,7 @@
                                                 <th>Nik</th>
                                                 <th>Name</th>
                                                 <th>Date Created</th>
+                                                <th>Employee Entry Date</th>
                                                 <th>Count</th>
                                             </tr>
                                         </thead>
@@ -588,6 +589,32 @@
                 {
                     data: 'datecreated',
                     nama: 'datecreated'
+                },
+                {
+                    data: 'tgl_masuk',
+                    render: function(data) {
+                        if(data == ''){
+                            var date = "";
+                        } else {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year;
+                        }
+                        return date;  
+                    } 
                 },
                 {
                     data: 'total',

@@ -55,7 +55,15 @@ class CommentController extends Controller
             // }
             // $strUpload = $upload[0];
 
-            $userid = Session::get('userid');
+            /* Update Ticket */
+            $update = DB::connection('pgsql')->table('helpdesk.t_ticket')
+            ->where('ticketno', $request->ticketno)
+            ->update([
+                'last_update' => date('Y-m-d H:i:s')
+            ]);
+            DB::commit();
+            /* End */
+
             
             /* Insert Comment */
             $insert = DB::connection('pgsql')->table('helpdesk.t_discussion')->insert([
