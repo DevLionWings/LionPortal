@@ -444,15 +444,15 @@ class MyticketController extends Controller
                 }
                 if($roleid == 'RD009'){
                     if($divisionid == 'DV002'){ // SAP
-                        if($userid == $row["assignedto"] || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
+                        if($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
                             return $headBtn. $updateBtn;
                         } 
                     } else if ($divisionid == 'DV003'){ // APP
-                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
+                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
                             return $headBtn. $updateBtn;
                         }
                     } else if ($divisionid == 'DV001'){ // INFRA
-                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
                             return $headBtn. $updateBtn;
                         }
                     } else {
@@ -750,15 +750,15 @@ class MyticketController extends Controller
                 }
                 if($roleid == 'RD009'){
                     if($divisionid == 'DV002'){ // SAP
-                        if($userid == $row["assignedto"] || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
+                        if($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
                             return $headBtn. $updateBtn;
                         } 
                     } else if ($divisionid == 'DV003'){ // APP
-                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
+                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
                             return $headBtn. $updateBtn;
                         }
                     } else if ($divisionid == 'DV001'){ // INFRA
-                        if ($userid == $row["assignedto"] || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
                             return $headBtn. $updateBtn;
                         }
                     } else {
