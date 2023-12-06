@@ -91,7 +91,7 @@ class CutiController extends Controller
             $nama = trim($datakaryawan->nama);
             $tglmasuk = $datakaryawan->tgl_in;
             $gaji = $datakaryawan->gaji * 30;  
-            $gajisehari = $datakaryawan->gaji / 30;
+            $gajisehari = $datakaryawan->gaji;
             $gajiUm = $gajisehari - $uangmakan;
             $gajiUmHist = $gajiSehariHist - $uangmakan;
             $formatGaji = 'Rp.'.number_format($gaji,0,',','.');
