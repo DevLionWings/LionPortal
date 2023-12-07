@@ -353,7 +353,7 @@ class TiketController extends Controller
                     $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = $updateBtn;
+                    $managerItBtn = '';
                     $headBtn = '';
                 }
                 
@@ -383,37 +383,40 @@ class TiketController extends Controller
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } 
                     } else if($row["statusid"] == 'SD003'){
-                            $infBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                    } else {
-                        if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
-                            $infBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
-                        } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
-                            $infBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
-                        } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
-                            $infBtn = $transportedBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
-                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
-                            $infBtn = $transportedBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
-                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
-                            $infBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
-                        } 
+                        $infBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn. $updateBtn;
+                    } else if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $approveTransBtn. $updateBtn;
+                    } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $approveTransBtn. $updateBtn;
+                    } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
+                        $infBtn = $transportedBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn. $updateBtn;
+                    } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
+                        $infBtn = $transportedBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $approveTransBtn. $updateBtn;
+                    } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn. $updateBtn;
                     }
                 }
                 /* End */
@@ -660,7 +663,7 @@ class TiketController extends Controller
                     $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = $updateBtn;
+                    $managerItBtn = '';
                     $headBtn = '';
                 }
                 
@@ -690,37 +693,40 @@ class TiketController extends Controller
                             $managerItBtn = $viewTransBtn. $updateBtn;
                         } 
                     } else if($row["statusid"] == 'SD003'){
-                            $infBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                    } else {
-                        if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
-                            $infBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
-                        } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
-                            $infBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
-                        } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
-                            $infBtn = $transportedBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
-                        } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
-                            $infBtn = $transportedBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
-                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
-                            $infBtn = $viewTransBtn;
-                            $sapBtn = $viewTransBtn;
-                            $headBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
-                        } 
+                        $infBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn. $updateBtn;
+                    } else if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $approveTransBtn. $updateBtn;
+                    } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $approveTransBtn. $updateBtn;
+                    } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
+                        $infBtn = $transportedBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn. $updateBtn;
+                    } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
+                        $infBtn = $transportedBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $approveTransBtn. $updateBtn;
+                    } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                        $infBtn = $viewTransBtn;
+                        $sapBtn = $viewTransBtn;
+                        $headBtn = $viewTransBtn;
+                        $managerItBtn = $viewTransBtn. $updateBtn;
                     }
                 }
                 /* End */
@@ -1220,9 +1226,9 @@ class TiketController extends Controller
 
         if($update == true){
             if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "transport send successfully");
+                return redirect()->route('mytiket')->with("success", "update ticket successfully");
             } else {
-                return redirect()->route('tiket')->with("success", "transport send successfully");
+                return redirect()->route('tiket')->with("success", "update ticket successfully");
             }
         } else { 
             return redirect()->back()->with("error", "error");

@@ -138,7 +138,7 @@ class Repository
                     ->orderBy('tgl', 'desc')
                     ->limit(10)
                     ->simplePaginate($countfilter);
-
+                    
                 if($data->isNotEmpty()){
                     $response = array(
                         'rc' => '00',
@@ -426,6 +426,7 @@ class Repository
                         ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
                         ->where('a.userid', 'LIKE','%'.$requestor.'%') 
                         ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                        ->where('f.userid', $userid) 
                         ->where('f.divisionid', $divisionid)
                         ->count();
         
@@ -451,6 +452,7 @@ class Repository
                         ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
                         ->where('a.userid', 'LIKE','%'.$requestor.'%') 
                         ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                        ->where('f.userid', $userid) 
                         ->where('f.divisionid', $divisionid)
                         ->limit(10)
                         ->simplePaginate($count);

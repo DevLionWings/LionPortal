@@ -42,149 +42,155 @@ class TransportController extends Controller
         $emailSendTo = $dataUser->usermail;
         $emailNameSendTo = $dataUser->username;
         
-        /* Checked Opsi Transport */
-        if (empty($request->lqa)) {
-            $lqa = '1';
-            $date_lqa = '';
-            $lpr = '1';
-            $date_lpr = date('Y-m-d H:i:s');
-            $status = 'Request To LPR';
-        } else if (empty($request->lpr)){
-            $lqa = '1';
-            $date_lqa = date('Y-m-d H:i:s');
-            $lpr = '0';
-            $date_lpr = '';
-            $status = 'Request To LQA';
-        } 
-        /* end checked */
-
-        /* Checked Transport Number*/
-        if($request->opsi == "exist"){
-            $transid = $request->transportid;
-            /* If Existing Get data transport id */
-            $existing = DB::connection('pgsql')->table('helpdesk.t_transport')
-                ->where('transportid', $transid)
-                ->get();
-
-            $trim_transno = [];
-            foreach ($existing as $key => $value) {
-                array_push($trim_transno, $value->transportno);
-                // array_push($trim_transno, trim(preg_replace('/\s+/', ',', $value->transportno)));
-            }
-            $transno = implode(" ", $trim_transno);
-      
-            $transportId = $existing[0]->transportid;
-            $sendtolqa = $existing[0]->sendto_lqa;
-            $sendtolpr = $existing[0]->sendto_lpr;
-
-            /* Update Transport to DB */
-            if($date_lqa == ''){
-                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
-                ->where('transportid', $transid)
-                ->update([
-                    'transportno' => $transno,
-                    'sendto_lqa' => $lqa,
-                    'sendto_lpr' => $lpr,
-                    'createdon_lpr' => $date_lpr
-                ]);
-
-                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
-                ->where('ticketno', $ticketno)
-                ->update([
-                    'statusid' => 'SD010',
-                ]);
-            } else {
-                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
-                ->where('transportid', $transid)
-                ->update([
-                    'transportno' => $transno,
-                    'sendto_lqa' => $lqa,
-                    'createdon_lqa' => $date_lqa,
-                    'sendto_lpr' => $lpr
-                ]);
-
-                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
-                ->where('ticketno', $ticketno)
-                ->update([
-                    'statusid' => 'SD010',
-                ]);
-            } 
-            /* End */
-
-        } else if($request->opsi == "new"){
-            $transno = $request->transnumber;
-
-            /* Generate Transport Id */
-            $year = date("Y");
-            $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT007')->where('period', $year)->first();
-
-            $subs1 = $dataPrefix->prefix;
-            $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
-            $transportId = $subs1.$subs2;
-            $last = $dataPrefix->last_number + 1;
-            $update = DB::connection('pgsql')->table('master_data.m_counter')
-                ->where('counterid', 'CT007')
-                ->where('period', $year)
-                ->update([
-                    'last_number' => $last
-            ]);
-            /* End */
-
-             /* Insert Transport to DB */
-            if($date_lqa == ''){
-                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
-                    'transportid' => $transportId,
-                    'ticketno' => $request->ticketno,
-                    'transportno' => $transno,
-                    'sendto_lqa' => $lqa,
-                    'sendto_lpr' => $lpr,
-                    'createdon_lpr' => $date_lpr,
-                    'createdon' => date('Y-m-d H:i:s'),
-                ]);
-
-                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
-                ->where('ticketno', $ticketno)
-                ->update([
-                    'statusid' => 'SD010',
-                ]);
-            } else {
-                $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
-                    'transportid' => $transportId,
-                    'ticketno' => $request->ticketno,
-                    'transportno' => $transno,
-                    'sendto_lqa' => $lqa,
-                    'createdon_lqa' => $date_lqa,
-                    'sendto_lpr' => $lpr,
-                    'createdon' => date('Y-m-d H:i:s'),
-                ]);
-
-                $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
-                ->where('ticketno', $ticketno)
-                ->update([
-                    'statusid' => 'SD010',
-                ]);
-            }
-            /* End */
-        } else {
-            $transno = "";
-        }
-        /* End */
-
-        /* Send Email */
-        // $transportId = implode(",", $datatrq);
-        // $status = "REQUEST";
-        $remark = 'Request Transport';
-        $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
-        /* End */
-
-        if($insert == true){
+        if (empty($request->lqa) && empty($request->lpr)){
             if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "request transport send successfully");
+                return redirect()->route('mytiket')->with("error", "TRQ has been transported(LPR)  & Checked Box not Found");
             } else {
-                return redirect()->route('tiket')->with("success", "request transport send successfully");
+                return redirect()->route('tiket')->with("error", "TRQ has been transported(LPR) & Checked Box not Found");
             }
-        } else { 
-            return redirect()->back()->with("error", "error");
+        } else {
+            /* Checked Opsi Transport */
+            if (empty($request->lqa)) {
+                $lqa = '1';
+                $date_lqa = '';
+                $lpr = '1';
+                $date_lpr = date('Y-m-d H:i:s');
+                $status = 'Request To LPR';
+            } else if (empty($request->lpr)){
+                $lqa = '1';
+                $date_lqa = date('Y-m-d H:i:s');
+                $lpr = '0';
+                $date_lpr = '';
+                $status = 'Request To LQA';
+            } 
+            /* end checked */
+
+            /* Checked Transport Number*/
+            if($request->opsi == "exist"){
+                $transid = $request->transportid;
+                /* If Existing Get data transport id */
+                $existing = DB::connection('pgsql')->table('helpdesk.t_transport')
+                    ->where('transportid', $transid)
+                    ->get();
+
+                $trim_transno = [];
+                foreach ($existing as $key => $value) {
+                    array_push($trim_transno, $value->transportno);
+                    // array_push($trim_transno, trim(preg_replace('/\s+/', ',', $value->transportno)));
+                }
+                $transno = implode(" ", $trim_transno);
+        
+                $transportId = $existing[0]->transportid;
+                $sendtolqa = $existing[0]->sendto_lqa;
+                $sendtolpr = $existing[0]->sendto_lpr;
+
+                /* Update Transport to DB */
+                if($date_lqa == ''){
+                    $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
+                    ->where('transportid', $transid)
+                    ->update([
+                        'transportno' => $transno,
+                        'sendto_lqa' => $lqa,
+                        'sendto_lpr' => $lpr,
+                        'createdon_lpr' => $date_lpr
+                    ]);
+
+                    $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                    ->where('ticketno', $ticketno)
+                    ->update([
+                        'statusid' => 'SD010',
+                    ]);
+                } else {
+                    $insert = DB::connection('pgsql')->table('helpdesk.t_transport')
+                    ->where('transportid', $transid)
+                    ->update([
+                        'transportno' => $transno,
+                        'sendto_lqa' => $lqa,
+                        'createdon_lqa' => $date_lqa,
+                        'sendto_lpr' => $lpr
+                    ]);
+
+                    $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                    ->where('ticketno', $ticketno)
+                    ->update([
+                        'statusid' => 'SD010',
+                    ]);
+                } 
+                /* End */
+
+            } else if($request->opsi == "new"){
+                $transno = $request->transnumber;
+
+                /* Generate Transport Id */
+                $year = date("Y");
+                $dataPrefix = DB::connection('pgsql')->table('master_data.m_counter')->where('counterid', 'CT007')->where('period', $year)->first();
+
+                $subs1 = $dataPrefix->prefix;
+                $subs2 =  str_pad($dataPrefix->last_number + 1, 4, "00", STR_PAD_LEFT);
+                $transportId = $subs1.$subs2;
+                $last = $dataPrefix->last_number + 1;
+                $update = DB::connection('pgsql')->table('master_data.m_counter')
+                    ->where('counterid', 'CT007')
+                    ->where('period', $year)
+                    ->update([
+                        'last_number' => $last
+                ]);
+                /* End */
+
+                /* Insert Transport to DB */
+                if($date_lqa == ''){
+                    $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
+                        'transportid' => $transportId,
+                        'ticketno' => $request->ticketno,
+                        'transportno' => $transno,
+                        'sendto_lqa' => $lqa,
+                        'sendto_lpr' => $lpr,
+                        'createdon_lpr' => $date_lpr,
+                        'createdon' => date('Y-m-d H:i:s'),
+                    ]);
+
+                    $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                    ->where('ticketno', $ticketno)
+                    ->update([
+                        'statusid' => 'SD010',
+                    ]);
+                } else {
+                    $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
+                        'transportid' => $transportId,
+                        'ticketno' => $request->ticketno,
+                        'transportno' => $transno,
+                        'sendto_lqa' => $lqa,
+                        'createdon_lqa' => $date_lqa,
+                        'sendto_lpr' => $lpr,
+                        'createdon' => date('Y-m-d H:i:s'),
+                    ]);
+
+                    $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+                    ->where('ticketno', $ticketno)
+                    ->update([
+                        'statusid' => 'SD010',
+                    ]);
+                }
+                /* End */
+            } else {
+                $transno = "";
+            }
+            /* End */
+
+            /* Send Email */
+            $remark = 'Request Transport';
+            $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
+            /* End */
+
+            if($insert == true){
+                if($page == 'mytiket'){
+                    return redirect()->route('mytiket')->with("success", "request transport send successfully");
+                } else {
+                    return redirect()->route('tiket')->with("success", "request transport send successfully");
+                }
+            } else { 
+                return redirect()->back()->with("error", "error");
+            }
         }
     }
 
@@ -242,7 +248,6 @@ class TransportController extends Controller
 
         /* Send Email */ 
         $transportId = implode(",", $datatrq);
-        // $status = "APPROVE";
         $remark = $request->remark;
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
@@ -397,16 +402,15 @@ class TransportController extends Controller
 
         /* Send Email */
         $transportId = implode(",", $datatrq);
-        // $status = "TRANSPORTED";
         $remark = $request->remark;
         $emailTRANS = $this->mail->SENDMAILTRANSPORT($transportId, $ticketno, $transno, $emailNameSender, $emailSender, $emailSendTo, $emailNameSendTo, $status, $remark);
         /* End */
 
         if($transported == true){
             if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "transport send successfully");
+                return redirect()->route('mytiket')->with("success", "transported successfully");
             } else {
-                return redirect()->route('tiket')->with("success", "transport send successfully");
+                return redirect()->route('tiket')->with("success", "transported successfully");
             }
         } else { 
             return redirect()->back()->with("error", "error");
@@ -478,7 +482,6 @@ class TransportController extends Controller
         foreach ($transport as $key => $value) {
             array_push($transportArray, [
                 "TRANSPORTID" => trim($value['transportid'])
-                // "TRANSPORTNO" => trim($value['transportno']),
             ]);
         }
 
@@ -506,7 +509,6 @@ class TransportController extends Controller
         foreach ($transport as $key => $value) {
             array_push($transportArray, [
                 "TRANSPORTID" => trim($value['transportid'])
-                // "TRANSPORTNO" => trim($value['transportno']),
             ]);
         }
 

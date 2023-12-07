@@ -47,7 +47,7 @@
                                     <div class="form-group">
                                         <label>Requestor :</label>
                                         <div class="input-group value">
-                                            <select id="requestor" name="requestor" class="select2" style="width: 100%;">
+                                            <select id="requestor" name="requestor" class="requestor" style="width: 100%;">
                                             <option value="10"> all</option>
                                                 @foreach($usreq as $usreqcode)
                                                 <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
@@ -60,7 +60,7 @@
                                     <div class="form-group">
                                         <label>Ticket :</label>
                                         <div class="input-group value">
-                                            <select id="ticketno" name="ticketno" class="form-control input--style-6">
+                                            <select id="ticketno" name="ticketno" class="noticket">
                                             <option value="HLP"> all</option>
                                                 @foreach($tick as $tickcode)
                                                 <option value="{{ $tickcode['ID'] }}">{{ $tickcode['NAME'] }}</option>
@@ -209,7 +209,7 @@
                         <div class="form-group">
                             <div class="name">User Request :</div>
                             <div class="input-group value">
-                                <select id="user" name="user" class="select2" style="width: 100%;" required>
+                                <select id="user" name="user" class="newticket" style="width: 100%;" required>
                                     <option value=""> Masukkan Pilihan :</option>
                                     @foreach($usreq as $usreqcode)
                                     <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
@@ -1105,7 +1105,15 @@
         hideBtn.hide();
 
         //Initialize Select2 Elements
-        $('.select2').select2();
+        $('.requestor').select2({
+            width: '100%'
+        });
+        $('.noticket').select2({
+            width: '100%'
+        });
+        $('.newticket').select2({
+            width: '100%'
+        });
         $('.datepicker').daterangepicker();
 
         $('#save-btn').on('click', function() {
