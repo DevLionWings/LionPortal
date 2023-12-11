@@ -248,7 +248,7 @@ class MyticketController extends Controller
         
         return DataTables::of($data['dat'])
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->orderByRaw('status_trans_lpr = 0')->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
@@ -418,7 +418,7 @@ class MyticketController extends Controller
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
                         $managerItBtn = $approveTransBtn. $updateBtn;
-                    } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
@@ -557,7 +557,7 @@ class MyticketController extends Controller
 
         return DataTables::of($data['dat'])
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->orderByRaw('status_trans_lpr = 0')->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
@@ -702,11 +702,6 @@ class MyticketController extends Controller
                         $managerItBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
-                        $infBtn = $viewTransBtn;
-                        $sapBtn = $viewTransBtn;
-                        $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
                     } else if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
@@ -727,7 +722,7 @@ class MyticketController extends Controller
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
                         $managerItBtn = $approveTransBtn. $updateBtn;
-                    } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;

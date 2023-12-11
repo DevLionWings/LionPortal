@@ -59,6 +59,7 @@ Route::get('/addform', [TiketController::class,'addForm'])->name('add.form');
 Route::post('/updatetiket', [TiketController::class,'updateTiket'])->name('update-tiket');
 Route::post('/edittiket', [TiketController::class,'editTiket'])->name('edit-tiket');
 Route::post('/closetiket', [TiketController::class,'closedTiket'])->name('close-tiket');
+Route::post('/getdatamodal/update', [TiketController::class,'dataModalUpdate'])->name('modal-update');
 
 Route::get('/mytiket', [MyticketController::class,'myTiket'])->name('mytiket');
 Route::get('/mytiket/get', [MyticketController::class,'myTiketList'])->name('my-tiket');

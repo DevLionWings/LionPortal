@@ -110,6 +110,19 @@
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
         }
+
+        /* Important part */
+        .modal-dialog{
+            overflow-y: initial !important;
+            zoom: 85%;
+        }
+        /* .modal-backdrop{
+            zoom: 150%  !important;
+        } */
+        .modal-body{
+            height: 80vh;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body  class="hold-transition sidebar-mini">

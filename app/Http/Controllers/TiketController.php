@@ -180,10 +180,11 @@ class TiketController extends Controller
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $divisionid = Session::get('divisionid');
+        $ticketno = 'ticketlist';
         $dat = '';
 
         /* Get Data Ticket */
-        $dataTicket = $this->repository->GETTIKET($userid, $roleid);
+        $dataTicket = $this->repository->GETTIKET($userid, $roleid, $ticketno);
         $json = json_decode($dataTicket, true);
       
         if($json["rc"] == "00") 
@@ -242,7 +243,7 @@ class TiketController extends Controller
         $resp = json_encode($data);
         return DataTables::of($data)
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->orderByRaw('status_trans_lpr = 0')->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
@@ -378,20 +379,12 @@ class TiketController extends Controller
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn;
                             $managerItBtn = $approveTransBtn. $updateBtn;
-                        } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
-                            $infBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
-                        } 
+                        }
                     } else if($row["statusid"] == 'SD003'){
                         $infBtn = $viewTransBtn;
                         $managerItBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
-                        $infBtn = $viewTransBtn;
-                        $sapBtn = $viewTransBtn;
-                        $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
                     } else if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
@@ -411,8 +404,8 @@ class TiketController extends Controller
                         $infBtn = $transportedBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $approveTransBtn. $updateBtn;
-                    } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                        $managerItBtn = $viewTransBtn. $updateBtn;
+                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
@@ -552,7 +545,7 @@ class TiketController extends Controller
 
         return DataTables::of($data['dat'])
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->orderByRaw('status_trans_lpr = 0')->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
@@ -697,11 +690,6 @@ class TiketController extends Controller
                         $managerItBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
-                        $infBtn = $viewTransBtn;
-                        $sapBtn = $viewTransBtn;
-                        $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
                     } else if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
@@ -722,7 +710,7 @@ class TiketController extends Controller
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
                         $managerItBtn = $approveTransBtn. $updateBtn;
-                    } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
+                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
@@ -1233,5 +1221,72 @@ class TiketController extends Controller
         } else { 
             return redirect()->back()->with("error", "error");
         }
+    }
+
+    public function dataModalUpdate(Request $request){
+        $userid = Session::get('userid');
+        $roleid = Session::get('roleid');
+        $divisionid = Session::get('divisionid');
+        $ticketno = $request->ticketno;
+
+        /* Get Data Ticket */
+        // $dataTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')->where('ticketno', $request->ticketno)->first();
+        $dataTicket = $this->repository->GETTIKET($userid, $roleid, $ticketno);
+        $json = json_decode($dataTicket, true);
+
+        if($json["rc"] == "00") 
+        {   
+            $dataTrim = $json["data"]['data'];
+
+            $dataTrimArray = [];
+            foreach ($dataTrim as $key => $value) {
+                array_push($dataTrimArray, [
+                    "ticketno" => trim($value['ticketno']),
+                    "userid" => trim($value['userid']),
+                    "requestor" => trim($value['requestor']),
+                    "categoryid" => trim($value['categoryid']),
+                    "category" => trim($value['category']),
+                    "subject" => trim($value['subject']),
+                    "attachment" => trim($value['attachment']),
+                    "statusid" => trim($value['statusid']),
+                    "status" => trim($value['status']),
+                    "priorid" => trim($value['priorid']),
+                    "priority" => trim($value['priority']),
+                    "detail" => trim($value['detail']),
+                    "assignedto" => trim($value['assignedto']),
+                    "assigned_to" => trim($value['assigned_to']),
+                    "createdon" => trim($value['createdon']),
+                    "departmentid" => trim($value['departmentid']),
+                    "approvedby_1" => trim($value['approvedby_1']),
+                    "approvedby_2" => trim($value['approvedby_2']),
+                    "approvedby_3" => trim($value['approvedby_3']),
+                    "approvedby_it" => trim($value['approvedby_it']),
+                    "rejectedby" => trim($value['rejectedby']),
+                    "approvedby1_date" => trim($value['approvedby1_date']),
+                    "approvedby2_date" => trim($value['approvedby2_date']),
+                    "approvedby3_date" => trim($value['approvedby3_date']),
+                    "approvedbyit_date" => trim($value['approvedbyit_date']),
+                    "targetdate" => trim($value['target_date']),
+                    "createdby" => trim($value['createdby']),
+                    "approvedby1Name" => trim($value['approved1']),
+                    "approvedbyitName" => trim($value['approvedit']),
+                    "createdname" => trim($value['created']),
+                    "systemid" => trim($value['systemid']),
+                    "moduleid" => trim($value['moduleid']),
+                    "modulename" => trim($value['modulename']),
+                    "objectid" => trim($value['objectid']),
+                    "objectname" => trim($value['objectname']),
+                    "systemname" => trim($value['systemname']),
+                    "last_update" => trim($value['last_update'])
+            
+                ]); 
+            }
+         
+            $data = $dataTrimArray;
+        } else {
+            $data = []; 
+        }
+        
+        return $data;
     }
 }

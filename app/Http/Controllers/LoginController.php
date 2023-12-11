@@ -173,11 +173,9 @@ class LoginController extends Controller
         /* Update Status Login */
         $update = $this->updateLogout($userid, $password); 
         /* End */ 
-        
         Session::flush();
-        Session::regenerate();
     
-        return redirect()->route('login-page')->with('info','You have been logged out.');;
+        return redirect()->route('login-page')->with('info','You have been logged out.');
     }  
     
 }

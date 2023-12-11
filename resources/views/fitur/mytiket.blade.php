@@ -312,24 +312,20 @@
                             <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
                             <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">  
+                                <div class="mb-3">
+                                    <button type="button" id="trq" class="trq btn btn-primary" disabled><i class="fa fa-truck"></i></button>
+                                    <button type="button" id="edit" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
+                                </div> 
+                            </div>
+                        </div>
                         <hr />
-                        <!-- <label class="form-check-label">Display Comment :</label> -->
-                        
                         <h4 class="modal-title">Activity :</h4>
                         <div class="form-group" id="hidecmnt">
-                            <!-- <label class="form-check-label" for="comment_body" disabled></label> -->
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body" placeholder="Write a comment..."></textarea>
                             <button type="button" id="btncomment" class="btncomment btn btn-primary btn-xs">Save</button>
                         </div>
-                        <!-- <div class="form-group">
-                            <input type="file" name="filecomment" id="filecomment" class="form-control">
-                        </div> -->
-                        <!-- <div class="form-group" >
-                            <input type="text" name="countcomment" id="countcomment" class="modal-input" readonly>
-                        </div>
-                        <div class="form-group" >
-                            <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> View Comment</button>
-                        </div> -->
                         <div class="row">
                             <div class="col-3"> 
                                 <button type="button" id="viewcomment" class="viewcomment btn btn-link btn-xs"><i class="fas fa-comment"></i> Show Details</button>
@@ -1260,11 +1256,14 @@
             $('#tiket_list').DataTable().clear().destroy();
             var $dataticket = $('#tiket_list').DataTable({
                 destroy: true,
-                scrollX: true,
                 processing: true,
                 serverSide: true,
                 responsive: false,
                 searching: true,
+                fixedColumns: true,
+                scrollX: true,
+                scrollY: 400,
+                scrollCollapse: true,
                 pageLength: 30,
                 dom: 'Blfrtip',
                 buttons: [
@@ -1288,16 +1287,6 @@
                 },
                 order: [[ 10, "desc" ]],
                 columns: [
-                    // {
-                    //     data: 'ticketno',
-                    //     render: function(data){
-                    //         if(data != null){
-                    //             return '';
-                    //         } else {
-                    //             return '';
-                    //         }
-                    //     }
-                    // },
                     {
                         data: 'action',
                         name: 'action',
@@ -2230,11 +2219,14 @@
         });
 
         var table = $('#tiket_list').DataTable({
-            scrollX: true,
             processing: true,
             serverSide: true,
             responsive: false,
             searching: true,
+            fixedColumns: true,
+            scrollX: true,
+            scrollY: 400,
+            scrollCollapse: true,
             pageLength: 30,
             ajax: "{{ route('my-tiket') }}",
             order: [[ 10, "desc" ]],
@@ -2243,16 +2235,6 @@
                     'excel'
             ],
             columns: [
-                // {
-                //     data: 'ticketno',
-                //     render: function(data){
-                //         if(data != null){
-                //             return '';
-                //         } else {
-                //             return '';
-                //         }
-                //     }
-                // },
                 {
                     data: 'action',
                     name: 'action',
@@ -2482,7 +2464,7 @@
         
         /* End */
 
-         /* close button reload */
+        /* close button reload */
         $(document).on('click', '.close-btn2', function() {
                 $("#comment1").load(" #comment1");
                 $("#comment2").load(" #comment2");
@@ -2535,6 +2517,101 @@
                 $("#update").load(" #update"); 
         });
         /* end */
+
+        /* Button In View */ 
+        $(document).on('click', '.trq', function () {
+            $('#modal-transport').modal({backdrop: 'static', keyboard: false})  
+            $('#modal-view-user').modal('hide');
+            $('#modal-transport').modal('show');
+        })
+
+        $(document).on('click', '.edit', function () {
+            var ticketno = $('#modal-view-user form[name="view-user"] input[name="ticketno"]').val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '{{ route("modal-update") }}',
+                type: 'POST',
+                data: {
+                    'ticketno' : ticketno,
+                },
+                success: function(response) {
+                    $('#modal-view-user').modal('hide');
+                   
+                    var assignedto = response[0]['assignedto'];
+                    var moduleid = response[0]['moduleid'];
+                    var objectid = response[0]['objectid'];
+                    var priorid = response[0]['priorid'];
+                    var statusid = response[0]['statusid'];
+                    var hide1 = $("#hidemodule");
+                    hide1.show()
+                    if(systemid == 'SY002'){
+                        hide1.hide();
+                    }
+                    getCategoryJson(response[0]['systemid'],  response[0]['categoryid']);
+                    $('#modal-update-user form[name="update"] input[name="ticketno"]').val(response[0]['ticketno']);
+                    $('#modal-update-user form[name="update"] input[name="requestor"]').val(response[0]['requestor']);
+                    $('#modal-update-user form[name="update"] input[name="systemid"]').val(response[0]['subject']);
+                    $('#modal-update-user form[name="update"] select[name="category"]').val(response[0]['category']);
+                    $('#modal-update-user form[name="update"] input[name="subject"]').val(response[0]['subject']);
+                    $('#modal-update-user form[name="update"] textarea[name="detail"]').val(response[0]['detail']);
+                    $('#modal-update-user form[name="update"] input[name="approve"]').val(response[0]['approvedby1Name']);
+                    $('#modal-update-user form[name="update"] input[name="approveit"]').val(response[0]['approvedbyitName']);
+                    $('#modal-update-user form[name="update"] input[name="created"]').val(response[0]['createdname']);
+                    $('#modal-update-user form[name="update"] input[name="targetdates"]').val(response[0]['targetdate']);
+
+                    var assignedto_options = $('#modal-update-user form[name="update"] select[name="assignto"]').children();
+                    $.each(assignedto_options, function(key, value) {
+                        if($(value).val() == assignedto) {
+                            $(value).attr('selected', true);
+                        } else {
+                            $(value).attr('selected', false);
+                        }
+                    });
+                    var moduleid_options = $('#modal-update-user form[name="update"] select[name="moduleid"]').children();
+                    $.each(moduleid_options, function(key, value) {
+                        if($(value).val() == moduleid) {
+                            $(value).attr('selected', true);
+                        } else {
+                            $(value).val() == "";
+                            $(value).attr('selected', false);
+                        }
+                    });
+                    var objectid_options = $('#modal-update-user form[name="update"] select[name="objecttype"]').children();
+                    $.each(objectid_options, function(key, value) {
+                        if($(value).val() == objectid) {
+                            $(value).attr('selected', true);
+                        } else {
+                            $(value).attr('selected', false);
+                        }
+                    });
+                    var priority_options = $('#modal-update-user form[name="update"] select[name="priority"]').children();
+                    $.each(priority_options, function(key, value) {
+                        if($(value).val() == priorid) {
+                            $(value).attr('selected', true);
+                        } else {
+                            $(value).attr('selected', false);
+                        }
+                    });
+                    var status_options =$('#modal-update-user form[name="update"] select[name="status"]').children();
+                    $.each(status_options, function(key, value) {
+                        if($(value).val() == statusid) {
+                            $(value).attr('selected', true);
+                        } else {
+                            $(value).attr('selected', false);
+                        }
+                    });
+                    $('#modal-update-user').modal({backdrop: 'static', keyboard: false});
+                    $('#modal-update-user').modal('show');
+                    
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            });
+        })
+        /* End */
     });
 
    

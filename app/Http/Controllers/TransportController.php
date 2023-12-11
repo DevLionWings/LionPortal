@@ -44,9 +44,9 @@ class TransportController extends Controller
         
         if (empty($request->lqa) && empty($request->lpr)){
             if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("error", "TRQ has been transported(LPR)  & Checked Box not Found");
+                return redirect()->route('mytiket')->with("error", "Checked Box not Found");
             } else {
-                return redirect()->route('tiket')->with("error", "TRQ has been transported(LPR) & Checked Box not Found");
+                return redirect()->route('tiket')->with("error", "Checked Box not Found");
             }
         } else {
             /* Checked Opsi Transport */
@@ -243,7 +243,6 @@ class TransportController extends Controller
                 ]);
             }
         }
-       
         /* End */
 
         /* Send Email */ 
