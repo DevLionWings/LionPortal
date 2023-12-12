@@ -585,53 +585,107 @@ class Repository
         return json_encode($response);   
     }
 
-    public static function GETTIKET($userid, $roleid, $ticketno)
+    public static function GETTIKET($userid, $roleid, $ticketno, $typeticket)
     {   
         try{
-            if($ticketno == 'ticketlist'){
-                if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001') {
+            if($typeticket == 'ticketall'){
+                if($ticketno == 'ticketlist'){
+                    if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001') {
+                        $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->count();
+            
+                        $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->limit(10)
+                            ->orderBy('a.ticketno', 'desc')
+                            ->simplePaginate($count);
 
-                    $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                        ->count();
-        
-                    $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
-                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                        ->limit(10)
-                        ->orderBy('a.ticketno', 'desc')
-                        ->simplePaginate($count);
+                    } else {
+                        $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->where('a.userid', $userid)
+                            ->orWhere('b.mgrid', $userid)
+                            ->orWhere('a.assignedto', $userid)
+                            ->orWhere('a.assignedto', '')
+                            ->orderBy('a.ticketno', 'desc')
+                            ->count();
+            
+                        $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->where('a.userid', $userid)
+                            ->orWhere('b.mgrid', $userid)
+                            ->orWhere('a.assignedto', '')
+                            ->orderBy('a.ticketno', 'desc')
+                            ->limit(10)
+                            ->simplePaginate($count);
 
+                    }
                 } else {
                     $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                         ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
@@ -646,14 +700,12 @@ class Repository
                         ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
                         ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
                         ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
                         ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
                         ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                         'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
                         'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                        ->where('a.userid', $userid)
-                        ->orWhere('b.mgrid', $userid)
-                        ->orWhere('a.assignedto', $userid)
-                        ->orWhere('a.assignedto', '')
+                        ->where('a.ticketno', $ticketno)
                         ->orderBy('a.ticketno', 'desc')
                         ->count();
         
@@ -675,41 +727,16 @@ class Repository
                         ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
                         'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
                         'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                        ->where('a.userid', $userid)
-                        ->orWhere('b.mgrid', $userid)
-                        ->orWhere('a.assignedto', '')
+                        ->where('a.ticketno', $ticketno)
                         ->orderBy('a.ticketno', 'desc')
                         ->limit(10)
                         ->simplePaginate($count);
-
                 }
             } else {
-
                 $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                     ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                    ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
                     ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                    ->leftjoin('master_data.m_category as e',  function($q){
-                        $q->on('a.categoryid', '=', 'e.categoryid')
-                        ->on( 'a.systemid', '=', 'e.systemid' );
-                    })
-                    ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                    ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                    ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                    ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
-                    ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
-                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                    'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
-                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                    ->where('a.ticketno', $ticketno)
-                    ->orderBy('a.ticketno', 'desc')
-                    ->count();
-    
-                $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                    ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
                     ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                    ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
                     ->leftjoin('master_data.m_category as e',  function($q){
                         $q->on('a.categoryid', '=', 'e.categoryid')
                         ->on( 'a.systemid', '=', 'e.systemid' );
@@ -722,12 +749,40 @@ class Repository
                     ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
                     ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
                     ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                    'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                    'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
                     'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                    ->where('a.ticketno', $ticketno)
+                    ->where('a.userid', $userid)
+                    ->orWhere('b.mgrid', $userid)
+                    ->orWhere('a.assignedto', $userid)
+                    ->orWhere('a.assignedto', '')
                     ->orderBy('a.ticketno', 'desc')
-                    ->limit(10)
+                    ->count();
+
+                $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                    ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                    ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                    ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                    ->leftjoin('master_data.m_category as e',  function($q){
+                        $q->on('a.categoryid', '=', 'e.categoryid')
+                        ->on( 'a.systemid', '=', 'e.systemid' );
+                    })
+                    ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                    ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                    ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                    ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                    ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                    ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')
+                    ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                    ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                    'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date',  
+                    'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                    ->where('a.userid', $userid)
+                    ->orWhere('b.mgrid', $userid)
+                    ->orWhere('a.assignedto', $userid)
+                    ->orWhere('a.assignedto', '')
+                    ->orderBy('a.ticketno', 'desc')
                     ->simplePaginate($count);
+
             }
            
             $response = array(
@@ -743,7 +798,7 @@ class Repository
         return json_encode($response);   
     }
 
-    public static function GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module)
+    public static function GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module, $typeticket)
     {   
         // $start_date = "2023-06-01";
         // $end_date = "2023-06-19";
@@ -751,184 +806,248 @@ class Repository
         // $ticketno = "HLP20230002";
         // $assignto = "101017";
         try{
-            if($start_date == $end_date){
-                if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001') {
-                   
-                    $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid') 
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid') 
-                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')                                                                                                                                                                                                
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
-                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
-                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
-                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
-                        ->where('a.systemid', 'LIKE','%'.$system.'%')
-                        ->count();
-                   
-                    $data =  DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
-                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
-                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
-                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
-                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
-                        ->where('a.systemid', 'LIKE','%'.$system.'%')
-                        ->limit(10)
-                        ->orderBy('a.ticketno', 'desc')
-                        ->simplePaginate($count);
-                } else {
-                    $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
-                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                        ->where('a.userid', $userid)
-                        ->where('b.mgrid', $userid)
-                        ->where('a.assignedto', $userid)
-                        ->where('a.assignedto', '')
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
-                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
-                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
-                        ->where('a.systemid', 'LIKE','%'.$system.'%')
-                        ->count();
+            if($typeticket == 'ticketall'){
+                if($start_date == $end_date){
+                    if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001') {
+                        $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid') 
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid') 
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')                                                                                                                                                                                                
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->count();
+                    
+                        $data =  DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->orderBy('a.ticketno', 'desc')
+                            ->simplePaginate($count);
+                    } else {
+                        $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->where('a.userid', $userid)
+                            ->where('b.mgrid', $userid)
+                            ->where('a.assignedto', $userid)
+                            ->where('a.assignedto', '')
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->count();
+            
+                        $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->where('a.userid', $userid)
+                            ->where('b.mgrid', $userid)
+                            ->where('a.assignedto', '')
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->orderBy('a.ticketno', 'desc')
+                            ->limit(10)
+                            ->simplePaginate($count);
         
-                    $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
-                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
-                        ->where('a.userid', $userid)
-                        ->where('b.mgrid', $userid)
-                        ->where('a.assignedto', '')
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
-                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
-                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
-                        ->where('a.systemid', 'LIKE','%'.$system.'%')
-                        ->orderBy('a.ticketno', 'desc')
-                        ->limit(10)
-                        ->simplePaginate($count);
-    
+                    }
+                } else {
+                    if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001') {
+                    
+                        $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid') 
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid') 
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')                                                                                                                                                                                                
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date]) 
+                            ->count();
+                    
+                        $data =  DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
+                            ->orderBy('a.ticketno', 'desc')
+                            ->simplePaginate($count);
+                    } else {
+                        $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->where('a.userid', $userid)
+                            ->where('b.mgrid', $userid)
+                            ->where('a.assignedto', $userid)
+                            ->where('a.assignedto', '')
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
+                            ->count();
+            
+                        $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                            ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                            ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                            ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                            ->leftjoin('master_data.m_category as e',  function($q){
+                                $q->on('a.categoryid', '=', 'e.categoryid')
+                                ->on( 'a.systemid', '=', 'e.systemid' );
+                            })
+                            ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                            ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                            ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                            ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                            ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                            ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                            ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                            ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                            'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                            'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                            ->where('a.userid', $userid)
+                            ->where('b.mgrid', $userid)
+                            ->where('a.assignedto', '')
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
+                            ->orderBy('a.ticketno', 'desc')
+                            ->simplePaginate($count);
+        
+                    }
                 }
             } else {
-                if ($roleid == 'RD004' || $roleid == 'RD005' || $roleid == 'RD006' || $roleid == 'RD007' || $roleid == 'RD008' || $roleid == 'RD009' || $roleid == 'RD001') {
-                 
-                    $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid') 
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid') 
-                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid')                                                                                                                                                                                                
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
-                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
-                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
-                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
-                        ->where('a.systemid', 'LIKE','%'.$system.'%')
-                        ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date]) 
-                        ->count();
-                   
-                    $data =  DB::connection('pgsql')->table('helpdesk.t_ticket as a')
-                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
-                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
-                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
-                        ->leftjoin('master_data.m_category as e',  function($q){
-                            $q->on('a.categoryid', '=', 'e.categoryid')
-                            ->on( 'a.systemid', '=', 'e.systemid' );
-                        })
-                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
-                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
-                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
-                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
-                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
-                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
-                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
-                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
-                        'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
-                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid', 'l.description as modulename', 'a.objectid', 'k.description as objectname' , 'j.description as systemname')
-                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
-                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
-                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
-                        ->where('a.systemid', 'LIKE','%'.$system.'%')
-                        ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
-                        ->limit(10)
-                        ->orderBy('a.ticketno', 'desc')
-                        ->simplePaginate($count);
-                } else {
+                if($start_date == $end_date && $ticketno == '%' && $requestor == '%' && $assignto == '%' && $status == '%' && $system == '%' && $module == '%'){
                     $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                         ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
                         ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
@@ -948,16 +1067,10 @@ class Repository
                         'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
                         'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
                         ->where('a.userid', $userid)
-                        ->where('b.mgrid', $userid)
-                        ->where('a.assignedto', $userid)
-                        ->where('a.assignedto', '')
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
-                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
-                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
-                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
-                        ->where('a.systemid', 'LIKE','%'.$system.'%')
-                        ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
+                        ->orWhere('b.mgrid', $userid)
+                        ->orWhere('a.assignedto', $userid)
+                        ->orWhere('a.assignedto', '')
+                        ->orderBy('a.ticketno', 'desc')
                         ->count();
         
                     $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
@@ -979,19 +1092,125 @@ class Repository
                         'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
                         'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
                         ->where('a.userid', $userid)
-                        ->where('b.mgrid', $userid)
-                        ->where('a.assignedto', '')
-                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                        ->orWhere('b.mgrid', $userid)
+                        ->orWhere('a.assignedto', $userid)
+                        ->orWhere('a.assignedto', '')
+                        ->orderBy('a.ticketno', 'desc')
+                        ->simplePaginate($count);
+                } else if($start_date == $end_date) {
+                    $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                        ->leftjoin('master_data.m_category as e',  function($q){
+                            $q->on('a.categoryid', '=', 'e.categoryid')
+                            ->on( 'a.systemid', '=', 'e.systemid' );
+                        })
+                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                        'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                        ->where('a.assignedto', $userid)
                         ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
                         ->where('a.userid', 'LIKE','%'.$requestor.'%') 
-                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
+                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
+                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                        ->where('a.systemid', 'LIKE','%'.$system.'%')
+                        ->count();
+    
+                    $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                        ->leftjoin('master_data.m_category as e',  function($q){
+                            $q->on('a.categoryid', '=', 'e.categoryid')
+                            ->on( 'a.systemid', '=', 'e.systemid' );
+                        })
+                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                        'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                        ->where('a.assignedto', $userid)
+                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
+                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                        ->where('a.systemid', 'LIKE','%'.$system.'%')
+                        ->orderBy('a.ticketno', 'desc')
+                        ->simplePaginate($count);             
+                        
+                } else {
+                    $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                        ->leftjoin('master_data.m_category as e',  function($q){
+                            $q->on('a.categoryid', '=', 'e.categoryid')
+                            ->on( 'a.systemid', '=', 'e.systemid' );
+                        })
+                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                        'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                        ->where('a.assignedto', $userid)
+                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
+                        ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                        ->where('a.systemid', 'LIKE','%'.$system.'%')
+                        ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
+                        ->count();
+    
+                    $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
+                        ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
+                        ->join('master_data.m_ticket_priority as c', 'a.priorid', '=', 'c.priorid')
+                        ->join('master_data.m_ticket_status as d', 'a.statusid', '=', 'd.statusid')
+                        ->leftjoin('master_data.m_category as e',  function($q){
+                            $q->on('a.categoryid', '=', 'e.categoryid')
+                            ->on( 'a.systemid', '=', 'e.systemid' );
+                        })
+                        ->leftjoin('master_data.m_user as f', 'a.assignedto', '=', 'f.userid')
+                        ->leftjoin('master_data.m_user as g', 'a.approvedby_1', '=', 'g.userid')
+                        ->leftjoin('master_data.m_user as h', 'a.approvedby_it', '=', 'h.userid')
+                        ->leftjoin('master_data.m_user as i', 'a.createdby', '=', 'i.userid')
+                        ->leftjoin('master_data.m_object_type as k', 'a.objectid', '=', 'k.objectid')
+                        ->leftjoin('master_data.m_module as l', 'a.moduleid', '=', 'l.moduleid') 
+                        ->join('master_data.m_system as j', 'a.systemid', '=', 'j.systemid')
+                        ->select('a.ticketno', 'a.userid', 'b.username as requestor', 'a.categoryid','e.description as category',  'a.subject', 'a.attachment', 'a.statusid', 'd.description as status','a.priorid', 'c.description as priority', 'a.assignedto','f.username as assigned_to', 
+                        'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
+                        'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
+                        ->where('a.assignedto', $userid)
+                        ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                        ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                        ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                        ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                         ->where('a.moduleid', 'LIKE','%'.$module.'%')
                         ->where('a.systemid', 'LIKE','%'.$system.'%')
                         ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                         ->orderBy('a.ticketno', 'desc')
-                        ->limit(10)
-                        ->simplePaginate($count);
-    
+                        ->simplePaginate($count);             
+                        return $data;       
                 }
             }
           

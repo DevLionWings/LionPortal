@@ -117,12 +117,12 @@
             <li class="nav-item">
               <a href="{{ url('tiket') }}" class="nav-link" type="submit" id="m-tiket"><i class="far fa-circle nav-icon"></i>
                 <p>
-                  Ticket All
+                  Ticketing
                 </p>
               </a>
             </li>
           </ul>
-          <ul class="nav nav-treeview">
+          <!-- <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('mytiket') }}" class="nav-link" type="submit" id="m-mytiket"><i class="far fa-circle nav-icon"></i>
                 <p>
@@ -130,7 +130,7 @@
                 </p>
               </a>
             </li>
-          </ul>
+          </ul> -->
         </li>
         @endif
         @if(session('roleid')  == 'RD006' || session('departmentid')  == 'DD005' || session('roleid')  == 'RD001')

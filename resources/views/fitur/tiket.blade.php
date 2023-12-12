@@ -48,7 +48,7 @@
                                         <label>Requestor :</label>
                                         <div class="input-group value">
                                             <select id="requestor" name="requestor" class="requestor" style="width: 100%;">
-                                            <option value="10"> all</option>
+                                            <option value="%"> all</option>
                                                 @foreach($usreq as $usreqcode)
                                                 <option value="{{ $usreqcode['ID'] }}">{{ $usreqcode['NAME'] }}</option>
                                                 @endforeach
@@ -61,7 +61,7 @@
                                         <label>Ticket :</label>
                                         <div class="input-group value">
                                             <select id="ticketno" name="ticketno" class="noticket">
-                                            <option value="HLP"> all</option>
+                                            <option value="%"> all</option>
                                                 @foreach($tick as $tickcode)
                                                 <option value="{{ $tickcode['ID'] }}">{{ $tickcode['NAME'] }}</option>
                                                 @endforeach
@@ -74,7 +74,7 @@
                                         <label>Assign To :</label>
                                         <div class="input-group value">
                                             <select id="assignto" name="assignto" class="form-control input--style-6">
-                                                <option value="10"> all</option>
+                                                <option value="%"> all</option>
                                                 @foreach($assn as $assncode)
                                                 <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
                                                 @endforeach
@@ -87,7 +87,7 @@
                                         <label>Status :</label>
                                         <div class="input-group value">
                                             <select id="status" name="status" class="form-control input--style-6">
-                                                <option value="SD"> all</option>
+                                                <option value="%"> all</option>
                                                 @foreach($stat as $statcode)
                                                 <option value="{{ $statcode['ID'] }}">{{ $statcode['NAME'] }}</option>
                                                 @endforeach
@@ -100,7 +100,7 @@
                                         <label>Module :</label>
                                         <div class="input-group value">
                                             <select id="modulefilter" name="modulefilter" class="form-control input--style-6">
-                                                <option value="MD"> all</option>
+                                                <option value="%"> all</option>
                                                 @foreach($mdl as $mdlcode)
                                                 <option value="{{ $mdlcode['ID'] }}">{{ $mdlcode['NAME'] }}</option>
                                                 @endforeach
@@ -113,7 +113,7 @@
                                         <label>System :</label>
                                         <div class="input-group value">
                                             <select id="systemfilter" name="systemfilter" class="form-control input--style-6">
-                                                <option value="SY"> all</option>
+                                                <option value="%"> all</option>
                                                 @foreach($sys as $syscode)
                                                 <option value="{{ $syscode['ID'] }}">{{ $syscode['NAME'] }}</option>
                                                 @endforeach
@@ -132,6 +132,17 @@
                                             </div>
                                             <input type="text" class="form-control float-right datepicker"
                                                 name="data_date_range">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Type Ticket :</label>
+                                        <div class="input-group value">
+                                            <select id="typeticket" name="typeticket" class="form-control input--style-6">
+                                                <option value="myticket">My Ticket</option>
+                                                <option value="ticketall">Ticket All</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -515,7 +526,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <button type="button" class="close-btn2 btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" id="edit" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
+                            <button type="button" id="editbutton" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
                         </div>
                     </div>   
                 </form>
@@ -1284,6 +1295,7 @@
             var subject  = $(this).attr('data-subject');
             var detail  = $(this).attr('data-detail');
             var assign  = $(this).attr('data-assignto');
+            var assignid  = $(this).attr('data-assigntoid');
             var roleid  = $(this).attr('data-roleid');
             var targetdate  = $(this).attr('data-targetdate');
             var created  = $(this).attr('data-createdname');
@@ -1304,7 +1316,7 @@
             var createdon  = $(this).attr('data-createdon');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view1"]');
-            console.log(assign);
+            console.log(assignid);
             console.log(user_login);
             var hide = $("#hidecmnt");
             hide.show();
@@ -1321,7 +1333,9 @@
             var hideeditbutton = $("#editbutton");
             hideeditbutton.hide();
             
-            if(assign == user_login){
+            if(assignid == user_login){
+                hideeditbutton.show();
+            } else if (user_login == '101943'){
                 hideeditbutton.show();
             }
 
@@ -1496,6 +1510,7 @@
             var ticketno = $('select[name="ticketno"] option:selected').val();
             var module = $('select[name="modulefilter"] option:selected').val();
             var system = $('select[name="systemfilter"] option:selected').val();
+            var typeticket = $('select[name="typeticket"] option:selected').val();
            
             $('#tiket_list').DataTable().clear().destroy();
             var $dataticket = $('#tiket_list').DataTable({
@@ -1523,6 +1538,7 @@
                         d.ticketno = $('select[name="ticketno"] option:selected').val();
                         d.module = $('select[name="modulefilter"] option:selected').val();
                         d.system = $('select[name="systemfilter"] option:selected').val();
+                        d.typeticket = $('select[name="typeticket"] option:selected').val();
                     },
                     "dataSrc": function (settings) {
                         $btn_submit.text("Submit");
@@ -2506,8 +2522,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                         var userid = $.session.get('userid');
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-userlogin="'+userid+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-userlogin="'+row["user_login"]+'" data-assigntoid="'+row["assignedto"]+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                     }
                 },
                 {

@@ -180,11 +180,12 @@ class TiketController extends Controller
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $divisionid = Session::get('divisionid');
-        $ticketno = 'ticketlist';
+        $ticketno = 'ticketlist'; // digunakan func dataModalUpdate //
+        $typeticket = $request->typeticket;
         $dat = '';
 
         /* Get Data Ticket */
-        $dataTicket = $this->repository->GETTIKET($userid, $roleid, $ticketno);
+        $dataTicket = $this->repository->GETTIKET($userid, $roleid, $ticketno, $typeticket);
         $json = json_decode($dataTicket, true);
       
         if($json["rc"] == "00") 
@@ -230,7 +231,8 @@ class TiketController extends Controller
                     "objectid" => trim($value['objectid']),
                     "objectname" => trim($value['objectname']),
                     "systemname" => trim($value['systemname']),
-                    "last_update" => trim($value['last_update'])
+                    "last_update" => trim($value['last_update']),
+                    "user_login" => $userid
             
                 ]); 
             }
@@ -274,9 +276,9 @@ class TiketController extends Controller
                 $mgrid = Session::get('mgrid');
                 $divisionid = Session::get('divisionid');
                 $document_name = str_replace("storage/", "", $row["attachment"]);
-                $parentBtn = '<a href="javascript:void(0)" class="view btn btn-outline-info btn-xs"  data-userlogin="'.$userid.'" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                $parentBtn = '<a href="javascript:void(0)" class="view btn btn-outline-info btn-xs"  data-userlogin="'.$row["user_login"].'" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
-                data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
+                data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-assigntoid="'.$row["assignedto"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
                 data-approvedby1="'.$row["approvedby1_date"].'" data-approvedbyit="'.$row["approvedbyit_date"].'" data-systemid="'.$row["systemid"].'" data-systemname="'.$row["systemname"].'" data-moduleid="'.$row["moduleid"].'" 
                 data-objectid="'.$row["objectid"].'"  data-objectname="'.$row["objectname"].'" data-createdon="'.$row["createdon"].'" data-download="'.$document_name.'"><i class="fa fa-eye" aria-hidden="true"></i></a>';
@@ -482,10 +484,11 @@ class TiketController extends Controller
         $start_date = date("Y-m-d", strtotime($start));
         $end = explode(' - ',$date_arr)[1];
         $end_date = date("Y-m-d", strtotime($end));
+        $typeticket = $request->typeticket;
         
         /* Get Filter Ticket */
-        $dataFilter = $this->repository->GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module);
-    
+        $dataFilter = $this->repository->GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module, $typeticket);
+        
         $json = json_decode($dataFilter, true);
         
         $dat = '';
