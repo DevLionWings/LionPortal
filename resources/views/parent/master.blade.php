@@ -114,13 +114,13 @@
         /* Important part */
         .modal-dialog{
             overflow-y: initial !important;
-            zoom: 85%;
+            zoom: 100%;
         }
-        /* .modal-backdrop{
+        .modal-backdrop{
             zoom: 150%  !important;
-        } */
+        }
         .modal-body{
-            height: 80vh;
+            height: 90vh;
             overflow-y: auto;
         }
     </style>

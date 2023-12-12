@@ -150,9 +150,9 @@
                                         <th>Tiket No</th>
                                         <th>Category</th>
                                         <th>Status</th>
-                                        <th>Subject</th>
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
+                                        <th>Subject</th>
                                         <th>System</th>
                                         <th>Module</th>
                                         <th>Object Type</th>
@@ -315,8 +315,8 @@
                         <div class="row">
                             <div class="col-md-6">  
                                 <div class="mb-3">
-                                    <button type="button" id="trq" class="trq btn btn-primary" disabled><i class="fa fa-truck"></i></button>
-                                    <button type="button" id="edit" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
+                                    <button type="button" id="trqbutton" class="trq btn btn-primary" disabled><i class="fa fa-truck"></i></button>
+                                    <button type="button" id="editbutton" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
                                 </div> 
                             </div>
                         </div>
@@ -1071,6 +1071,7 @@
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view-user"]');
             var hide = $("#hidecmnt");
+            var hideeditbutton = $("#editbutton");
             hide.show();
             if(statusid == 'SD003'){
                 hide.hide();
@@ -1262,7 +1263,7 @@
                 searching: true,
                 fixedColumns: true,
                 scrollX: true,
-                scrollY: 400,
+                // scrollY: 400,
                 scrollCollapse: true,
                 pageLength: 30,
                 dom: 'Blfrtip',
@@ -1373,16 +1374,16 @@
                         }
                     },
                     {
-                        data: 'subject',
-                        name: 'subject'
-                    },
-                    {
                         data: 'requestor',
                         name: 'requestor'
                     },
                     {
                         data: 'assigned_to',
                         name: 'assigned_to'
+                    },
+                    {
+                        data: 'subject',
+                        name: 'subject'
                     },
                     {
                         data: 'systemname',
@@ -2225,7 +2226,7 @@
             searching: true,
             fixedColumns: true,
             scrollX: true,
-            scrollY: 400,
+            // scrollY: 400,
             scrollCollapse: true,
             pageLength: 30,
             ajax: "{{ route('my-tiket') }}",
@@ -2321,16 +2322,16 @@
                     }
                 },
                 {
-                    data: 'subject',
-                    name: 'subject'
-                },
-                {
                     data: 'requestor',
                     name: 'requestor'
                 },
                 {
                     data: 'assigned_to',
                     name: 'assigned_to'
+                },
+                {
+                    data: 'subject',
+                    name: 'subject'
                 },
                 {
                     data: 'systemname',

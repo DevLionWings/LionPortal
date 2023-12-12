@@ -169,9 +169,9 @@
                                         <th>Tiket No</th>
                                         <th>Category</th>
                                         <th>Status</th>
-                                        <th>Subject</th>
                                         <th>Requestor</th>
                                         <th>Assigned To</th>
+                                        <th>Subject</th>
                                         <th>System</th>
                                         <th>Module</th>
                                         <th>Object Type</th>
@@ -486,7 +486,7 @@
                             <div class="col-md-6">  
                                 <div class="mb-3">
                                     <button type="button" id="trq" class="trq btn btn-primary" disabled><i class="fa fa-truck"></i></button>
-                                    <button type="button" id="edit" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
+                                    
                                 </div> 
                             </div>
                         </div>
@@ -515,6 +515,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <button type="button" class="close-btn2 btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" id="edit" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
                         </div>
                     </div>   
                 </form>
@@ -1272,6 +1273,7 @@
             // $("#comment1").load(" #comment1");
             $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
             getComment($(this).attr('data-ticket'), $(this).attr('data-statusid'));
+            var user_login = $(this).attr('data-userlogin');
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -1302,6 +1304,8 @@
             var createdon  = $(this).attr('data-createdon');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view1"]');
+            console.log(assign);
+            console.log(user_login);
             var hide = $("#hidecmnt");
             hide.show();
             if(statusid == 'SD003'){
@@ -1313,6 +1317,14 @@
             if(moduleid == ''){
                 modulehide.hide();
             }
+
+            var hideeditbutton = $("#editbutton");
+            hideeditbutton.hide();
+            
+            if(assign == user_login){
+                hideeditbutton.show();
+            }
+
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="requestor"]').val(requestor);
@@ -1494,7 +1506,7 @@
                 searching: true,
                 fixedColumns: true,
                 scrollX: true,
-                scrollY: 400,
+                // scrollY: 400,
                 scrollCollapse: true,
                 pageLength: 30,
                 dom: 'Blfrtip',
@@ -1606,16 +1618,16 @@
                         }
                     },
                     {
-                        data: 'subject',
-                        name: 'subject'
-                    },
-                    {
                         data: 'requestor',
                         name: 'requestor'
                     },
                     {
                         data: 'assigned_to',
                         name: 'assigned_to'
+                    },
+                    {
+                        data: 'subject',
+                        name: 'subject'
                     },
                     {
                         data: 'systemname',
@@ -1795,7 +1807,7 @@
                     'status' : 'TRANSPORTED'
                 },
                 success: function(response){ 
-                    console.log(response);
+                    // console.log(response);
                     window.location=response.url;
                     $(this).attr('disabled', true);
                     $(this).text("Loading ...");
@@ -2334,7 +2346,6 @@
                     'ticketno' : ticketno, 
                 },
                 success: function(response) {
-                    console.log(response["trq"])
                     var showBtn = $("#btnhistorytransported");
                     var hideBtn = $("#btnhidetransported");
                     showBtn.hide();
@@ -2468,7 +2479,7 @@
             searching: true,
             fixedColumns: true,
             scrollX: true,
-            scrollY: 400,
+            // scrollY: 400,
             scrollCollapse: true,
             pageLength: 30,
             dom: 'Blfrtip',
@@ -2495,7 +2506,8 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                         var userid = $.session.get('userid');
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-userlogin="'+userid+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -2576,16 +2588,16 @@
                     }
                 },
                 {
-                    data: 'subject',
-                    name: 'subject'
-                },
-                {
                     data: 'requestor',
                     name: 'requestor'
                 },
                 {
                     data: 'assigned_to',
                     name: 'assigned_to'
+                },
+                {
+                    data: 'subject',
+                    name: 'subject'
                 },
                 {
                     data: 'systemname',
@@ -2788,7 +2800,7 @@
                     'ticketno' : ticketno,
                 },
                 success: function(response) {
-                    $('#modal-view-user').modal('hide');
+                    // $('#modal-view-user').modal('hide');
                    
                     var assignedto = response[0]['assignedto'];
                     var moduleid = response[0]['moduleid'];
@@ -2919,7 +2931,6 @@
     }
 
     function getCategoryAddJson(systemid) {
-        console.log(value)
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
