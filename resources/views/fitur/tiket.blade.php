@@ -16,7 +16,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h5>Ticket All</h5>
+                    <h5>Ticketing</h5>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -69,12 +69,27 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                @if(session('roleid') == 'RD009')
+                                <div class="col-md-2" id="hideassignhead">
+                                    <div class="form-group">
+                                        <label>Assigned To :</label>
+                                        <div class="input-group value">
+                                            <select id="assigntodiv" name="assigntodiv" class="form-control input--style-6">
+                                                <option value="%">My Team</option>
+                                                @foreach($team as $teamcode)
+                                                <option value="{{ $teamcode['ID'] }}">{{ $teamcode['NAME'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="col-md-2" id="hideassign">
                                     <div class="form-group">
                                         <label>Assign To :</label>
                                         <div class="input-group value">
                                             <select id="assignto" name="assignto" class="form-control input--style-6">
-                                                <option value="%"> all</option>
+                                                <option value="%">all</option>
                                                 @foreach($assn as $assncode)
                                                 <option value="{{ $assncode['ID'] }}">{{ $assncode['NAME'] }}</option>
                                                 @endforeach
@@ -149,6 +164,7 @@
                                 <div class="col-md-1">
                                     <div class="form-group">
                                         <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" ><i class="fas fa-search"></i></button>
+                                        <input type="hidden" id="roleidsession" name="roleidsession" value="{{ session('roleid') }}">
                                     </div>
                                 </div>
                             </div>
@@ -1337,6 +1353,8 @@
                 hideeditbutton.show();
             } else if (user_login == '101943'){
                 hideeditbutton.show();
+            } else {
+                hideeditbutton.hide();
             }
 
             $form.find('input[name="id"]').val(user_id);
@@ -1506,6 +1524,7 @@
             var daterange = $('input[name="data_date_range"]').val();
             var requestor = $('select[name="requestor"]  option:selected').val();
             var assignto = $('select[name="assignto"] option:selected').val();
+            var assigntodiv = $('select[name="assigntodiv"] option:selected').val();
             var status = $('select[name="status"] option:selected').val();
             var ticketno = $('select[name="ticketno"] option:selected').val();
             var module = $('select[name="modulefilter"] option:selected').val();
@@ -1523,7 +1542,7 @@
                 scrollX: true,
                 // scrollY: 400,
                 scrollCollapse: true,
-                pageLength: 30,
+                pageLength: 20,
                 dom: 'Blfrtip',
                 buttons: [
                     'excel'
@@ -1534,6 +1553,7 @@
                         d.daterange = $('input[name="data_date_range"]').val();
                         d.requestor = $('select[name="requestor"] option:selected').val();
                         d.assignto = $('select[name="assignto"] option:selected').val();
+                        d.assigntodiv = $('select[name="assigntodiv"] option:selected').val();
                         d.status = $('select[name="status"] option:selected').val();
                         d.ticketno = $('select[name="ticketno"] option:selected').val();
                         d.module = $('select[name="modulefilter"] option:selected').val();
@@ -1555,7 +1575,7 @@
                     {
                         data: 'ticketno',
                         render: function(data, type, row){
-                            return '<a href="javascript:void(0)" class="view btn btn-link" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                            return '<a href="javascript:void(0)" class="view btn btn-link" data-userlogin="'+row["user_login"]+'" data-assigntoid="'+row["assignedto"]+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                         }
                     },
                     {
@@ -2497,7 +2517,7 @@
             scrollX: true,
             // scrollY: 400,
             scrollCollapse: true,
-            pageLength: 30,
+            pageLength: 20,
             dom: 'Blfrtip',
             buttons: [
                 'excel'
@@ -3157,6 +3177,61 @@
                 $(this).attr("value", "true");
             } else {
                 $(this).attr("value", "false");
+            }
+        });
+    });
+</script>
+<script>
+    $(function() {
+        var select = $("#typeticket");
+        var hide1 = $("#hideassign");
+        var hide2 = $("#hideassignhead");
+
+        var roleidsession = $('#roleidsession').val();
+        if(roleidsession == 'RD009') {
+            hide1.hide();
+            hide2.show();
+
+            select.change(function() {
+            value = $(this).find(":selected").val()
+                if (value == 'ticketall') {
+                    hide1.show();
+                    hide2.hide();
+                } else if (value == 'myticket'){
+                    hide1.hide();
+                    hide2.show();
+                } else {
+                    hide1.hide();
+                    hide2.hide();
+                }
+            });
+        } else {
+            hide1.hide();
+            hide2.hide();
+
+            select.change(function() {
+            value = $(this).find(":selected").val()
+                if (value == 'ticketall') {
+                    hide1.show();
+                    hide2.hide();
+                } else if (value == 'myticket'){
+                    hide1.hide();
+                    hide2.hide();
+                } else {
+                    hide1.hide();
+                    hide2.hide();
+                }
+            });
+        }
+       
+        select.change(function() {
+            value = $(this).find(":selected").val()
+            if (value == 'ticketall') {
+                hide1.show();
+            } else if (value == 'myticket'){
+                hide1.hide();
+            } else {
+                hide1.hide();
             }
         });
     });
