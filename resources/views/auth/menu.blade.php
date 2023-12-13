@@ -117,7 +117,7 @@
             <li class="nav-item">
               <a href="{{ url('tiket') }}" class="nav-link" type="submit" id="m-tiket"><i class="far fa-circle nav-icon"></i>
                 <p>
-                  Ticketing
+                  Ticket
                 </p>
               </a>
             </li>
