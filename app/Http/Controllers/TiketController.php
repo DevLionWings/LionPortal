@@ -371,7 +371,7 @@ class TiketController extends Controller
                     $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = '';
+                    $managerItBtn = $updateBtn;
                     $headBtn = '';
                 }
                 
@@ -386,16 +386,16 @@ class TiketController extends Controller
                     if($row["statusid"] != 'SD003' && $userid == $row["assignedto"]){
                         if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
+                            $managerItBtn = $approveTransBtn;
                         } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
+                            $managerItBtn = $approveTransBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
                             $infBtn = $transportedBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
+                            $managerItBtn = $viewTransBtn;
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
+                            $managerItBtn = $approveTransBtn;
                         }
                     } else if($row["statusid"] == 'SD003'){
                         $infBtn = $viewTransBtn;
@@ -406,27 +406,27 @@ class TiketController extends Controller
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $approveTransBtn. $updateBtn;
+                        $managerItBtn = $approveTransBtn;
                     } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $approveTransBtn. $updateBtn;
+                        $managerItBtn = $approveTransBtn;
                     } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
                         $infBtn = $transportedBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
+                        $managerItBtn = $viewTransBtn;
                     } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                         $infBtn = $transportedBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
+                        $managerItBtn = $viewTransBtn;
                     } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
+                        $managerItBtn = $viewTransBtn;
                     }
                 }
                 /* End */
@@ -519,6 +519,7 @@ class TiketController extends Controller
         if($json["rc"] == "00") 
         {   
             $dataTrim = $json["data"];
+           
             $dataTrimArray = [];
           
             foreach ($dataTrim as $key => $value) {
@@ -683,7 +684,7 @@ class TiketController extends Controller
                     $infBtn = '';
                     $sapBtn = '';
                     $managerBtn = '';
-                    $managerItBtn = '';
+                    $managerItBtn = $updateBtn;
                     $headBtn = '';
                 }
                 
@@ -698,19 +699,19 @@ class TiketController extends Controller
                     if($row["statusid"] != 'SD003' && $userid == $row["assignedto"]){
                         if( $value['sendto_lqa'] == '1' && $value['status_lqa'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
+                            $managerItBtn = $approveTransBtn;
                         } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
+                            $managerItBtn = $approveTransBtn;
                         } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
                             $infBtn = $transportedBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
+                            $managerItBtn = $viewTransBtn;
                         } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $transportedBtn;
-                            $managerItBtn = $approveTransBtn. $updateBtn;
+                            $managerItBtn = $approveTransBtn;
                         } else if($value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '0' && $value['status_lqa'] == '1' && $value['status_lpr'] == '0' && $value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '0'){
                             $infBtn = $viewTransBtn;
-                            $managerItBtn = $viewTransBtn. $updateBtn;
+                            $managerItBtn = $viewTransBtn;
                         } 
                     } else if($row["statusid"] == 'SD003'){
                         $infBtn = $viewTransBtn;
@@ -721,27 +722,27 @@ class TiketController extends Controller
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $approveTransBtn. $updateBtn;
+                        $managerItBtn = $approveTransBtn;
                     } else if( $value['sendto_lqa'] == '1' && $value['sendto_lpr'] == '1' && $value['status_lpr'] == '0'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $approveTransBtn. $updateBtn;
+                        $managerItBtn = $approveTransBtn;
                     } else if($value['status_lqa'] == '1' &&  $value['status_trans_lqa'] == '0'){
                         $infBtn = $transportedBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
+                        $managerItBtn = $viewTransBtn;
                     } else if($value['status_lqa'] == '1' && $value['status_lpr'] == '1' && $value['status_trans_lpr'] == '0'){
                         $infBtn = $transportedBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $approveTransBtn. $updateBtn;
+                        $managerItBtn = $approveTransBtn;
                     } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $viewTransBtn. $updateBtn;
+                        $managerItBtn = $viewTransBtn;
                     }
                 }
                 /* End */
@@ -764,6 +765,7 @@ class TiketController extends Controller
                 if($roleid == 'RD004' || $roleid == 'RD008'){
                     return $itBtn;
                 }
+
                 if($roleid == 'RD009'){
                     if($divisionid == 'DV002'){ // SAP
                         if($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
@@ -783,6 +785,7 @@ class TiketController extends Controller
                         return $headBtn;
                     }  
                 }
+
                 if($roleid == 'RD002'){ 
                     return $managerBtn;
                 }
@@ -792,7 +795,6 @@ class TiketController extends Controller
                 if($roleid == 'RD003'){
                     return $parentBtn. $download_btn;
                 }
-
             })
             ->rawColumns(['action'])
             ->addIndexColumn()

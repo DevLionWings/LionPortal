@@ -461,7 +461,7 @@
                             <!-- <a href="/download" id="upload" name="upload" class="btn btn-large pull-right"><i class="icon-download-alt"> -->
                             <!-- <input type="hidden" id="upload" name="upload" class="form-control">
                             <button style="margin-left: 5px" class="upload btn btn-link btn-sm">Download File</button> -->
-                            <a style="margin-left: 5px"><input type="button" id="upload" name="upload" class=" upload btn btn-link btn-sm" readonly></a>
+                            <a style="margin-left: 5px"><input type="button" id="upload" name="upload" class="upload btn btn-link btn-sm" disabled></a>
                         </div>
                         <div class="row">
                             <div class="col-md-6">  
@@ -1332,8 +1332,7 @@
             var createdon  = $(this).attr('data-createdon');
             var $modal = $('#modal-view-user');
             var $form = $modal.find('form[name="view1"]');
-            console.log(assignid);
-            console.log(user_login);
+        
             var hide = $("#hidecmnt");
             hide.show();
             if(statusid == 'SD003'){
@@ -1349,13 +1348,14 @@
             var hideeditbutton = $("#editbutton");
             hideeditbutton.hide();
             
-            if(assignid == user_login){
+            if(user_login == '101943' && status != 'CLOSED'){
                 hideeditbutton.show();
-            } else if (user_login == '101943'){
+            } else if (assignid == user_login && status != 'CLOSED'){
                 hideeditbutton.show();
             } else {
                 hideeditbutton.hide();
             }
+            
 
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
@@ -1908,7 +1908,7 @@
                         $viewComment.append($nama,$date,$filecomment,$comment);
                     });
                     document.getElementById("comment_body").value = "";
-                    document.getElementById("files").value = "";
+                    // document.getElementById("files").value = "";
                     $('#modal-view-user form[name="view1"] input[name="comment"]').parent().html($viewComment);
                     getComment(ticketno);
                     
