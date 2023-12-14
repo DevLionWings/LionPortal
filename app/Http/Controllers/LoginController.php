@@ -155,7 +155,7 @@ class LoginController extends Controller
                     ->withSuccess('You have successfully logged in!');
                         
             } else {
-                return back()->withErrors(['error' => 'Wrong Password',]);
+                return back()->withErrors(['error' => 'Wrong Userid or Password',]);
             }
             
         }

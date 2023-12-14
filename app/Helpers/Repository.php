@@ -1391,8 +1391,13 @@ class Repository
                             'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
                             'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
                             ->where('a.userid', $userid)
-                            ->orWhere('a.assignedto', $userid)
-                            ->orWhere('a.assignedto', '')
+                            ->where('a.assignedto', '')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->count();
             
@@ -1415,8 +1420,13 @@ class Repository
                             'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
                             'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
                             ->where('a.userid', $userid)
-                            ->orWhere('a.assignedto', $userid)
-                            ->orWhere('a.assignedto', '')
+                            ->where('a.assignedto', '')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%') 
+                            ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
                             ->limit($length)
@@ -1558,8 +1568,13 @@ class Repository
                             'a.createdon', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
                             'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
                             ->where('a.userid', $userid)
-                            ->orWhere('a.assignedto', $userid)
-                            ->orWhere('a.assignedto', '')
+                            ->where('a.assignedto', '')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%')
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->count();
             
@@ -1582,8 +1597,13 @@ class Repository
                             'a.createdon', 'a.last_update', 'b.departmentid', 'a.detail', 'a.approvedby_1', 'a.approvedby_2', 'a.approvedby_3', 'a.approvedby_it', 'a.rejectedby', 'a.createdby', 'b.mgrid', 'b.headid', 'b.spvid', 'a.approvedby1_date', 'a.approvedby2_date', 'a.approvedby3_date', 'a.approvedbyit_date', 
                             'a.target_date', 'g.username as approved1', 'h.username as approvedit', 'i.username as created', 'a.systemid', 'a.moduleid',  'l.description as modulename', 'a.objectid', 'k.description as objectname', 'j.description as systemname')
                             ->where('a.userid', $userid)
-                            ->orWhere('a.assignedto', $userid)
-                            ->orWhere('a.assignedto', '')
+                            ->where('a.assignedto', '')
+                            ->where('a.ticketno', 'LIKE','%'.$ticketno.'%') 
+                            ->where('a.statusid', 'LIKE','%'.$status.'%') 
+                            ->where('a.userid', 'LIKE','%'.$requestor.'%')
+                            ->where('a.moduleid', 'LIKE','%'.$module.'%')
+                            ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
                             ->limit($length)
