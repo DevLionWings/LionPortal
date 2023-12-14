@@ -849,10 +849,11 @@ class TiketController extends Controller
         $validated = $request->validate([
                 'user' => 'required',
                 'category' => 'required',
+                'system' => 'required',
                 'priority' => 'required',
                 'subject' => 'required',
                 'detail' => 'required',
-                'system' => 'required',
+                'assignto' => 'required',
             ],
             [
                 'required'  => 'The :attribute field is required.'

@@ -36,7 +36,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="float-sm-right">
-                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#modal-add-ticket"><i class="fa fa-plus" aria-hidden="true"></i> New Ticket</button>
+                                <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#modal-add-ticket" data-backdrop="static" data-keyboard="false"><i class="fa fa-plus" aria-hidden="true"></i> New Ticket</button>
                                 <!-- <form id="formData" name="formData" method="get" action="{{ route('add.form') }}">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-success btn-sm">+ Tambah Ticket</button> -->
@@ -221,11 +221,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">New Ticket</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="add-close close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form id="form" name="form" action="{{ route('add-tiket') }}" method="post" enctype="multipart/form-data">
+                <form id="add-form" name="add-form" action="{{ route('add-tiket') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="ticketno" name="ticketno">
                     <input type="hidden" id="statusid" name="statusid">
@@ -360,7 +360,7 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="add-close btn btn-default" data-dismiss="modal">Close</button>
                         <button type="button" id="save-btn" class="btn btn-primary">Add Ticket</button>
                     </div>
                 </form>
@@ -1144,7 +1144,7 @@
             width: '100%'
         });
         $('.newticket').select2({
-            width: '100%'
+            width: '100%',
         });
         $('.datepicker').daterangepicker();
 
@@ -2813,6 +2813,11 @@
         });
         $(document).on('click', '.close-btn-update', function() {
                 $("#update").load(" #update"); 
+        });
+
+        $(document).on('click', '.add-close', function() {
+                document.getElementById("add-form").reset();
+                $(".newticket").select2("val", "");
         });
         /* end */
 
