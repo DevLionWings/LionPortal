@@ -438,6 +438,7 @@ class TiketController extends Controller
                     $headBtn = $headBtn.$download_btn;
                     $managerBtn = $managerBtn.$download_btn;
                     $managerItBtn = $managerItBtn.$download_btn;
+                   
                 }
               
                 if($roleid == 'RD005'){
@@ -450,20 +451,26 @@ class TiketController extends Controller
                     return $itBtn;
                 }
                 if($roleid == 'RD009'){
+                    
                     if($divisionid == 'DV002'){ // SAP
-                        if($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
+                        if ($row["attachment"] != '' || $row["attachment"] != null){
+                            return $headBtn;
+                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' ){
                             return $headBtn. $updateBtn;
-                        } 
+                        }
                     } else if ($divisionid == 'DV003'){ // APP
-                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
+                        if ($row["attachment"] != '' || $row["attachment"] != null){
+                            return $headBtn;
+                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' ){
                             return $headBtn. $updateBtn;
                         }
                     } else if ($divisionid == 'DV001'){ // INFRA
-                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
-                            return $headBtn. $updateBtn;
-                        } else {
-                            return $infBtn;
-                        }
+                        return $infBtn;
+                        // if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                        //     return $headBtn. $updateBtn;
+                        // } else {
+                        //     return $infBtn;
+                        // }
                     } else {
                         return $headBtn;
                     }  
@@ -560,7 +567,8 @@ class TiketController extends Controller
                     "objectid" => trim($value['objectid']),
                     "objectname" => trim($value['objectname']),
                     "systemname" => trim($value['systemname']),
-                    "last_update" => trim($value['last_update'])
+                    "last_update" => trim($value['last_update']),
+                    "user_login" => $userid
                 ]);
             }
             $data['dat'] = $dataTrimArray;
@@ -603,7 +611,7 @@ class TiketController extends Controller
                 $mgrid = Session::get('mgrid');
                 $divisionid = Session::get('divisionid');
                 $document_name = str_replace("storage/", "", $row["attachment"]);
-                $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
+                $parentBtn = ' <a href="javascript:void(0)" class="view btn btn-outline-info btn-xs" data-userlogin="'.$row["user_login"].'" data-ticket="'.$row["ticketno"].'" data-id="'.$row["userid"].'" data-statusid="'.$row["statusid"].'"
                 data-requestor="'.$row["requestor"].'" data-status="'.$row["status"].'" data-category="'.$row["category"].'" data-priority="'.$row["priority"].'" data-priorid="'.$row["priorid"].'" data-subject="'.$row["subject"].'" 
                 data-detail="'.$row["detail"].'" data-assignto="'.$row["assigned_to"].'" data-created="'.$row["createdby"].'" data-approve="'.$row["approvedby_1"].'" data-upload="'.$document_name.'" 
                 data-approve1name="'.$row["approvedby1Name"].'" data-approveitname="'.$row["approvedbyitName"].'" data-createdname="'.$row["createdname"].'" data-targetdate="'.$row["targetdate"].'" 
@@ -768,19 +776,24 @@ class TiketController extends Controller
 
                 if($roleid == 'RD009'){
                     if($divisionid == 'DV002'){ // SAP
-                        if($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003'){
+                        if ($row["attachment"] != '' || $row["attachment"] != null){
+                            return $headBtn;
+                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' ){
                             return $headBtn. $updateBtn;
                         } 
                     } else if ($divisionid == 'DV003'){ // APP
-                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003'){
+                        if ($row["attachment"] != '' || $row["attachment"] != null){
+                            return $headBtn;
+                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' ){
                             return $headBtn. $updateBtn;
                         }
                     } else if ($divisionid == 'DV001'){ // INFRA
-                        if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
-                            return $headBtn. $updateBtn;
-                        } else {
-                            return $infBtn;
-                        }
+                        return $infBtn;
+                        // if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                        //     return $headBtn. $updateBtn;
+                        // } else {
+                        //     return $infBtn;
+                        // }
                     } else {
                         return $headBtn;
                     }  
