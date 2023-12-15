@@ -275,7 +275,7 @@ class KwitansiController extends Controller
             
         }
 
-        $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('receipt.templatekwitansi', $data)->setPaper('a4', 'potrait');
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('receipt.templatekwitansi', $data)->setPaper('letter', 'potrait');
         return $pdf->stream('Print_Kwitansi' . date('dmYHis') . '.pdf');
     }
 

@@ -361,7 +361,7 @@ class CutiController extends Controller
                 $hitung5 = 3 * $koperasi;
                 $hitung6 = round(3 * ($gaji * 2/100));
                 $untuk = "Uang Pengganti Cuti Hamil a/n ".$nama.' bagian: '.$bagian.' id: '.$id;
-                $keterangan = "3x(GP + UM) - 3x(JHT) - 3x(SPSI) - 3x(Koperasi) - 3x(Bpjs + Pensiun) - ".$jmlhchh."x(Cuti Haid)". PHP_EOL .$hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
+                $keterangan = "3x(GP + UM) - 3x(JHT) - 3x(SPSI) - 3x(Koperasi) - 3x(Bpjs + Pensiun) - ".$jmlhchh."x(Cuti Haid)". PHP_EOL .$hitung1.' - '.$hitung2.' - '.$hitung6.' - '.$hitung4.' - '.$hitung5.' - '.$hitung3;
                 $ket = $untuk.PHP_EOL.$keterangan;
                 
                 /* Count Months */
@@ -425,7 +425,7 @@ class CutiController extends Controller
                 $hitung5 = 2 * $koperasi;
                 $hitung6 = round(2 * ($gaji * 2/100));
                 $untuk = "Uang Pengganti Cuti Keguguran a/n ".$nama.' bagian: '.$bagian.' id: '.$id;
-                $keterangan = "1.5x(GP + UM) - 2x(JHT) - (Cuti Haid) - 2x(SPSI) - 2x(Koperasi) - 2x(Bpjs + Pensiun) - ".$jmlhchh."x(Cuti Haid)". PHP_EOL . $hitung1.' - '.$hitung2.' - '.$hitung3.' - '.$hitung4.' - '.$hitung5.' - '.$hitung6;
+                $keterangan = "1.5x(GP + UM) - 2x(JHT) - (Cuti Haid) - 2x(SPSI) - 2x(Koperasi) - 2x(Bpjs + Pensiun) - ".$jmlhchh."x(Cuti Haid)". PHP_EOL . $hitung1.' - '.$hitung2.' - '.$hitung6.' - '.$hitung4.' - '.$hitung5.' - '.$hitung3;
                 $ket = $untuk.PHP_EOL.$keterangan;
                 
                 /* Count Months */
@@ -594,7 +594,8 @@ class CutiController extends Controller
             
         }
 
-        $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('receipt.templatekwitansi', $data)->setPaper('f4', 'portrait');
+        $customPaper = array(0,0,360,360);
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('receipt.templatekwitansi', $data)->setPaper('letter', 'portrait');
         return $pdf->stream('Print_Kwitansi' . date('dmYHis') . '.pdf');
     }
 }

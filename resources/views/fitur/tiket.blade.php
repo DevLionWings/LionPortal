@@ -234,7 +234,7 @@
                     <div class="modal-body">
                         @if(session('roleid') == 'RD001' || session('roleid') == 'RD004' || session('roleid') == 'RD005' || session('roleid') == 'RD006' || session('roleid') == 'RD007' || session('roleid') == 'RD008' || session('roleid') == 'RD009')
                         <div class="form-group">
-                            <div class="name">User Request :</div>
+                            <div class="name">User Request<a class="text-danger">*</a> :</div>
                             <div class="input-group value">
                                 <select id="user" name="user" class="newticket" style="width: 100%;" required>
                                     <option value=""> Masukkan Pilihan :</option>
@@ -247,7 +247,7 @@
                         @endif
                         @if(session('roleid') == 'RD006' || session('roleid') == 'RD009')
                         <div class="form-group">
-                            <div class="name">Assigned To :</div>
+                            <div class="name">Assigned To<a class="text-danger">*</a> :</div>
                             <div class="input-group value">
                                 <select id="assignto" name="assignto" class="form-control input--style-6" required>
                                     <option value=""> Masukkan Pilihan :</option>
@@ -262,7 +262,7 @@
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <div class="form-group">
-                                        <div class="name">System :</div>
+                                        <div class="name">System<a class="text-danger">*</a> :</div>
                                         <div class="input-group value">
                                             <select id="system" name="system" class="form-control input--style-6" required>
                                                 <option value=""> Masukkan Pilihan :</option>
@@ -277,7 +277,7 @@
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <div class="form-group">
-                                        <div class="name">Category :</div>
+                                        <div class="name">Category<a class="text-danger">*</a> :</div>
                                         <div class="input-group value">
                                             <select id="category" name="category" class="form-control input--style-6" required>
                                                 <option value=""> Masukkan Pilihan :</option>
@@ -294,7 +294,7 @@
                             <div class="col-md-6"> 
                                 <div class="mb-3">
                                     <div class="form-group">
-                                        <div class="name">Priority :</div>
+                                        <div class="name">Priority<a class="text-danger">*</a> :</div>
                                         <div class="input-group value">
                                             <select id="priority" name="priority" class="form-control input--style-6" required>
                                                 <option value=""> Masukkan Pilihan :</option>
@@ -335,11 +335,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-check-label" for="group">Subject :</label>
+                            <label class="form-check-label" for="group">Subject<a class="text-danger">*</a> :</label>
                             <input type="text" name="subject" class="form-control" id="subject" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-check-label" for="detail">Detail Issue :</label>
+                            <label class="form-check-label" for="detail">Detail Issue<a class="text-danger">*</a> :</label>
                             <textarea type="text" name="detail" class="form-control" id="detail" required></textarea>
                         </div>
                         <!-- <div class="form-group">
@@ -357,6 +357,9 @@
                             <div class="input-group value">
                                 <input type="text"  id="createdate" name="createdate" class="form-control input--style-6" readonly>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <p class="text-danger">*Field Required</p>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -1149,7 +1152,7 @@
         $('.datepicker').daterangepicker();
 
         $('#save-btn').on('click', function() {
-            $('#form').submit();
+            $('#add-form').submit();
             $(this).attr('disabled', true);
             $(this).text("Loading ...");
         });
@@ -1301,6 +1304,8 @@
             $('#modal-view-user').modal({backdrop: 'static', keyboard: false})  
             getComment($(this).attr('data-ticket'), $(this).attr('data-statusid'));
             var user_login = $(this).attr('data-userlogin');
+            var roleid = $(this).attr('data-roleid');
+            var division = $(this).attr('data-division');
             var user_id = $(this).attr('data-id');
             var ticketno = $(this).attr('data-ticket');
             var requestor = $(this).attr('data-requestor');
@@ -1345,18 +1350,36 @@
                 modulehide.hide();
             }
 
+            console.log(roleid)
+            console.log(division)
+            console.log(user_login)
+            console.log(assignid)
+            console.log(systemid)
             var hideeditbutton = $("#editbutton");
             hideeditbutton.hide();
             
-            if(user_login == '101943' && status != 'CLOSED'){
+            if(roleid == 'RD006' && status != 'CLOSED'){
                 hideeditbutton.show();
+            } else if (roleid == 'RD009' && status != 'CLOSED'){
+                if(division == 'DV001'){ //INFRA
+                    if(assignid == user_login && status != 'CLOSED' || systemid == 'SY003' && status != 'CLOSED'){
+                        hideeditbutton.show();
+                    }
+                } else if(division == 'DV002'){ //SAP
+                    if(assignid == user_login && status != 'CLOSED' || systemid == 'SY001' && status != 'CLOSED'){
+                        hideeditbutton.show();
+                    }
+                } else if(division == 'DV003'){ // APP
+                    if(assignid == user_login && status != 'CLOSED' || systemid == 'SY002' && status != 'CLOSED'){
+                        hideeditbutton.show();
+                    }
+                }
             } else if (assignid == user_login && status != 'CLOSED'){
                 hideeditbutton.show();
             } else {
                 hideeditbutton.hide();
             }
             
-
             $form.find('input[name="id"]').val(user_id);
             $form.find('input[name="ticketno"]').val(ticketno);
             $form.find('input[name="requestor"]').val(requestor);
@@ -1575,7 +1598,7 @@
                     {
                         data: 'ticketno',
                         render: function(data, type, row){
-                            return '<a href="javascript:void(0)" class="view btn btn-link" data-userlogin="'+row["user_login"]+'" data-assigntoid="'+row["assignedto"]+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                            return '<a href="javascript:void(0)" class="view btn btn-link"  data-division="'+row["division"]+'" data-roleid="'+row["roleid"]+'" data-userlogin="'+row["user_login"]+'" data-assigntoid="'+row["assignedto"]+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                         }
                     },
                     {
@@ -2542,7 +2565,7 @@
                 {
                     data: 'ticketno',
                     render: function(data, type, row){
-                        return '<a href="javascript:void(0)" class="view btn btn-link" data-userlogin="'+row["user_login"]+'" data-assigntoid="'+row["assignedto"]+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                        return '<a href="javascript:void(0)" class="view btn btn-link" data-division="'+row["division"]+'" data-roleid="'+row["roleid"]+'" data-userlogin="'+row["user_login"]+'" data-assigntoid="'+row["assignedto"]+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
                     }
                 },
                 {
@@ -2986,7 +3009,7 @@
                     var $options = "<option value='"+data["CATEGORYID"]+"'>"+data["DESC"]+"</option>";
                     $select_client.append($options);
                 });
-                $('#modal-add-ticket form[name="form"] select[name="category"]').parent().html($select_client);
+                $('#modal-add-ticket form[name="add-form"] select[name="category"]').parent().html($select_client);
                 
             },
             error: function (error) {
