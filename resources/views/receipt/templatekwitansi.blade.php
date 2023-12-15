@@ -34,7 +34,6 @@
 						<tr>
 							<td></td>	
 							<td style="text-align: right; font-size:13px; vertical-align:bottom;">{{ $data->tanggal }}</td>
-							<br>
 						</tr> 	
 						<tr>  
 							<td style="vertical-align:bottom; font-size:12px;" >Rp <b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>
@@ -76,35 +75,35 @@
 					<table>  
 						<tr>  
 							<td rowspan="8" width=70px style="vertical-align:bottom; text-align: center; font-size:13px; border:1px solid #000;"><hr><b>HRD</b></td>
-							<td style="font-size:12px;"><b>&nbsp;&nbsp;&nbsp;{{ $data->nokwitansi }}</b></td> 
+							<td style="font-size:11px;"><b>&nbsp;&nbsp;&nbsp;{{ $data->nokwitansi }}</b></td> 
 							<td style="text-align: right; font-size:8px;">{{ $data->periode }} </td> 
 						</tr>   
 						<tr>  
-							<td style="font-size:12px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Telah terima dari</td>  
-							<td style="font-size:12px;"><b>{{ $data->terimadari }}</b></td>  
+							<td style="font-size:11px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Telah terima dari</td>  
+							<td style="font-size:11px;"><b>{{ $data->terimadari }}</b></td>  
 						</tr>  
 						<tr>  
-							<td style="font-size:12px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Uang sejumlah</td>  
-							<td  style="font-size:12px; background-color: #D8D8D8;"><b># {{ $data->terbilang }} #</b></td>  
+							<td style="font-size:11px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Uang sejumlah</td>  
+							<td  style="font-size:11px; background-color: #D8D8D8;"><b># {{ $data->terbilang }} #</b></td>  
 						</tr>  
 						<tr>  
-							<td style="font-size:12px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Untuk pembayaran</td>  
-							<td style="font-size:12px; white-space: pre-line;">{{ $data->keterangan }}</td>  
+							<td style="font-size:11px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Untuk pembayaran</td>  
+							<td style="font-size:11px; white-space: pre-line;">{{ $data->keterangan }}</td>  
 						</tr> 
 						<tr>  
-							<td style="font-size:12px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Tangggal masuk</td>  
-							<td style="font-size:12px;">{{ $data->tglmasuk }}</td>  
+							<td style="font-size:11px; vertical-align:top;">&nbsp;&nbsp;&nbsp;Tangggal masuk</td>  
+							<td style="font-size:11px;">{{ $data->tglmasuk }}</td>  
 						</tr>   
 						<tr>
 							<td></td>	
-							<td style="text-align: right; font-size:13px; vertical-align:bottom;">{{ $data->tanggal }}</td>
+							<td style="text-align: right; font-size:12px; vertical-align:bottom;">{{ $data->tanggal }}</td>
 						</tr>	
 						<tr>  
-							<td style="font-size:12px;">&nbsp;&nbsp;&nbsp;</td>  
-							<td style="font-size:12px;">&nbsp;&nbsp;&nbsp;</td>  
+							<td style="font-size:11px;">&nbsp;&nbsp;&nbsp;</td>  
+							<td style="font-size:11px;">&nbsp;&nbsp;&nbsp;</td>
 						</tr> 
 						<tr>  
-							<td style="vertical-align:bottom; font-size:12px;" >Rp<b style="text-align: right; font-size:15px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>  
+							<td style="vertical-align:bottom; font-size:11px;" >Rp<b style="text-align: right; font-size:14px; background-color: #D8D8D8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $data->nominal }}</b></td>  
 						</tr>
 					</table> 
 				</td>
