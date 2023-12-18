@@ -433,6 +433,7 @@ class TiketController extends Controller
                 }
                 /* End */
 
+                // Button Download //
                 if ($row["attachment"] != '' || $row["attachment"] != null){
                     $itBtn = $itBtn.$download_btn;
                     $sapBtn = $sapBtn.$download_btn;
@@ -441,6 +442,15 @@ class TiketController extends Controller
                     $managerBtn = $managerBtn.$download_btn;
                     $managerItBtn = $managerItBtn.$download_btn;
                    
+                } 
+                // Button View Transport //
+                if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                    $itBtn = $itBtn;
+                    $sapBtn = $sapBtn;
+                    $infBtn = $infBtn;
+                    $headBtn = $headBtn.$updateBtn;
+                    $managerBtn = $managerBtn;
+                    $managerItBtn = $managerItBtn;
                 }
               
                 if($roleid == 'RD005'){
@@ -453,19 +463,20 @@ class TiketController extends Controller
                     return $itBtn;
                 }
                 if($roleid == 'RD009'){
-                    
                     if($divisionid == 'DV002'){ // SAP
-                        if ($row["attachment"] != '' || $row["attachment"] != null){
-                            return $headBtn;
-                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' ){
-                            return $headBtn. $updateBtn;
-                        }
+                        return $headBtn;
+                        // if ($row["attachment"] != '' || $row["attachment"] != null){
+                        //     return $headBtn;
+                        // } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' ){
+                        //     return $headBtn;
+                        // }
                     } else if ($divisionid == 'DV003'){ // APP
-                        if ($row["attachment"] != '' || $row["attachment"] != null){
-                            return $headBtn;
-                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' ){
-                            return $headBtn. $updateBtn;
-                        }
+                        return $headBtn;
+                        // if ($row["attachment"] != '' || $row["attachment"] != null){
+                        //     return $headBtn;
+                        // } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' ){
+                        //     return $headBtn. $updateBtn;
+                        // }
                     } else if ($divisionid == 'DV001'){ // INFRA
                         return $infBtn;
                         // if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
@@ -473,9 +484,7 @@ class TiketController extends Controller
                         // } else {
                         //     return $infBtn;
                         // }
-                    } else {
-                        return $headBtn;
-                    }  
+                    } 
                 }
                 if($roleid == 'RD002'){ 
                     return $managerBtn;
@@ -502,7 +511,11 @@ class TiketController extends Controller
         $divisionid = Session::get('divisionid');
         $requestor = $request->requestor;
         if($roleid == 'RD009'){
-            $assignto = $request->assigntodiv;
+            if($request->assigntodiv == '%'){
+                $assignto = $request->assignto;
+            } else {
+                $assignto = $request->assigntodiv;
+            }
         } else {
             $assignto = $request->assignto;
         }
@@ -759,6 +772,7 @@ class TiketController extends Controller
                 }
                 /* End */
 
+                // Button Download //
                 if ($row["attachment"] != '' || $row["attachment"] != null){
                     $itBtn = $itBtn.$download_btn;
                     $sapBtn = $sapBtn.$download_btn;
@@ -766,6 +780,16 @@ class TiketController extends Controller
                     $headBtn = $headBtn.$download_btn;
                     $managerBtn = $managerBtn.$download_btn;
                     $managerItBtn = $managerItBtn.$download_btn;
+                }
+
+                // Button View Transport //
+                if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
+                    $itBtn = $itBtn;
+                    $sapBtn = $sapBtn;
+                    $infBtn = $infBtn;
+                    $headBtn = $headBtn.$updateBtn;
+                    $managerBtn = $managerBtn;
+                    $managerItBtn = $managerItBtn;
                 }
             
                 if($roleid == 'RD005'){
@@ -780,26 +804,27 @@ class TiketController extends Controller
 
                 if($roleid == 'RD009'){
                     if($divisionid == 'DV002'){ // SAP
-                        if ($row["attachment"] != '' || $row["attachment"] != null){
-                            return $headBtn;
-                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' ){
-                            return $headBtn. $updateBtn;
-                        } 
+                        return $headBtn;
+                        // if ($row["attachment"] != '' || $row["attachment"] != null){
+                        //     return $headBtn;
+                        // } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY001' && $row["statusid"] != 'SD003' ){
+                        //     return $headBtn;
+                        // }
                     } else if ($divisionid == 'DV003'){ // APP
-                        if ($row["attachment"] != '' || $row["attachment"] != null){
-                            return $headBtn;
-                        } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' ){
-                            return $headBtn. $updateBtn;
-                        }
+                        return $headBtn;
+                        // if ($row["attachment"] != '' || $row["attachment"] != null){
+                        //     return $headBtn;
+                        // } else if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY002' && $row["statusid"] != 'SD003' ){
+                        //     return $headBtn. $updateBtn;
+                        // }
+                    } else if ($divisionid == 'DV001'){ // INFRA
                         return $infBtn;
                         // if ($userid == $row["assignedto"] && $row["statusid"] != 'SD003' || $row["systemid"] == 'SY003' && $row["statusid"] != 'SD003'){
                         //     return $headBtn. $updateBtn;
                         // } else {
                         //     return $infBtn;
                         // }
-                    } else {
-                        return $headBtn;
-                    }  
+                    } 
                 }
 
                 if($roleid == 'RD002'){ 
