@@ -262,7 +262,13 @@ class TiketController extends Controller
     
         return DataTables::of($data)
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->orderByRaw('status_trans_lpr = 0')->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])
+                    ->orderByRaw('status_trans_lpr = 0')
+                    ->orderByRaw('status_lqa = 0')
+                    ->orderByRaw('status_lpr = 0')
+                    ->orderByRaw('status_trans_lqa = 0')
+                    ->orderByRaw('status_trans_lpr = 0')
+                    ->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
@@ -598,7 +604,13 @@ class TiketController extends Controller
 
         return DataTables::of($data['dat'])
             ->addColumn('action', function($row){
-                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])->orderByRaw('status_trans_lpr = 0')->get();
+                $dataTransport = DB::connection('pgsql')->table('helpdesk.t_transport')->where('ticketno', $row["ticketno"])
+                    ->orderByRaw('status_trans_lpr = 0')
+                    ->orderByRaw('status_lqa = 0')
+                    ->orderByRaw('status_lpr = 0')
+                    ->orderByRaw('status_trans_lqa = 0')
+                    ->orderByRaw('status_trans_lpr = 0')
+                    ->get();
                 $dataTransArray = [];
 
                 foreach ($dataTransport as $key => $value1) {
@@ -762,7 +774,7 @@ class TiketController extends Controller
                         $infBtn = $transportedBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
-                        $managerItBtn = $approveTransBtn;
+                        $managerItBtn = $viewTransBtn;
                     } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
@@ -1301,13 +1313,7 @@ class TiketController extends Controller
         $SendMail = $this->mail->SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName); 
 
         if($update == true){
-            if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "update ticket successfully");
-            } else {
-                return redirect()->route('tiket')->with("success", "update ticket successfully");
-            }
-        } else { 
-            return redirect()->back()->with("error", "error");
+            return redirect()->back()->with("success", "update ticket successfully");
         }
     }
 

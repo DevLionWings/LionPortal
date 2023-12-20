@@ -459,7 +459,7 @@
                         d.login = $('select[name="status"] option:selected').val();
                     }
                 },
-                order: [[ 4, "desc" ]],
+                // order: [[ 4, "desc" ]],
                 columns: [
                     {
                         data: 'userid',
@@ -519,7 +519,7 @@
                 'excel'
             ],
             ajax: "{{ route('user-list') }}",
-            order: [[ 4, "desc" ]],
+            // order: [[ 4, "desc" ]],
             columns: [
                 {
                     data: 'userid',

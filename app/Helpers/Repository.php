@@ -66,7 +66,7 @@ class Repository
         return json_encode($response);
     }
 
-    public static function GETABSEN($id, $userid, $start_date, $end_date, $roleid, $departmentid, $mgrid)
+    public static function GETABSEN($id, $userid, $start_date, $end_date, $roleid, $departmentid, $mgrid, $myteam, $start, $length)
     {   
         // $start_date = "2023-06-01";
         // $end_date = "2023-06-19";
@@ -93,12 +93,11 @@ class Repository
         }
         
         if(DB::connection('pgsql')->table('absensi.kartuabsensi')->where('id', $userid)->exists()){
-            if ($start_date == $datenow && $end_date == $datenow){
+            if ($start_date == $datenow && $end_date == $datenow && $myteam == '%'){
                 $count = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->where('tgl', '>', now()->subDays(30)->endOfDay())
                     ->orderBy('tgl', 'desc')
-                    ->limit(10)
                     ->count();
             
 
@@ -106,8 +105,9 @@ class Repository
                     ->whereIn('id', $arr_user)
                     ->where('tgl', '>', now()->subDays(30)->endOfDay())
                     ->orderBy('tgl', 'desc')
-                    ->limit(10)
-                    ->simplePaginate($count);
+                    ->offset($start)
+                    ->limit($length)
+                    ->get();
                 
                 if($data->isNotEmpty()){
                     $response = array(
@@ -124,20 +124,52 @@ class Repository
                         'total' => []
                     );
                 }
-            } else {
+            } else if ($myteam == '%'){
                 $countfilter = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
                     ->orderBy('tgl', 'desc')
-                    ->limit(10)
                     ->count();
 
                 $data = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
                     ->orderBy('tgl', 'desc')
-                    ->limit(10)
-                    ->simplePaginate($countfilter);
+                    ->offset($start)
+                    ->limit($length)
+                    ->get();
+                    
+                if($data->isNotEmpty()){
+                    $response = array(
+                        'rc' => '00',
+                        'msg' => 'success',
+                        'data' => $data,
+                        'total' => $countfilter
+                    );
+                } else {
+                    $response = array(
+                        'rc' => '01',
+                        'msg' => 'failed',
+                        'data' => [],
+                        'total' => []
+                    );
+                }
+            } else {
+                $countfilter = DB::connection('pgsql')->table('absensi.kartuabsensi')
+                    // ->whereIn('id', $arr_user)
+                    ->where('id', 'LIKE','%'.$myteam.'%')
+                    ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
+                    ->orderBy('tgl', 'desc')
+                    ->count();
+
+                $data = DB::connection('pgsql')->table('absensi.kartuabsensi')
+                    // ->whereIn('id', $arr_user)
+                    ->where('id', 'LIKE','%'.$myteam.'%')
+                    ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
+                    ->orderBy('tgl', 'desc')
+                    ->offset($start)
+                    ->limit($length)
+                    ->get();
                     
                 if($data->isNotEmpty()){
                     $response = array(

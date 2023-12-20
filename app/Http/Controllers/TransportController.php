@@ -204,7 +204,7 @@ class TransportController extends Controller
         $emailNameSendTo = 'IT-Lion Wings';
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
-        $transno = $request->transno;
+        // $transno = $request->transno;
         $page = $request->page;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
@@ -221,6 +221,9 @@ class TransportController extends Controller
             $status = "APPROVE TO LQA";
         } 
         
+        $getTransno = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq)->first();
+        $transno = $getTransno->transportno;
+
         /* Approve Transport */
         if($datelqa == ''){
             for ($a=0; $a < count($datatrq) ; $a++){
@@ -272,7 +275,7 @@ class TransportController extends Controller
         $emailNameSendTo = 'IT - Lion Wings';
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
-        $transno = $request->transno;
+        // $transno = $request->transno;
         $date = date('Y-m-d H:i:s');
         $page = $request->page;
         
@@ -290,6 +293,9 @@ class TransportController extends Controller
             $lpr = 0;
         }
         
+        $getTransno = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq)->first();
+        $transno = $getTransno->transportno;
+
         if($request->status == 'APPROVE'){
             /* Approve Transport */
             for ($a=0; $a < count($datatrq) ; $a++){
@@ -354,7 +360,7 @@ class TransportController extends Controller
         $emailNameSendTo = 'IT-Lion Wings';
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
-        $transno = $request->transno;
+        // $transno = $request->transno;
         $page = $request->page;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
@@ -370,7 +376,10 @@ class TransportController extends Controller
             $usernamelpr = '';
             $status = "TRANSPORTED TO LQA";
         } 
-       
+        
+        $getTransno = DB::connection('pgsql')->table('helpdesk.t_transport')->where('transportid', $datatrq)->first();
+        $transno = $getTransno->transportno;
+        
         /* Trasnported Transport */
         if($datelqa == ''){
             for ($a=0; $a < count($datatrq) ; $a++){

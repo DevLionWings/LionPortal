@@ -35,6 +35,36 @@
                         <div class="card-header">
                             <div class="card-header">
                                 <div class="row align-items-end">
+                                    @if(session('roleid') == 'RD009')
+                                    <div class="col-md-2" id="hideassignhead">
+                                        <div class="form-group">
+                                            <label>My Team :</label>
+                                            <div class="input-group value">
+                                                <select id="myteam" name="myteam" class="form-control input--style-6">
+                                                    <option value="%">My Team</option>
+                                                    @foreach($team as $teamcode)
+                                                    <option value="{{ $teamcode['ID'] }}">{{ $teamcode['NAME'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                    @if(session('roleid') == 'RD006')
+                                    <div class="col-md-2" id="hideassignhead">
+                                        <div class="form-group">
+                                            <label>My Team :</label>
+                                            <div class="input-group value">
+                                                <select id="mydepart" name="mydepart" class="form-control input--style-6">
+                                                    <option value="%">My Team</option>
+                                                    @foreach($depart as $departcode)
+                                                    <option value="{{ $departcode['ID'] }}">{{ $departcode['NAME'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Date Range:</label>
@@ -159,6 +189,8 @@
 
         $(document).on('click', '.absen', function submit() {
             daterange = $('input[name="data_date_range"]').val();
+            myteam = $('select[name="myteam"] option:selected').val();
+            mydepart = $('select[name="myteam"] option:selected').val();
            
             $('#dataabsen').DataTable().clear().destroy();
             var $dataabsen = $('#dataabsen').DataTable({
@@ -177,6 +209,8 @@
                     url: '{{ route("get-absensi") }}',
                     "data": function (d) {
                         d.daterange = $('input[name="data_date_range"]').val();
+                        d.myteam = $('select[name="myteam"] option:selected').val();
+                        d.mydepart = $('select[name="mydepart"] option:selected').val();
                     },
                 },
                 columns: [
@@ -208,7 +242,18 @@
                             var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
                             var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
                             var seconds = today.getSeconds() + "";
+                            var hari = today.getDay();
 
+                            switch(hari) {
+                                case 0: hari = "Minggu"; break;
+                                case 1: hari = "Senin"; break;
+                                case 2: hari = "Selasa"; break;
+                                case 3: hari = "Rabu"; break;
+                                case 4: hari = "Kamis"; break;
+                                case 5: hari = "Jum'at"; break;
+                                case 6: hari = "Sabtu"; break;
+                            }
+                            
                             day = day;
                             month = month;
                             year = year;
@@ -216,7 +261,7 @@
                             minutes = minutes;
                             seconds = seconds;
                             // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                            var date = day + "/" + month + "/" + year;
+                            var date = hari + ", " + day + "/" + month + "/" + year;
                             return date;   
                         }
                     },
@@ -282,6 +327,8 @@
                 "url": '{{ route("get-absensi") }}',
                 "data": function (d) {
                     d.daterange = $('input[name="data_date_range"]').val();
+                    d.myteam = $('select[name="myteam"] option:selected').val();
+                    d.mydepart = $('select[name="mydepart"] option:selected').val();
                 },
             },
             columns: [
@@ -313,6 +360,17 @@
                         var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
                         var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
                         var seconds = today.getSeconds() + "";
+                        var hari = today.getDay();
+
+                        switch(hari) {
+                            case 0: hari = "Minggu"; break;
+                            case 1: hari = "Senin"; break;
+                            case 2: hari = "Selasa"; break;
+                            case 3: hari = "Rabu"; break;
+                            case 4: hari = "Kamis"; break;
+                            case 5: hari = "Jum'at"; break;
+                            case 6: hari = "Sabtu"; break;
+                        }
 
                         day = day;
                         month = month;
@@ -321,7 +379,7 @@
                         minutes = minutes;
                         seconds = seconds;
                         // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
-                        var date = day + "/" + month + "/" + year;
+                        var date = hari + ", " + day + "/" + month + "/" + year;
                         return date;   
                     }
                 },

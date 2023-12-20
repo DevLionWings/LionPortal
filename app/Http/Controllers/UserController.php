@@ -66,7 +66,7 @@ class UserController extends Controller
 
     public function dataList(Request $request)
     {
-        $datacounter = DB::connection('pgsql')->table('master_data.m_user')->get();
+        $datacounter = DB::connection('pgsql')->table('master_data.m_user')->orderBy('userid', 'asc')->get();
         $dataTrimArray = [];
         foreach ($datacounter as $key => $value) {
             array_push($dataTrimArray, [
@@ -86,7 +86,7 @@ class UserController extends Controller
         return DataTables::of($data['dat'])
         ->addColumn('action', function($row){
             $deleteBtn = ' <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-userid="'.$row["userid"].'" ><i class="fa fa-trash" aria-hidden="true"></i></a>';
-            $editBtn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm" 
+            $editBtn = ' <a href="javascript:void(0)" class="edit btn btn-success btn-sm" 
             data-userid="'.$row["userid"].'" data-username="'.$row["username"].'" data-pass="'.$row["pass"].'" data-departmentid="'.$row["departmentid"].'" data-plantid="'.$row["plantid"].'" data-roleid="'.$row["roleid"].'" 
             data-spvid="'.$row["spvid"].'" data-mgrid="'.$row["mgrid"].'" data-usermail="'.$row["usermail"].'"><i class="fas fa-edit"></i></a>';
             return $deleteBtn.$editBtn;
@@ -100,7 +100,7 @@ class UserController extends Controller
     {
         $status = (int)$request->login;
        
-        $datacounter = DB::connection('pgsql')->table('master_data.m_user')->where('status_login', $status)->get();
+        $datacounter = DB::connection('pgsql')->table('master_data.m_user')->where('status_login', $status)->orderBy('userid', 'asc')->get();
         $dataTrimArray = [];
         foreach ($datacounter as $key => $value) {
             array_push($dataTrimArray, [
@@ -120,7 +120,7 @@ class UserController extends Controller
         
         return DataTables::of($data['dat'])
         ->addColumn('action', function($row){
-            $editloginBtn = '<a href="javascript:void(0)" class="editlogin btn btn-danger btn-sm" 
+            $editloginBtn = ' <a href="javascript:void(0)" class="editlogin btn btn-danger btn-sm" 
             data-userid="'.$row["userid"].'" data-username="'.$row["username"].'"  data-status="'.$row["status"].'"><i class="fas fa-sign-in-alt"></i></a>';
             return $editloginBtn;
             
