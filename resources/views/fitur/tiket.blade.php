@@ -1129,7 +1129,11 @@
         $('.newticket').select2({
             width: '100%',
         });
-        $('.datepicker').daterangepicker();
+
+        $('.datepicker').daterangepicker({
+            autoUpdateInput: false,
+           
+        });
 
         $('#save-btn').on('click', function() {
             $('#add-form').submit();
@@ -1636,8 +1640,10 @@
                                 statusText = `<span class="badge badge-primary">Monitoring</span>`;
                             } else if(data == "TRANSPORT PROCESS"){
                                 statusText = `<span class="badge badge-info">Transport Process</span>`;
+                            } else if(data == "DEVELOPMENT"){
+                                statusText = `<span class="badge badge-warning">Development</span>`;
                             } else if(data == "TRAINING"){
-                                statusText = `<span class="badge badge-dark">TRAINING</span>`;
+                                statusText = `<span class="badge badge-dark">Training</span>`;
                             } else if(data == "WAITING FOR VENDOR"){
                                 statusText = `<span class="badge badge-success">WAITING FOR VENDOR</span>`;
                             } else if(data == "WAITING FOR PURCHASING"){
@@ -2759,8 +2765,10 @@
                             statusText = `<span class="badge badge-primary">Monitoring</span>`;
                         } else if(data == "TRANSPORT PROCESS"){
                             statusText = `<span class="badge badge-info">Transport Process</span>`;
+                        } else if(data == "DEVELOPMENT"){
+                            statusText = `<span class="badge badge-warning">Development</span>`;
                         } else if(data == "TRAINING"){
-                            statusText = `<span class="badge badge-dark">TRAINING</span>`;
+                            statusText = `<span class="badge badge-dark">Training</span>`;
                         } else if(data == "WAITING FOR VENDOR"){
                             statusText = `<span class="badge badge-success">WAITING FOR VENDOR</span>`;
                         } else if(data == "WAITING FOR PURCHASING"){

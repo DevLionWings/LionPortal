@@ -396,11 +396,11 @@ class TransportController extends Controller
             }
         }
         
-        $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
-        ->where('ticketno', $ticketno)
-        ->update([
-            'statusid' => 'SD011',
-        ]);
+        // $updateTicket = DB::connection('pgsql')->table('helpdesk.t_ticket')
+        // ->where('ticketno', $ticketno)
+        // ->update([
+        //     'statusid' => 'SD011',
+        // ]);
         /* End */
 
         /* Send Email */
