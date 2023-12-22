@@ -512,14 +512,6 @@
                             <label class="form-check-label" for="targetdate" disabled>Target Date:</label>
                             <input type="text" name="targetdate" class="form-control" id="targetdate" readonly>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">  
-                                <div class="mb-3">
-                                    <button type="button" id="trq" class="trq btn btn-primary" disabled><i class="fa fa-truck"></i></button>
-                                    
-                                </div> 
-                            </div>
-                        </div>
                         <hr />
                         <h4 class="modal-title">Activity :</h4>
                         <div class="form-group" id="hidecmnt">
@@ -546,6 +538,7 @@
                         <div class="mb-3">
                             <button type="button" class="close-btn2 btn btn-default" data-dismiss="modal">Close</button>
                             <button type="button" id="editbutton" class="edit btn btn-success"><i class="fas fa-edit"></i></button>
+                            <!-- <button type="button" id="trq" class="trq btn btn-primary" disabled><i class="fa fa-truck"></i></button> -->
                         </div>
                     </div>   
                 </form>
@@ -707,7 +700,7 @@
                             <label class="form-check-label" for="subject" disabled>Subject :</label>
                             <input type="text" name="subject" class="form-control" id="subject" readonly>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="desc">
                             <label class="form-check-label" for="detail" disabled>Detail Issue :</label>
                             <textarea type="text" name="detail" class="form-control" id="detail" rows="4" cols="50" ></textarea>
                         </div>
@@ -725,7 +718,7 @@
                             <label class="form-check-label" for="targetdate" disabled>Target Date :</label>
                             <input type="text" name="targetdates" class="form-control" id="targetdates">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="comnt">
                             <label class="form-check-label" for="comment_body" disabled>Activity Comment :</label>
                             <textarea type="text" name="comment_body" class="form-control" id="comment_body" rows="4" cols="50" placeholder="Write a comment..."></textarea>
                         </div>
@@ -750,7 +743,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="close-btn-update btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="updateBtn btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>
@@ -866,7 +859,6 @@
                 </div>
                 <form action="{{ route('send-transport') }}" method="post" name="transport" id="transport">
                     @csrf
-                    <input type="hidden" id="page" name="page" value='tiketall'/>
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="form-check-label" for="ticketno" disabled>Ticket No :</label>
@@ -898,11 +890,11 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4" id="checklqa"> 
-                                <input type="checkbox" id="lqa" name="lqa" value="true"> 
+                                <input type="checkbox" class="messageCheckbox" id="lqa" name="lqa" value="lqa"> 
                                 <label for="lqa">LQA</label><br>
                             </div>
                             <div class="col-md-4" id="checklpr"> 
-                                <input type="checkbox" id="lpr" name="lpr" value="true">
+                                <input type="checkbox" class="messageCheckbox" id="lpr" name="lpr" value="lpr">
                                 <label for="lpr">LPR</label><br>  
                             </div>
                         </div>
@@ -919,7 +911,7 @@
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="close-btn-trans btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" >Send</button>
+                        <button type="button" class="transportBtn btn btn-primary" >Send</button>
                     </div>
                 </form>
             </div>
@@ -936,9 +928,9 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('approve-transport') }}" method="post" name="transport-approve" id="transport-approve">
+                <form action="" method="post" name="transport-approve" id="transport-approve">
                     @csrf
-                    <input type="hidden" id="page" name="page" value='tiketall'/>
+                    <!-- <input type="hidden" id="page" name="page" value='tiketall'/> -->
                     <div class="modal-body">
                         <input type="hidden" id="sendlqa" name="sendlqa">
                         <input type="hidden" id="sendlpr" name="sendlpr">
@@ -955,18 +947,6 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="form-group">
-                            <label class="form-check-label" for="transno" disabled>Transport Number:</label>
-                            <textarea type="text" name="transno" class="form-control" id="transno" readonly></textarea>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="viewsendlqa" disabled>Status LQA :</label>
-                            <input type="text" name="viewsendlqa" class="form-control" id="viewsendlqa" readonly>
-                        </div> 
-                        <div class="form-group">
-                            <label class="form-check-label" for="viewsendlpr" disabled>Status LPR :</label>
-                            <input type="text" name="viewsendlpr" class="form-control" id="viewsendlpr" readonly>
-                        </div>  -->
                         <div class="form-group">
                             <label class="form-check-label" for="remark" disabled>Remark :</label>
                             <input type="text" name="remark" class="form-control" id="remark">
@@ -985,7 +965,7 @@
                         <button type="button" class="close-btn-approve btn btn-default" data-dismiss="modal">Close</button>
                         <div class="justify-content-between">
                             <button type="button" id ="reject-btn" name ="reject-btn" class="rejectBtn btn btn-danger">Reject</button>
-                            <button type="button" id ="approve-btn" name ="approve-btn" class="btn btn-primary" >Approve</button>
+                            <button type="button" id ="approve-btn" class="approveBtn btn btn-primary" >Approve</button>
                         </div>
                     </div>
                 </form>
@@ -1084,7 +1064,7 @@
                         <button type="button" class="close-btn-transported btn btn-default" data-dismiss="modal">Close</button>
                         <div class="justify-content-between">
                             <button type="button" id ="transported-reject-btn" name ="transported-reject-btn" class="rejectBtnTransported btn btn-danger">Reject</button>
-                            <button type="button" id ="transported-btn" name ="transported-btn" class="btn btn-success" >Transported</button>
+                            <button type="button" id ="transported-btn" class="transportedBtn btn btn-success" >Transported</button>
                         </div>
                     </div>
                 </form>
@@ -1158,18 +1138,18 @@
         });
 
         $('#approve-btn').prop('disabled', true);
-        $('#approve-btn').on('click', function() {
-            $('#transport-approve').submit();
-            $(this).attr('disabled', true);
-            $(this).text("Loading ...");
-        });
+        // $('#approve-btn').on('click', function() {
+        //     $('#transport-approve').submit();
+        //     $(this).attr('disabled', true);
+        //     $(this).text("Loading ...");
+        // });
 
         $('#transported-btn').prop('disabled', true);
-        $('#transported-btn').on('click', function() {
-            $('#transport-transported').submit();
-            $(this).attr('disabled', true);
-            $(this).text("Loading ...");
-        });
+        // $('#transported-btn').on('click', function() {
+        //     $('#transport-transported').submit();
+        //     $(this).attr('disabled', true);
+        //     $(this).text("Loading ...");
+        // });
 
         $('#reject-btn').prop('disabled', true);
         $('#transported-reject-btn').prop('disabled', true);
@@ -1251,6 +1231,7 @@
             $form.find('input[name="viewsendlpr"]').val(lpr);
             $form.find('input[name="sendlqa"]').val(sendlqa);
             $form.find('input[name="sendlpr"]').val(sendlpr);
+            document.getElementById("transid").value = "";
             $modal.modal('show');
         });
 
@@ -1350,11 +1331,6 @@
                 modulehide.hide();
             }
 
-            console.log(roleid)
-            console.log(division)
-            console.log(user_login)
-            console.log(assignid)
-            console.log(systemid)
             var hideeditbutton = $("#editbutton");
             hideeditbutton.hide();
             
@@ -1658,10 +1634,8 @@
                                 statusText = `<span class="badge badge-success">Waiting For User</span>`;
                             } else if(data == "MONITORING"){
                                 statusText = `<span class="badge badge-primary">Monitoring</span>`;
-                            } else if(data == "REQUEST TRANSPORT"){
-                                statusText = `<span class="badge badge-warning">Request Transport</span>`;
-                            } else if(data == "DONE TRANSPORT"){
-                                statusText = `<span class="badge badge-info">Done Transport</span>`;
+                            } else if(data == "TRANSPORT PROCESS"){
+                                statusText = `<span class="badge badge-info">Transport Process</span>`;
                             } else if(data == "TRAINING"){
                                 statusText = `<span class="badge badge-dark">TRAINING</span>`;
                             } else if(data == "WAITING FOR VENDOR"){
@@ -1782,10 +1756,6 @@
                     "sSearch": "Keyword:",
                     "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
                 },
-                drawCallback: function() {
-                    $btn_submit.text("Sumbit");
-                    $btn_submit.prop('disabled', false);
-                }
             });
         });
              
@@ -1848,6 +1818,174 @@
                 }
             });
         })
+
+        $(document).on('click', '.updateBtn', function() {
+            var ticketno = $('#modal-update-user form[name="update"] input[name="ticketno"]').val();
+            var moduleid = $('#modal-update-user form[name="update"] select[name="moduleid"]').val();
+            var assignto = $('#modal-update-user form[name="update"] select[name="assignto"]').val();
+            var category = $('#modal-update-user form[name="update"] select[name="category"]').val();
+            var comment_body = $('#modal-update-user form[name="update"] textarea[name="comment_body"]').val();
+            var priority = $('#modal-update-user form[name="update"] select[name="priority"]').val();
+            var objecttype = $('#modal-update-user form[name="update"] select[name="objecttype"]').val();
+            var detail = $('#modal-update-user form[name="update"] textarea[name="detail"]').val();
+            var targetdates = $('#modal-update-user form[name="update"] input[name="targetdates"]').val();
+            var status = $('#modal-update-user form[name="update"] select[name="status"]').val();
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "/edittiket",
+                data: {
+                    'ticketno' : ticketno, 
+                    'moduleid' : moduleid,
+                    'assignto' : assignto,
+                    'category' : category,
+                    'comment_body' : comment_body,
+                    'priority' : priority,
+                    'objecttype' : objecttype,
+                    'detail' : detail,
+                    'targetdates' : targetdates,
+                    'status' : status,
+                    
+                },
+                success: function(response){ 
+                    // console.log(response);
+                    alert(response);
+                    $('#modal-update-user').modal('hide');
+                    getCallback();
+                
+                  
+             
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            });
+        })
+
+        $(document).on('click', '.transportBtn', function() {
+            var checkedlqa = $("#lqa");
+            var checkedlpr = $("#lpr");
+
+            var checkedValueLqa = checkedlqa.is(':checked');
+            var checkedValueLpr = checkedlpr.is(':checked');
+
+            if (checkedValueLqa == true) {
+                var lpr = '';
+                var lqa = $('#modal-transport form[name="transport"] input[name="lqa"]').val();
+            } else if (checkedValueLpr == true){
+                var lpr = $('#modal-transport form[name="transport"] input[name="lpr"]').val();
+                var lqa = '';
+            }
+            
+            var opsi = $('#modal-transport form[name="transport"] select[name="opsi"]').val();
+            var ticketno = $('#modal-transport form[name="transport"] input[name="ticketno"]').val();
+            var transportid = $('#modal-transport form[name="transport"] select[name="transportid"]').val();
+            var transnumber = $('#modal-transport form[name="transport"] textarea[name="transnumber"]').val();
+            
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "/send/transport",
+                data: {
+                    'ticketno' : ticketno, 
+                    'lqa' : lqa,
+                    'lpr' : lpr,
+                    'transportid' : transportid,
+                    'opsi' : opsi,
+                    'transnumber' : transnumber
+                    
+                },
+                success: function(response){ 
+                    // console.log(response);
+                    alert(response);
+                    $('#modal-transport').modal('hide');
+                    getCallback();
+                    $("#history").load(" #history");
+                    document.getElementById("transport").reset();
+                    var showBtn = $("#btnhistorytrans1");
+                    var hideBtn = $("#btnhidetrans1");
+                    showBtn.show();
+                    hideBtn.hide();
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            });
+        })
+
+        $(document).on('click', '.approveBtn', function() {
+            var ticketno = $('#modal-transport-approve form[name="transport-approve"] input[name="ticketno"]').val();
+            var sendlqa = $('#modal-transport-approve form[name="transport-approve"] input[name="sendlqa"]').val();
+            var sendlpr = $('#modal-transport-approve form[name="transport-approve"] input[name="sendlpr"]').val();
+            var data_transportid = $('#modal-transport-approve form[name="transport-approve"] select[name="data_transportid[]"]').val();
+            var remark = $('#modal-transport-approve form[name="transport-approve"] input[name="remark"]').val();
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "/approve/transport",
+                data: {
+                    'ticketno' : ticketno, 
+                    'sendlqa' : sendlqa,
+                    'sendlpr' : sendlpr,
+                    'data_transportid' : data_transportid,
+                    'remark' : remark
+                    
+                },
+                success: function(response){ 
+                    // console.log(response);
+                    alert(response);
+                    $('#modal-transport-approve').modal('hide');
+                    getCallback();
+                    $("#history3").load(" #history3"); 
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            });
+        })
+
+        $(document).on('click', '.transportedBtn', function() {
+            var ticketno = $('#modal-transported form[name="transport-transported"] input[name="ticketno"]').val();
+            var sendlqa = $('#modal-transported form[name="transport-transported"] input[name="sendlqa"]').val();
+            var sendlpr = $('#modal-transported form[name="transport-transported"] input[name="sendlpr"]').val();
+            var data_transportid = $('#modal-transported form[name="transport-transported"] select[name="data_transportid[]"]').val();
+            var remark = $('#modal-transported form[name="transport-transported"] input[name="remark"]').val();
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "/transported/transport",
+                data: {
+                    'ticketno' : ticketno, 
+                    'sendlqa' : sendlqa,
+                    'sendlpr' : sendlpr,
+                    'data_transportid' : data_transportid,
+                    'remark' : remark
+                    
+                },
+                success: function(response){ 
+                    // console.log(response);
+                    alert(response);
+                    $('#modal-transported').modal('hide');
+                    getCallback();
+                    $("#history4").load(" #history4"); 
+                },
+                error: function (error) {
+                    console.error(error);
+                },
+            });
+        })
+
 
         $(document).on('click', '.rejectBtnTransported', function() {
             var ticketno = $('#modal-transported form[name="transport-transported"] input[name="ticketno"]').val();
@@ -2548,14 +2686,6 @@
             ajax: {
                 url: "{{ route('get-tiket') }}"
             },
-            beforeSend: function () {
-            $("#listCard").LoadingOverlay("show", {
-                background: "rgba(1, 56, 63, 0.5)"
-            });
-            },
-            complete: function () {
-                $("#listCard").LoadingOverlay("hide");
-            },
             order: [[ 10, "desc" ]],
             columns: [
                 {
@@ -2627,10 +2757,8 @@
                             statusText = `<span class="badge badge-success">Waiting For User</span>`;
                         } else if(data == "MONITORING"){
                             statusText = `<span class="badge badge-primary">Monitoring</span>`;
-                        } else if(data == "REQUEST TRANSPORT"){
-                            statusText = `<span class="badge badge-warning">Request Transport</span>`;
-                        } else if(data == "DONE TRANSPORT"){
-                            statusText = `<span class="badge badge-info">Done Transport</span>`;
+                        } else if(data == "TRANSPORT PROCESS"){
+                            statusText = `<span class="badge badge-info">Transport Process</span>`;
                         } else if(data == "TRAINING"){
                             statusText = `<span class="badge badge-dark">TRAINING</span>`;
                         } else if(data == "WAITING FOR VENDOR"){
@@ -2750,6 +2878,11 @@
 				"sSearch": "Keyword:",
 				"sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
 			},
+            // Callback: function() {
+            // //   $btn_submit.text("Sumbit");
+            // //   $btn_submit.prop('disabled', false);
+            //   getCallback();
+            // }
         });
 
         /* hide button */
@@ -2794,7 +2927,6 @@
         $(document).on('click', '.close-btn', function() {
                 $("#comment1").load(" #comment1");
                 $("#comment2").load(" #comment2");
-                $('#approve-btn').prop('disabled', true);
         });
         $(document).on('click', '.close-btn2-trans', function() {
                 $("#history").load(" #history");
@@ -2805,20 +2937,19 @@
                 hideBtn.hide();
         });
         $(document).on('click', '.close-btn-trans', function() {
-            document.getElementById("transport").reset();
                 $("#history").load(" #history");
                 $("#history1").load(" #history1");
-                $('#approve-btn').prop('disabled', true);
-                var showBtn = $("#btnhistorytrans1");
-                var hideBtn = $("#btnhidetrans1");
+                document.getElementById("transport").reset();
+                var showBtn = $("#btnhistorytrans");
+                var hideBtn = $("#btnhidetrans");
                 showBtn.show();
                 hideBtn.hide();
         });
         $(document).on('click', '.close-btn-approve', function() {
                 $('#approve-btn').prop('disabled', true);
                 $('#reject-btn').prop('disabled', true);
-                document.getElementById("transport-approve").reset();
                 $("#history3").load(" #history3"); 
+                document.getElementById("transport-approve").reset();
                 var showBtn = $("#btnhistoryapprove");
                 var hideBtn = $("#btnhideapprove");
                 showBtn.show();
@@ -2827,8 +2958,8 @@
         $(document).on('click', '.close-btn-transported', function() {
                 $('#transported-btn').prop('disabled', true);
                 $('#transported-reject-btn').prop('disabled', true);
-                document.getElementById("transport-transported").reset();
                 $("#history4").load(" #history4"); 
+                document.getElementById("transport-transported").reset();
                 var showBtn = $("#btnhistorytransported");
                 var hideBtn = $("#btnhidetransported");
                 showBtn.show();
@@ -2836,7 +2967,10 @@
         });
         $(document).on('click', '.close-btn-update', function() {
                 $("#update").load(" #update"); 
+                document.getElementById("desc").value = "";
+                document.getElementById("comnt").value = "";
         });
+        
 
         $(document).on('click', '.add-close', function() {
                 document.getElementById("add-form").reset();
@@ -2845,11 +2979,11 @@
         /* end */
 
         /* Button In View */ 
-        $(document).on('click', '.trq', function () {
-            $('#modal-transport').modal({backdrop: 'static', keyboard: false})  
-            $('#modal-view-user').modal('hide');
-            $('#modal-transport').modal('show');
-        })
+        // $(document).on('click', '.trq', function () {
+        //     $('#modal-transport').modal({backdrop: 'static', keyboard: false})  
+        //     $('#modal-view-user').modal('hide');
+        //     $('#modal-transport').modal('show');
+        // })
 
         $(document).on('click', '.edit', function () {
             var ticketno = $('#modal-view-user form[name="view1"] input[name="ticketno"]').val();
@@ -2863,7 +2997,7 @@
                     'ticketno' : ticketno,
                 },
                 success: function(response) {
-                    // $('#modal-view-user').modal('hide');
+                    $('#modal-view-user').modal('hide');
                    
                     var assignedto = response[0]['assignedto'];
                     var moduleid = response[0]['moduleid'];
@@ -3018,6 +3152,245 @@
         })
     }
 
+    function getCallback() {
+        var daterange = $('input[name="data_date_range"]').val();
+        var requestor = $('select[name="requestor"]  option:selected').val();
+        var assignto = $('select[name="assignto"] option:selected').val();
+        var assigntodiv = $('select[name="assigntodiv"] option:selected').val();
+        var status = $('select[name="status"] option:selected').val();
+        var ticketno = $('select[name="ticketno"] option:selected').val();
+        var module = $('select[name="modulefilter"] option:selected').val();
+        var system = $('select[name="systemfilter"] option:selected').val();
+        var typeticket = $('select[name="typeticket"] option:selected').val();
+        
+        $('#tiket_list').DataTable().clear().destroy();
+        var $dataticket = $('#tiket_list').DataTable({
+            destroy: true,
+            processing: true,
+            serverSide: true,
+            responsive: false,
+            searching: true,
+            fixedColumns: true,
+            scrollX: true,
+            // scrollY: 400,
+            scrollCollapse: true,
+            pageLength: 20,
+            dom: 'Blfrtip',
+            buttons: [
+                'excel'
+            ],
+            ajax: {
+                url: "{{ route('filter-tiket') }}",
+                "data": function (d) {
+                    d.daterange = $('input[name="data_date_range"]').val();
+                    d.requestor = $('select[name="requestor"] option:selected').val();
+                    d.assignto = $('select[name="assignto"] option:selected').val();
+                    d.assigntodiv = $('select[name="assigntodiv"] option:selected').val();
+                    d.status = $('select[name="status"] option:selected').val();
+                    d.ticketno = $('select[name="ticketno"] option:selected').val();
+                    d.module = $('select[name="modulefilter"] option:selected').val();
+                    d.system = $('select[name="systemfilter"] option:selected').val();
+                    d.typeticket = $('select[name="typeticket"] option:selected').val();
+                }
+            },
+            order: [[ 10, "desc" ]],
+            columns: [
+                {
+                    data: 'action',
+                    name: 'action',
+                },
+                {
+                    data: 'ticketno',
+                    render: function(data, type, row){
+                        return '<a href="javascript:void(0)" class="view btn btn-link"  data-division="'+row["division"]+'" data-roleid="'+row["roleid"]+'" data-userlogin="'+row["user_login"]+'" data-assigntoid="'+row["assignedto"]+'" data-ticket="'+row["ticketno"]+'" data-id="'+row["userid"]+'" data-statusid="'+row["statusid"]+'" data-requestor="'+row["requestor"]+'" data-status="'+row["status"]+'" data-category="'+row["category"]+'" data-priority="'+row["priority"]+'" data-priorid="'+row["priorid"]+'" data-subject="'+row["subject"]+'" data-detail="'+row["detail"]+'" data-assignto="'+row["assigned_to"]+'" data-created="'+row["createdby"]+'" data-approve="'+row["approvedby_1"]+'" data-upload="'+row["attachment"]+'" data-approve1name="'+row["approvedby1Name"]+'" data-approveitname="'+row["approvedbyitName"]+'" data-createdname="'+row["createdname"]+'" data-targetdate="'+row["targetdate"]+'" data-approvedby1="'+row["approvedby1_date"]+'" data-approvedbyit="'+row["approvedbyit_date"]+'" data-approvedby_1="'+row["approvedby_1"]+'" data-approvedby_it="'+row["approvedby_it"]+'" data-systemid="'+row["systemid"]+'" data-moduleid="'+row["moduleid"]+'" data-modulename="'+row["modulename"]+'" data-objectid="'+row["objectid"]+'" data-objectname="'+row["objectname"]+'" data-createdon="'+row["createdon"]+'" data-systemname="'+row["systemname"]+'">'+data+'</a>'
+                    }
+                    
+                },
+                {
+                    data: 'category',
+                    render: function(data) {
+                        if(data == 'INCIDENT'){
+                        statusText = `<span class="badge badge-danger">INCIDENT</span>`;
+                        } else if (data == 'CHANGE REQUEST'){
+                            statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
+                        } else if (data == 'HARDWARE'){
+                            statusText = `<span class="badge badge-info">HARDWARE</span>`;
+                        } else if (data == 'USER REQUEST'){
+                            statusText = `<span class="badge badge-warning">USER REQUEST</span>`;
+                        } else if (data == 'AUTHORIZATION'){
+                            statusText = `<span class="badge badge-dark">AUTHORIZATION</span>`;
+                        } else if (data == 'INTERNET ACCESS'){
+                            statusText = `<span class="badge badge-primary">INTERNET ACCESS</span>`;
+                        } else if (data == 'EMAIL'){
+                            statusText = `<span class="badge badge-dark">EMAIL ACCESS</span>`;
+                        } else if (data == 'INTERNET'){
+                            statusText = `<span class="badge badge-primary">INTERNET</span>`;
+                        } else if (data == 'DATA'){
+                            statusText = `<span class="badge badge-info">DATA</span>`;
+                        } else if (data == 'OTHER'){
+                            statusText = `<span class="badge badge-warning">OTHER</span>`;
+                        } else if (data == 'IMPROVEMENT'){
+                            statusText = `<span class="badge badge-primary">IMPROVEMENT</span>`;
+                        } else if (data == 'PROCEDURE'){
+                            statusText = `<span class="badge badge-info">PROCEDURE</span>`;
+                        } else if (data == 'INFRASTRUCTURE'){
+                            statusText = `<span class="badge badge-success">INFRASTRUCTURE</span>`;
+                        } else if (data == 'SOFTWARE'){
+                            statusText = `<span class="badge badge-dark">SOFTWARE</span>`;
+                        } else if(data == 'TRAINING'){
+                            statusText = `<span class="badge badge-info">TRAINING</span>`;
+                        } else {
+                            statusText = `<span class="badge badge-warning">VPN</span>`;
+                        }
+                        
+                        return statusText;
+                    }
+                },
+                {
+                    data: 'status',
+                    render: function (data){
+                        if(data == "CLOSED"){
+                        statusText = `<span class="badge badge-danger">Closed</span>`;
+                        } else if(data == "IN PROGRESS"){
+                            statusText = `<span class="badge badge-success">In Progress</span>`;
+                        } else if(data == "WAITING FOR APPROVAL"){
+                            statusText = `<span class="badge badge-warning">Waiting For Approval</span>`;
+                        } else if(data == "NOT STARTED"){
+                            statusText = `<span class="badge badge-dark">Not Started</span>`;
+                        } else if(data == "HOLD"){
+                            statusText = `<span class="badge badge-warning">Hold</span>`;
+                        } else if(data == "WAITING FOR USER"){
+                            statusText = `<span class="badge badge-success">Waiting For User</span>`;
+                        } else if(data == "MONITORING"){
+                            statusText = `<span class="badge badge-primary">Monitoring</span>`;
+                        } else if(data == "REQUEST TRANSPORT"){
+                            statusText = `<span class="badge badge-warning">Request Transport</span>`;
+                        } else if(data == "DONE TRANSPORT"){
+                            statusText = `<span class="badge badge-info">Done Transport</span>`;
+                        } else if(data == "TRAINING"){
+                            statusText = `<span class="badge badge-dark">TRAINING</span>`;
+                        } else if(data == "WAITING FOR VENDOR"){
+                            statusText = `<span class="badge badge-success">WAITING FOR VENDOR</span>`;
+                        } else if(data == "WAITING FOR PURCHASING"){
+                            statusText = `<span class="badge badge-success">WAITING FOR PURCHASING</span>`;
+                        } else if(data == "WAITING FOR ENGINEERING"){
+                            statusText = `<span class="badge badge-success">WAITING FOR ENGINEERING</span>`;
+                        } else {
+                            statusText = `<span class="badge badge-primary">Open</span>`;
+                        }
+                        return statusText;
+                    }
+                },
+                {
+                    data: 'requestor',
+                    name: 'requestor'
+                },
+                {
+                    data: 'assigned_to',
+                    name: 'assigned_to'
+                },
+                {
+                    data: 'subject',
+                    name: 'subject'
+                },
+                {
+                    data: 'systemname',
+                    name: 'systemname'
+                },
+                {
+                    data: 'modulename',
+                    name: 'modulename'
+                },
+                {
+                    data: 'objectname',
+                    name: 'objectname'
+                },
+                {
+                    data: 'createdon',
+                    render: function(data) {
+                        var today = new Date(data);
+                        var day = today.getDate() + "";
+                        var month = (today.getMonth() + 1) + "";
+                        var year = today.getFullYear() + "";
+                        var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                        var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                        var seconds = today.getSeconds() + "";
+
+                        day = day;
+                        month = month;
+                        year = year;
+                        hour = hour;
+                        minutes = minutes;
+                        seconds = seconds;
+                        // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                        var date = day + "/" + month + "/" + year;
+                        return date;   
+                    }
+                },
+                {
+                    data: 'targetdate',
+                    render: function(data) {
+                        // console.log(data);
+                        if(data == ''){
+                            var date = "";
+                        } else {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year;
+                        }
+                        return date;   
+                    }
+                },
+                {
+                    data: 'last_update',
+                    render: function(data) {
+                        if(data == ''){
+                            var date = "";
+                        } else {
+                            var today = new Date(data);
+                            var day = today.getDate() + "";
+                            var month = (today.getMonth() + 1) + "";
+                            var year = today.getFullYear() + "";
+                            var hour = (today.getHours() < 10 ? '0' : '') + today.getHours();
+                            var minutes = (today.getMinutes() < 10 ? '0' : '' ) + today.getMinutes();
+                            var seconds = today.getSeconds() + "";
+
+                            day = day;
+                            month = month;
+                            year = year;
+                            hour = hour;
+                            minutes = minutes;
+                            seconds = seconds;
+                            // console.log(day + "/" + month + "/" + year + " " + hour + ":" + minutes + ":" + seconds);
+                            var date = day + "/" + month + "/" + year + "," + hour + ":" + minutes + ":" + seconds;
+                        }
+                        return date;   
+                    }
+                },    
+            ],
+            oLanguage: {
+                "sLengthMenu": "Tampilkan _MENU_ data",
+                "sProcessing": "Loading...",
+                "sSearch": "Keyword:",
+                "sInfo": "Menampilkan _START_ - _END_ dari _TOTAL_ data" 	
+            },
+        });
+        
+    }
+
     function getTrqCreate(ticketno) {
         $.ajax({
             headers: {
@@ -3054,6 +3427,9 @@
                                 hide1.hide();
                                 hide2.show();
                             } else if (data["LQA"] == 1 && data["LPR"] == 1 && data["TRANSPORTEDLQA"] == 1 && data["TRANSPORTEDLPR"] == 1){
+                                hide1.hide();
+                                hide2.hide();
+                            } else {
                                 hide1.hide();
                                 hide2.hide();
                             }

@@ -23,13 +23,12 @@ class TransportController extends Controller
     }
 
     public function sendTransport(Request $request)
-    {    
+    {   
         $userid = Session::get('userid');
         $emailNameSender = Session::get('username');
         $emailSender = Session::get('usermail');
         $mgrid = Session::get('mgrid');
         $ticketno = $request->ticketno;
-        $page = $request->page;
         if($mgrid == null){
             $dataUser = DB::connection('pgsql')->table('master_data.m_user')
             ->where('userid', $userid)
@@ -42,21 +41,18 @@ class TransportController extends Controller
         $emailSendTo = $dataUser->usermail;
         $emailNameSendTo = $dataUser->username;
         
-        if (empty($request->lqa) && empty($request->lpr)){
-            if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("error", "Checked Box not Found");
-            } else {
-                return redirect()->route('tiket')->with("error", "Checked Box not Found");
-            }
+        if ($request->lqa == null && $request->lpr == null){
+            // return redirect()->route('tiket')->with("error", "Checked Box not Found");
+            return "Checked Box not Found";
         } else {
             /* Checked Opsi Transport */
-            if (empty($request->lqa)) {
+            if ($request->lqa == null) {
                 $lqa = '1';
                 $date_lqa = '';
                 $lpr = '1';
                 $date_lpr = date('Y-m-d H:i:s');
                 $status = 'Request To LPR';
-            } else if (empty($request->lpr)){
+            } else if ($request->lpr == null){
                 $lqa = '1';
                 $date_lqa = date('Y-m-d H:i:s');
                 $lpr = '0';
@@ -64,7 +60,7 @@ class TransportController extends Controller
                 $status = 'Request To LQA';
             } 
             /* end checked */
-
+           
             /* Checked Transport Number*/
             if($request->opsi == "exist"){
                 $transid = $request->transportid;
@@ -154,6 +150,7 @@ class TransportController extends Controller
                     ->update([
                         'statusid' => 'SD010',
                     ]);
+                    DB::commit();
                 } else {
                     $insert = DB::connection('pgsql')->table('helpdesk.t_transport')->insert([
                         'transportid' => $transportId,
@@ -170,6 +167,7 @@ class TransportController extends Controller
                     ->update([
                         'statusid' => 'SD010',
                     ]);
+                    DB::commit();
                 }
                 /* End */
             } else {
@@ -183,13 +181,9 @@ class TransportController extends Controller
             /* End */
 
             if($insert == true){
-                if($page == 'mytiket'){
-                    return redirect()->route('mytiket')->with("success", "request transport send successfully");
-                } else {
-                    return redirect()->route('tiket')->with("success", "request transport send successfully");
-                }
-            } else { 
-                return redirect()->back()->with("error", "error");
+                return "request send successfully";
+            } else {
+                return "Checked Box not Found";
             }
         }
     }
@@ -205,7 +199,7 @@ class TransportController extends Controller
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
         // $transno = $request->transno;
-        $page = $request->page;
+        // $page = $request->page;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
             $datelqa = '';
@@ -255,13 +249,14 @@ class TransportController extends Controller
         /* End */
 
         if($approve == true){
-            if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "approved send successfully");
-            } else {
-                return redirect()->route('tiket')->with("success", "approved send successfully");
-            }
+            return "approved send successfully";
+            // if($page == 'mytiket'){
+            //     return redirect()->route('mytiket')->with("success", "approved send successfully");
+            // } else {
+            //     return redirect()->route('tiket')->with("success", "approved send successfully");
+            // }
         } else { 
-            return redirect()->back()->with("error", "error");
+            return "Checked Box not Found";
         }
     }
 
@@ -361,7 +356,7 @@ class TransportController extends Controller
         $ticketno = $request->ticketno;
         $datatrq = $request->data_transportid;
         // $transno = $request->transno;
-        $page = $request->page;
+        // $page = $request->page;
 
         if($request->sendlqa == '1' && $request->sendlpr == '1'){
             $datelqa = '';
@@ -415,13 +410,14 @@ class TransportController extends Controller
         /* End */
 
         if($transported == true){
-            if($page == 'mytiket'){
-                return redirect()->route('mytiket')->with("success", "transported successfully");
-            } else {
-                return redirect()->route('tiket')->with("success", "transported successfully");
-            }
+            // if($page == 'mytiket'){
+            //     return redirect()->route('mytiket')->with("success", "transported successfully");
+            // } else {
+            //     return redirect()->route('tiket')->with("success", "transported successfully");
+            // }
+            return "transported send successfully";
         } else { 
-            return redirect()->back()->with("error", "error");
+            return "Checked Box not Found";
         }
     }
 
