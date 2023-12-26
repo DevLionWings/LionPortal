@@ -51,7 +51,7 @@ class Mail
         SendtoMail::to($emails)->send(new SendMail($mailData));
     }
 
-    public static function SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName)
+    public static function SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName, $emailDivision, $emailListcomment)
     {
         $username = Session::get('username');
         $useremail = Session::get('usermail');
@@ -85,13 +85,13 @@ class Mail
             'createdname' => $emailCreatedName
         );
        
-        SendtoMail::to($emails)->send(new SendMailUpdate($mailData));
+        SendtoMail::to($emails)->cc($emailListcomment)->bcc($emailDivision)->send(new SendMailUpdate($mailData));
     }
 
-    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated)
+    public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated, $emailDivision, $emailListcomment)
     {
         $emails = array($emailSign, $emailFrom, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated);
-      
+        
         $mailData = array(
             'comment' => $comment_body,
             'ticketno' => $ticketno,
@@ -99,7 +99,7 @@ class Mail
             'assigned_to' => $assignNameSign
         );
        
-        SendtoMail::to($emails)->send(new SendMailComment($mailData));
+        SendtoMail::to($emails)->cc($emailListcomment)->bcc($emailDivision)->send(new SendMailComment($mailData));
     }
 
     public static function SENDMAILBOOKROOM($newBookId, $subject, $desc, $startdate, $enddate, $starttime, $endtime, $assignNameBook, $emailBook, $emailBookBy, $assignNameBookBy, $roomName, $repeat, $status)

@@ -28,6 +28,7 @@ class CommentController extends Controller
         $useremail = Session::get('usermail');
         $mgrid = Session::get('mgrid');
         $roleid = Session::get('roleid');
+        $divisionid = Session::get('divisionid');
         $comment_body = $request->input('comment_body');
         $ticketno = $request->ticketno;
         $file = $request->file('files');
@@ -72,9 +73,8 @@ class CommentController extends Controller
                 'comment' => $request->comment_body,
                 'createdon' =>  date('Y-m-d H:i:s'),
             ]);
-            /* End */
-
             DB::commit();
+            /* End */
          
             if($request->status == 'WAITING FOR USER'){
                 /* Send Email */
@@ -86,16 +86,37 @@ class CommentController extends Controller
                 $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
                 $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
                 $dataCreated = DB::connection('pgsql')->table('master_data.m_user')->where('username', $createdby)->first();
+                $dataDivision = DB::connection('pgsql')->table('master_data.m_user')->where('divisionid', $divisionid)->get();
+                $arr_divisi = array();
+                foreach($dataDivision as $key => $value){
+                    array_push($arr_divisi, $value->usermail);
+                };
+                $dataCommentuser = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $ticketno)->get();
+                $arr_commentuser = array();
+                foreach($dataCommentuser as $key => $value){
+                    array_push($arr_commentuser, $value->senderid);
+                };
+                $dataEmailComment = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', $arr_commentuser)->get();
+                $arr_emailcomment = array();
+                foreach($dataEmailComment as $key => $value){
+                    array_push($arr_emailcomment, trim($value->usermail));
+                };
+            
+                $emailFrom = trim($useremail);
+                $assignNameSign = trim($dataAssign->username);
+                $emailSign =  trim($dataAssign->usermail);
+                $emailMgrIt =  trim($dataMgrIt->usermail);
+                $emailMgrUser =  trim($dataMgrUser->usermail);
+                $emailRequestor = trim($dataReq->usermail);
+                $emailCreated = trim($dataCreated->usermail);
 
-                $emailFrom = $useremail;
-                $assignNameSign = $dataAssign->username;
-                $emailSign =  $dataAssign->usermail;
-                $emailMgrIt =  $dataMgrIt->usermail;
-                $emailMgrUser =  $dataMgrUser->usermail;
-                $emailRequestor = $dataReq->usermail;
-                $emailCreated = $dataCreated->usermail;
+                $impSmailDivision = implode(',',$arr_divisi);
+                $impemailListcomment= implode(',',$arr_emailcomment);
 
-                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated);
+                $emailDivision = explode(',',trim($impSmailDivision));
+                $emailListcomment = explode(',',trim($impemailListcomment));
+
+                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated, $emailDivision, $emailListcomment);
                 /* End Send Email */
             } else {
                 /* Send Email */
@@ -107,16 +128,38 @@ class CommentController extends Controller
                 $dataMgrUser = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $mgrUser)->first();
                 $dataReq = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $requestor)->first();
                 $dataCreated = DB::connection('pgsql')->table('master_data.m_user')->where('username', $createdby)->first();
-
-                $emailFrom = $useremail;
-                $assignNameSign = $dataAssign->username;
-                $emailSign =  $dataAssign->usermail;
-                $emailMgrIt =  $dataMgrIt->usermail;
+                $dataDivision = DB::connection('pgsql')->table('master_data.m_user')->where('divisionid', $divisionid)->get();
+                $arr_divisi = array();
+                foreach($dataDivision as $key => $value){
+                    array_push($arr_divisi, $value->usermail);
+                };
+                $dataCommentuser = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $ticketno)->get();
+                $arr_commentuser = array();
+                foreach($dataCommentuser as $key => $value){
+                    array_push($arr_commentuser, $value->senderid);
+                };
+                
+                $dataEmailComment = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', $arr_commentuser)->get();
+                $arr_emailcomment = array();
+                foreach($dataEmailComment as $key => $value){
+                    array_push($arr_emailcomment, trim($value->usermail));
+                };
+                
+                $emailFrom = trim($useremail);
+                $assignNameSign = trim($dataAssign->username);
+                $emailSign =  trim($dataAssign->usermail);
+                $emailMgrIt =  trim($dataMgrIt->usermail);
                 $emailMgrUser =  'blank@lionwings.com';
                 $emailRequestor = 'blank@lionwings.com';
-                $emailCreated = $dataCreated->usermail;
+                $emailCreated = trim($dataCreated->usermail);
 
-                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated);
+                $impSmailDivision = implode(',',$arr_divisi);
+                $impemailListcomment= implode(',',$arr_emailcomment);
+
+                $emailDivision = explode(',',trim($impSmailDivision));
+                $emailListcomment = explode(',',trim($impemailListcomment));
+
+                $SendMail = $this->mail->SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated, $emailDivision, $emailListcomment);
                 /* End Send Email */
             }
         

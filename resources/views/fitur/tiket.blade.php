@@ -1130,10 +1130,7 @@
             width: '100%',
         });
 
-        $('.datepicker').daterangepicker({
-            autoUpdateInput: false,
-           
-        });
+        $('.datepicker').daterangepicker();
 
         $('#save-btn').on('click', function() {
             $('#add-form').submit();

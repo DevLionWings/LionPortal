@@ -430,7 +430,7 @@ class TiketController extends Controller
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
                         $managerItBtn = $viewTransBtn;
-                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
+                    } else {
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
@@ -506,7 +506,6 @@ class TiketController extends Controller
             ->rawColumns(['action'])
             ->setTotalRecords($json["total"])
             ->setFilteredRecords($json["total"])
-            ->skipPaging()
             ->make(true);
     }
 
@@ -775,7 +774,7 @@ class TiketController extends Controller
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
                         $managerItBtn = $viewTransBtn;
-                    } else if ($value['status_trans_lqa'] == '1' && $value['status_trans_lpr'] == '1'){
+                    } else {
                         $infBtn = $viewTransBtn;
                         $sapBtn = $viewTransBtn;
                         $headBtn = $viewTransBtn;
@@ -850,7 +849,6 @@ class TiketController extends Controller
                 }
             })
             ->rawColumns(['action'])
-            ->addIndexColumn()
             ->setTotalRecords($json["total"])
             ->setFilteredRecords($json["total"])
             ->skipPaging()
@@ -1231,6 +1229,7 @@ class TiketController extends Controller
         $userid = Session::get('userid');
         $roleid = Session::get('roleid');
         $mgrid = Session::get('mgrid');
+        $divisionid = Session::get('divisionid');
         $ticketno = $request->ticketno;
         $assignto = $request->assignto;
         $assignName = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $assignto)->first();
@@ -1300,6 +1299,23 @@ class TiketController extends Controller
         /* Get User Email */ 
         $emailADD = $this->validate->GETUSEREMAIL($flag, $userreq, $assignto, $mgrIt, $mgrUser, $userid, $category, $roleid);
         $emailCreated = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $createdby)->first();
+
+        $dataDivision = DB::connection('pgsql')->table('master_data.m_user')->where('divisionid', $divisionid)->get();
+        $arr_divisi = array();
+        foreach($dataDivision as $key => $value){
+            array_push($arr_divisi, $value->usermail);
+        };
+        $dataCommentuser = DB::connection('pgsql')->table('helpdesk.t_discussion')->where('ticketno', $ticketno)->get();
+        $arr_commentuser = array();
+        foreach($dataCommentuser as $key => $value){
+            array_push($arr_commentuser, $value->senderid);
+        };
+        
+        $dataEmailComment = DB::connection('pgsql')->table('master_data.m_user')->whereIn('userid', $arr_commentuser)->get();
+        $arr_emailcomment = array();
+        foreach($dataEmailComment as $key => $value){
+            array_push($arr_emailcomment, trim($value->usermail));
+        };
        
         $emailSign = $assignName->usermail;
         $emailReq = $emailADD['emailReq'];
@@ -1308,9 +1324,14 @@ class TiketController extends Controller
         $emailApproveit =  $emailADD['emailApproveit'];
         $emailCreatedName = $emailCreated->username;
         $emailCreated = $emailCreated->usermail;
+        $impSmailDivision = implode(',',$arr_divisi);
+        $impemailListcomment= implode(',',$arr_emailcomment);
+
+        $emailDivision = explode(',',trim($impSmailDivision));
+        $emailListcomment = explode(',',trim($impemailListcomment));
         /* End */
         
-        $SendMail = $this->mail->SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName); 
+        $SendMail = $this->mail->SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName, $emailDivision, $emailListcomment); 
 
         if($update == true){
             return "update ticket successfully";
