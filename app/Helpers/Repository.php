@@ -983,7 +983,7 @@ class Repository
         return json_encode($response);   
     }
 
-    public static function GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module, $typeticket, $divisionid, $start, $length)
+    public static function GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module, $typeticket, $divisionid, $start, $length, $keyword)
     {   
         // $start_date = "2023-06-01";
         // $end_date = "2023-06-19";
@@ -1018,6 +1018,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->count();
                     
                         $data =  DB::connection('pgsql')->table('helpdesk.t_ticket as a')
@@ -1044,6 +1046,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
                             ->limit($length)
@@ -1077,6 +1081,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->count();
             
                         $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
@@ -1106,6 +1112,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
                             ->limit($length)
@@ -1139,6 +1147,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date]) 
                             ->count();
                     
@@ -1166,6 +1176,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
@@ -1200,6 +1212,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->count();
             
@@ -1230,6 +1244,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
@@ -1239,7 +1255,7 @@ class Repository
                     }
                 }
             } else {
-                if($start_date == $end_date && $ticketno == '%' && $requestor == '%' && $assignto == '%' && $status == '%' && $system == '%' && $module == '%'){
+                if($start_date == $end_date && $ticketno == '%' && $requestor == '%' && $assignto == '%' && $status == '%' && $system == '%' && $module == '%' && $keyword == null){
                     if($roleid == 'RD009'){
                         $count = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
                             ->join('master_data.m_user as b', 'a.userid', '=', 'b.userid')
@@ -1418,6 +1434,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->count();
     
@@ -1446,6 +1464,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
                             ->limit($length)
@@ -1477,6 +1497,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->count();
             
@@ -1506,6 +1528,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
                             ->limit($length)
@@ -1535,6 +1559,8 @@ class Repository
                             ->where('a.userid', 'LIKE','%'.$requestor.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->count();
         
                         $data = DB::connection('pgsql')->table('helpdesk.t_ticket as a')
@@ -1561,6 +1587,8 @@ class Repository
                             ->where('a.userid', 'LIKE','%'.$requestor.'%') 
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
                             ->limit($length)
@@ -1593,6 +1621,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->count();
@@ -1622,6 +1652,8 @@ class Repository
                             ->where('a.assignedto', 'LIKE','%'.$assignto.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
@@ -1653,6 +1685,8 @@ class Repository
                             ->where('a.userid', 'LIKE','%'.$requestor.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->count();
@@ -1682,6 +1716,8 @@ class Repository
                             ->where('a.userid', 'LIKE','%'.$requestor.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)
@@ -1712,6 +1748,8 @@ class Repository
                             ->where('a.userid', 'LIKE','%'.$requestor.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->count();
         
@@ -1739,6 +1777,8 @@ class Repository
                             ->where('a.userid', 'LIKE','%'.$requestor.'%')
                             ->where('a.moduleid', 'LIKE','%'.$module.'%')
                             ->where('a.systemid', 'LIKE','%'.$system.'%')
+                            ->where('a.subject', 'LIKE','%'.$keyword.'%')
+                            ->orWhere('a.detail', 'LIKE','%'.$keyword.'%')
                             ->whereBetween(DB::raw('DATE(a.createdon)'), [$start_date, $end_date])
                             ->orderBy('a.ticketno', 'desc')
                             ->offset($start)

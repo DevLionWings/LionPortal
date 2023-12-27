@@ -161,9 +161,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Keyword :</label>
+                                        <input type="text" name="keyword" class="form-control" id="keyword" placeholder="search by subject & detail">
+                                    </div>
+                                </div>
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" ><i class="fas fa-search"></i></button>
+                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" ><i class="fas fa-search"></i> Search</button>
                                         <input type="hidden" id="roleidsession" name="roleidsession" value="{{ session('roleid') }}">
                                     </div>
                                 </div>
@@ -1529,6 +1535,7 @@
             var module = $('select[name="modulefilter"] option:selected').val();
             var system = $('select[name="systemfilter"] option:selected').val();
             var typeticket = $('select[name="typeticket"] option:selected').val();
+            var keyword = $('input[name="keyword"]').val();
            
             $('#tiket_list').DataTable().clear().destroy();
             var $dataticket = $('#tiket_list').DataTable({
@@ -1548,6 +1555,7 @@
                     url: "{{ route('filter-tiket') }}",
                     "data": function (d) {
                         d.daterange = $('input[name="data_date_range"]').val();
+                        d.keyword = $('input[name="keyword"]').val();
                         d.requestor = $('select[name="requestor"] option:selected').val();
                         d.assignto = $('select[name="assignto"] option:selected').val();
                         d.assigntodiv = $('select[name="assigntodiv"] option:selected').val();

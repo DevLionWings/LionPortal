@@ -537,9 +537,10 @@ class TiketController extends Controller
         $typeticket = $request->typeticket;
         $start = $request->start;
         $length = $request->length;
+        $keyword = $request->keyword;
         
         /* Get Filter Ticket */
-        $dataFilter = $this->repository->GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module, $typeticket, $divisionid, $start, $length);
+        $dataFilter = $this->repository->GETFILTERTIKET($userid, $ticketno, $requestor, $assignto, $status, $start_date, $end_date, $roleid, $system, $module, $typeticket, $divisionid, $start, $length, $keyword);
         $json = json_decode($dataFilter, true);
         
         $dat = '';
