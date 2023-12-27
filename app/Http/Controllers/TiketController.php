@@ -506,6 +506,7 @@ class TiketController extends Controller
             ->rawColumns(['action'])
             ->setTotalRecords($json["total"])
             ->setFilteredRecords($json["total"])
+            ->skipPaging()
             ->make(true);
     }
 

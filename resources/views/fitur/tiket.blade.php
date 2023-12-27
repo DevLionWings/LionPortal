@@ -1232,7 +1232,6 @@
             $form.find('input[name="viewsendlpr"]').val(lpr);
             $form.find('input[name="sendlqa"]').val(sendlqa);
             $form.find('input[name="sendlpr"]').val(sendlpr);
-            document.getElementById("transid").value = "";
             $modal.modal('show');
         });
 
@@ -1537,11 +1536,9 @@
                 processing: true,
                 serverSide: true,
                 responsive: false,
-                searching: true,
+                searching: false,
                 fixedColumns: true,
                 scrollX: true,
-                // scrollY: 400,
-                scrollCollapse: true,
                 pageLength: 20,
                 dom: 'Blfrtip',
                 buttons: [
@@ -1948,6 +1945,7 @@
                     $('#modal-transport-approve').modal('hide');
                     getCallback();
                     $("#history3").load(" #history3"); 
+                    document.getElementById("transport-approve").reset();
                 },
                 error: function (error) {
                     console.error(error);
@@ -1982,6 +1980,7 @@
                     $('#modal-transported').modal('hide');
                     getCallback();
                     $("#history4").load(" #history4"); 
+                    document.getElementById("transport-transported").reset();
                 },
                 error: function (error) {
                     console.error(error);
@@ -2676,7 +2675,7 @@
             processing: true,
             serverSide: true,
             responsive: false,
-            searching: true,
+            searching: false,
             fixedColumns: true,
             scrollX: true,
             // scrollY: 400,
