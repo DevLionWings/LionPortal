@@ -161,7 +161,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label>Keyword :</label>
                                         <input type="text" name="keyword" class="form-control" id="keyword" placeholder="search by subject & detail">
