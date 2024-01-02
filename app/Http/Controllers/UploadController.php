@@ -9,10 +9,10 @@ class UploadController extends Controller
 {
     public function viewUpload()
     {
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        }
+        // $isLogin = Session::get('status_login');
+        // if($isLogin != 1) {
+        //     return redirect()->route('login-page');
+        // }
 
         return view('fitur.tiket');
     }

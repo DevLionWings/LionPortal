@@ -26,10 +26,10 @@ class ViewroomController extends Controller
 
     public function viewRoom(Request $request)
     {
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        }
+        // $isLogin = Session::get('status_login');
+        // if($isLogin != 1) {
+        //     return redirect()->route('login-page');
+        // }
         
         return view('fitur.viewroom');
     }

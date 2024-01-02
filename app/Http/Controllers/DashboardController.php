@@ -27,48 +27,58 @@ class DashboardController extends Controller
         $password = trim(Session::get('password'));
         $roleid = trim(Session::get('roleid'));
         $departid = trim(Session::get('departmentid'));
+        $sys = '';
 
-        $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
-        $json = json_decode($datLogin);
-        
-        if ($json->rc == 00){
-            $data = $json->data;
-            $status_login = $data->status_login;
-            if ($data == [] || $status_login == 0) {
-                return redirect()->route('login')
-                ->withErrors('please login first');
-            } else {
-                $session = array(
-                    'status_login' => $status_login
-                );
-                Session::put('status_login', $status_login);
-                
-                if ($roleid == 'RD011' || $roleid == 'RD012'){
-                    return redirect()->route('admin-index')
-                    ->withSuccess('You have successfully logged in!');
-                } else if ($departid != 'DD001'){
-                    return view('fitur.absensi');
-                } else {
-                    return view('auth.dashboard');
-                }
-            }
-        } else {
-            // $flushSessions = session()->flush();
-            return redirect()->route('login');
+        $dataSystem = DB::connection('pgsql')->table('master_data.m_system')->get();
+
+        $dataTrimArray = [];
+        foreach ($dataSystem as $key => $value) {
+            array_push($dataTrimArray, [
+                "NAME" => trim($value->description),
+                "ID" => trim($value->systemid)
+            ]);
         }
-        $session = array(
-            'status_login' => $status_login
-        );
-        Session::put('status_login', $status_login);
+        
+        $data['sys'] = $dataTrimArray; 
 
         if ($roleid == 'RD011'){
             return redirect()->route('admin-index')
             ->withSuccess('You have successfully logged in!');
         } else if ($departid != 'DD001'){
-            return view('fitur.absensi');
+            return view('fitur.absensi', $data);
         } else {
-            return view('auth.dashboard');
+            return view('auth.dashboard', $data);
         }
+
+        // $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
+        // $json = json_decode($datLogin);
+        
+        // if ($json->rc == 00){
+        //     $data = $json->data;
+        //     $status_login = $data->status_login;
+        //     if ($data == [] || $status_login == 0) {
+        //         return redirect()->route('login')
+        //         ->withErrors('please login first');
+        //     } else {
+        //         $session = array(
+        //             'status_login' => $status_login
+        //         );
+        //         Session::put('status_login', $status_login);
+
+        //         if ($roleid == 'RD011' || $roleid == 'RD012'){
+        //             return redirect()->route('admin-index')
+        //             ->withSuccess('You have successfully logged in!');
+        //         } else if ($departid != 'DD001'){
+        //             return view('fitur.absensi', $data);
+        //         } else {
+        //             return view('auth.dashboard', $data);
+        //         }
+        //     }
+        // } else {
+        //     // $flushSessions = session()->flush();
+        //     return redirect()->route('login');
+        // }
+         
     }
     
 }

@@ -29,10 +29,10 @@ class KwitansiController extends Controller
 
     public function kwitansi(Request $request)
     {
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        } 
+        // $isLogin = Session::get('status_login');
+        // if($isLogin != 1) {
+        //     return redirect()->route('login-page');
+        // } 
 
         $cate = '';
 

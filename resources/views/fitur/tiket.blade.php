@@ -161,7 +161,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Keyword :</label>
                                         <input type="text" name="keyword" class="form-control" id="keyword" placeholder="search by subject & detail">
@@ -169,7 +169,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="form-group">
-                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" ><i class="fas fa-search"></i> Search</button>
+                                        <button id="ticket" name="ticket" class="ticket btn-submit btn btn-secondary" ><i class="fas fa-search"></i></button>
                                         <input type="hidden" id="roleidsession" name="roleidsession" value="{{ session('roleid') }}">
                                     </div>
                                 </div>

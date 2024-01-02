@@ -27,10 +27,10 @@ class MeetingroomController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        }
+        // $isLogin = Session::get('status_login');
+        // if($isLogin != 1) {
+        //     return redirect()->route('login-page');
+        // }
 
         $usreq = '';
         $rmid = '';
@@ -316,10 +316,10 @@ class MeetingroomController extends Controller
         $rmid = '';
         $tm = '';
         
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        }
+        // $isLogin = Session::get('status_login');
+        // if($isLogin != 1) {
+        //     return redirect()->route('login-page');
+        // }
 
         $dataRoom = DB::connection('pgsql')->table('master_data.m_meeting_room')->get();
 

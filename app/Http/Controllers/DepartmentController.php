@@ -19,10 +19,10 @@ class DepartmentController extends Controller
 
     public function index(Request $request)
     {
-        $isLogin = Session::get('status_login');
-        if($isLogin != 1) {
-            return redirect()->route('login-page');
-        }
+        // $isLogin = Session::get('status_login');
+        // if($isLogin != 1) {
+        //     return redirect()->route('login-page');
+        // }
 
         return view('fitur.masterdepartment');
     }

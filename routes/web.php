@@ -89,7 +89,9 @@ Route::group(['middleware' => ['isLogin']], function () {
 /* Chart-Today */ 
 Route::group(['middleware' => ['isLogin']], function () {
     Route::get('get/stattoday', [ChartController::class, 'getStatToday'])->name('get.stat');
+    Route::get('get/all', [ChartController::class, 'getDataTicketingAll'])->name('get.all');
     Route::get('get/month', [ChartController::class, 'getDataTicketingMonth'])->name('get.month');
+    Route::get('get/today', [ChartController::class, 'getDataTicketingToday'])->name('get.today');
     Route::get('get/year', [ChartController::class, 'getDataTicketingYear'])->name('get.year');
 });
 
