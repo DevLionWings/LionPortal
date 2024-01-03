@@ -1334,7 +1334,7 @@ class TiketController extends Controller
         /* End */
         
         $SendMail = $this->mail->SENDMAILUPDATE($ticketno, $category, $cateName, $priority, $priorityName, $subject, $remark, $note, $status, $statusid, $comment_body, $assign, $assignNameSign, $emailSign, $emailReq, $emailApprove1, $emailCreated, $emailCreatedName, $emailDivision, $emailListcomment); 
-
+        
         if($update == true){
             return "update ticket successfully";
             // return redirect()->back()->with("success", "update ticket successfully");

@@ -41,14 +41,34 @@ class DashboardController extends Controller
         
         $data['sys'] = $dataTrimArray; 
 
-        if ($roleid == 'RD011'){
-            return redirect()->route('admin-index')
-            ->withSuccess('You have successfully logged in!');
-        } else if ($departid != 'DD001'){
-            return view('fitur.absensi', $data);
-        } else {
-            return view('auth.dashboard', $data);
+        $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
+        $json = json_decode($datLogin);
+        if ($json->rc == 01){
+            return redirect()->route('login')
+            ->withErrors('please login first');
         }
+        if ($json->data->status_login == 0) {
+            return redirect()->route('login')
+            ->withErrors('please login first');
+        } else {
+            if ($roleid == 'RD011' || $roleid == 'RD012'){
+                return redirect()->route('admin-index')
+                ->withSuccess('You have successfully logged in!');
+            } else if ($departid != 'DD001'){
+                return view('fitur.absensi', $data);
+            } else {
+                return view('auth.dashboard', $data);
+            }
+        }
+
+        // if ($roleid == 'RD011'){
+        //     return redirect()->route('admin-index')
+        //     ->withSuccess('You have successfully logged in!');
+        // } else if ($departid != 'DD001'){
+        //     return view('fitur.absensi', $data);
+        // } else {
+        //     return view('auth.dashboard', $data);
+        // }
 
         // $datLogin = $this->repository->GETUSER(Session::get('userid'), $password);
         // $json = json_decode($datLogin);

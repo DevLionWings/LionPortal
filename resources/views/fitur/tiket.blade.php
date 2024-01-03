@@ -3222,7 +3222,7 @@
                     data: 'category',
                     render: function(data) {
                         if(data == 'INCIDENT'){
-                        statusText = `<span class="badge badge-danger">INCIDENT</span>`;
+                            statusText = `<span class="badge badge-danger">INCIDENT</span>`;
                         } else if (data == 'CHANGE REQUEST'){
                             statusText = `<span class="badge badge-success">CHANGE REQUEST</span>`;
                         } else if (data == 'HARDWARE'){
@@ -3262,7 +3262,7 @@
                     data: 'status',
                     render: function (data){
                         if(data == "CLOSED"){
-                        statusText = `<span class="badge badge-danger">Closed</span>`;
+                            statusText = `<span class="badge badge-danger">Closed</span>`;
                         } else if(data == "IN PROGRESS"){
                             statusText = `<span class="badge badge-success">In Progress</span>`;
                         } else if(data == "WAITING FOR APPROVAL"){
@@ -3275,12 +3275,12 @@
                             statusText = `<span class="badge badge-success">Waiting For User</span>`;
                         } else if(data == "MONITORING"){
                             statusText = `<span class="badge badge-primary">Monitoring</span>`;
-                        } else if(data == "REQUEST TRANSPORT"){
-                            statusText = `<span class="badge badge-warning">Request Transport</span>`;
-                        } else if(data == "DONE TRANSPORT"){
-                            statusText = `<span class="badge badge-info">Done Transport</span>`;
+                        } else if(data == "TRANSPORT PROCESS"){
+                            statusText = `<span class="badge badge-info">Transport Process</span>`;
+                        } else if(data == "DEVELOPMENT"){
+                            statusText = `<span class="badge badge-warning">Development</span>`;
                         } else if(data == "TRAINING"){
-                            statusText = `<span class="badge badge-dark">TRAINING</span>`;
+                            statusText = `<span class="badge badge-dark">Training</span>`;
                         } else if(data == "WAITING FOR VENDOR"){
                             statusText = `<span class="badge badge-success">WAITING FOR VENDOR</span>`;
                         } else if(data == "WAITING FOR PURCHASING"){

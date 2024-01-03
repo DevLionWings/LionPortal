@@ -55,6 +55,13 @@ class Mail
     {
         $username = Session::get('username');
         $useremail = Session::get('usermail');
+
+        if($emailListcomment == [""]){
+            $emailComment = 'blank@lionwings.com';
+        } else {
+            $emailComment = $emailListcomment;
+        }
+
         if($useremail == null || $emailSign == null || $emailReq == null || $emailApprove1 == null){
             $emails = array(
                     $useremail => 'blank@lionwings.com',
@@ -66,7 +73,7 @@ class Mail
         } else {
             $emails = array($useremail, $emailSign, $emailReq, $emailApprove1, $emailCreated);
         }
-       
+        
         $mailData = array(
             'username' => $username,
             'ticketno' => $ticketno,
@@ -85,7 +92,7 @@ class Mail
             'createdname' => $emailCreatedName
         );
        
-        SendtoMail::to($emails)->cc($emailListcomment)->bcc($emailDivision)->send(new SendMailUpdate($mailData));
+        SendtoMail::to($emails)->cc($emailComment)->bcc($emailDivision)->send(new SendMailUpdate($mailData));
     }
 
     public static function SENDMAILCOMMENT($ticketno, $comment_body, $assignNameSign, $emailSign, $emailFrom, $detail, $emailMgrIt, $emailMgrUser, $emailRequestor, $emailCreated, $emailDivision, $emailListcomment)

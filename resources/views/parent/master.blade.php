@@ -192,8 +192,8 @@
             idleTime = idleTime + 1;
             var userid = {{ Session::get('userid') }};
             // console.log("This is javascript session" + userid);
-            if( userid != '111111'){
-                if (idleTime > 15 && !isIdle) { // 15 minutes
+            if( userid != '111111' || userid != '000000'){
+                if (idleTime > 5 && !isIdle) { // 15 minutes
                     isIdle = true;
                     // alert("Session timeout");
                     var url = "{{ route('login') }}";

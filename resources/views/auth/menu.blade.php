@@ -30,7 +30,7 @@
           </a>
         </li>
         @endif
-        @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD006' || session('roleid')  == 'RD004')
+        @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD006' || session('roleid')  == 'RD004' || session('roleid')  == 'RD000')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa fa-database"></i>
@@ -39,6 +39,7 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          @if(session('roleid')  == 'RD000')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('user') }}" class="nav-link" type="submit" id="m-user"><i class="far fa-circle nav-icon"></i>
@@ -48,6 +49,8 @@
               </a>
             </li>
           </ul>
+          @endif
+          @if(session('roleid')  != 'RD000')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('counter') }}" class="nav-link" type="submit" id="m-counter"><i class="far fa-circle nav-icon"></i>
@@ -57,6 +60,8 @@
               </a>
             </li>
           </ul>
+          @endif
+          @if(session('roleid')  != 'RD000')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('category') }}" class="nav-link" type="submit" id="m-category"><i class="far fa-circle nav-icon"></i>
@@ -66,6 +71,8 @@
               </a>
             </li>
           </ul>
+          @endif
+          @if(session('roleid')  != 'RD000')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('department') }}" class="nav-link" type="submit" id="m-department"><i class="far fa-circle nav-icon"></i>
@@ -75,6 +82,8 @@
               </a>
             </li>
           </ul>
+          @endif
+          @if(session('roleid')  != 'RD000')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('role') }}" class="nav-link" type="submit" id="m-role"><i class="far fa-circle nav-icon"></i>
@@ -84,6 +93,8 @@
               </a>
             </li>
           </ul>
+          @endif
+          @if(session('roleid')  != 'RD000')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('plant') }}" class="nav-link" type="submit" id="m-plant"><i class="far fa-circle nav-icon"></i>
@@ -95,7 +106,8 @@
           </ul>
         </li>
         @endif
-        @if(session('roleid')  != 'RD011')
+        @endif
+        @if(session('roleid')  != 'RD000' && session('roleid')  != 'RD011')
         <li class="nav-item">
           <a href="{{ url('absensi') }}" class="nav-link" type="submit" id="m-Attendance"><i class="nav-icon fas fa-calendar-check"></i>
             <p>
@@ -191,6 +203,7 @@
           </ul>
           @endif
         </li>
+        @if(session('roleid')  != 'RD000')
         <li class="nav-item">
           <a href="#" class="nav-link" >
             <i class="nav-icon fas fa-door-open"></i>
@@ -199,6 +212,7 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          @endif
           @if(session('roleid')  == 'RD001' || session('roleid')  == 'RD011' || session('roleid')  == 'RD012' || session('roleid')  == 'RD006')
           <ul class="nav nav-treeview">
             <li class="nav-item">
