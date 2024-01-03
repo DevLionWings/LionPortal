@@ -39,7 +39,7 @@
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          @if(session('roleid')  == 'RD000')
+          @if(session('roleid')  == 'RD000' || session('roleid')  == 'RD001')
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ url('user') }}" class="nav-link" type="submit" id="m-user"><i class="far fa-circle nav-icon"></i>
