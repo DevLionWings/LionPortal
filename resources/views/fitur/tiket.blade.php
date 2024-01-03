@@ -1863,6 +1863,9 @@
                     alert(response);
                     $('#modal-update-user').modal('hide');
                     getCallback();
+                    $("#update").load(" #update"); 
+                    document.getElementById("desc").value = "";
+                    document.getElementById("comnt").value = "";
                 
                   
              
