@@ -37,10 +37,15 @@ class LoginController extends Controller
         $date = date('Y-m-d H:i:s');
        
         try {
-            $update = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->update([
-                'status_login' => 1,
-                'createdon' => $date
-            ]);
+            if($userid == '000000'){
+                $update = true;
+            } else {
+                $update = DB::connection('pgsql')->table('master_data.m_user')->where('userid', $userid)->update([
+                    'status_login' => 1,
+                    'createdon' => $date
+                ]);
+            }
+           
             DB::commit();
             if(!empty($update)){
                 return response()->json([

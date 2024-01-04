@@ -161,11 +161,13 @@ class Repository
                 $countfilter = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
+                    ->orderBy('tgl', 'desc')
                     ->count();
 
                 $data = DB::connection('pgsql')->table('absensi.kartuabsensi')
                     ->whereIn('id', $arr_user)
                     ->whereBetween(DB::raw('DATE(tgl)'), [$start_date, $end_date])
+                    ->orderBy('tgl', 'desc')
                     ->offset($start)
                     ->limit($length)
                     ->get();

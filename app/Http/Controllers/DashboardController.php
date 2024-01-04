@@ -47,7 +47,7 @@ class DashboardController extends Controller
             return redirect()->route('login')
             ->withErrors('please login first');
         }
-        if ($json->data->status_login == 0) {
+        if ($json->data->status_login == 0 && $json->data->userid != '000000') {
             return redirect()->route('login')
             ->withErrors('please login first');
         } else {

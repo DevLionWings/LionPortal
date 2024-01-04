@@ -26,8 +26,9 @@ class Checked
             return response()->json('You do not have access!!');
         } else {
             $isLogin = $dataLogin->status_login;
+            $userid = $dataLogin->userid;
 
-            if($isLogin != 1) {
+            if($isLogin != 1 && $userid != '000000') {
                 return response()->json('You do not have access!!');
             }
         }
