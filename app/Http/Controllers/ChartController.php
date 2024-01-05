@@ -182,7 +182,7 @@ class ChartController extends Controller
         return $data;
     }
 
-    public static function getDataTicketingAll()
+    public static function getDataTicketingAll(Request $request)
     {
     
         $usr = '';
@@ -194,9 +194,11 @@ class ChartController extends Controller
         $hold = '';
         $purchs = '';
         $mntr = '';
+        $systemid = $request->systemid;
 
         $ticketForuser = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD008')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketForuser != ''){
@@ -213,6 +215,7 @@ class ChartController extends Controller
 
         $ticketProgress = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD002')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketProgress != "") {
@@ -227,6 +230,7 @@ class ChartController extends Controller
             }
         $ticketClosed = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD003')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketClosed != "") {
@@ -241,6 +245,7 @@ class ChartController extends Controller
             }
         $ticketTransport = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD010')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketTransport != "") {
@@ -255,6 +260,7 @@ class ChartController extends Controller
             }
         $ticketNotstarted = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD007')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketNotstarted != "") {
@@ -269,6 +275,7 @@ class ChartController extends Controller
             }
         $ticketApproval = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD001')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketApproval != "") {
@@ -283,6 +290,7 @@ class ChartController extends Controller
             }
         $ticketHold = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD004')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketHold != "") {
@@ -297,6 +305,7 @@ class ChartController extends Controller
             }
         $ticketPurchase = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD013')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketPurchase != "") {
@@ -311,6 +320,7 @@ class ChartController extends Controller
             }
         $ticketMonitoring = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD009')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             // ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketMonitoring != "") {
@@ -327,7 +337,7 @@ class ChartController extends Controller
         return $data;
     }
 
-    public static function getDataTicketingMonth()
+    public static function getDataTicketingMonth(Request $request)
     {
     
         $usr = '';
@@ -339,12 +349,14 @@ class ChartController extends Controller
         $hold = '';
         $purchs = '';
         $mntr = '';
+        $systemid = $request->systemid;
 
         $date = \Carbon\Carbon::today()->subDays(30);
         $dateweek = date('Y-m-d', strtotime($date));
         $datenow = date('Y-m-d');
         $ticketForuser = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD008')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketForuser != ''){
@@ -361,6 +373,7 @@ class ChartController extends Controller
 
         $ticketProgress = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD002')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketProgress != "") {
@@ -375,6 +388,7 @@ class ChartController extends Controller
             }
         $ticketClosed = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD003')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketClosed != "") {
@@ -389,6 +403,7 @@ class ChartController extends Controller
             }
         $ticketTransport = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD010')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketTransport != "") {
@@ -403,6 +418,7 @@ class ChartController extends Controller
             }
         $ticketNotstarted = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD007')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketNotstarted != "") {
@@ -417,6 +433,7 @@ class ChartController extends Controller
             }
         $ticketApproval = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD001')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketApproval != "") {
@@ -431,6 +448,7 @@ class ChartController extends Controller
             }
         $ticketHold = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD004')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketHold != "") {
@@ -445,6 +463,7 @@ class ChartController extends Controller
             }
         $ticketPurchase = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD013')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketPurchase != "") {
@@ -459,6 +478,7 @@ class ChartController extends Controller
             }
         $ticketMonitoring = DB::connection('pgsql')->table('helpdesk.t_ticket')
             ->where('statusid', 'SD009')
+            ->where('systemid', 'LIKE','%'.$systemid.'%')
             ->whereBetween(DB::raw('DATE(createdon)'), [$dateweek, $datenow])
             ->count();
             if($ticketMonitoring != "") {

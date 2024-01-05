@@ -327,6 +327,43 @@
         })
     }
 
+    function getStatAllCount(systemid) {
+        $.ajax({
+            type: "GET",
+            url: "get/all",
+            data: {
+                'systemid' : systemid
+            },
+            success: function(response) {
+                // console.log(response);
+                $('label[name="loading-chart"]').css('display', 'none')
+                $('canvas[id="alltime"]').css('display', 'block')
+                ticketingChartAll(response["prg"], response["clsd"], response["usr"], response["trans"], response["notstr"], response["apprv"], response["hold"], response["purchs"], response["mntr"])
+            }, error: function(err) {
+                // console.log(err)
+                alert('Opps, something wrong with dashboard chart');
+            }
+        })
+    }
+
+    function getStatMonthCount(systemid) {
+        $.ajax({
+            type: "GET",
+            url: "get/month",
+            data: {
+                'systemid' : systemid
+            },
+            success: function(response) {
+                // console.log(response);
+                $('label[name="loading-month"]').css('display', 'none')
+                $('canvas[id="monthly"]').css('display', 'block')
+                ticketingChartMonth(response["prg"], response["clsd"], response["usr"], response["trans"], response["notstr"], response["apprv"], response["hold"], response["purchs"], response["mntr"])
+            }, error: function(err) {
+                // console.log(err)
+                alert('Opps, something wrong with dashboard chart');
+            }
+        })
+    }
 
     $.ajax({
         url: '{{ route("get.all") }}',
@@ -385,6 +422,8 @@
             success: function(response) {
                 // console.log(response)
                 getShowCount(systemid);
+                getStatAllCount(systemid);
+                getStatMonthCount(systemid)
             },
             error: function (error) {
                 console.error(error);

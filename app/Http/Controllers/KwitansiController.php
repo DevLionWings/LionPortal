@@ -286,6 +286,7 @@ class KwitansiController extends Controller
         $nama = $request->nama;  
         $category = $request->category; 
         $datenow = date('Y-m-d H:i:s');
+        $dateyear = date('Y');
         /* Rapel */
 
         /* General */
@@ -329,6 +330,7 @@ class KwitansiController extends Controller
             $datacounter = DB::connection('pgsql')->table('master_data.m_counter')
                 ->where('counterid', 'CT003')
                 ->where('prefix', 'KWS')
+                ->where('period', $dateyear)
                 ->select('period','start_number', 'end_number', 'last_number')
                 ->first();
 
